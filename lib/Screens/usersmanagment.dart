@@ -1,9 +1,18 @@
 import 'package:alumni_management_admin/utils.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
+
+import '../Models/Language_Model.dart';
 
 class UsersManagement extends StatefulWidget {
-  const UsersManagement({super.key});
+  String?Username;
+   UsersManagement({this.Username});
 
   @override
   State<UsersManagement> createState() => _UsersManagementState();
@@ -11,1465 +20,1332 @@ class UsersManagement extends StatefulWidget {
 
 class _UsersManagementState extends State<UsersManagement> {
 
+  bool dashboard = false;
+  bool userManagement = false;
+  bool reports = false;
+  bool users = false;
+  bool gallery = false;
+  bool  events= false;
+  bool  news= false;
+  bool  message= false;
+  bool  setting= false;
+
+  String Uservalue="Select";
+  String Userdocid="";
+  String Authusertype="admin";
+
+  final  _formKey=GlobalKey<FormState>();
+
+  List<String>PermissionLis = [];
+  List<String>list = [];
+
+
+  TextEditingController userName=TextEditingController();
+  TextEditingController passWord=TextEditingController();
+
+
+  @override
+  void initState() {
+    mangementpermision();
+    // TODO: implement initState
+    super.initState();
+  }
+
+  mangementpermision() async {
+
+    print("User Document idddddddddddddddddddddddddddddddddddddddddddddddddddddd");
+    print(FirebaseAuth.instance.currentUser!.uid);
+
+    setState(() {
+      PermissionLis.clear();
+      list.clear();
+    });
+    setState(() {
+      list.add("Select");
+    });
+    var doc1 = await FirebaseFirestore.instance.collection("AdminUser").get();
+    for(int i=0;i<doc1.docs.length;i++){
+      setState(() {
+        list.add(doc1.docs[i]['username']);
+      });
+    }
+    print(":list fo dicument");
+    print(list);
+    var document = await FirebaseFirestore.instance.collection("AdminUser").where("username",isEqualTo:widget.Username).get();
+    for(int j=0;j<document.docs.length;j++){
+      setState(() {
+        Uservalue=document.docs[j]['username'];
+        Userdocid=document.docs[j].id;
+      });
+      for(int i=0;i<document.docs[j]['permission'].length;i++){
+        if(document.docs[j]['permission'][i]=="dashboard"){
+          setState(() {
+            dashboard=true;
+            PermissionLis.add("dashboard");
+          });
+        }
+        if(document.docs[j]['permission'][i]=="userManagement"){
+          setState(() {
+            userManagement=true;
+            PermissionLis.add("userManagement");
+          });
+        }
+        if(document.docs[j]['permission'][i]=="reports"){
+          setState(() {
+            reports=true;
+            PermissionLis.add("reports");
+          });
+        }
+        if(document.docs[j]['permission'][i]=="users"){
+          setState(() {
+            users=true;
+            PermissionLis.add("users");
+          });
+        }
+        if(document.docs[j]['permission'][i]=="gallery"){
+          setState(() {
+            gallery=true;
+            PermissionLis.add("gallery");
+          });
+        }
+        if(document.docs[j]['permission'][i]=="events"){
+          setState(() {
+            events=true;
+            PermissionLis.add("events");
+          });
+        }
+        if(document.docs[j]['permission'][i]=="news"){
+          setState(() {
+            news=true;
+            PermissionLis.add("news");
+          });
+        }
+        if(document.docs[j]['permission'][i]=="message"){
+          setState(() {
+            message=true;
+            PermissionLis.add("message");
+          });
+        }
+        if(document.docs[j]['permission'][i]=="setting"){
+          setState(() {
+            setting=true;
+            PermissionLis.add("setting");
+          });
+        }
+      }
+    }
+    print("End of the fuinctionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
+    print("End of the fuinctionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
+    print("End of the fuinctionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
+
+  }
+
   @override
   Widget build(BuildContext context) {
-    final double width=MediaQuery.of(context).size.width;
-    final double height=MediaQuery.of(context).size.height;
+    double width=MediaQuery.of(context).size.width;
+    double height=MediaQuery.of(context).size.height;
     double baseWidth = 1920;
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
-    return FadeInRight(
-      child: Container(
-        // autogroupoqukgSD (T1ghpQWA8tTeNcoXbfoQUK)
-        width: 1575*fem,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-            /*  Container(
-                // topbarpHX (8:1317)
-                margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 7*fem),
-                padding: EdgeInsets.fromLTRB(40*fem, 30*fem, 66*fem, 30*fem),
-                width: double.infinity,
-                height: 120*fem,
-                decoration: BoxDecoration (
-                  color: Color(0xffffffff),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+    return
+      Padding(
+        padding:  EdgeInsets.only(left:width/170.75,right: width/170.75),
+        child: Container(
+          height:height/1.0015,
+          child: SingleChildScrollView(
+            physics:const  ScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Container(
-                      // alumnimanagment6kq (8:1360)
-                      margin: EdgeInsets.fromLTRB(0*fem, 1*fem, 40*fem, 0*fem),
-                      child: Text(
-                        'Alumni Managment',
-                        style: SafeGoogleFont (
+                    Padding(
+                      padding:  EdgeInsets.only(top: height/61.43),
+                      child: KText(
+                        text:"User Managements",
+                      style:  SafeGoogleFont (
                           'Poppins',
-                          fontSize: 36*ffem,
+                          fontSize: 25*ffem,
                           fontWeight: FontWeight.w600,
-                          height: 1.3999999364*ffem/fem,
-                          color: Color(0xff151d48),
+                          height: 1.6*ffem/fem,
+                          color: Color(0xff05004e),
                         ),
                       ),
                     ),
-                    Container(
-                      // searchbarofF (8:1356)
-                      margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 58*fem, 0*fem),
-                      padding: EdgeInsets.fromLTRB(28*fem, 16.5*fem, 329*fem, 16.5*fem),
-                      height: double.infinity,
-                      decoration: BoxDecoration (
-                        color: Color(0xfff9fafb),
-                        borderRadius: BorderRadius.circular(16*fem),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            // magnifiertRo (8:1357)
-                            margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 12*fem, 0*fem),
-                            width: 24*fem,
-                            height: 24*fem,
-                            child: Image.asset(
-                              'assets/images/magnifier.png',
-                              width: 24*fem,
-                              height: 24*fem,
-                            ),
-                          ),
-                          Text(
-                            // searchhereCxH (8:1359)
-                            'Search here...',
-                            style: SafeGoogleFont (
+                  ],
+                ),
+                SizedBox(height: height/41.143,),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    SizedBox(width:40),
+                    SizedBox(
+
+                        child: Row(
+                          children: [
+                            SizedBox(width:150),
+                            KText( text:"Select the Role  : ",style:
+                            SafeGoogleFont (
                               'Poppins',
-                              fontSize: 18*ffem,
-                              fontWeight: FontWeight.w400,
-                              height: 1.5*ffem/fem,
-                              color: Color(0xff737791),
+                              fontWeight: FontWeight.w700,
+                            )),
+                            SizedBox(width:10),
+                            Material(
+                              elevation: 2,
+                              borderRadius: BorderRadius.circular(8),
+                              color: Color(0xffFFFFFF),
+                              child: SizedBox(
+                                width:width/5.464,
+                                height:height/13.02,
+
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButtonFormField2<String>(
+                                    isExpanded: true,
+                                    hint: KText(
+                                        text:'Select',
+                                      style:
+                                      SafeGoogleFont (
+                                        'Poppins',
+                                      )
+                                    ),
+                                    items: list.map((String item) => DropdownMenuItem<String>(
+                                      value: item,
+                                      child: KText(
+                                          text: item,
+                                        style:  SafeGoogleFont (
+                                          'Poppins',
+                                        )
+                                      ),
+                                    ))
+                                        .toList(),
+                                    value: Uservalue,
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        Uservalue = value!;
+                                      });
+                                      setthevalue(value);
+                                    },
+                                    buttonStyleData:  ButtonStyleData(
+                                    ),decoration: InputDecoration(
+                                      border: InputBorder.none
+                                  ),
+
+                                  ),
+                                ),
+                              ),
                             ),
+                          ],
+                        )),
+
+                    SizedBox(width:30),
+
+                    InkWell(
+                      onTap: (){
+                        adduserdialogBox();
+                      },
+                      child: Container(
+                          width: width/10.5076,
+                          height: height/16.275,
+                          decoration: BoxDecoration(
+                              color: Color(0xff5D5FEF),
+                              borderRadius: BorderRadius.circular(8)
                           ),
-                        ],
+                          child:  Center(child:  KText( text:"Add User",style:
+                          SafeGoogleFont (
+                            'Poppins',
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white
+                          ),))
                       ),
                     ),
-                    Container(
-                      // languangeLYh (8:1319)
-                      margin: EdgeInsets.fromLTRB(0*fem, 16.5*fem, 58*fem, 16.5*fem),
-                      padding: EdgeInsets.fromLTRB(0*fem, 0*fem, 7.06*fem, 0*fem),
-                      height: double.infinity,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                    SizedBox(width:30),
+                    InkWell(
+                      onTap: (){
+                        updatefunction();
+                        successpopuop("Permission Add Successfully....");
+                      },
+                      child: Container(
+                          width: width/10.5076,
+                          height: height/16.275,
+                          decoration: BoxDecoration(
+                              color: Color(0xff5D5FEF),
+                              borderRadius: BorderRadius.circular(8)
+                          ),
+                          child:  Center(child:  KText( text:"Add Permission",style:SafeGoogleFont (
+                              'Poppins',
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white
+                          ),))
+                      ),
+                    ),
+                  ],
+                ),
+
+                SizedBox(height: height/41.143,),
+
+                Padding(
+                  padding:  EdgeInsets.symmetric(
+                    horizontal: width/170.75,
+                    vertical: height/81.375
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+
+                      SizedBox(height: height/32.55,),
+
+                      Row(
                         children: [
-                          Container(
-                            // textTNR (8:1320)
-                            margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 23*fem, 0*fem),
-                            padding: EdgeInsets.fromLTRB(0.75*fem, 0*fem, 0*fem, 0*fem),
-                            height: double.infinity,
+                          SizedBox(
+                            width: width/6.83,
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Container(
-                                  // united9m3 (8:1321)
-                                  margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 14.75*fem, 0*fem),
-                                  width: 22.5*fem,
-                                  height: 22.5*fem,
-                                  child: Image.asset(
-                                    'assets/images/united.png',
-                                    width: 22.5*fem,
-                                    height: 22.5*fem,
-                                  ),
-                                ),
-                                Text(
-                                  // engusQws (8:1337)
-                                  'Eng (US)',
-                                  style: SafeGoogleFont (
-                                    'Poppins',
-                                    fontSize: 18*ffem,
-                                    fontWeight: FontWeight.w600,
-                                    height: 1.5*ffem/fem,
-                                    color: Color(0xff374557),
-                                  ),
-                                ),
+                                Checkbox(
+                                    value: dashboard,
+                                    onChanged: (val) {
+                                      setState(() {
+                                        dashboard = !dashboard;
+                                      });
+                                      if (dashboard == true) {
+                                        PermissionLis.add("dashboard");
+                                      }
+                                      else{
+                                        PermissionLis.remove("dashboard");
+                                      }
+                                    }),
+                                SizedBox(width: width/273.2,),
+                                KText( text:"DashBoard"
+                                    ,style:SafeGoogleFont (
+                                  'Poppins',
+                                )),
                               ],
                             ),
                           ),
-                          Container(
-                            // chevrondown9Pf (8:1338)
-                            margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 0*fem),
-                            width: 9.94*fem,
-                            height: 6*fem,
-                            child: Image.asset(
-                              'assets/images/chevron-down.png',
-                              width: 9.94*fem,
-                              height: 6*fem,
+                          SizedBox(
+                            width: width/6.83,
+                            child: Row(
+                              children: [
+                                Checkbox(
+                                    value: userManagement,
+                                    onChanged: (val) {
+                                      setState(() {
+                                        userManagement =
+                                        !userManagement;
+                                        if (userManagement == true) {
+                                          PermissionLis.add("userManagement");
+                                        }
+                                        else{
+                                          PermissionLis.remove("userManagement");
+                                        }
+                                      });
+                                    }),
+                                SizedBox(width: width/273.2,),
+                                KText( text:"User Management",style:SafeGoogleFont (
+                                  'Poppins',
+                                )),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: width/6.83,
+                            child: Row(
+                              children: [
+                                Checkbox(
+                                    value: reports,
+                                    onChanged: (val) {
+                                      setState(() {
+                                        reports =
+                                        !reports;
+                                      });
+                                      if (reports == true) {
+                                        PermissionLis.add("reports");
+                                      }
+                                      else{
+                                        PermissionLis.remove("reports");
+                                      }
+                                    }),
+                                SizedBox(width: width/273.2,),
+                                KText( text:"Reports",style:SafeGoogleFont (
+                                  'Poppins',
+                                )),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: width/6.83,
+                            child: Row(
+                              children: [
+                                Checkbox(
+                                    value: users,
+                                    onChanged: (val) {
+                                      setState(() {
+                                        users =
+                                        !users;
+                                      });
+                                      if (users == true) {
+                                        PermissionLis.add("users");
+                                      }
+                                      else{
+                                        PermissionLis.remove("users");
+                                      }
+
+                                    }),
+                                SizedBox(width: width/273.2,),
+                                KText( text:"Users",style:SafeGoogleFont (
+                                  'Poppins',
+                                )),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: width/6.83,
+                            child: Row(
+                              children: [
+                                Checkbox(
+                                    value: gallery,
+                                    onChanged: (val) {
+                                      setState(() {
+                                        gallery =
+                                        !gallery;
+                                      });
+                                      if (gallery == true) {
+                                        PermissionLis.add("gallery");
+                                      }
+                                      else{
+                                        PermissionLis.remove("gallery");
+                                      }
+                                    }),
+                                SizedBox(width: width/273.2,),
+                                KText( text:"Gallery",style:SafeGoogleFont (
+                                  'Poppins',
+                                )),
+                              ],
                             ),
                           ),
                         ],
                       ),
-                    ),
-                    Container(
-                      // menuFBo (8:1340)
-                      height: double.infinity,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                      SizedBox(height: 20,),
+
+                      Row(
                         children: [
-                          Container(
-                            // notificationsPoo (8:1349)
-                            margin: EdgeInsets.fromLTRB(0*fem, 2*fem, 24*fem, 0*fem),
-                            width: 48*fem,
-                            height: 48*fem,
-                            child: Image.asset(
-                              'assets/images/notifications.png',
-                              width: 48*fem,
-                              height: 48*fem,
+                          SizedBox(
+                            width: width/6.83,
+                            child: Row(
+                              children: [
+                                Checkbox(
+                                    value: events,
+                                    onChanged: (val) {
+                                      setState(() {
+                                        events =
+                                        !events;
+                                      });
+                                      if (events == true) {
+                                        PermissionLis.add("events");
+                                      }
+                                      else{
+                                        PermissionLis.remove("events");
+                                      }
+                                    }),
+                                SizedBox(width: width/273.2,),
+                                KText( text:"Events",style:SafeGoogleFont (
+                                  'Poppins',
+                                )),
+                              ],
                             ),
                           ),
-                          Container(
-                            // group1000002734i5P (8:1341)
-                            height: double.infinity,
+                          SizedBox(
+                            width: width/6.83,
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Container(
-                                  // rectangle139349F (8:1342)
-                                  margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 20*fem, 0*fem),
-                                  width: 60*fem,
-                                  height: 60*fem,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(16*fem),
-                                    child: Image.asset(
-                                      'assets/images/rectangle-1393.png',
-                                      fit: BoxFit.cover,
+                                Checkbox(
+                                    value: news,
+                                    onChanged: (val) {
+                                      setState(() {
+                                        news =
+                                        !news;
+                                      });
+                                      if (news == true) {
+                                        PermissionLis.add("news");
+                                      }
+                                      else{
+                                        PermissionLis.remove("news");
+                                      }
+                                    }),
+                                SizedBox(width: width/273.2,),
+                                KText( text:"News",style:SafeGoogleFont (
+                                  'Poppins',
+                                )),
+                              ],
+                            ),
+                          ),
+
+                          SizedBox(
+                            width: width/6.83,
+                            child: Row(
+                              children: [
+                                Checkbox(
+                                    value: setting,
+                                    onChanged: (val) {
+                                      setState(() {
+                                        setting =
+                                        !setting;
+                                      });
+                                      if (setting == true) {
+                                        PermissionLis.add("setting");
+                                      }
+                                      else{
+                                        PermissionLis.remove("setting");
+                                      }
+                                    }),
+                                SizedBox(width: width/273.2,),
+                                KText( text:"Setting",style:SafeGoogleFont (
+                                  'Poppins',
+                                )),
+                              ],
+                            ),
+                          ),
+
+                        ],
+                      ),
+
+                      SizedBox(height: 20,),
+
+
+
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: height/130.2,),
+                Row(
+                  children: [
+                    KText(
+                      text:"Users Lists",
+                      style:  SafeGoogleFont (
+                        'Poppins',
+                        fontSize: 25*ffem,
+                        fontWeight: FontWeight.w600,
+                        height: 1.6*ffem/fem,
+                        color: Color(0xff05004e),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height:height/130.2),
+                SizedBox(
+                  width:width/1.2418,
+                  child:
+                  SingleChildScrollView(
+                    physics: const ScrollPhysics(),
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            color:  const Color(0xff5D5FEF),
+                          ),
+                          child: Row(
+
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+
+                              SizedBox(
+                                width: width/27.32,
+                                height: height/16.275,
+                                child: Center(
+                                  child: KText(
+                                    text: "Si.No",
+                                    style:
+                                    SafeGoogleFont (
+                                      'Poppins',
+                                      fontSize: 19*ffem,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white
                                     ),
                                   ),
                                 ),
-                                Container(
-                                  // group21862Me9 (8:1343)
-                                  margin: EdgeInsets.fromLTRB(0*fem, 6*fem, 0*fem, 6*fem),
-                                  width: 124*fem,
-                                  height: double.infinity,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        // autogroupw2mqssP (T1gm24fofjnFtrqGMVw2mq)
-                                        margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 4*fem),
-                                        width: double.infinity,
+                              ),
+
+                              SizedBox(
+                                width: width/2.1015,
+                                height: height/16.275,
+                                child: Center(
+                                  child: KText(
+                                    text:"User Name",
+                                    style:
+                                    SafeGoogleFont (
+                                      'Poppins',
+                                      fontSize: 19*ffem,
+                                      fontWeight: FontWeight.w700,
+                                        color: Colors.white
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              SizedBox(
+                                width: width/6.83,
+                                height: height/16.275,
+                                child: Center(
+                                  child: KText(
+                                    text:"Password",
+                                    style:
+                                    SafeGoogleFont (
+                                      'Poppins',
+                                      fontSize: 19*ffem,
+                                      fontWeight: FontWeight.w700,    color: Colors.white
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              SizedBox(
+                                width: width/6.83,
+                                height: height/16.275,
+                                child: Center(
+                                  child: KText(
+                                    text: "Actions",
+                                    style:
+                                    SafeGoogleFont (
+                                      'Poppins',
+                                      fontSize: 19*ffem,
+                                      fontWeight: FontWeight.w700,    color: Colors.white
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+
+                            ],
+                          ),
+                        ),
+                        SizedBox(height:height/81.375),
+                        StreamBuilder(
+                          stream: FirebaseFirestore.instance.collection("AdminUser").orderBy("timestamp").snapshots(),
+                          builder: (context, snapshot) {
+
+                            if(snapshot.hasData==null){
+                              return const Center(child: CircularProgressIndicator(),);
+                            }
+                            if(!snapshot.hasData){
+                              return const Center(child: CircularProgressIndicator(),);
+                            }
+
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (context, index) {
+
+                                var data=snapshot.data!.docs[index];
+                                return
+                                  Padding(
+                                    padding:  EdgeInsets.only(bottom:height/81.375),
+                                    child: Material(
+                                      color: Color(0xffFFFFFF),
+                                      elevation: 20,
+                                      borderRadius: BorderRadius.circular(4),
+                                      shadowColor: Colors.black12,
+                                      child: SizedBox(
+                                        height:height/13.02,
                                         child: Row(
+
                                           crossAxisAlignment: CrossAxisAlignment.center,
+
                                           children: [
-                                            Container(
-                                              // dinesh1To (8:1348)
-                                              margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 53*fem, 0*fem),
-                                              child: Text(
-                                                'Dinesh',
-                                                style: SafeGoogleFont (
-                                                  'Poppins',
-                                                  fontSize: 16*ffem,
-                                                  fontWeight: FontWeight.w500,
-                                                  height: 1.5*ffem/fem,
-                                                  color: Color(0xff151d48),
+
+
+                                            SizedBox(
+                                              width: width/27.32,
+                                              height: height/14.466,
+                                              child: Center(
+                                                child: KText(
+                                                  text: (index+1).toString(),
+                                                  style:
+                                                  SafeGoogleFont (
+                                                    'Poppins',
+                                                    fontSize: 19*ffem,
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                            Container(
-                                              // group21861XS9 (8:1344)
-                                              width: 16*fem,
-                                              height: 16*fem,
-                                              child: Image.asset(
-                                                'assets/images/group-21861-2hF.png',
-                                                width: 16*fem,
-                                                height: 16*fem,
+
+                                            SizedBox(
+                                              width: width/2.1015,
+                                              height: height/14.466,
+                                              child: Center(
+                                                child: KText(
+                                                  text:   data['username'].toString(),
+                                                  style:
+                                                  SafeGoogleFont (
+                                                    'Poppins',
+                                                    fontSize: 19*ffem,
+                                                  ),
+                                                ),
                                               ),
                                             ),
+
+                                            SizedBox(
+                                              width: width/6.83,
+                                              height: height/14.466,
+                                              child: Center(
+                                                child: KText(
+                                                  text:   data['password'].toString(),
+                                                  style:
+                                                  SafeGoogleFont (
+                                                    'Poppins',
+                                                    fontSize: 19*ffem,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+
+                                            SizedBox(
+                                              width: width/6.83,
+                                              height: height/14.466,
+                                              child:
+                                              Center(
+                                                child: InkWell(
+                                                  onTap:(){
+                                                    _deletepopup(data.id);
+                                                  },
+                                                  child: Material(
+
+                                                    borderRadius: BorderRadius.circular(100),
+                                                    color: Colors.white,
+                                                    child: Container(
+                                                      height:height/21,
+                                                      width:width/17.075,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius: BorderRadius.circular(100),
+                                                          color: Colors.white
+                                                      ),
+                                                      child: Center(child: Icon(Icons.delete)),
+                                                    ),
+                                                    elevation: 10,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+
+
                                           ],
                                         ),
                                       ),
-                                      Text(
-                                        // admin3vH (8:1347)
-                                        'Admin',
-                                        style: SafeGoogleFont (
-                                          'Poppins',
-                                          fontSize: 14*ffem,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.4285714286*ffem/fem,
-                                          color: Color(0xff737791),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                                    ),
+                                  );
+                              },);
+                          },
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),*/
-              Container(
-                // autogroupnqzdo8m (T1gi69YvmcjfWeTh5WNqZd)
-                width: 1554*fem,
-                height: 1173.32*fem,
-                child: Stack(
-                  children: [
-                    Positioned(
-                      // profilebgvUH (8:2063)
-                      left: 1160.28515625*fem,
-                      top: 0*fem,
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(31.29*fem, 80.83*fem, 32.59*fem, 412.32*fem),
-                        width: 393.71*fem,
-                        height: 1173.32*fem,
-                        decoration: BoxDecoration (
-                          color: Color(0xffffffff),
-                          borderRadius: BorderRadius.circular(10*fem),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              // profilenamemjo (8:2065)
-                              margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 51.65*fem),
-                              width: double.infinity,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    // imgbgtZX (8:2072)
-                                    margin: EdgeInsets.fromLTRB(119.94*fem, 0*fem, 118.64*fem, 20.91*fem),
-                                    width: double.infinity,
-                                    height: 91.26*fem,
-                                    child: Stack(
-                                      children: [
-                                        Positioned(
-                                          // bgD61 (8:2073)
-                                          left: 0*fem,
-                                          top: 0*fem,
-                                          child: Align(
-                                            child: SizedBox(
-                                              width: 91.26*fem,
-                                              height: 91.26*fem,
-                                              child: Image.asset(
-                                                'assets/images/bg.png',
-                                                width: 91.26*fem,
-                                                height: 91.26*fem,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Positioned(
-                                          // ellipse587x5 (8:2076)
-                                          left: 0*fem,
-                                          top: 0*fem,
-                                          child: Align(
-                                            child: SizedBox(
-                                              width: 91.26*fem,
-                                              height: 91.26*fem,
-                                              child: Container(
-                                                decoration: BoxDecoration (
-                                                  borderRadius: BorderRadius.circular(45.6291923523*fem),
-                                                  image: DecorationImage (
-                                                    image: AssetImage (
-                                                      'assets/images/ellipse-58-bg.png',
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    // prakashdeoP8u (8:2071)
-                                    margin: EdgeInsets.fromLTRB(6.02*fem, 0*fem, 0*fem, 8*fem),
-                                    child: Text(
-                                      'Prakash Deo',
-                                      style: SafeGoogleFont (
-                                        'Nunito',
-                                        fontSize: 22*ffem,
-                                        fontWeight: FontWeight.w600,
-                                        height: 1.3625*ffem/fem,
-                                        color: Color(0xff030229),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    // uiuxdesignergth (8:2069)
-                                    margin: EdgeInsets.fromLTRB(8.02*fem, 0*fem, 0*fem, 47.55*fem),
-                                    child: Text(
-                                      'UI/UX Designer',
-                                      style: SafeGoogleFont (
-                                        'Nunito',
-                                        fontSize: 14*ffem,
-                                        fontWeight: FontWeight.w400,
-                                        height: 1.3625*ffem/fem,
-                                        color: Color(0xff030229),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    // linezuP (8:2066)
-                                    width: 329.83*fem,
-                                    height: 0.5*fem,
-                                    child: Image.asset(
-                                      'assets/images/line-s1T.png',
-                                      width: 329.83*fem,
-                                      height: 0.5*fem,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              // contactinfoXuK (8:2109)
-                              margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 24.77*fem, 68.12*fem),
-                              width: 302.46*fem,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    // autogroupndnkSWV (T1gj4sRR27hYZoCNm3ndnK)
-                                    padding: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 26.07*fem),
-                                    width: double.infinity,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          // contactinfomYm (8:2134)
-                                          margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 40.18*fem),
-                                          child: Text(
-                                            'Contact Info',
-                                            style: SafeGoogleFont (
-                                              'Nunito',
-                                              fontSize: 18*ffem,
-                                              fontWeight: FontWeight.w600,
-                                              height: 1.3625*ffem/fem,
-                                              color: Color(0xff030229),
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          // emailH1K (8:2126)
-                                          margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 79.26*fem, 0*fem),
-                                          width: double.infinity,
-                                          child: Row(
-                                            crossAxisAlignment: CrossAxisAlignment.end,
-                                            children: [
-                                              Opacity(
-                                                // messagezwK (8:2129)
-                                                opacity: 0.3,
-                                                child: Container(
-                                                  margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 14.34*fem, 0*fem),
-                                                  width: 20.86*fem,
-                                                  height: 19.56*fem,
-                                                  child: Image.asset(
-                                                    'assets/images/message.png',
-                                                    width: 20.86*fem,
-                                                    height: 19.56*fem,
-                                                  ),
-                                                ),
-                                              ),
-                                              Container(
-                                                // kajope5182ummohcom5xm (8:2128)
-                                                margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 1.47*fem),
-                                                child: Text(
-                                                  'kajope5182@ummoh.com',
-                                                  style: SafeGoogleFont (
-                                                    'Nunito',
-                                                    fontSize: 16*ffem,
-                                                    fontWeight: FontWeight.w400,
-                                                    height: 1.3625*ffem/fem,
-                                                    color: Color(0xff030229),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    // autogroup8z8fNws (T1giYoTBaTc7Nkx6Vd8Z8F)
-                                    margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 25.57*fem),
-                                    width: double.infinity,
-                                    height: 72.2*fem,
-                                    child: Stack(
-                                      children: [
-                                        Positioned(
-                                          // line7Pf (8:2118)
-                                          left: 0*fem,
-                                          top: 0*fem,
-                                          child: Container(
-                                            width: 302.46*fem,
-                                            height: 72.2*fem,
-                                          ),
-                                        ),
-                                        Positioned(
-                                          // phonenumberr6M (8:2121)
-                                          left: 0*fem,
-                                          top: 26.0738296509*fem,
-                                          child: Container(
-                                            width: 141.2*fem,
-                                            height: 23.47*fem,
-                                            child: Row(
-                                              crossAxisAlignment: CrossAxisAlignment.end,
-                                              children: [
-                                                Opacity(
-                                                  // call9r9 (8:2124)
-                                                  opacity: 0.3,
-                                                  child: Container(
-                                                    margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 14.34*fem, 0*fem),
-                                                    width: 20.86*fem,
-                                                    height: 20.86*fem,
-                                                    child: Image.asset(
-                                                      'assets/images/call.png',
-                                                      width: 20.86*fem,
-                                                      height: 20.86*fem,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  // SqF (8:2123)
-                                                  margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 1.47*fem),
-                                                  child: Text(
-                                                    '33757005467',
-                                                    style: SafeGoogleFont (
-                                                      'Nunito',
-                                                      fontSize: 16*ffem,
-                                                      fontWeight: FontWeight.w400,
-                                                      height: 1.3625*ffem/fem,
-                                                      color: Color(0xff030229),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    // locationxob (8:2110)
-                                    margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 102.26*fem, 0*fem),
-                                    width: double.infinity,
-                                    height: 50.68*fem,
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Opacity(
-                                          // locationUmw (8:2114)
-                                          opacity: 0.3,
-                                          child: Container(
-                                            margin: EdgeInsets.fromLTRB(0*fem, 5.21*fem, 16.95*fem, 0*fem),
-                                            width: 18.25*fem,
-                                            height: 22.16*fem,
-                                            child: Image.asset(
-                                              'assets/images/location.png',
-                                              width: 18.25*fem,
-                                              height: 22.16*fem,
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          // textP8D (8:2111)
-                                          height: double.infinity,
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                // hogcamproadLJM (8:2112)
-                                                margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 6.68*fem),
-                                                child: Text(
-                                                  '2239  Hog Camp Road',
-                                                  style: SafeGoogleFont (
-                                                    'Nunito',
-                                                    fontSize: 16*ffem,
-                                                    fontWeight: FontWeight.w400,
-                                                    height: 1.3625*ffem/fem,
-                                                    color: Color(0xff030229),
-                                                  ),
-                                                ),
-                                              ),
-                                              Text(
-                                                // schaumburgE8q (8:2113)
-                                                'Schaumburg',
-                                                style: SafeGoogleFont (
-                                                  'Nunito',
-                                                  fontSize: 16*ffem,
-                                                  fontWeight: FontWeight.w400,
-                                                  height: 1.3625*ffem/fem,
-                                                  color: Color(0xff030229),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              // group649mPf (10:82)
-                              margin: EdgeInsets.fromLTRB(64.43*fem, 0*fem, 64.41*fem, 19*fem),
-                              width: double.infinity,
-                              height: 30*fem,
-                              decoration: BoxDecoration (
-                                borderRadius: BorderRadius.circular(22.5*fem),
-                              ),
-                              child: Stack(
-                                children: [
-                                  Positioned(
-                                    // rectangle186fzq (10:83)
-                                    left: 17.8403320312*fem,
-                                    top: 0*fem,
-                                    child: Align(
-                                      child: SizedBox(
-                                        width: 166.51*fem,
-                                        height: 30*fem,
-                                        child: Container(
-                                          decoration: BoxDecoration (
-                                            borderRadius: BorderRadius.circular(22.5*fem),
-                                            color: Color(0xff26c0e2),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    // downloadimagesAAu (10:84)
-                                    left: 35*fem,
-                                    top: 4*fem,
-                                    child: Align(
-                                      child: SizedBox(
-                                        width: 131*fem,
-                                        height: 22*fem,
-                                        child: Text(
-                                          'Download Images',
-                                          textAlign: TextAlign.center,
-                                          style: SafeGoogleFont (
-                                            'Nunito',
-                                            fontSize: 16*ffem,
-                                            fontWeight: FontWeight.w400,
-                                            height: 1.3625*ffem/fem,
-                                            color: Color(0xffffffff),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              // group6502iu (10:85)
-                              margin: EdgeInsets.fromLTRB(50.43*fem, 0*fem, 52.41*fem, 0*fem),
-                              width: double.infinity,
-                              height: 30*fem,
-                              decoration: BoxDecoration (
-                                color: Color(0xffffd56b),
-                                borderRadius: BorderRadius.circular(22.5*fem),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Download Documents',
-                                  textAlign: TextAlign.center,
-                                  style: SafeGoogleFont (
-                                    'Nunito',
-                                    fontSize: 16*ffem,
-                                    fontWeight: FontWeight.w400,
-                                    height: 1.3625*ffem/fem,
-                                    color: Color(0xff030229),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      // bgsjX (8:2231)
-                      left: 0*fem,
-                      top: 349.389251709*fem,
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(26.07*fem, 19.56*fem, 39.11*fem, 19.56*fem),
-                        width: 1119.87*fem,
-                        height: 78.22*fem,
-                        decoration: BoxDecoration (
-                          color: Color(0xffffffff),
-                          borderRadius: BorderRadius.circular(10*fem),
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              // imgbgjFw (8:2246)
-                              margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 14.34*fem, 0*fem),
-                              width: 39.11*fem,
-                              height: double.infinity,
-                              decoration: BoxDecoration (
-                                color: Color(0xfff6d0d0),
-                                borderRadius: BorderRadius.circular(19.5553703308*fem),
-                              ),
-                              child: Center(
-                                // imgFVB (8:2248)
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  height: 39.11*fem,
-                                  child: Container(
-                                    decoration: BoxDecoration (
-                                      borderRadius: BorderRadius.circular(19.5553703308*fem),
-                                      image: DecorationImage (
-                                        fit: BoxFit.cover,
-                                        image: AssetImage (
-                                          'assets/images/img-bg-EKT.png',
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              // robertbacinsxeV (8:2245)
-                              margin: EdgeInsets.fromLTRB(0*fem, 4.14*fem, 129.49*fem, 0*fem),
-                              child: Text(
-                                'Robert Bacins',
-                                style: SafeGoogleFont (
-                                  'Nunito',
-                                  fontSize: 18*ffem,
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.3625*ffem/fem,
-                                  color: Color(0xff030229),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              // robertbacins4182com4xR (8:2243)
-                              margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 158.21*fem, 1.07*fem),
-                              child: Text(
-                                'robertbacins4182@.com',
-                                style: SafeGoogleFont (
-                                  'Nunito',
-                                  fontSize: 18*ffem,
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.3625*ffem/fem,
-                                  color: Color(0xff030229),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              // afs (8:2241)
-                              margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 75.98*fem, 1.07*fem),
-                              child: Text(
-                                '+33757005467',
-                                style: SafeGoogleFont (
-                                  'Nunito',
-                                  fontSize: 18*ffem,
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.3625*ffem/fem,
-                                  color: Color(0xff030229),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              // buttonVH3 (8:2237)
-                              margin: EdgeInsets.fromLTRB(0*fem, 1.3*fem, 91.26*fem, 2.61*fem),
-                              width: 86.04*fem,
-                              height: double.infinity,
-                              decoration: BoxDecoration (
-                                color: Color(0x195b92ff),
-                                borderRadius: BorderRadius.circular(33*fem),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Male',
-                                  style: SafeGoogleFont (
-                                    'Nunito',
-                                    fontSize: 16*ffem,
-                                    fontWeight: FontWeight.w400,
-                                    height: 1.3625*ffem/fem,
-                                    color: Color(0xff5b92ff),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Opacity(
-                              // menu96h (8:2233)
-                              opacity: 0.3,
-                              child: Container(
-                                margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 0.65*fem),
-                                width: 18.25*fem,
-                                height: 4.56*fem,
-                                child: Image.asset(
-                                  'assets/images/menu-fRb.png',
-                                  width: 18.25*fem,
-                                  height: 4.56*fem,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      // bg2gH (10:7)
-                      left: 0*fem,
-                      top: 455*fem,
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(26.07*fem, 19.56*fem, 39.11*fem, 19.56*fem),
-                        width: 1119.87*fem,
-                        height: 78.22*fem,
-                        decoration: BoxDecoration (
-                          color: Color(0xffffffff),
-                          borderRadius: BorderRadius.circular(10*fem),
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              // imgbgV45 (10:22)
-                              margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 14.34*fem, 0*fem),
-                              width: 39.11*fem,
-                              height: double.infinity,
-                              decoration: BoxDecoration (
-                                color: Color(0xfff6d0d0),
-                                borderRadius: BorderRadius.circular(19.5553703308*fem),
-                              ),
-                              child: Center(
-                                // imgbN1 (10:24)
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  height: 39.11*fem,
-                                  child: Container(
-                                    decoration: BoxDecoration (
-                                      borderRadius: BorderRadius.circular(19.5553703308*fem),
-                                      image: DecorationImage (
-                                        fit: BoxFit.cover,
-                                        image: AssetImage (
-                                          'assets/images/img-bg-8Ro.png',
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              // robertbacinsTv1 (10:21)
-                              margin: EdgeInsets.fromLTRB(0*fem, 4.14*fem, 129.49*fem, 0*fem),
-                              child: Text(
-                                'Robert Bacins',
-                                style: SafeGoogleFont (
-                                  'Nunito',
-                                  fontSize: 18*ffem,
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.3625*ffem/fem,
-                                  color: Color(0xff030229),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              // robertbacins4182comxbs (10:19)
-                              margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 158.21*fem, 1.07*fem),
-                              child: Text(
-                                'robertbacins4182@.com',
-                                style: SafeGoogleFont (
-                                  'Nunito',
-                                  fontSize: 18*ffem,
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.3625*ffem/fem,
-                                  color: Color(0xff030229),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              // qvZ (10:17)
-                              margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 75.98*fem, 1.07*fem),
-                              child: Text(
-                                '+33757005467',
-                                style: SafeGoogleFont (
-                                  'Nunito',
-                                  fontSize: 18*ffem,
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.3625*ffem/fem,
-                                  color: Color(0xff030229),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              // buttonxEV (10:13)
-                              margin: EdgeInsets.fromLTRB(0*fem, 1.3*fem, 91.26*fem, 2.61*fem),
-                              width: 86.04*fem,
-                              height: double.infinity,
-                              decoration: BoxDecoration (
-                                color: Color(0x195b92ff),
-                                borderRadius: BorderRadius.circular(33*fem),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Male',
-                                  style: SafeGoogleFont (
-                                    'Nunito',
-                                    fontSize: 16*ffem,
-                                    fontWeight: FontWeight.w400,
-                                    height: 1.3625*ffem/fem,
-                                    color: Color(0xff5b92ff),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Opacity(
-                              // menu1Tf (10:9)
-                              opacity: 0.3,
-                              child: Container(
-                                margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 0.65*fem),
-                                width: 18.25*fem,
-                                height: 4.56*fem,
-                                child: Image.asset(
-                                  'assets/images/menu-CM7.png',
-                                  width: 18.25*fem,
-                                  height: 4.56*fem,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      // bgVNq (8:2250)
-                      left: 0*fem,
-                      top: 258.1308898926*fem,
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(26.07*fem, 19.56*fem, 39.11*fem, 19.56*fem),
-                        width: 1119.87*fem,
-                        height: 78.22*fem,
-                        decoration: BoxDecoration (
-                          color: Color(0xffffffff),
-                          borderRadius: BorderRadius.circular(10*fem),
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              // imgbgYc1 (8:2254)
-                              margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 14.34*fem, 0*fem),
-                              width: 39.11*fem,
-                              height: double.infinity,
-                              decoration: BoxDecoration (
-                                color: Color(0xffcbeaf0),
-                                borderRadius: BorderRadius.circular(19.5553703308*fem),
-                              ),
-                              child: Center(
-                                // imgGH7 (8:2256)
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  height: 39.11*fem,
-                                  child: Container(
-                                    decoration: BoxDecoration (
-                                      borderRadius: BorderRadius.circular(19.5553703308*fem),
-                                      image: DecorationImage (
-                                        image: AssetImage (
-                                          'assets/images/img-bg-iG9.png',
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              // shelbygoodeNqw (8:2253)
-                              margin: EdgeInsets.fromLTRB(0*fem, 4.14*fem, 128.49*fem, 0*fem),
-                              child: Text(
-                                'Shelby Goode',
-                                style: SafeGoogleFont (
-                                  'Nunito',
-                                  fontSize: 18*ffem,
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.3625*ffem/fem,
-                                  color: Color(0xff030229),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              // shelbygoode481gmailcomfq3 (8:2264)
-                              margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 121.21*fem, 1.07*fem),
-                              child: Text(
-                                'shelbygoode481@gmail.com',
-                                style: SafeGoogleFont (
-                                  'Nunito',
-                                  fontSize: 18*ffem,
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.3625*ffem/fem,
-                                  color: Color(0xff030229),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              // NUZ (8:2262)
-                              margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 75.98*fem, 1.07*fem),
-                              child: Text(
-                                '+33757005467',
-                                style: SafeGoogleFont (
-                                  'Nunito',
-                                  fontSize: 18*ffem,
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.3625*ffem/fem,
-                                  color: Color(0xff030229),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              // buttontSu (8:2265)
-                              margin: EdgeInsets.fromLTRB(0*fem, 1.3*fem, 79.53*fem, 2.61*fem),
-                              width: 97.78*fem,
-                              height: double.infinity,
-                              decoration: BoxDecoration (
-                                border: Border.all(color: Color(0x19fff4f0)),
-                                color: Color(0x19ff8f6b),
-                                borderRadius: BorderRadius.circular(33*fem),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Female',
-                                  style: SafeGoogleFont (
-                                    'Nunito',
-                                    fontSize: 16*ffem,
-                                    fontWeight: FontWeight.w400,
-                                    height: 1.3625*ffem/fem,
-                                    color: Color(0xffff8f6b),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Opacity(
-                              // menuYnM (8:2257)
-                              opacity: 0.3,
-                              child: Container(
-                                margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 0.65*fem),
-                                width: 18.25*fem,
-                                height: 4.56*fem,
-                                child: Image.asset(
-                                  'assets/images/menu-wff.png',
-                                  width: 18.25*fem,
-                                  height: 4.56*fem,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      // table1e4h (8:2268)
-                      left: 0*fem,
-                      top: 166.8724975586*fem,
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(26.07*fem, 19.56*fem, 39.11*fem, 19.56*fem),
-                        width: 1119.87*fem,
-                        height: 78.22*fem,
-                        decoration: BoxDecoration (
-                          color: Color(0xffffffff),
-                          borderRadius: BorderRadius.circular(10*fem),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Color(0x11030229),
-                              offset: Offset(1*fem, 17*fem),
-                              blurRadius: 22*fem,
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              // imagebg48R (8:2272)
-                              margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 14.34*fem, 0*fem),
-                              width: 39.11*fem,
-                              height: double.infinity,
-                              decoration: BoxDecoration (
-                                color: Color(0xffe4e1fb),
-                                borderRadius: BorderRadius.circular(19.5553703308*fem),
-                              ),
-                              child: Center(
-                                // imageaMf (8:2274)
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  height: 39.11*fem,
-                                  child: Container(
-                                    decoration: BoxDecoration (
-                                      borderRadius: BorderRadius.circular(19.5553703308*fem),
-                                      image: DecorationImage (
-                                        image: AssetImage (
-                                          'assets/images/image-bg.png',
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              // johndeoVUd (8:2271)
-                              margin: EdgeInsets.fromLTRB(0*fem, 4.14*fem, 168.49*fem, 0*fem),
-                              child: Text(
-                                'John Deo',
-                                style: SafeGoogleFont (
-                                  'Nunito',
-                                  fontSize: 18*ffem,
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.3625*ffem/fem,
-                                  color: Color(0xff030229),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              // johndoe2211gmailcomp17 (8:2283)
-                              margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 149.21*fem, 1.07*fem),
-                              child: Text(
-                                'johndoe2211@gmail.com',
-                                style: SafeGoogleFont (
-                                  'Nunito',
-                                  fontSize: 18*ffem,
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.3625*ffem/fem,
-                                  color: Color(0xff030229),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              // XgD (8:2281)
-                              margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 75.98*fem, 1.07*fem),
-                              child: Text(
-                                '+33757005467',
-                                style: SafeGoogleFont (
-                                  'Nunito',
-                                  fontSize: 18*ffem,
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.3625*ffem/fem,
-                                  color: Color(0xff030229),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              // buttonFMK (8:2284)
-                              margin: EdgeInsets.fromLTRB(0*fem, 2.61*fem, 91.26*fem, 1.3*fem),
-                              width: 86.04*fem,
-                              height: double.infinity,
-                              decoration: BoxDecoration (
-                                color: Color(0x195b92ff),
-                                borderRadius: BorderRadius.circular(33*fem),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Male',
-                                  style: SafeGoogleFont (
-                                    'Nunito',
-                                    fontSize: 16*ffem,
-                                    fontWeight: FontWeight.w400,
-                                    height: 1.3625*ffem/fem,
-                                    color: Color(0xff5b92ff),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              // menu6Mw (8:2275)
-                              margin: EdgeInsets.fromLTRB(0*fem, 0.65*fem, 0*fem, 0*fem),
-                              width: 18.25*fem,
-                              height: 4.56*fem,
-                              child: Image.asset(
-                                'assets/images/menu-GAd.png',
-                                width: 18.25*fem,
-                                height: 4.56*fem,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    /*Positioned(
-                      // editdeletebZb (8:2287)
-                      left: 1062.5083007812*fem,
-                      top: 221.6275024414*fem,
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(13.04*fem, 13.04*fem, 13.04*fem, 13.04*fem),
-                        width: 143.41*fem,
-                        height: 102.99*fem,
-                        decoration: BoxDecoration (
-                          color: Color(0xffffffff),
-                          borderRadius: BorderRadius.circular(10*fem),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Color(0x19000000),
-                              offset: Offset(0*fem, 10*fem),
-                              blurRadius: 10*fem,
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              // edit2uo (8:2289)
-                              margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 6.52*fem),
-                              padding: EdgeInsets.fromLTRB(13.36*fem, 9.13*fem, 63.04*fem, 8.07*fem),
-                              width: double.infinity,
-                              decoration: BoxDecoration (
-                                color: Color(0x0c5b92ff),
-                                borderRadius: BorderRadius.circular(5*fem),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    // editKP7 (8:2292)
-                                    margin: EdgeInsets.fromLTRB(0*fem, 0.25*fem, 8.15*fem, 0*fem),
-                                    width: 9.78*fem,
-                                    height: 9.78*fem,
-                                    child: Image.asset(
-                                      'assets/images/edit.png',
-                                      width: 9.78*fem,
-                                      height: 9.78*fem,
-                                    ),
-                                  ),
-                                  Text(
-                                    // editct1 (8:2291)
-                                    'Edit',
-                                    style: SafeGoogleFont (
-                                      'Nunito',
-                                      fontSize: 13*ffem,
-                                      fontWeight: FontWeight.w400,
-                                      height: 1.3625*ffem/fem,
-                                      color: Color(0xff5b92ff),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              // deleteMKo (8:2296)
-                              padding: EdgeInsets.fromLTRB(13.36*fem, 9.13*fem, 47.04*fem, 8.07*fem),
-                              width: double.infinity,
-                              decoration: BoxDecoration (
-                                color: Color(0x0ce71d36),
-                                borderRadius: BorderRadius.circular(5*fem),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    // iconlybolddeleteFg5 (8:2298)
-                                    margin: EdgeInsets.fromLTRB(0*fem, 0.25*fem, 8.15*fem, 0*fem),
-                                    width: 9.78*fem,
-                                    height: 10.86*fem,
-                                    child: Image.asset(
-                                      'assets/images/iconly-bold-delete.png',
-                                      width: 9.78*fem,
-                                      height: 10.86*fem,
-                                    ),
-                                  ),
-                                  Text(
-                                    // deleteZRs (8:2303)
-                                    'Delete',
-                                    style: SafeGoogleFont (
-                                      'Nunito',
-                                      fontSize: 13*ffem,
-                                      fontWeight: FontWeight.w400,
-                                      height: 1.3625*ffem/fem,
-                                      color: Color(0xffe71d36),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),*/
-                    Positioned(
-                      // tableheadingVqK (8:2304)
-                      left: 26.0738525391*fem,
-                      top: 132.9764709473*fem,
-                      child: Container(
-                        width: 932.14*fem,
-                        height: 21*fem,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              // nameDFX (8:2305)
-                              margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 233.36*fem, 0*fem),
-                              height: double.infinity,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    // namekWM (8:2306)
-                                    margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 14.75*fem, 0*fem),
-                                    child: Text(
-                                      'Name',
-                                      style: SafeGoogleFont (
-                                        'Nunito',
-                                        fontSize: 15*ffem,
-                                        fontWeight: FontWeight.w400,
-                                        height: 1.3625*ffem/fem,
-                                        color: Color(0xff030229),
-                                      ),
-                                    ),
-                                  ),
-                                  Opacity(
-                                    // arrowdown2TvZ (8:2307)
-                                    opacity: 0.7,
-                                    child: Container(
-                                      margin: EdgeInsets.fromLTRB(0*fem, 1.6*fem, 0*fem, 0*fem),
-                                      width: 7.82*fem,
-                                      height: 6.52*fem,
-                                      child: Image.asset(
-                                        'assets/images/arrow-down-2.png',
-                                        width: 7.82*fem,
-                                        height: 6.52*fem,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              // emailYqX (8:2309)
-                              margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 297.24*fem, 0*fem),
-                              height: double.infinity,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    // emailfv9 (8:2312)
-                                    margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 14.15*fem, 0*fem),
-                                    child: Text(
-                                      'Email',
-                                      style: SafeGoogleFont (
-                                        'Nunito',
-                                        fontSize: 15*ffem,
-                                        fontWeight: FontWeight.w400,
-                                        height: 1.3625*ffem/fem,
-                                        color: Color(0xff030229),
-                                      ),
-                                    ),
-                                  ),
-                                  Opacity(
-                                    // arrowdown3b37 (8:2310)
-                                    opacity: 0.7,
-                                    child: Container(
-                                      margin: EdgeInsets.fromLTRB(0*fem, 1.6*fem, 0*fem, 0*fem),
-                                      width: 7.82*fem,
-                                      height: 6.52*fem,
-                                      child: Image.asset(
-                                        'assets/images/arrow-down-3.png',
-                                        width: 7.82*fem,
-                                        height: 6.52*fem,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              // phonenumbergKT (8:2313)
-                              margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 80.83*fem, 0*fem),
-                              height: double.infinity,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    // phonenumberntH (8:2316)
-                                    margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 18.33*fem, 0*fem),
-                                    child: Text(
-                                      'Phone number',
-                                      style: SafeGoogleFont (
-                                        'Nunito',
-                                        fontSize: 15*ffem,
-                                        fontWeight: FontWeight.w400,
-                                        height: 1.3625*ffem/fem,
-                                        color: Color(0xff030229),
-                                      ),
-                                    ),
-                                  ),
-                                  Opacity(
-                                    // arrowdown46e5 (8:2314)
-                                    opacity: 0.7,
-                                    child: Container(
-                                      margin: EdgeInsets.fromLTRB(0*fem, 1.6*fem, 0*fem, 0*fem),
-                                      width: 7.82*fem,
-                                      height: 6.52*fem,
-                                      child: Image.asset(
-                                        'assets/images/arrow-down-4.png',
-                                        width: 7.82*fem,
-                                        height: 6.52*fem,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              // genderyxm (8:2317)
-                              height: double.infinity,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    // gender8qf (8:2320)
-                                    margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 15.18*fem, 0*fem),
-                                    child: Text(
-                                      'Gender',
-                                      style: SafeGoogleFont (
-                                        'Nunito',
-                                        fontSize: 15*ffem,
-                                        fontWeight: FontWeight.w400,
-                                        height: 1.3625*ffem/fem,
-                                        color: Color(0xff030229),
-                                      ),
-                                    ),
-                                  ),
-                                  Opacity(
-                                    // arrowdown5rFs (8:2318)
-                                    opacity: 0.7,
-                                    child: Container(
-                                      margin: EdgeInsets.fromLTRB(0*fem, 1.6*fem, 0*fem, 0*fem),
-                                      width: 7.82*fem,
-                                      height: 6.52*fem,
-                                      child: Image.asset(
-                                        'assets/images/arrow-down-5.png',
-                                        width: 7.82*fem,
-                                        height: 6.52*fem,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      // hedingbuttonLgq (8:2321)
-                      left: 0*fem,
-                      top: 39.110748291*fem,
-                      child: Container(
-                        width: 1118.57*fem,
-                        height: 54.76*fem,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              // alumnilistFYu (8:2323)
-                              margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 775.46*fem, 6.11*fem),
-                              child: Text(
-                                'Alumni List',
-                                style: SafeGoogleFont (
-                                  'Nunito',
-                                  fontSize: 24*ffem,
-                                  fontWeight: FontWeight.w700,
-                                  height: 1.3625*ffem/fem,
-                                  color: Color(0xff030229),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              // bgmXF (8:2325)
-                              padding: EdgeInsets.fromLTRB(26.07*fem, 17.04*fem, 56.96*fem, 12.72*fem),
-                              height: double.infinity,
-                              decoration: BoxDecoration (
-                                color: Color(0xff605bff),
-                                borderRadius: BorderRadius.circular(10*fem),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    // plusUAm (8:2329)
-                                    margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 21.04*fem, 4.32*fem),
-                                    width: 13.04*fem,
-                                    height: 13.04*fem,
-                                    child: Image.asset(
-                                      'assets/images/plus.png',
-                                      width: 13.04*fem,
-                                      height: 13.04*fem,
-                                    ),
-                                  ),
-                                  Text(
-                                    // addalumniytD (8:2328)
-                                    'Add Alumni',
-                                    style: SafeGoogleFont (
-                                      'Nunito',
-                                      fontSize: 18*ffem,
-                                      fontWeight: FontWeight.w400,
-                                      height: 1.3625*ffem/fem,
-                                      color: Color(0xffffffff),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+                SizedBox(height:height/32.55),
+
+              ],
+            ),
           ),
         ),
-      ),
+      );
+  }
+
+  ///Permission update function
+  updatefunction() async {
+
+    print("Lists -------------------------------- document Id");
+    print(PermissionLis);
+    print(Userdocid);
+
+    FirebaseFirestore.instance.collection("AdminUser").doc(Userdocid).update({
+      "permission":PermissionLis
+    });
+
+  }
+
+  successpopuop(name) {
+    double width=MediaQuery.of(context).size.width;
+    double height=MediaQuery.of(context).size.height;
+    double baseWidth = 1920;
+    double fem = MediaQuery.of(context).size.width / baseWidth;
+    double ffem = fem * 0.97;
+
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return Container(
+          margin: EdgeInsets.only(
+              left: width / 3.268,
+              right: width / 3.845,
+              top: height / 4.106,
+              bottom: height / 4.106),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: const Color(0xffFFFFFF),
+          ),
+          child: Column(
+            children: [
+              SizedBox(
+                height: height / 16.425,
+              ),
+              SizedBox(
+                height: height / 3.750,
+                width: width / 11.383,
+                child: Lottie.asset("assets/Succes animation.json"),
+              ),
+              SizedBox(
+                height: height / 54.75,
+              ),
+              KText( text:name,style:SafeGoogleFont (
+                    'Poppins',
+                    fontWeight: FontWeight.w700,
+                  )
+              ),
+              SizedBox(
+                height: height / 82.1250,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  //cancel button
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      height: height / 18.464,
+                      width: width / 11.383,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(5)),
+                      child: Center(
+                          child: KText(
+                              text:"Cancel",
+                              style:SafeGoogleFont (
+                            'Poppins',
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white
+                          )
+                          )),
+                    ),
+                  ),
+                  SizedBox(
+                    width: width / 34.15,
+                  ),
+
+                  //okay button
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+
+                    },
+                    child: Container(
+                      height: height / 18.464,
+                      width: width / 11.383,
+                      decoration: BoxDecoration(
+                          color: Color(0xff5D5FEF),
+                          borderRadius: BorderRadius.circular(5)),
+                      child: Center(
+                          child: KText(
+                            text: "Okay",
+                            style: SafeGoogleFont (
+                              'Poppins',
+                              fontSize: 19*ffem,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white
+                            ),
+                          )),
+                    ),
+                  ),
+                  SizedBox(
+                    width: width / 34.15,
+                  )
+                ],
+              )
+            ],
+          ),
+        );
+      },
     );
   }
+
+  setthevalue(value) async {
+    print("Entereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+    setState(() {
+      PermissionLis.clear();
+       dashboard = false;
+       userManagement = false;
+       reports = false;
+       users = false;
+       gallery = false;
+        events= false;
+        news= false;
+        message= false;
+        setting= false;
+    });
+    var document = await FirebaseFirestore.instance.collection("AdminUser").where("username",isEqualTo:value).get();
+    for(int j=0;j<document.docs.length;j++){
+      setState(() {
+        Userdocid=document.docs[j].id;
+      });
+      print(Userdocid);
+      print(PermissionLis);
+      for(int i=0;i<document.docs[j]['permission'].length;i++){
+        if(document.docs[j]['permission'][i]=="dashboard"){
+          setState(() {
+            dashboard=true;
+            PermissionLis.add("dashboard");
+          });
+        }
+        if(document.docs[j]['permission'][i]=="userManagement"){
+          setState(() {
+            userManagement=true;
+            PermissionLis.add("userManagement");
+          });
+        }
+        if(document.docs[j]['permission'][i]=="reports"){
+          setState(() {
+            reports=true;
+            PermissionLis.add("reports");
+          });
+        }
+        if(document.docs[j]['permission'][i]=="users"){
+          setState(() {
+            users=true;
+            PermissionLis.add("users");
+          });
+        }
+        if(document.docs[j]['permission'][i]=="gallery"){
+          setState(() {
+            gallery=true;
+            PermissionLis.add("gallery");
+          });
+        }
+        if(document.docs[j]['permission'][i]=="events"){
+          setState(() {
+            events=true;
+            PermissionLis.add("events");
+          });
+        }
+        if(document.docs[j]['permission'][i]=="news"){
+          setState(() {
+            news=true;
+            PermissionLis.add("news");
+          });
+        }
+        if(document.docs[j]['permission'][i]=="message"){
+          setState(() {
+            message=true;
+            PermissionLis.add("message");
+          });
+        }
+        if(document.docs[j]['permission'][i]=="setting"){
+          setState(() {
+            setting=true;
+            PermissionLis.add("setting");
+          });
+        }
+      }
+    }
+  }
+
+  ///delete popup
+  String deletefile="https://assets5.lottiefiles.com/packages/lf20_tqsLQJ3Q73.json";
+
+  _deletepopup(docid){
+    double width=MediaQuery.of(context).size.width;
+    double height=MediaQuery.of(context).size.height;
+    double baseWidth = 1920;
+    double fem = MediaQuery.of(context).size.width / baseWidth;
+    double ffem = fem * 0.97;
+    showDialog(context: context, builder:(context) {
+      return Padding(
+        padding:  EdgeInsets.only(top: height/4.34,bottom: height/4.34,left: width/3.9028,right:width/3.9028),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25)
+          ),
+          child: Scaffold(
+            backgroundColor: Color(0xffFFFFFF),
+            body:
+            Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                   SizedBox(height:height/21.7),
+                  KText( text:"Are You Sure Want to Delete",style:
+                  SafeGoogleFont (
+                    'Poppins',
+                    fontSize: 19*ffem,
+                    fontWeight: FontWeight.w700,
+                  ),),
+
+                   SizedBox(height:height/32.55),
+
+                  SizedBox(
+                    height:height/3.6166,
+                    width:width/7.5888,
+                    child: Lottie.network(deletefile),
+                  ),
+
+                   SizedBox(height:height/32.55),
+
+                  InkWell(
+                    onTap: (){
+                      deletedocument(docid);
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      height:height/16.275,
+                      width:width/7.588,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          color: const Color(0xff5D5FEF)
+                      ),
+                      child: Center(
+                        child: KText( text:"Okay",style:
+                        SafeGoogleFont (
+                          'Poppins',
+                          fontSize: 19*ffem,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white
+                        ),),
+                      ),
+                    ),
+                  )
+
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    },);
+  }
+
+  ///delete document
+  deletedocument(id){
+    FirebaseFirestore.instance.collection("AdminUser").doc(id).delete();
+    mangementpermision();
+  }
+
+  ///create document function
+  documentcreatfunc(){
+    FirebaseFirestore.instance.collection("AdminUser").doc().set({
+      "Type":Authusertype,
+      "password":passWord.text,
+      "permission":[],
+      "username":userName.text,
+      "timestamp":DateTime.now().millisecondsSinceEpoch
+    });
+    setState(() {
+      Authusertype="admin";
+      passWord.clear();
+      userName.clear();
+    });
+    mangementpermision();
+    Navigator.pop(context);
+    successpopuop("New User Add Successfully....");
+
+  }
+
+
+  adduserdialogBox(){
+    double width=MediaQuery.of(context).size.width;
+    double height=MediaQuery.of(context).size.height;
+    double baseWidth = 1920;
+    double fem = MediaQuery.of(context).size.width / baseWidth;
+    double ffem = fem * 0.97;
+    return
+      showDialog(
+        barrierDismissible: false,
+        barrierColor: Colors.transparent,
+        context: context, builder:(context) {
+        return
+          StatefulBuilder(builder: (context, setState) {
+            return Form(
+              key: _formKey,
+              child: Padding(
+                padding:  EdgeInsets.only(top: height/6.51,bottom: height/6.51,left: width/3.9028,right:width/3.9028),
+                child: Material(
+                  elevation: 10,
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  child: Padding(
+                    padding:  EdgeInsets.symmetric(
+                      vertical: height/32.55,
+                        horizontal: width/68.3
+                    ),
+                    child: SizedBox(
+                      width: width/2.732,
+                      child: Center(
+                        child: Column(
+                          children: [
+                            KText( text:"Add New User",style:
+                            SafeGoogleFont (
+                              'Poppins',
+                              fontSize: 19*ffem,
+                              fontWeight: FontWeight.w700,
+                            ),),
+
+                            SizedBox(
+                              child:
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+
+                                  KText(
+                                    text:"User Name",
+                                    style:
+                                    SafeGoogleFont (
+                                      'Poppins',
+                                      fontSize: 19*ffem,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  SizedBox(height: height/41.143,),
+
+                                  Container(
+                                    width: width / 3.0,
+                                    height: height / 14.42,
+                                    //color: Color(0xffDDDEEE),
+                                    decoration: BoxDecoration(
+                                        color: const Color(0xffDDDEEE),
+                                        borderRadius: BorderRadius.circular(4)),
+                                    child: TextFormField(
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(RegExp(r"[a-z0-9-@ ,.]+|\s")),
+                                        // FilteringTextInputFormatter.allow(RegExp("[a-z]")),
+                                      ],
+                                      controller: userName,
+                                      keyboardType: TextInputType.multiline,
+                                      maxLines: null,
+                                      style: GoogleFonts.poppins(
+                                          fontSize: width / 106.6),
+                                      decoration: InputDecoration(
+                                        hintText: "Type a User Name",
+                                        contentPadding: EdgeInsets.only(
+                                            left: width / 68.3,
+                                            bottom: height / 82.125),
+                                        border: InputBorder.none,
+                                      ),
+                                      validator: (value) => value!.isEmpty?"Field is Empty":null,
+                                    ),
+                                  ),
+                                ],
+                              ),),
+                            SizedBox(height:height/45.5),
+
+                            SizedBox(
+                              child:
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+
+                                  KText(
+                                    text:"Password",
+                                    style:
+                                    SafeGoogleFont (
+                                      'Poppins',
+                                      fontSize: 19*ffem,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  SizedBox(height: height/41.143,),
+
+                                  Container(
+                                    width: width / 3.0,
+                                    height: height / 14.42,
+                                    //color: Color(0xffDDDEEE),
+                                    decoration: BoxDecoration(
+                                        color: const Color(0xffDDDEEE),
+                                        borderRadius: BorderRadius.circular(4)),
+                                    child: TextFormField(
+                                        controller: passWord,
+                                        keyboardType: TextInputType.multiline,
+                                        maxLines: null,
+                                        style: GoogleFonts.poppins(
+                                            fontSize: width / 106.6),
+                                        decoration: InputDecoration(
+                                          hintText: "Type a Password",
+                                          contentPadding: EdgeInsets.only(
+                                              left: width / 68.3,
+                                              bottom: height / 82.125),
+                                          border: InputBorder.none,
+                                        ),
+                                        validator: (value){
+                                          if(value!.isEmpty){
+                                            return  "Field is Empty";
+                                          }
+                                          if(value!.isNotEmpty){
+                                            if(value.length<6){
+                                              return  "Please fill the Password";
+                                            }
+                                          }
+                                        }
+
+                                    ),
+                                  ),
+                                ],
+                              ),),
+                            SizedBox(height:height/45.5),
+                            KText(
+                              text:  "( Hint : User Name Allows Only Email Address and Password is Minimum 6 Characters )",
+                              style:
+                              SafeGoogleFont (
+                                'Poppins',
+                                fontSize: 19*ffem,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            SizedBox(height:height/45.5),
+                            Row(
+                              children: [
+                                SizedBox(width:85),
+                                KText( text:"Select the User Type",style:
+                                SafeGoogleFont (
+                                  'Poppins',
+                                  fontSize: 19*ffem,
+                                  fontWeight: FontWeight.w700,
+                                ),),
+                              ],
+                            ),
+
+                            SizedBox(
+                              height:height/10.85,
+                              width:width/2.2766,
+
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width:width/9.1066,
+                                    child: RadioListTile(
+                                      title:  KText( text:"Admin",style: SafeGoogleFont (
+                                        'Poppins',
+                                        fontSize: 19*ffem,
+                                        fontWeight: FontWeight.w700,
+                                      ),),
+                                      value: "admin",
+                                      groupValue: Authusertype,
+                                      onChanged: (value){
+                                        setState(() {
+                                          Authusertype = value.toString();
+                                        });
+                                      },
+                                    ),
+                                  ),
+
+                                  SizedBox(
+                                    width:width/8.5375,
+                                    child: RadioListTile(
+                                      title:  KText( text:"Staff", style:SafeGoogleFont (
+                                        'Poppins',
+                                        fontSize: 19*ffem,
+                                        fontWeight: FontWeight.w700,
+                                      ),),
+                                      value: "staff",
+                                      groupValue: Authusertype,
+                                      onChanged: (value){
+                                        setState(() {
+                                          Authusertype = value.toString();
+                                        });
+                                      },
+                                    ),
+                                  ),
+
+                                  SizedBox(
+                                    width:width/8.5375,
+                                    child: RadioListTile(
+                                      title:  KText( text:"Others",style: SafeGoogleFont (
+                                        'Poppins',
+                                        fontSize: 19*ffem,
+                                        fontWeight: FontWeight.w700,
+                                      ),),
+                                      value: "others",
+                                      groupValue: Authusertype,
+                                      onChanged: (value){
+                                        setState(() {
+                                          Authusertype = value.toString();
+                                        });
+                                      },
+                                    ),
+                                  ),
+
+
+                                ],
+                              ),
+                            ),
+                            SizedBox(height:height/40.5),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                InkWell(
+                                  onTap: (){
+                                    setState(() {
+                                      Authusertype="admin";
+                                      passWord.clear();
+                                      userName.clear();
+                                    });
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                      width: width/11.3833,
+                                      height: height/17.1315,
+                                      decoration: BoxDecoration(
+                                          color: Color(0xffFFFFFF),
+                                          borderRadius: BorderRadius.circular(8)
+                                      ),
+                                      child:  Center(child:  KText( text:"Cancel",style:  SafeGoogleFont (
+                                        'Poppins',
+                                        fontSize: 19*ffem,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.black
+                                      ),))
+                                  ),
+                                ),
+                                SizedBox(width:10),
+
+                                InkWell(
+                                  onTap: (){
+                                    if(_formKey.currentState!.validate()&&passWord.text.length>6){
+                                      documentcreatfunc();
+                                    }
+
+
+                                  },
+                                  child: Container(
+                                      width: width/11.3833,
+                                      height: height/17.1315,
+                                      decoration: BoxDecoration(
+                                          color: Color(0xff5D5FEF),
+                                          borderRadius: BorderRadius.circular(8)
+                                      ),
+                                      child:  Center(child:  KText( text:"Submit",style:  SafeGoogleFont (
+                                        'Poppins',
+                                        fontSize: 19*ffem,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white
+                                      ),))
+                                  ),
+                                ),
+                                SizedBox(width:10),
+                              ],
+                            ),
+
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },);
+      },);
+  }
+
 }

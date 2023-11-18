@@ -1,4 +1,6 @@
 import 'package:alumni_management_admin/Screens/demo.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'dart:ui';
@@ -17,6 +19,11 @@ class SigninPage extends StatefulWidget {
 }
 
 class _SigninPageState extends State<SigninPage> {
+
+  bool _success=false;
+  TextEditingController emailController=TextEditingController();
+  TextEditingController passwordController=TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1861;
@@ -255,6 +262,7 @@ class _SigninPageState extends State<SigninPage> {
                                 borderRadius: BorderRadius.circular(10*fem),
                               ),
                               child: TextField(
+                                controller: emailController,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   contentPadding: EdgeInsets.only(bottom: 20)
@@ -303,6 +311,7 @@ class _SigninPageState extends State<SigninPage> {
                                 borderRadius: BorderRadius.circular(10*fem),
                               ),
                               child: TextField(
+                                controller: passwordController,
                                 obscureText: true,
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
@@ -317,6 +326,9 @@ class _SigninPageState extends State<SigninPage> {
                                   color: Color(0xff030229),
 
                                 ),
+                                onSubmitted: (value){
+                                  _signInWithEmailAndPassword();
+                                },
                               ),
                             ),
                           ],
@@ -436,9 +448,7 @@ class _SigninPageState extends State<SigninPage> {
                         margin: EdgeInsets.fromLTRB(2*fem, 0*fem, 0*fem, 35.03*fem),
                         child: TextButton(
                           onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context)=>MyWidget())
-                            );
+                            _signInWithEmailAndPassword();
 
                           },
                           style: TextButton.styleFrom (
@@ -517,4 +527,78 @@ class _SigninPageState extends State<SigninPage> {
       ),
     );
   }
+
+
+  _signInWithEmailAndPassword() async {
+
+    bool result = false;
+    var auth=FirebaseAuth.instance;
+    final User? user = (await auth.signInWithEmailAndPassword(
+      email: emailController.text,
+      password: passwordController.text,
+    ).catchError((e){
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    })).user;
+    if (user != null) {
+      setState(() {
+        _success = true;
+        result = true;
+        // _userEmail = user.uid;
+        Docuemntcheckfunction();
+      });
+    } else {
+      setState(() {
+        _success = false;
+        result = false;
+      });
+    }
+    return result;
+  }
+
+  final snackBar = SnackBar(
+    backgroundColor: Colors.transparent,
+    elevation: 0,
+    content: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.black, width: 3),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x19000000),
+              spreadRadius: 2.0,
+              blurRadius: 8.0,
+              offset: Offset(2, 4),
+            )
+          ],
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.info_outline, color: Colors.black),
+            const Padding(
+              padding: EdgeInsets.only(left: 8.0),
+              child: Text('Invalid Credentials !!', style: TextStyle(color: Colors.black)),
+            ),
+            const Spacer(),
+            TextButton(onPressed: () => debugPrint("Undid"), child: Text("Undo"))
+          ],
+        )
+    ),
+  );
+
+  Docuemntcheckfunction()async{
+    var data=await FirebaseFirestore.instance.collection("AdminUser").get();
+    for(int i=0;i<data.docs.length;i++){
+      if(data.docs[i]['username']==emailController.text && data.docs[i]['password']==passwordController.text){
+        print(data.docs[i]['Type']);
+        print(data.docs[i]['username']);
+        print(data.docs[i]['password']);
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyWidget(Authusertype:data.docs[i]['username']),));
+      }
+    }
+
+
+  }
+
 }

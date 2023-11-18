@@ -1,11 +1,27 @@
 import 'package:alumni_management_admin/Screens/Dashboard.dart';
 import 'package:alumni_management_admin/Screens/usersmanagment.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
+
+import '../Models/Language_Model.dart';
+import '../utils.dart';
+import 'Events_Screen.dart';
+import 'Gallery_Screen.dart';
+import 'Message_Screen.dart';
+import 'News_Screen.dart';
+import 'Reports_Screen.dart';
+import 'Setting_Screen.dart';
+import 'Signin.dart';
+import 'Users_Screen.dart';
 
 
-List<bool> isSelected = [true, false, false, false, false,false, false, false, false,];
+List<bool> isSelected = [true, false, false, false, false,false, false, false, false,false,];
 List<NavElement> navElements = [
+  NavElement(),
   NavElement(),
   NavElement(),
   NavElement(),
@@ -22,6 +38,7 @@ List<String> texts = [
   'Reports',
   'Users',
   'Gallery',
+  'Events',
   'News ',
   'Messages',
   'Setting',
@@ -33,6 +50,7 @@ List<IconData> icons = [
   Icons.auto_graph_rounded,
   Icons.person_outlined,
   Icons.image_outlined,
+  Icons.event,
   Icons.newspaper_sharp,
   Icons.message,
   Icons.settings,
@@ -40,15 +58,17 @@ List<IconData> icons = [
 ];
 
 class MyWidget extends StatefulWidget {
-  const MyWidget({Key ?key}) : super(key: key);
+  String?Authusertype;
+   MyWidget({this.Authusertype});
 
   @override
   _MyWidgetState createState() => _MyWidgetState();
 }
 
 class _MyWidgetState extends State<MyWidget> {
+
   void select(int n) {
-    for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < 10; i++) {
       if (i == n)
         isSelected[i] = true;
       else
@@ -83,62 +103,104 @@ class _MyWidgetState extends State<MyWidget> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20.0),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 14.0,
-                      ),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 15.0, top: 5.0, bottom: 5.0),
-                            child: Container(
-                                width: 45,
-                                height: 45,
-                                child: Image.asset("assets/dummy logo.png")),
-                          ),
-                          SizedBox(
-                            width: 8.0,
-                          ),
-                          Text("Alumni \nAssociation",style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 20
-                          ),)
+                  child: SingleChildScrollView(
+                    physics: ScrollPhysics(),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 14.0,
+                        ),
+                        Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 15.0, top: 5.0, bottom: 5.0),
+                              child: Container(
+                                  width: 45,
+                                  height: 45,
+                                  child: Image.asset("assets/dummy logo.png")),
+                            ),
+                            SizedBox(
+                              width: 8.0,
+                            ),
+                            KText(text:"Alumni \nAssociation",style:
+                            GoogleFonts.poppins(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20
+                            ),)
 
-                        ],
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: navElements
-                            .map(
-                              (e) => NavElement(
-                            index: navElements.indexOf(e),
-                            text: texts[navElements.indexOf(e)],
-                            icon: icons[navElements.indexOf(e)],
-                            active: isSelected[navElements.indexOf(e)],
-                            onTap: () {
-                              setState(() {
-                                select(navElements.indexOf(e));
-                                if(navElements.indexOf(e)==0){
-                                  setState(() {
-                                    pages=DashBoard();
-                                  });
-                                }
-                                if(navElements.indexOf(e)==1){
-                                  setState(() {
-                                    pages=UsersManagement();
-                                  });
-                                }
-                              });
-                            },
-                          ),
-                        )
-                            .toList(),
-                      ),
-                    ],
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: navElements
+                              .map(
+                                (e) => NavElement(
+                              index: navElements.indexOf(e),
+                              text: texts[navElements.indexOf(e)],
+                              icon: icons[navElements.indexOf(e)],
+                              active: isSelected[navElements.indexOf(e)],
+                              onTap: () {
+                                setState(() {
+                                  select(navElements.indexOf(e));
+                                  if(navElements.indexOf(e)==0){
+                                    setState(() {
+                                      pages=DashBoard();
+                                    });
+                                  }
+                                  if(navElements.indexOf(e)==1){
+                                    setState(() {
+                                      pages=UsersManagement();
+                                    });
+                                  }
+                                  if(navElements.indexOf(e)==2){
+                                    setState(() {
+                                      pages=Reports_Screen();
+                                    });
+                                  }
+                                  if(navElements.indexOf(e)==3){
+                                    setState(() {
+                                      pages=Users_Screen();
+                                    });
+                                  }
+                                  if(navElements.indexOf(e)==4){
+                                    setState(() {
+                                      pages=Gallery_Screen();
+                                    });
+                                  }
+                                  if(navElements.indexOf(e)==5){
+                                    setState(() {
+                                      pages=Events_Screen();
+                                    });
+                                  }
+                                  if(navElements.indexOf(e)==6){
+                                    setState(() {
+                                      pages=News_Screen();
+                                    });
+                                  }
+                                  if(navElements.indexOf(e)==7){
+                                    setState(() {
+                                      pages=Message_Screen();
+                                    });
+                                  }
+                                  if(navElements.indexOf(e)==8){
+                                    setState(() {
+                                      pages=Setting_Screen();
+                                    });
+                                  }
+                                  if(navElements.indexOf(e)==9){
+                                    LogoutPopup();
+                                  }
+                                });
+                              },
+                            ),
+                          )
+                              .toList(),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -152,6 +214,127 @@ class _MyWidgetState extends State<MyWidget> {
       ),
     );
   }
+
+
+  LogoutPopup(){
+
+    showDialog(
+      barrierColor: Colors.transparent,
+      context: context, builder:(context) {
+      return ZoomIn(
+        duration: Duration(milliseconds: 300),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 150.0,bottom: 150,left: 350,right:350),
+          child: Material(
+            color: Colors.white,
+            shadowColor: Color(0xff245BCA),
+            borderRadius: BorderRadius.circular(8),
+            elevation: 10,
+            child: Container(
+
+              decoration: BoxDecoration(
+                color: Color(0xffFFFFFF),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Scaffold(
+                backgroundColor: Color(0xffFFFFFF),
+                body: Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height:30),
+                      KText(text:"Are You Sure Want to Logout",style:
+                      SafeGoogleFont (
+                          'Nunito',
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black,
+                        fontSize: 18
+
+                      )),
+
+                      const SizedBox(height:20),
+
+                      SizedBox(
+                        height:180,
+                        width:180,
+                        child: SvgPicture.asset("assets/Logout img.svg"),
+                      ),
+
+                      const SizedBox(height:20),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            splashColor: Colors.transparent,
+                            hoverColor:Colors.transparent,
+                            onTap: (){
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              height:40,
+                              width:180,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Center(
+                                child:KText(text:"Cancel",style:
+                                SafeGoogleFont (
+                                    'Nunito',
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black,
+                                    fontSize: 16
+
+                                )),
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: (){
+                              _signOut();
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              height:40,
+                              width:180,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  color:  Color(0xff5D5FEF)
+                              ),
+                              child: Center(
+                                child:KText(text:"Okay",
+                                style:
+                                SafeGoogleFont (
+                                  'Nunito',
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                  fontSize: 16
+
+                                ),),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    },);
+  }
+
+  _signOut()  async{
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => const SigninPage(),));
+
+  }
+
+
 }
 
 class NavElement extends StatefulWidget {
@@ -296,7 +479,7 @@ class _NavElementState extends State<NavElement> with TickerProviderStateMixin {
                           child: AnimatedOpacity(
                             duration: Duration(milliseconds: 375),
                             opacity: opacity,
-                            child: Text(
+                            child:KText(text:
                               widget.text!,
                               style: GoogleFonts.poppins(
                                 fontWeight: widget.active! ? FontWeight.w500: FontWeight.w500,
@@ -328,4 +511,5 @@ class _NavElementState extends State<NavElement> with TickerProviderStateMixin {
       ),
     );
   }
+
 }
