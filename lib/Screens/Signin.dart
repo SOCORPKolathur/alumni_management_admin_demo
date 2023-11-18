@@ -20,6 +20,7 @@ class SigninPage extends StatefulWidget {
 
 class _SigninPageState extends State<SigninPage> {
 
+  bool _showpassword=true;
   bool _success=false;
   TextEditingController emailController=TextEditingController();
   TextEditingController passwordController=TextEditingController();
@@ -312,11 +313,18 @@ class _SigninPageState extends State<SigninPage> {
                               ),
                               child: TextField(
                                 controller: passwordController,
-                                obscureText: true,
+                                obscureText: _showpassword,
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
                                     contentPadding: EdgeInsets.only(bottom: 20),
-                                  suffixIcon: Icon(Icons.remove_red_eye,size: 22,color:Color(0xff030229))
+                                  suffixIcon: InkWell(
+
+                                      onTap:(){
+                                        setState((){
+                                          _showpassword=!_showpassword;
+                                        });
+                                      },
+                                      child: Icon(Icons.remove_red_eye,size: 22,color:Color(0xff030229)))
                                 ),
                                 style: SafeGoogleFont (
                                   'Nunito',
