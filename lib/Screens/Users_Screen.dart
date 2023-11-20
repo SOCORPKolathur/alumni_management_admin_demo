@@ -1,10 +1,21 @@
+import 'dart:convert';
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cool_alert/cool_alert.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+import '../Constant_.dart';
 import '../Models/Language_Model.dart';
+import '../Models/Response_Model.dart';
+import '../StateModel.dart' as StatusModel;
 import '../utils.dart';
+import 'dart:html';
+import 'dart:html' as html;
+
 
 class Users_Screen extends StatefulWidget {
   const Users_Screen({super.key});
@@ -12,6 +23,241 @@ class Users_Screen extends StatefulWidget {
   @override
   State<Users_Screen> createState() => _Users_ScreenState();
 }
+const List<String> StateList = <String>[
+  "Select State",
+  "Andhra Pradesh",
+  "Arunachal Pradesh",
+  "Assam",
+  "Bihar",
+  "Chhattisgarh",
+  "Goa",
+  'Gujarat',
+  "Haryana",
+  "Himachal Pradesh",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Manipur",
+  "Meghalaya",
+  "Mizoram",
+  "Nagaland",
+  "Odisha",
+  "Punjab",
+  "Rajasthan",
+  "Sikkim",
+  "Tamil Nadu",
+  "Telangana",
+  "Tripura",
+  "Uttarakhand",
+  " Uttar Pradesh",
+  "West Bengal",
+];
+
+const List<String> coutryList=<String>[
+  'Select Country',
+   "Afghanistan",
+   "Albania"	,
+  	"Algeria"	,
+  	"Andorra"	,
+  	"Angola"	,
+  	"Antigua and Barbuda",
+  	"Argentina",
+  	"Armenia"	,
+  	"Australia",
+  	"Austria"	,
+    "Azerbaijan",
+    "Bahamas",
+    "Bahrain"	,
+    "Bangladesh",
+    "Barbados"	,
+    "Belarus"	,
+    "Belgium"	,
+    'Belize'	,
+  	"Bhutan"	,
+  	'Bolivia'	,
+  	'Bosnia and Herzegovina',
+  	'Botswana',
+  	'Brazil',
+  	'Brunei',
+  	'Bulgaria',
+    'Burkina Faso',
+  	'Burundi',
+  	"Côte d'Ivoire",
+    'Cabo Verde	',
+    'Cambodia',
+  	'Cameroon	',
+  	'Canada'	,
+  	'Central African Republic'	,
+  	'Chad'	,
+  	'Chile'	,
+  	'China'	,
+  	'Colombia'	,
+  	'Comoros',
+  	'Congo (Congo-Brazzaville)	',
+  	'Costa Rica	',
+  	'Croatia	',
+  	'Cuba	',
+  	'Cyprus	',
+   'Czechia (Czech Republic)',
+  	'Democratic Republic of the Congo'	,
+  	'Denmark'	,
+  	'Djibouti'	,
+  	'Dominica'	,
+  	'Dominican Republic',
+  	'Ecuador',
+  	'Egypt'	,
+  	'El Salvador',
+  	'Equatorial Guinea',
+  	'Eritrea	',
+  	'Estonia	',
+  	'Eswatini (Swaziland)	',
+  	'Ethiopia	',
+  	'Fiji	',
+  	'Finland	',
+  	'France	',
+  	'Gabon	',
+  	'Gambia	',
+  	'Georgia'	,
+  	'Germany'	,
+  	'Ghana'	,
+  	'Greece'	,
+  	'Grenada'	,
+  	'Guatemala'	,
+  	'Guinea'	,
+  	'Guinea-Bissau',
+  	'Guyana'	,
+  	'Haiti'	,
+  	'Holy See	',
+  	'Honduras'	,
+  	'Hungary'	,
+  	'Iceland'	,
+  	'India'	,
+  	'Indonesia'	,
+  	'Iran'	,
+  	'Iraq'	,
+  	'Ireland'	,
+  	'Israel'	,
+  	'Italy'	,
+  	'Jamaica'	,
+  	'Japan'	,
+  	'Jordan'	,
+  	'Kazakhstan'	,
+  	'Kenya',
+  	'Kiribati'	,
+  	'Kuwait'	,
+  	'Kyrgyzstan'	,
+  	'Laos'	,
+  	'Latvia'	,
+  	'Lebanon'	,
+  	'Lesotho'	,
+  	'Liberia'	,
+  	'Libya'	,
+  	'Liechtenstein'	,
+  	'Lithuania',
+  	'Luxembourg'	,
+  	'Madagascar'	,
+  	'Malawi'	,
+  	'Malaysia'	,
+  	'Maldives'	,
+  	'Mali'	,
+  	'Malta'	,
+  	'Marshall Islands	',
+  	'Mauritania',
+  	'Mauritius',
+  	'Mexico',
+  	'Micronesia',
+  	'Moldova',
+  	'Monaco',
+  	'Mongolia',
+  	'Montenegro',
+  	'Morocco'	,
+  	'Mozambique',
+  	'Myanmar (formerly Burma)',
+  	'Namibia',
+  	'Nauru'	,
+  	'Nepal',
+  	'Netherlands',
+  	'New Zealand',
+  	'Nicaragua',
+  	'Niger',
+  	'Nigeria',
+  	'North Korea',
+  	'North Macedonia',
+  	'Norway',
+  	'Oman',
+  	'Pakistan',
+  	'Palau',
+  	'Palestine State',
+  	'Panama',
+  	'Papua New Guinea',
+  	'Paraguay'	,
+  	'Peru'	,
+  	'Philippines'	,
+  	'Poland'	,
+  	'Portugal'	,
+  	'Qatar'	,
+  	'Romania'	,
+  	'Russia'	,
+  	'Rwanda'	,
+  	'Saint Kitts and Nevis	',
+  	'Saint Lucia	',
+  	'Saint Vincent and the Grenadines	',
+  	'Samoa'	,
+  	'San Marino	',
+  	'Sao Tome and Principe	',
+  	'Saudi Arabia	',
+  	'Senegal'	,
+  	'Serbia'	,
+  	'Seychelles	',
+  	'Sierra Leone	',
+  	'Singapore',
+  	'Slovakia'	,
+  	'Slovenia'	,
+  	'Solomon Islands	',
+  	'Somalia',
+  	'South Africa',
+  	'South Korea',
+  	'South Sudan',
+  	'Spain'	,
+  	'Sri Lanka'	,
+  	'Sudan'	,
+  	'Suriname'	,
+  	'Sweden'	,
+  	'Switzerland'	,
+  	'Syria'	,
+  	'Tajikistan'	,
+  	'Tanzania'	,
+  	'Thailand'	,
+  	'Timor-Leste'	,
+  	'Togo'	,
+  	'Tonga'	,
+  	'Trinidad and Tobago'	,
+  	'Tunisia'	,
+  	'Turkey'	,
+  	'Turkmenistan'	,
+  	'Tuvalu'	,
+  	'Uganda'	,
+  	'Ukraine'	,
+  	'United Arab Emirates',
+  	'United Kingdom	',
+  	'United States of America	',
+  	'Uruguay	',
+  	'Uzbekistan	',
+  	'Vanuatu	',
+  	'Venezuela	',
+  	'Vietnam	',
+  	'Yemen',
+  	'Zambia'	,
+  	'Zimbabwe',
+];
+
+const List<String> MaritalStatusList=[
+  'Marital Status',
+    'Yes',
+    'No'
+];
 
 class _Users_ScreenState extends State<Users_Screen> {
 
@@ -25,11 +271,17 @@ class _Users_ScreenState extends State<Users_Screen> {
 
 final _formkey=GlobalKey<FormState>();
 
+final RegExp _inputPattern = RegExp(r'^\d{4}\s\d{4}\s\d{4}$');
+  File? Url;
+  var Uploaddocument;
+  var Editimg;
+  String imgUrl="";
 
-
+  GlobalKey popmenukey = GlobalKey();
 TextEditingController firstNamecon=TextEditingController();
 TextEditingController middleNamecon=TextEditingController();
 TextEditingController lastNamecon=TextEditingController();
+TextEditingController dateofBirthcon=TextEditingController();
 TextEditingController gendercon=TextEditingController();
 TextEditingController alterEmailIdcon=TextEditingController();
 TextEditingController aadhaarNumbercon=TextEditingController();
@@ -37,20 +289,56 @@ TextEditingController phoneNumbercon=TextEditingController();
 TextEditingController mobileNumbercon=TextEditingController();
 TextEditingController emailIDcon=TextEditingController();
 TextEditingController adreesscon=TextEditingController();
-TextEditingController citycon=TextEditingController();
+TextEditingController citycon=TextEditingController(text:"Select City");
 TextEditingController pinCodecon=TextEditingController();
-TextEditingController statecon=TextEditingController();
-TextEditingController countrycon=TextEditingController();
+TextEditingController statecon=TextEditingController( text: "Select State");
+TextEditingController countrycon=TextEditingController(text:"Select Country");
+TextEditingController yearPassedcon=TextEditingController();
+TextEditingController subjectStremdcon=TextEditingController();
+TextEditingController classcon=TextEditingController();
+TextEditingController rollnocon=TextEditingController();
+TextEditingController lastvisitcon=TextEditingController();
+TextEditingController housecon=TextEditingController();
+TextEditingController statusmessagecon=TextEditingController();
+TextEditingController educationquvalificationcon=TextEditingController();
+TextEditingController additionalquvalificationcon=TextEditingController();
+TextEditingController occupationcon=TextEditingController();
+TextEditingController designationcon=TextEditingController();
+TextEditingController company_concerncon=TextEditingController();
+TextEditingController maritalStatuscon=TextEditingController(text:"Marital Status");
+TextEditingController spouseNamecon=TextEditingController();
+TextEditingController anniversaryDatecon=TextEditingController();
+TextEditingController no_of_childreancon=TextEditingController();
+
+
+  List usereditlist=[
+    "View",
+    "Edit",
+    "Delete",
+
+    // menuItem(
+    //     Name: "Edit",
+    //   widgets: Icon(Icons.edit)
+    // ),
+    // menuItem(
+    //     Name: "Delete",
+    //     widgets: Icon(Icons.delete)
+    // ),
+
+  ];
+
+
 
   @override
   Widget build(BuildContext context) {
     final double width=MediaQuery.of(context).size.width;
     final double height=MediaQuery.of(context).size.height;
+    Size size = MediaQuery.of(context).size;
     double baseWidth = 1920;
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
     return
-      UserEdit==false?
+      UserEdit!=false?
       FadeInRight(
       child: SingleChildScrollView(
         physics: const ScrollPhysics(),
@@ -109,8 +397,28 @@ TextEditingController countrycon=TextEditingController();
                                         width:100,
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(100),
-                                          color: Color(0xffDDDEEE)
+                                          color: Color(0xffDDDEEE),
+                                            image:
+                                            Uploaddocument!=null?
+                                            DecorationImage(
+                                              fit:BoxFit.cover,
+                                              image: MemoryImage(
+                                                Uint8List.fromList(
+                                                  base64Decode(Uploaddocument!
+                                                      .split(',')
+                                                      .last),
+                                                ),
+                                              ),
+                                            ):
+                                            Editimg!=null?
+                                            DecorationImage(
+                                                    fit:BoxFit.cover,
+                                                image: NetworkImage(Editimg)):
+                                            DecorationImage(
+                                                    fit:BoxFit.cover,
+                                                image: AssetImage(Constants().avator))
                                         ),
+
                                       ),
                                       SizedBox(width:15),
                                       Column(
@@ -129,30 +437,35 @@ TextEditingController countrycon=TextEditingController();
                                           SizedBox(height:5),
                                           Row(
                                             children: [
-                                              Container(
-                                                height:30,
-                                                width:80,
-                                               decoration: BoxDecoration(
-                                                 color: Color(0xffDDDEEE),
-                                                 border: Border.all(color: Color(0xff000000))
-                                               ),
-                                                child: Center(
-                                                  child:
-                                                  KText(
-                                                    text:  "Choose File",
-                                                    style: SafeGoogleFont (
-                                                      'Nunito',
-                                                      fontSize: 17*ffem,
-                                                      fontWeight: FontWeight.w600,
-                                                      height: 1.3625*ffem/fem,
-                                                      color: Color(0xff000000),
+                                              GestureDetector(
+                                                onTap:(){
+                                                  addImage(size);
+                                                },
+                                                child: Container(
+                                                  height:30,
+                                                  width:80,
+                                                 decoration: BoxDecoration(
+                                                   color: Color(0xffDDDEEE),
+                                                   border: Border.all(color: Color(0xff000000))
+                                                 ),
+                                                  child: Center(
+                                                    child:
+                                                    KText(
+                                                      text:  "Choose File",
+                                                      style: SafeGoogleFont (
+                                                        'Nunito',
+                                                        fontSize: 17*ffem,
+                                                        fontWeight: FontWeight.w600,
+                                                        height: 1.3625*ffem/fem,
+                                                        color: Color(0xff000000),
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
                                               SizedBox(width:5),
                                               KText(
-                                                text:  "No file chosen",
+                                                text:  Uploaddocument==null?"No file chosen":"File is Selected",
                                                 style: SafeGoogleFont (
                                                   'Nunito',
                                                   fontSize: 17*ffem,
@@ -173,8 +486,6 @@ TextEditingController countrycon=TextEditingController();
                                 SizedBox(
                                   width: 680,
                                 height:250,
-
-
                                   child:Column(
                                     children: [
 
@@ -206,16 +517,31 @@ TextEditingController countrycon=TextEditingController();
                                                     borderRadius: BorderRadius.circular(3)
                                                   ),
                                                   child:TextFormField(
+                                                    controller:firstNamecon,
+                                                    inputFormatters: [
+                                                      FilteringTextInputFormatter.allow(RegExp("[a-zA-Z ]")),
+                                                    ],
+                                                    maxLength: 45,
                                                     decoration: InputDecoration(
                                                       border: InputBorder.none,
+                                                      counterText: "",
                                                     ),
-                                                    validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                                    validator: (value){
+                                                      if( value!.isEmpty){
+                                                        return 'Field is required';
+                                                      }
+                                                      
+                                                    },
+                                                    onChanged: (val){
+                                                      _formkey.currentState!.validate();
+                                                    },
                                                   )
                                                 )
                                               ],
 
                                             ),
                                           ),
+
                                           SizedBox(
                                             height:60,
                                             child: Column(
@@ -240,16 +566,20 @@ TextEditingController countrycon=TextEditingController();
                                                         borderRadius: BorderRadius.circular(3)
                                                     ),
                                                     child:TextFormField(
+                                                      controller:middleNamecon,
+                                                      inputFormatters: [
+                                                        FilteringTextInputFormatter.allow(RegExp("[a-zA-Z ]")),
+                                                      ],
                                                       decoration: InputDecoration(
                                                         border: InputBorder.none,
                                                       ),
-                                                      validator: (value) => value!.isEmpty ? 'Field is required' : null,
                                                     )
                                                 )
                                               ],
 
                                             ),
                                           ),
+
                                           SizedBox(
                                             height:60,
                                             child: Column(
@@ -274,10 +604,19 @@ TextEditingController countrycon=TextEditingController();
                                                         borderRadius: BorderRadius.circular(3)
                                                     ),
                                                     child:TextFormField(
+                                                      controller:lastNamecon,
+                                                      inputFormatters: [
+                                                        FilteringTextInputFormatter.allow(RegExp("[a-zA-Z ]")),
+                                                      ],
+                                                      maxLength:45,
                                                       decoration: InputDecoration(
                                                         border: InputBorder.none,
+                                                        counterText: "",
                                                       ),
                                                       validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                                      onChanged: (val){
+                                                        _formkey.currentState!.validate();
+                                                      },
                                                     )
                                                 )
                                               ],
@@ -296,7 +635,7 @@ TextEditingController countrycon=TextEditingController();
                                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                                         children: [
 
-                                          ///drop down date of birth
+                                          ///d date of birth
                                           SizedBox(
                                             height:60,
                                             child: Column(
@@ -321,11 +660,35 @@ TextEditingController countrycon=TextEditingController();
                                                         borderRadius: BorderRadius.circular(3)
                                                     ),
                                                     child:TextFormField(
+                                                      controller:dateofBirthcon,
                                                       decoration: InputDecoration(
                                                         border: InputBorder.none,
                                                       ),
                                                       validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                    )
+                                                      readOnly: true,
+                                                      onTap: () async {
+                                                        DateTime? pickedDate = await showDatePicker(
+                                                            context: context,
+                                                            initialDate: DateTime.now(),
+                                                            firstDate: DateTime(1950),
+                                                            //DateTime.now() - not to allow to choose before today.
+                                                            lastDate: DateTime(2100));
+
+                                                        if (pickedDate != null) {
+                                                          //pickedDate output format => 2021-03-10 00:00:00.000
+                                                          String formattedDate =
+                                                          DateFormat('dd/MM/yyyy')
+                                                              .format(pickedDate);
+                                                          //formatted date output using intl package =>  2021-03-16
+                                                          setState(() {
+                                                            dateofBirthcon.text = formattedDate; //set output date to TextField value.
+                                                          });
+                                                        } else {}
+                                                        _formkey.currentState!.validate();
+                                                      },
+
+                                                    ),
+
                                                 )
                                               ],
 
@@ -357,10 +720,13 @@ TextEditingController countrycon=TextEditingController();
                                                         borderRadius: BorderRadius.circular(3)
                                                     ),
                                                     child:TextFormField(
+                                                      controller:gendercon,
+                                                      inputFormatters: [
+                                                        FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
+                                                      ],
                                                       decoration: InputDecoration(
                                                         border: InputBorder.none,
                                                       ),
-                                                      validator: (value) => value!.isEmpty ? 'Field is required' : null,
                                                     )
                                                 )
                                               ],
@@ -404,10 +770,13 @@ TextEditingController countrycon=TextEditingController();
                                                         borderRadius: BorderRadius.circular(3)
                                                     ),
                                                     child:TextFormField(
+                                                      controller:alterEmailIdcon,
+                                                      inputFormatters: [
+                                                        FilteringTextInputFormatter.allow(RegExp("[a-zA-Z@0-9]")),
+                                                      ],
                                                       decoration: InputDecoration(
                                                         border: InputBorder.none,
                                                       ),
-                                                      validator: (value) => value!.isEmpty ? 'Field is required' : null,
                                                     )
                                                 )
                                               ],
@@ -440,10 +809,38 @@ TextEditingController countrycon=TextEditingController();
                                                         borderRadius: BorderRadius.circular(3)
                                                     ),
                                                     child:TextFormField(
+                                                      controller:aadhaarNumbercon,
+                                                      maxLength: 14,
+                                                      inputFormatters: [
+                                                        FilteringTextInputFormatter.digitsOnly,
+                                                        TextInputFormatter.withFunction((oldValue, newValue) {
+                                                          final newString = newValue.text;
+
+                                                          if (_inputPattern.hasMatch(newString)) {
+                                                            return oldValue;
+                                                          }
+
+                                                          var formattedValue =
+                                                          newString.replaceAllMapped(RegExp(r'\d{4}'), (match) {
+                                                            return '${match.group(0)} ';
+                                                          });
+
+                                                          // Remove any trailing space
+                                                          if (formattedValue.endsWith(' ')) {
+                                                            formattedValue = formattedValue.substring(0, formattedValue.length - 1);
+                                                          }
+
+                                                          return TextEditingValue(
+                                                            text: formattedValue,
+                                                            selection: TextSelection.collapsed(offset: formattedValue.length),
+                                                          );
+                                                        }),
+                                                      ],
                                                       decoration: InputDecoration(
                                                         border: InputBorder.none,
+                                                        counterText: "",
                                                       ),
-                                                      validator: (value) => value!.isEmpty ? 'Field is required' : null,
+
                                                     )
                                                 )
                                               ],
@@ -523,10 +920,22 @@ TextEditingController countrycon=TextEditingController();
                                                       borderRadius: BorderRadius.circular(3)
                                                   ),
                                                   child:TextFormField(
+                                                    controller:phoneNumbercon,
+                                                    maxLength: 10,
+                                                    inputFormatters: [
+                                                      FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                                                    ],
                                                     decoration: InputDecoration(
                                                       border: InputBorder.none,
+                                                        counterText: ""
                                                     ),
-                                                    validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                                    validator: (value) {
+                                                       if(value!.isNotEmpty){
+                                                        if(value.length!=10){
+                                                          return 'Enter the Phone no correctly';
+                                                        }
+                                                      }
+                                                    },
                                                   )
                                               )
                                             ],
@@ -558,10 +967,20 @@ TextEditingController countrycon=TextEditingController();
                                                       borderRadius: BorderRadius.circular(3)
                                                   ),
                                                   child:TextFormField(
+                                                    controller:mobileNumbercon,
+                                                    inputFormatters: [
+                                                      FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                                                    ],
                                                     decoration: InputDecoration(
                                                       border: InputBorder.none,
                                                     ),
-                                                    validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                                    validator: (value) {
+                                                       if(value!.isNotEmpty){
+                                                        if(value.length!=10){
+                                                          return 'Enter the Mobile no correctly';
+                                                        }
+                                                      }
+                                                    },
                                                   )
                                               )
                                             ],
@@ -594,10 +1013,13 @@ TextEditingController countrycon=TextEditingController();
                                                       borderRadius: BorderRadius.circular(3)
                                                   ),
                                                   child:TextFormField(
+                                                    controller:emailIDcon,
+                                                    inputFormatters: [
+                                                      FilteringTextInputFormatter.allow(RegExp("[a-zA-Z@0-9]")),
+                                                    ],
                                                     decoration: InputDecoration(
                                                       border: InputBorder.none,
                                                     ),
-                                                    validator: (value) => value!.isEmpty ? 'Field is required' : null,
                                                   )
                                               )
                                             ],
@@ -637,10 +1059,16 @@ TextEditingController countrycon=TextEditingController();
                                                 borderRadius: BorderRadius.circular(3)
                                             ),
                                             child:TextFormField(
+                                              controller:adreesscon,
+                                              maxLines: null,
+                                              expands: true,
+                                              inputFormatters: [
+                                                FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
+                                              ],
                                               decoration: InputDecoration(
                                                 border: InputBorder.none,
                                               ),
-                                              validator: (value) => value!.isEmpty ? 'Field is required' : null,
+
                                             )
                                         )
                                       ],
@@ -657,6 +1085,88 @@ TextEditingController countrycon=TextEditingController();
                               child: Row(
 
                                 children: [
+                                  ///State Dropdown
+                                  SizedBox(
+                                    height:60,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        KText(
+                                          text: 'State *',
+                                          style: SafeGoogleFont (
+                                            'Nunito',
+                                            fontSize: 20*ffem,
+                                            fontWeight: FontWeight.w700,
+                                            height: 1.3625*ffem/fem,
+                                            color: Color(0xff000000),
+                                          ),
+                                        ),
+                                        SizedBox(height:6),
+                                        Container(
+                                            height:35,
+                                            width:240,
+                                            decoration: BoxDecoration(
+                                                color: const Color(0xffDDDEEE),
+                                                borderRadius: BorderRadius.circular(3)
+                                            ),
+                                            child:
+                                            DropdownButtonHideUnderline(
+                                              child: DropdownButtonFormField2<String>(
+                                                isExpanded: true,
+                                                isDense: true,
+                                                hint: Text(
+                                                  'Select State',
+                                                  style: SafeGoogleFont(
+                                                      'Nunito',
+                                                    fontSize: 20*ffem,
+                                                  ),
+                                                ),
+                                                items: StateList.map((String item) =>
+                                                    DropdownMenuItem<String>(
+                                                  value: item,
+                                                  child: Text(
+                                                    item,
+                                                    style:  SafeGoogleFont(
+                                                      'Nunito',
+                                                      fontSize: 20*ffem,
+                                                    ),
+                                                  ),
+                                                ))
+                                                    .toList(),
+                                                value: statecon.text,
+                                                validator: (value) {
+                                                    if(value=="Select State"){
+                                                      return 'Please Select the State';
+                                                    }
+                                                  },
+                                                onChanged: (String? value) {
+                                                  getCity(value.toString());
+                                                  setState(() {
+                                                    statecon.text = value!;
+                                                  });
+                                                  _formkey.currentState!.validate();
+
+                                                },
+                                                buttonStyleData:  ButtonStyleData(
+                                                  padding: EdgeInsets.symmetric(horizontal: width/22.5),
+                                                  height: height/18.9,
+                                                  width: width/2.571,
+                                                ),
+                                                menuItemStyleData:  MenuItemStyleData(
+                                                  height: height/18.9,
+                                                ),
+                                                decoration: InputDecoration(
+                                                  border: InputBorder.none
+                                                ),
+                                              ),
+                                            ),
+                                        )
+                                      ],
+
+                                    ),
+                                  ),
+                                  SizedBox(width:33),
+
 
                                   ///city
                                   SizedBox(
@@ -682,18 +1192,60 @@ TextEditingController countrycon=TextEditingController();
                                                 color: const Color(0xffDDDEEE),
                                                 borderRadius: BorderRadius.circular(3)
                                             ),
-                                            child:TextFormField(
-                                              decoration: InputDecoration(
-                                                border: InputBorder.none,
+                                            child:
+                                            DropdownButtonHideUnderline(
+                                              child: DropdownButtonFormField2<String>(
+                                                isExpanded: true,
+                                                isDense: true,
+                                                hint: Text(
+                                                  'Select City',
+                                                  style: SafeGoogleFont(
+                                                    'Nunito',
+                                                    fontSize: 20*ffem,
+                                                  ),
+                                                ),
+                                                items: _cities.map((String item) =>
+                                                    DropdownMenuItem<String>(
+                                                      value: item,
+                                                      child: Text(
+                                                        item,
+                                                        style:  SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: 20*ffem,
+                                                        ),
+                                                      ),
+                                                    )).toList(),
+                                                value: citycon.text,
+                                                validator: (value) {
+                                                  if(value=="Select City"){
+                                                    return 'Please Select the City';
+                                                  }
+                                                },
+                                                onChanged: (String? value) {
+                                                  setState(() {
+                                                    citycon.text = value!;
+                                                  });
+                                                  _formkey.currentState!.validate();
+                                                },
+                                                buttonStyleData:  ButtonStyleData(
+                                                  padding: EdgeInsets.symmetric(horizontal: width/22.5),
+                                                  height: height/18.9,
+                                                  width: width/2.571,
+                                                ),
+                                                menuItemStyleData:  MenuItemStyleData(
+                                                  height: height/18.9,
+                                                ),
+                                                decoration: InputDecoration(
+                                                    border: InputBorder.none
+                                                ),
                                               ),
-                                              validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                            )
+                                            ),
                                         )
                                       ],
 
                                     ),
                                   ),
-                                  SizedBox(width:33),
+                                  SizedBox(width:35),
 
                                   ///Pin Code
                                   SizedBox(
@@ -720,10 +1272,29 @@ TextEditingController countrycon=TextEditingController();
                                                 borderRadius: BorderRadius.circular(3)
                                             ),
                                             child:TextFormField(
+                                              controller:pinCodecon,
+                                              maxLength: 9,
+                                                inputFormatters: [
+                                                  FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                                                ],
                                               decoration: InputDecoration(
                                                 border: InputBorder.none,
+                                                  counterText: "",
                                               ),
-                                              validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                              validator: (value)
+                                              {
+                                               if(  value!.isEmpty){
+                                                 return  'Field is required';
+                                               }
+                                               else if( value!.isNotEmpty){
+                                                 if(  value!.length<6){
+                                                   return  'Pin code Minimum 6 Characters';
+                                                 }
+                                               }
+                                              },
+                                              onChanged: (val){
+                                                _formkey.currentState!.validate();
+                                              },
                                             )
                                         )
                                       ],
@@ -732,45 +1303,8 @@ TextEditingController countrycon=TextEditingController();
                                   ),
                                   SizedBox(width:35),
 
-                                  ///State Dropdown
-                                  SizedBox(
-                                    height:60,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        KText(
-                                          text: 'State *',
-                                          style: SafeGoogleFont (
-                                            'Nunito',
-                                            fontSize: 20*ffem,
-                                            fontWeight: FontWeight.w700,
-                                            height: 1.3625*ffem/fem,
-                                            color: Color(0xff000000),
-                                          ),
-                                        ),
-                                        SizedBox(height:6),
-                                        Container(
-                                            height:35,
-                                            width:240,
-                                            decoration: BoxDecoration(
-                                                color: const Color(0xffDDDEEE),
-                                                borderRadius: BorderRadius.circular(3)
-                                            ),
-                                            child:TextFormField(
-                                              decoration: InputDecoration(
-                                                border: InputBorder.none,
-                                              ),
-                                              validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                            )
-                                        )
-                                      ],
-
-                                    ),
-                                  ),
-                                  SizedBox(width:35),
 
                                   ///Country Dropdown
-
                                   SizedBox(
                                     height:60,
                                     child: Column(
@@ -794,12 +1328,56 @@ TextEditingController countrycon=TextEditingController();
                                                 color: const Color(0xffDDDEEE),
                                                 borderRadius: BorderRadius.circular(3)
                                             ),
-                                            child:TextFormField(
-                                              decoration: InputDecoration(
-                                                border: InputBorder.none,
+                                            child:
+                                            DropdownButtonHideUnderline(
+                                              child: DropdownButtonFormField2<String>(
+                                                isExpanded: true,
+                                                isDense: true,
+                                                hint: Text(
+                                                  'Select Country',
+                                                  style: SafeGoogleFont(
+                                                    'Nunito',
+                                                    fontSize: 20*ffem,
+                                                  ),
+                                                ),
+                                                items: coutryList.map((String item) =>
+                                                    DropdownMenuItem<String>(
+                                                      value: item,
+                                                      child: Text(
+                                                        item,
+                                                        style:  SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: 20*ffem,
+                                                        ),
+                                                      ),
+                                                    ))
+                                                    .toList(),
+                                                value: countrycon.text,
+                                                validator: (value) {
+                                                  if(value=="Select Country"){
+                                                    return 'Please Select the Country';
+                                                  }
+                                                },
+                                                onChanged: (String? value) {
+                                                  setState(() {
+                                                    countrycon.text = value!;
+                                                  });
+                                                  _formkey.currentState!.validate();
+
+                                                },
+                                                buttonStyleData:  ButtonStyleData(
+                                                  padding: EdgeInsets.symmetric(horizontal: width/22.5),
+                                                  height: height/18.9,
+                                                  width: width/2.571,
+                                                ),
+                                                menuItemStyleData:  MenuItemStyleData(
+                                                  height: height/18.9,
+                                                ),
+                                                decoration: InputDecoration(
+                                                    border: InputBorder.none
+                                                ),
                                               ),
-                                              validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                            )
+                                            ),
                                         )
                                       ],
 
@@ -876,10 +1454,17 @@ TextEditingController countrycon=TextEditingController();
                                                         borderRadius: BorderRadius.circular(3)
                                                     ),
                                                     child:TextFormField(
+                                                      controller:yearPassedcon,
+                                                      inputFormatters: [
+                                                        FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                                                      ],
                                                       decoration: InputDecoration(
                                                         border: InputBorder.none,
                                                       ),
                                                       validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                                      onChanged: (val){
+                                                        _formkey.currentState!.validate();
+                                                      },
                                                     )
                                                 )
                                               ],
@@ -912,10 +1497,14 @@ TextEditingController countrycon=TextEditingController();
                                                         borderRadius: BorderRadius.circular(3)
                                                     ),
                                                     child:TextFormField(
+                                                      controller:subjectStremdcon,
+                                                      inputFormatters: [
+                                                        FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
+                                                      ],
                                                       decoration: InputDecoration(
                                                         border: InputBorder.none,
                                                       ),
-                                                      validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                                     // validator: (value) => value!.isEmpty ? 'Field is required' : null,
                                                     )
                                                 )
                                               ],
@@ -955,10 +1544,17 @@ TextEditingController countrycon=TextEditingController();
                                                         borderRadius: BorderRadius.circular(3)
                                                     ),
                                                     child:TextFormField(
+                                                      controller:classcon,
+                                                      inputFormatters: [
+                                                        FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
+                                                      ],
                                                       decoration: InputDecoration(
                                                         border: InputBorder.none,
                                                       ),
                                                       validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                                      onChanged: (val){
+                                                        _formkey.currentState!.validate();
+                                                      },
                                                     )
                                                 )
                                               ],
@@ -991,10 +1587,14 @@ TextEditingController countrycon=TextEditingController();
                                                         borderRadius: BorderRadius.circular(3)
                                                     ),
                                                     child:TextFormField(
+                                                      controller:rollnocon,
+                                                      inputFormatters: [
+                                                        FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
+                                                      ],
                                                       decoration: InputDecoration(
                                                         border: InputBorder.none,
                                                       ),
-                                                      validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                                      //validator: (value) => value!.isEmpty ? 'Field is required' : null,
                                                     )
                                                 )
                                               ],
@@ -1033,10 +1633,14 @@ TextEditingController countrycon=TextEditingController();
                                                         borderRadius: BorderRadius.circular(3)
                                                     ),
                                                     child:TextFormField(
+                                                      controller:housecon,
+                                                      inputFormatters: [
+                                                        FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
+                                                      ],
                                                       decoration: InputDecoration(
                                                         border: InputBorder.none,
                                                       ),
-                                                      validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                                    //  validator: (value) => value!.isEmpty ? 'Field is required' : null,
                                                     )
                                                 )
                                               ],
@@ -1069,10 +1673,14 @@ TextEditingController countrycon=TextEditingController();
                                                         borderRadius: BorderRadius.circular(3)
                                                     ),
                                                     child:TextFormField(
+                                                      controller:lastvisitcon,
+                                                      inputFormatters: [
+                                                        FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
+                                                      ],
                                                       decoration: InputDecoration(
                                                         border: InputBorder.none,
                                                       ),
-                                                      validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                                     // validator: (value) => value!.isEmpty ? 'Field is required' : null,
                                                     )
                                                 )
                                               ],
@@ -1112,10 +1720,19 @@ TextEditingController countrycon=TextEditingController();
                                                   borderRadius: BorderRadius.circular(3)
                                               ),
                                               child:TextFormField(
+                                                controller:statusmessagecon,
+                                                maxLines: null,
+                                                expands: true,
+                                                inputFormatters: [
+                                                  FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
+                                                ],
                                                 decoration: InputDecoration(
                                                   border: InputBorder.none,
                                                 ),
                                                 validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                                onChanged: (val){
+                                                  _formkey.currentState!.validate();
+                                                },
                                               )
                                           )
                                         ],
@@ -1126,7 +1743,7 @@ TextEditingController countrycon=TextEditingController();
                               ],
                             ),
 
-                              //alumi edscation aualifications
+                              ///alumi edscation aualifications
                               SizedBox(height:20),
                             Row(
                               children: [
@@ -1178,10 +1795,13 @@ TextEditingController countrycon=TextEditingController();
                                           borderRadius: BorderRadius.circular(3)
                                       ),
                                       child:TextFormField(
+                                        controller:educationquvalificationcon,
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
+                                        ],
                                         decoration: InputDecoration(
                                           border: InputBorder.none,
                                         ),
-                                        validator: (value) => value!.isEmpty ? 'Field is required' : null,
                                       )
                                   )
                                 ],
@@ -1210,10 +1830,13 @@ TextEditingController countrycon=TextEditingController();
                                             borderRadius: BorderRadius.circular(3)
                                         ),
                                         child:TextFormField(
+                                          controller:additionalquvalificationcon,
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
+                                          ],
                                           decoration: InputDecoration(
                                             border: InputBorder.none,
                                           ),
-                                          validator: (value) => value!.isEmpty ? 'Field is required' : null,
                                         )
                                     )
                                   ],
@@ -1278,10 +1901,14 @@ TextEditingController countrycon=TextEditingController();
                                               borderRadius: BorderRadius.circular(3)
                                           ),
                                           child:TextFormField(
+                                            controller:occupationcon,
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
+                                            ],
                                             decoration: InputDecoration(
                                               border: InputBorder.none,
                                             ),
-                                            validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                           // validator: (value) => value!.isEmpty ? 'Field is required' : null,
                                           )
                                       )
                                     ],
@@ -1315,10 +1942,14 @@ TextEditingController countrycon=TextEditingController();
                                               borderRadius: BorderRadius.circular(3)
                                           ),
                                           child:TextFormField(
+                                            controller:designationcon,
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
+                                            ],
                                             decoration: InputDecoration(
                                               border: InputBorder.none,
                                             ),
-                                            validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                            //validator: (value) => value!.isEmpty ? 'Field is required' : null,
                                           )
                                       )
                                     ],
@@ -1352,10 +1983,14 @@ TextEditingController countrycon=TextEditingController();
                                               borderRadius: BorderRadius.circular(3)
                                           ),
                                           child:TextFormField(
+                                            controller:company_concerncon,
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
+                                            ],
                                             decoration: InputDecoration(
                                               border: InputBorder.none,
                                             ),
-                                            validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                           // validator: (value) => value!.isEmpty ? 'Field is required' : null,
                                           )
                                       )
                                     ],
@@ -1413,137 +2048,309 @@ TextEditingController countrycon=TextEditingController();
                                       SizedBox(height:6),
                                       Container(
                                           height:35,
-                                          width:260,
+                                          width:230,
                                           decoration: BoxDecoration(
                                               color: const Color(0xffDDDEEE),
                                               borderRadius: BorderRadius.circular(3)
                                           ),
-                                          child:TextFormField(
-                                            decoration: InputDecoration(
-                                              border: InputBorder.none,
+                                          child:
+                                          DropdownButtonHideUnderline(
+                                            child: DropdownButtonFormField2<String>(
+                                              isExpanded: true,
+                                              isDense: true,
+                                              hint: Text(
+                                                'Marital Status',
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  fontSize: 20*ffem,
+                                                ),
+                                              ),
+                                              items: MaritalStatusList.map((String item) =>
+                                                  DropdownMenuItem<String>(
+                                                    value: item,
+                                                    child: Text(
+                                                      item,
+                                                      style:  SafeGoogleFont(
+                                                        'Nunito',
+                                                        fontSize: 20*ffem,
+                                                      ),
+                                                    ),
+                                                  ))
+                                                  .toList(),
+                                              value: maritalStatuscon.text,
+                                              onChanged: (String? value) {
+                                                setState(() {
+                                                  maritalStatuscon.text = value!;
+                                                });
+                                              },
+                                              buttonStyleData:  ButtonStyleData(
+                                                padding: EdgeInsets.symmetric(horizontal: width/22.5),
+                                                height: height/18.9,
+                                                width: width/2.571,
+                                              ),
+                                              menuItemStyleData:  MenuItemStyleData(
+                                                height: height/18.9,
+                                              ),
+                                              decoration: InputDecoration(
+                                                  border: InputBorder.none
+                                              ),
                                             ),
-                                            validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                          )
+                                          ),
                                       )
                                     ],
 
                                   ),
                                 ),
-                                SizedBox(width:20),
+                                SizedBox(width:40),
 
+                                maritalStatuscon.text=="Yes"?
                                 SizedBox(
-                                  height:60,
-                                  child:
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      KText(
-                                        text: 'Spouse Name',
-                                        style: SafeGoogleFont (
-                                          'Nunito',
-                                          fontSize: 20*ffem,
-                                          fontWeight: FontWeight.w700,
-                                          height: 1.3625*ffem/fem,
-                                          color: Color(0xff000000),
-                                        ),
-                                      ),
-                                      SizedBox(height:6),
-                                      Container(
-                                          height:35,
-                                          width:260,
-                                          decoration: BoxDecoration(
-                                              color: const Color(0xffDDDEEE),
-                                              borderRadius: BorderRadius.circular(3)
-                                          ),
-                                          child:TextFormField(
-                                            decoration: InputDecoration(
-                                              border: InputBorder.none,
-                                            ),
-                                            validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                          )
-                                      )
-                                    ],
+                                   child:Row(
+                                       children:[
+                                         SizedBox(
+                                           height:60,
+                                           child:
+                                           Column(
+                                             crossAxisAlignment: CrossAxisAlignment.start,
+                                             children: [
+                                               KText(
+                                                 text: 'Spouse Name',
+                                                 style: SafeGoogleFont (
+                                                   'Nunito',
+                                                   fontSize: 20*ffem,
+                                                   fontWeight: FontWeight.w700,
+                                                   height: 1.3625*ffem/fem,
+                                                   color: Color(0xff000000),
+                                                 ),
+                                               ),
+                                               SizedBox(height:6),
+                                               Container(
+                                                   height:35,
+                                                   width:240,
+                                                   decoration: BoxDecoration(
+                                                       color: const Color(0xffDDDEEE),
+                                                       borderRadius: BorderRadius.circular(3)
+                                                   ),
+                                                   child:TextFormField(
+                                                     controller:spouseNamecon,
+                                                     inputFormatters: [
+                                                       FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
+                                                     ],
+                                                     decoration: InputDecoration(
+                                                       border: InputBorder.none,
+                                                     ),
+                                                     //validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                                   )
+                                               )
+                                             ],
 
-                                  ),
-                                ),
-                                SizedBox(width:20),
+                                           ),
+                                         ),
+                                         SizedBox(width:40),
 
-                                SizedBox(
-                                  height:60,
-                                  child:
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      KText(
-                                        text: "Anniversary Date ",
-                                        style: SafeGoogleFont (
-                                          'Nunito',
-                                          fontSize: 20*ffem,
-                                          fontWeight: FontWeight.w700,
-                                          height: 1.3625*ffem/fem,
-                                          color: Color(0xff000000),
-                                        ),
-                                      ),
-                                      SizedBox(height:6),
-                                      Container(
-                                          height:35,
-                                          width:260,
-                                          decoration: BoxDecoration(
-                                              color: const Color(0xffDDDEEE),
-                                              borderRadius: BorderRadius.circular(3)
-                                          ),
-                                          child:TextFormField(
-                                            decoration: InputDecoration(
-                                              border: InputBorder.none,
-                                            ),
-                                            validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                          )
-                                      )
-                                    ],
+                                         SizedBox(
+                                           height:60,
+                                           child:
+                                           Column(
+                                             crossAxisAlignment: CrossAxisAlignment.start,
+                                             children: [
+                                               KText(
+                                                 text: "Anniversary Date ",
+                                                 style: SafeGoogleFont (
+                                                   'Nunito',
+                                                   fontSize: 20*ffem,
+                                                   fontWeight: FontWeight.w700,
+                                                   height: 1.3625*ffem/fem,
+                                                   color: Color(0xff000000),
+                                                 ),
+                                               ),
+                                               SizedBox(height:6),
+                                               Container(
+                                                   height:35,
+                                                   width:240,
+                                                   decoration: BoxDecoration(
+                                                       color: const Color(0xffDDDEEE),
+                                                       borderRadius: BorderRadius.circular(3)
+                                                   ),
+                                                   child:TextFormField(
+                                                     readOnly: true,
+                                                     controller:anniversaryDatecon,
+                                                     decoration: InputDecoration(
+                                                       border: InputBorder.none,
+                                                     ),
+                                                     onTap: () async {
+                                                       DateTime? pickedDate = await showDatePicker(
+                                                           context: context,
+                                                           initialDate: DateTime.now(),
+                                                           firstDate: DateTime(1950),
+                                                           //DateTime.now() - not to allow to choose before today.
+                                                           lastDate: DateTime(2100));
 
-                                  ),
-                                ),
-                                
-                                SizedBox(width:20),
+                                                       if (pickedDate != null) {
+                                                         //pickedDate output format => 2021-03-10 00:00:00.000
+                                                         String formattedDate =
+                                                         DateFormat('dd/MM/yyyy')
+                                                             .format(pickedDate);
+                                                         //formatted date output using intl package =>  2021-03-16
+                                                         setState(() {
+                                                           anniversaryDatecon.text = formattedDate; //set output date to TextField value.
+                                                         });
+                                                       } else {}
+                                                     },
+                                                     // validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                                   )
+                                               )
+                                             ],
 
-                                SizedBox(
-                                  height:60,
-                                  child:
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      KText(
-                                        text: "No. Of Chindren",
-                                        style: SafeGoogleFont (
-                                          'Nunito',
-                                          fontSize: 20*ffem,
-                                          fontWeight: FontWeight.w700,
-                                          height: 1.3625*ffem/fem,
-                                          color: Color(0xff000000),
-                                        ),
-                                      ),
-                                      SizedBox(height:6),
-                                      Container(
-                                          height:35,
-                                          width:260,
-                                          decoration: BoxDecoration(
-                                              color: const Color(0xffDDDEEE),
-                                              borderRadius: BorderRadius.circular(3)
-                                          ),
-                                          child:TextFormField(
-                                            decoration: InputDecoration(
-                                              border: InputBorder.none,
-                                            ),
-                                            validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                          )
-                                      )
-                                    ],
+                                           ),
+                                         ),
 
-                                  ),
-                                ),
+                                         SizedBox(width:40),
+
+                                         SizedBox(
+                                           height:60,
+                                           child:
+                                           Column(
+                                             crossAxisAlignment: CrossAxisAlignment.start,
+                                             children: [
+                                               KText(
+                                                 text: "No. Of Chindren",
+                                                 style: SafeGoogleFont (
+                                                   'Nunito',
+                                                   fontSize: 20*ffem,
+                                                   fontWeight: FontWeight.w700,
+                                                   height: 1.3625*ffem/fem,
+                                                   color: Color(0xff000000),
+                                                 ),
+                                               ),
+                                               SizedBox(height:6),
+                                               Container(
+                                                   height:35,
+                                                   width:240,
+                                                   decoration: BoxDecoration(
+                                                       color: const Color(0xffDDDEEE),
+                                                       borderRadius: BorderRadius.circular(3)
+                                                   ),
+                                                   child:TextFormField(
+                                                     controller:no_of_childreancon,
+                                                     maxLength: 2,
+                                                     inputFormatters: [
+                                                       FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                                                     ],
+                                                     decoration: InputDecoration(
+                                                       border: InputBorder.none,
+                                                       counterText:"",
+                                                     ),
+                                                   )
+                                               )
+                                             ],
+
+                                           ),
+                                         ),
+                                       ]
+                                   )
+                               ):SizedBox(),
                               ],
                             ),
+                               SizedBox(height:30),
+                            
+                            ///buttons update reset and back
 
+                             Row(
+                               mainAxisAlignment:MainAxisAlignment.end,
+                               children: [
+                                 SizedBox(width:670,),
+
+
+                                 ///save button
+                                 GestureDetector(
+                                     onTap:(){
+                                       if(_formkey.currentState!.validate()){}
+                                     },
+                                   child: Container(
+                                       height:40,
+                                     width:120,
+                                     decoration:BoxDecoration(
+                                      color: Color(0xffD60A0B),
+                                       borderRadius: BorderRadius.circular(4),
+                                     ),
+                                       child:Center(
+                                           child:KText(
+                                             text:'Save',
+                                             style: SafeGoogleFont (
+                                               'Nunito',
+                                               fontSize: 19*ffem,
+                                               fontWeight: FontWeight.w400,
+                                               height: 1.3625*ffem/fem,
+                                               color: Color(0xffFFFFFF),
+                                             ),
+                                           ),
+                                     )
+                                   ),
+                                 ),
+                                 SizedBox(width:20,),
+
+                                 ///Reset Button
+                                 GestureDetector(
+                                   onTap:(){
+                                     controllersclearfunc();
+                                   },
+                                   child: Container(
+                                       height:40,
+                                       width:120,
+                                       decoration:BoxDecoration(
+                                         color: Color(0xff00A0E3),
+                                         borderRadius: BorderRadius.circular(4),
+                                       ),
+                                       child:Center(
+                                         child:KText(
+                                           text:'Reset',
+                                           style: SafeGoogleFont (
+                                             'Nunito',
+                                             fontSize: 19*ffem,
+                                             fontWeight: FontWeight.w400,
+                                             height: 1.3625*ffem/fem,
+                                             color: Color(0xffFFFFFF),
+                                           ),
+                                         ),
+                                       )
+                                   ),
+                                 ),
+                                 SizedBox(width:20,),
+
+
+                                 ///back Button
+                                 GestureDetector(
+                                   onTap:(){
+                                     setState((){
+                                       UserEdit==false;
+                                     });
+                                   },
+                                   child: Container(
+                                       height:40,
+                                       width:120,
+                                       decoration:BoxDecoration(
+                                         color: Colors.green,
+                                         borderRadius: BorderRadius.circular(4),
+                                       ),
+                                       child:Center(
+                                         child:KText(
+                                           text:'Back',
+                                           style: SafeGoogleFont (
+                                             'Nunito',
+                                             fontSize: 19*ffem,
+                                             fontWeight: FontWeight.w400,
+                                             height: 1.3625*ffem/fem,
+                                             color: Color(0xffFFFFFF),
+                                           ),
+                                         ),
+                                       )
+                                   ),
+                                 ),
+
+                               ],
+                             ),
+                            SizedBox(height:30),
 
 
                           ],
@@ -1575,7 +2382,6 @@ TextEditingController countrycon=TextEditingController();
                 children: [
                   SizedBox(
                     width:width/1.6457,
-
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -2085,23 +2891,15 @@ TextEditingController countrycon=TextEditingController();
 
                                       GestureDetector(
                                         onTap: (){
-                                          print("heloeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-                                          print(isFloatingOpen);
                                           // setState(() {
-                                          //   if(isFloatingOpen) floating!.remove();
-                                          //   else {
-                                          //     floating = createFloating(context);
-                                          //     Overlay.of(context).insert(floating!);
-                                          //   }
-                                          //   isFloatingOpen = !isFloatingOpen;
+                                          //   viewDocid=_userdata.id;
+                                          //   viewUser_details=!viewUser_details;
                                           // });
-                                          setState(() {
-                                            viewDocid=_userdata.id;
-                                            viewUser_details=!viewUser_details;
-                                          });
+                                          Popupmenu(context,_userdata.id);
                                           print(viewUser_details);
                                         },
                                         child: Container(
+                                          key: popmenukey,
                                           width:width/38.32,
                                           height:height/26.04,
                                           color:Colors.yellow,
@@ -2451,30 +3249,196 @@ TextEditingController countrycon=TextEditingController();
   }
 
 
+///select the city functions----------------------
+  List<String> _cities = ["Select City"];
 
-  OverlayEntry createFloating(context) {
-    RenderBox?  renderBox =  floatingKey.currentContext!
-        .findRenderObject() as RenderBox;
-    Offset offset = renderBox!.localToGlobal(Offset.zero);
-    return OverlayEntry(
-        builder: (context) {
-          return Positioned(
-              left: offset.dx,
-              width: renderBox.size.width,
-              top: offset.dy - 50,
-              child: Material(
-                  elevation: 20,
-                  child: Container(
-                      height: 50,
-                      color: Colors.blue,
-                      child: KText( text:"I'm floating overlay"  ,style: SafeGoogleFont ('Nunito'
-                      ),)
-                  )
-              )
-          );
-        }
+  Future getResponse() async {
+    var res = await rootBundle.loadString('packages/country_state_city_picker/lib/assets/country.json');
+    return jsonDecode(res);
+  }
+
+  Future getCity(state) async {
+    var response = await getResponse();
+    var takestate = response
+        .map((map) => StatusModel.StatusModel.fromJson(map))
+        .where((item) => item.emoji + "    " + item.name == "🇮🇳    India")
+        .map((item) => item.state)
+        .toList();
+    var states = takestate as List;
+    states.forEach((f) {
+      var name = f.where((item) => item.name == state);
+      var cityname = name.map((item) => item.city).toList();
+      cityname.forEach((ci) {
+        if (!mounted) return;
+        setState(() {
+          var citiesname = ci.map((item) => item.name).toList();
+          for (var citynames in citiesname) {
+            _cities.add(citynames.toString());
+          }
+        });
+      });
+    });
+    print("Get cityssss");
+    print(_cities);
+    return _cities;
+  }
+  
+  ///clear controller functions--------------------------------
+
+  controllersclearfunc(){
+   setState((){
+     firstNamecon.clear();
+     middleNamecon.clear();
+     lastNamecon.clear();
+     dateofBirthcon.clear();
+     gendercon.clear();
+     alterEmailIdcon.clear();
+     aadhaarNumbercon.clear();
+     phoneNumbercon.clear();
+     mobileNumbercon.clear();
+     emailIDcon.clear();
+     adreesscon.clear();
+     citycon.text="Select City";
+     pinCodecon.clear();
+     statecon.text="Select State";
+     countrycon.text="Select Country";
+     yearPassedcon.clear();
+     subjectStremdcon.clear();
+     classcon.clear();
+     rollnocon.clear();
+     lastvisitcon.clear();
+     housecon.clear();
+     statusmessagecon.clear();
+     educationquvalificationcon.clear();
+     additionalquvalificationcon.clear();
+     occupationcon.clear();
+     designationcon.clear();
+     company_concerncon.clear();
+     maritalStatuscon.text="Marital Status";
+     spouseNamecon.clear();
+     anniversaryDatecon.clear();
+     no_of_childreancon.clear();
+   });
+}
+
+///choose the image fundtions------------------------
+
+  addImage(Size size) {
+    InputElement input = FileUploadInputElement() as InputElement
+      ..accept = 'image/*';
+    input.click();
+    input.onChange.listen((event) {
+      final file = input.files!.first;
+      final reader = FileReader();
+      reader.readAsDataUrl(file);
+      reader.onLoadEnd.listen((event) async {
+        setState(() {
+          Url=file;
+          Uploaddocument=reader.result;
+        });
+
+      });
+    });
+  }
+
+
+
+  imageupload() async {
+    var snapshot = await FirebaseStorage.instance.ref().child('Images').child("${Url!.name}").putBlob(Url);
+    String downloadUrl = await snapshot.ref.getDownloadURL();
+      imgUrl=downloadUrl;
+  }
+
+
+  Popupmenu(BuildContext context,_userid) async {
+    print("Popupmenu open-----------------------------------------------------------");
+    double _width = MediaQuery.of(context).size.width;
+    final render = popmenukey.currentContext!.findRenderObject() as RenderBox;
+    await showMenu(
+      color: Colors.white,
+      context: context,
+      position: RelativeRect.fromLTRB(
+          render.localToGlobal(Offset.zero).dx,
+          render.localToGlobal(Offset.zero).dy + 50,
+          double.infinity,
+          double.infinity),
+      items: usereditlist.map((item) => PopupMenuItem<String>(
+        onTap: () async {
+
+          if(item=="View"){
+            setState((){
+              viewUser_details=!viewUser_details;
+              viewDocid=_userid;
+            });
+          }
+          else if(item=="Edit"){
+            setState((){
+              UserEdit=!UserEdit;
+            });
+            fetchdate(_userid);
+          }
+          else if(item=="Delete"){
+
+          }
+
+        },
+        value: item,
+        child: Text(
+          item,
+          style:  TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: Colors.black54,
+          ),
+          overflow: TextOverflow.ellipsis,
+        ),
+      ))
+          .toList(),
     );
   }
 
+
+  fetchdate(id)async{
+    var document=await FirebaseFirestore.instance.collection("Users").doc(id).get();
+    Map<String,dynamic>?value=document.data();
+    setState((){
+
+      firstNamecon.text=value!['Name'];
+      adreesscon.text=value['Address'];
+      emailIDcon.text=value['Email'];
+      gendercon.text=value['Gender'];
+      occupationcon.text=value['Occupation'];
+      phoneNumbercon.text=value['Phone'];
+      Editimg=value['UserImg'];
+
+    });
+  }
+
+
+
+}
+
+class Location {
+  String name;
+  String district;
+  String region;
+  String state;
+
+  Location(this.name, this.district, this.region, this.state);
+
+  factory Location.fromJson(Map<String, dynamic> json) {
+    return Location(
+        json['Name'], json['District'], json['Region'], json['State']);
+  }
+
+
+}
+
+
+class menuItem{
+
+  Widget? widgets;
+  String? Name;
+  menuItem({this.widgets, this.Name});
 
 }

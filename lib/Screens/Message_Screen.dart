@@ -687,7 +687,7 @@ class _Message_ScreenState extends State<Message_Screen> with SingleTickerProvid
                                             ? GestureDetector(
 
                                           onTap: (){
-                                            showdialog(snapshot.data!.docs[index].id,expand);
+                                         //   showdialog(snapshot.data!.docs[index].id,expand);
                                           },
                                           child: Align(
                                               alignment: Alignment.topRight,

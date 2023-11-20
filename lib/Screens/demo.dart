@@ -224,7 +224,7 @@ class _MyWidgetState extends State<MyWidget> {
       return ZoomIn(
         duration: Duration(milliseconds: 300),
         child: Padding(
-          padding: const EdgeInsets.only(top: 150.0,bottom: 150,left: 350,right:350),
+          padding:  EdgeInsets.only(top: 160.0,bottom: 160,left: 400,right:400),
           child: Material(
             color: Colors.white,
             shadowColor: Color(0xff245BCA),

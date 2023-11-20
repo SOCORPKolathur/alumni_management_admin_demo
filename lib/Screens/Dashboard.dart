@@ -97,44 +97,46 @@ class _DashBoardState extends State<DashBoard> {
                         ),
                       ),
                     ),
-                    Container(
-                      // searchbarvMf (6:149)
-                      margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 58*fem, 0*fem),
-                      padding: EdgeInsets.fromLTRB(28*fem, 16.5*fem, 329*fem, 16.5*fem),
-                      height: double.infinity,
-                      decoration: BoxDecoration (
-                        color: Color(0xfff9fafb),
-                        borderRadius: BorderRadius.circular(16*fem),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            // magnifierD5s (6:150)
-                            margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 12*fem, 0*fem),
-                            width: 24*fem,
-                            height: 24*fem,
-                            child: Image.asset(
-                              'assets/images/magnifier-27s.png',
-                              width: 24*fem,
-                              height: 24*fem,
-                            ),
-                          ),
-                          KText(
-                            text:
-                            // searchherevW5 (6:152)
-                            'Search here...',
-                            style: SafeGoogleFont (
-                              'Poppins',
-                              fontSize: 18*ffem,
-                              fontWeight: FontWeight.w400,
-                              height: 1.5*ffem/fem,
-                              color: Color(0xff737791),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    // Container(
+                    //   // searchbarvMf (6:149)
+                    //   margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 58*fem, 0*fem),
+                    //   padding: EdgeInsets.fromLTRB(28*fem, 16.5*fem, 329*fem, 16.5*fem),
+                    //   height: double.infinity,
+                    //   decoration: BoxDecoration (
+                    //     color: Color(0xfff9fafb),
+                    //     borderRadius: BorderRadius.circular(16*fem),
+                    //   ),
+                    //   child: Row(
+                    //     crossAxisAlignment: CrossAxisAlignment.center,
+                    //     children: [
+                    //       Container(
+                    //         // magnifierD5s (6:150)
+                    //         margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 12*fem, 0*fem),
+                    //         width: 24*fem,
+                    //         height: 24*fem,
+                    //         child: Image.asset(
+                    //           'assets/images/magnifier-27s.png',
+                    //           width: 24*fem,
+                    //           height: 24*fem,
+                    //         ),
+                    //       ),
+                    //       KText(
+                    //         text:
+                    //         // searchherevW5 (6:152)
+                    //         'Search here...',
+                    //         style: SafeGoogleFont (
+                    //           'Poppins',
+                    //           fontSize: 18*ffem,
+                    //           fontWeight: FontWeight.w400,
+                    //           height: 1.5*ffem/fem,
+                    //           color: Color(0xff737791),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+
+                    SizedBox(width:  580*fem,),
                     InkWell(
                       onTap:(){
                         _showPopupMenu();
@@ -162,7 +164,8 @@ class _DashBoardState extends State<DashBoard> {
                                     width: 22.5*fem,
                                     height: 22.5*fem,
                                     child:
-                                    CountryFlag.fromLanguageCode(flagvalue,
+                                    CountryFlag.fromLanguageCode(
+                                      flagvalue,
                                       borderRadius: 20,
                                       width: 9.94*fem,
                                       height: 6*fem,
@@ -263,16 +266,7 @@ class _DashBoardState extends State<DashBoard> {
                                                 ),
                                               ),
                                             ),
-                                            Container(
-                                              // group2186132H (6:137)
-                                              width: 16*fem,
-                                              height: 16*fem,
-                                              child: Image.asset(
-                                                'assets/images/group-21861-oGV.png',
-                                                width: 16*fem,
-                                                height: 16*fem,
-                                              ),
-                                            ),
+
                                           ],
                                         ),
                                       ),
@@ -2164,6 +2158,7 @@ class _DashBoardState extends State<DashBoard> {
         context: context,
         color: Color(0xffFFFFFF),
         surfaceTintColor: Color(0xffFFFFFF),
+        shadowColor: Colors.black12,
         position:  const RelativeRect.fromLTRB(550, 70, 200, 500),
         items: [
           PopupMenuItem(
@@ -2302,29 +2297,11 @@ class _DashBoardState extends State<DashBoard> {
             ),
             onTap: () {
               changeLocale(context, 'en_US');
-              flagvalue= "en_US";
+              flagvalue= "en";
               langvalue='English';
               //changeHomeViewLanguage();
             },
           ),
-          // PopupMenuItem<String>(
-          //   value: 'bn',
-          //   child: Row(
-          //     children: [
-          //       CountryFlag.fromCountryCode(
-          //         "BD",
-          //         height: height/16.275,
-          //         width: width/45.53,
-          //       ),
-          //        SizedBox(width: width/136.6),
-          //        const Text('Bengali'),
-          //     ],
-          //   ),
-          //   onTap: () {
-          //     changeLocale(context, 'bn');
-          //     changeHomeViewLanguage();
-          //   },
-          // ),
           PopupMenuItem<String>(
             value: 'es',
             child: Row(
@@ -2363,9 +2340,12 @@ class _DashBoardState extends State<DashBoard> {
             onTap: () {
               setState(() {
                 changeLocale(context, 'pt');
-                flagvalue= "pt";
+                flagvalue= "PT";
                 langvalue='Portuguese';
                 //changeHomeViewLanguage();
+              });
+              setState(() {
+
               });
             },
           ),
@@ -2385,7 +2365,7 @@ class _DashBoardState extends State<DashBoard> {
             onTap: () {
               setState(() {
                 changeLocale(context, 'fr');
-                flagvalue= "fr";
+                flagvalue= "Fr";
                 langvalue='French';
                 //changeHomeViewLanguage();
               });
@@ -2407,7 +2387,7 @@ class _DashBoardState extends State<DashBoard> {
             onTap: () {
               setState(() {
                 changeLocale(context, 'nl');
-                flagvalue= "nl";
+                flagvalue= "NL";
                 langvalue='Dutch';
                 //changeHomeViewLanguage();
               });
@@ -2473,7 +2453,7 @@ class _DashBoardState extends State<DashBoard> {
             onTap: () {
               setState(() {
                 changeLocale(context, 'sv');
-                flagvalue= "sv";
+                flagvalue= "SE";
                 langvalue='Swedish';
                 //changeHomeViewLanguage();
               });
@@ -2484,7 +2464,7 @@ class _DashBoardState extends State<DashBoard> {
             child: Row(
               children: [
                 CountryFlag.fromCountryCode(
-                  "LU",
+                  "lu",
                   height: height/16.275,
                   width: width/45.53,
                 ),
@@ -2495,7 +2475,7 @@ class _DashBoardState extends State<DashBoard> {
             onTap: () {
               setState(() {
                 changeLocale(context, 'ltz');
-                flagvalue= "ltz";
+                flagvalue= "lu";
                 langvalue='Luxembourish';
                 //changeHomeViewLanguage();
               });
