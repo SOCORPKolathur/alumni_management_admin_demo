@@ -9,4 +9,7 @@ class Constants {
    String Lottiefile="";
    String whiteshadeimg="assets/white-trianglify-b79c7e1f.jpg";
 
+
+
+
 }
