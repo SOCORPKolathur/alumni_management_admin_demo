@@ -602,7 +602,7 @@ class _SigninPageState extends State<SigninPage> {
         print(data.docs[i]['Type']);
         print(data.docs[i]['username']);
         print(data.docs[i]['password']);
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyWidget(Authusertype:data.docs[i]['username']),));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyWidget(email:data.docs[i]['username']),));
       }
     }
 

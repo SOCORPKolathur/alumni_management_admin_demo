@@ -130,7 +130,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                         style :SafeGoogleFont (
                           'Poppins',
                           fontSize: 22*ffem,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w500,
                           height: 1.6*ffem/fem,
                           color: Colors.white,
                         ),
@@ -149,7 +149,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                               style: SafeGoogleFont (
                                 'Poppins',
                                 fontSize: 20*ffem,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w500,
                                 height: 1.6*ffem/fem,
                                 color: Colors.white,
                               ),
@@ -168,12 +168,13 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                               style: SafeGoogleFont (
                                 'Poppins',
                                 fontSize: 20*ffem,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w500,
                                 height: 1.6*ffem/fem,
                                 color: Colors.white,
                               ),
                             ),
                           ),
+                          SizedBox(width:5),
                           Icon(
                             Icons.add_circle,
                             color: Colors.white,
@@ -190,12 +191,13 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                               style: SafeGoogleFont (
                                 'Poppins',
                                 fontSize: 20*ffem,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w500,
                                 height: 1.6*ffem/fem,
                                 color: Colors.white,
                               ),
                             ),
                           ),
+                          SizedBox(width:5),
                           Icon(
                             Icons.edit_note,
                             color: Colors.white,
@@ -210,12 +212,13 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                               style: SafeGoogleFont (
                                 'Poppins',
                                 fontSize: 20*ffem,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w500,
                                 height: 1.6*ffem/fem,
                                 color: Colors.white,
                               ),
                             ),
                           ),
+                          SizedBox(width:5),
                           RotatedBox(
                             quarterTurns: 3,
                             child: Icon(
@@ -352,7 +355,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                         style:SafeGoogleFont (
                           'Poppins',
                           fontSize: 20*ffem,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w500,
                           height: 1.6*ffem/fem,
                           color: Colors.white,
                         ),
@@ -371,7 +374,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                               style: SafeGoogleFont (
                                 'Poppins',
                                 fontSize: 20*ffem,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w500,
                                 height: 1.6*ffem/fem,
                                 color: Colors.white,
                               ),
@@ -390,12 +393,13 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                               style: SafeGoogleFont (
                                 'Poppins',
                                 fontSize: 20*ffem,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w500,
                                 height: 1.6*ffem/fem,
                                 color: Colors.white,
                               ),
                             ),
                           ),
+                          SizedBox(width:5),
                           Icon(
                             Icons.add_circle,
                             color: Colors.white,
@@ -412,12 +416,13 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                               style: SafeGoogleFont (
                                 'Poppins',
                                 fontSize: 20*ffem,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w500,
                                 height: 1.6*ffem/fem,
                                 color: Colors.white,
                               ),
                             ),
                           ),
+                          SizedBox(width:5),
                           Icon(
                             Icons.edit_note,
                             color: Colors.white,
@@ -432,12 +437,13 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                               style:SafeGoogleFont (
                                 'Poppins',
                                 fontSize: 20*ffem,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w500,
                                 height: 1.6*ffem/fem,
                                 color: Colors.white,
                               ),
                             ),
                           ),
+                          SizedBox(width:5),
                           RotatedBox(
                             quarterTurns: 3,
                             child: Icon(
@@ -575,7 +581,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
               SafeGoogleFont (
                 'Poppins',
                 fontSize: 22*ffem,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w500,
                 height: 1.6*ffem/fem,
               ),
             ),
@@ -767,7 +773,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                                 style: SafeGoogleFont (
                                   'Poppins',
                                   fontSize: 20*ffem,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.w500,
                                   height: 1.6*ffem/fem,
                                   color: Colors.white,
                                 ),

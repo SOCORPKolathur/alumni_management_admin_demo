@@ -189,7 +189,6 @@ class _UsersManagementState extends State<UsersManagement> {
                             KText( text:"Select the Role  : ",style:
                             SafeGoogleFont (
                               'Poppins',
-                              fontWeight: FontWeight.w700,
                             )),
                             SizedBox(width:10),
                             Material(
@@ -542,9 +541,10 @@ class _UsersManagementState extends State<UsersManagement> {
                     child: Column(
                       children: [
                         Container(
+                          height:height/13.02,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4),
-                            color:  const Color(0xff5D5FEF),
+                            color:  const Color(0xffDDDEEE),
                           ),
                           child: Row(
 
@@ -561,8 +561,7 @@ class _UsersManagementState extends State<UsersManagement> {
                                     SafeGoogleFont (
                                       'Poppins',
                                       fontSize: 19*ffem,
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.white
+                                      color: Color(0xff000000)
                                     ),
                                   ),
                                 ),
@@ -578,8 +577,7 @@ class _UsersManagementState extends State<UsersManagement> {
                                     SafeGoogleFont (
                                       'Poppins',
                                       fontSize: 19*ffem,
-                                      fontWeight: FontWeight.w700,
-                                        color: Colors.white
+                                        color: Color(0xff000000)
                                     ),
                                   ),
                                 ),
@@ -594,8 +592,7 @@ class _UsersManagementState extends State<UsersManagement> {
                                     style:
                                     SafeGoogleFont (
                                       'Poppins',
-                                      fontSize: 19*ffem,
-                                      fontWeight: FontWeight.w700,    color: Colors.white
+                                      fontSize: 19*ffem, color: Color(0xff000000)
                                     ),
                                   ),
                                 ),
@@ -611,7 +608,7 @@ class _UsersManagementState extends State<UsersManagement> {
                                     SafeGoogleFont (
                                       'Poppins',
                                       fontSize: 19*ffem,
-                                      fontWeight: FontWeight.w700,    color: Colors.white
+                                       color: Color(0xff000000)
                                     ),
                                   ),
                                 ),

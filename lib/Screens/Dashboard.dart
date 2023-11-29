@@ -1,16 +1,19 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_flags/country_flags.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import '../Demo_Page.dart';
+import '../Line_Graph.dart';
 import '../Models/Language_Model.dart';
 import '../utils.dart';
 import 'Notification_Screen.dart';
 
 class DashBoard extends StatefulWidget {
-  const DashBoard({Key? key}) : super(key: key);
+  String?usermail;
+   DashBoard({this.usermail});
 
   @override
   State<DashBoard> createState() => _DashBoardState();
@@ -22,7 +25,7 @@ class _DashBoardState extends State<DashBoard> {
 
 
 
-  var flagvalue= "en_US";
+  var flagvalue= "en";
   var langvalue='English';
 
 
@@ -84,7 +87,8 @@ class _DashBoardState extends State<DashBoard> {
                   children: [
                     Container(
                       // alumnimanagment1kV (6:153)
-                      margin: EdgeInsets.fromLTRB(0*fem, 1*fem, 40*fem, 0*fem),
+                      width:width/2.3,
+                      margin: EdgeInsets.fromLTRB(0*fem, 1*fem, 10*fem, 0*fem),
                       child: KText(
                         text:
                         'Alumni Management',
@@ -136,13 +140,13 @@ class _DashBoardState extends State<DashBoard> {
                     //   ),
                     // ),
 
-                    SizedBox(width:  580*fem,),
+                   // SizedBox(width:  580*fem,),
                     InkWell(
                       onTap:(){
                         _showPopupMenu();
                       },
                       child: Container(
-                        // languangefTf (6:112)
+                        width:width/7.58888,
                         margin: EdgeInsets.fromLTRB(0*fem, 16.5*fem, 58*fem, 16.5*fem),
                         padding: EdgeInsets.fromLTRB(0*fem, 0*fem, 7.06*fem, 0*fem),
                         height: double.infinity,
@@ -161,14 +165,14 @@ class _DashBoardState extends State<DashBoard> {
                                   Container(
                                     // unitedTPX (6:114)
                                     margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 14.75*fem, 0*fem),
-                                    width: 22.5*fem,
-                                    height: 22.5*fem,
+                                    width: 32.5*fem,
+                                    height: 42.5*fem,
                                     child:
                                     CountryFlag.fromLanguageCode(
                                       flagvalue,
                                       borderRadius: 20,
-                                      width: 9.94*fem,
-                                      height: 6*fem,
+                                      // width: 9.94*fem,
+                                      // height: 6*fem,
                                     ),
                                   ),
                                   KText(
@@ -238,7 +242,7 @@ class _DashBoardState extends State<DashBoard> {
                                 Container(
                                   // group21862szy (6:136)
                                   margin: EdgeInsets.fromLTRB(0*fem, 6*fem, 0*fem, 6*fem),
-                                  width: 80*fem,
+                                  width: 160*fem,
                                   height: double.infinity,
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -256,7 +260,7 @@ class _DashBoardState extends State<DashBoard> {
                                               child:
                                               KText(
                                                 text:
-                                                'Dinesh',
+                                                "Admin",
                                                 style: SafeGoogleFont (
                                                   'Poppins',
                                                   fontSize: 16*ffem,
@@ -273,7 +277,7 @@ class _DashBoardState extends State<DashBoard> {
                                       KText(
                                         text:
                                         // adminAch (6:140)
-                                        'Admin',
+                                        widget.usermail.toString(),
                                         style: SafeGoogleFont (
                                           'Poppins',
                                           fontSize: 14*ffem,
@@ -876,7 +880,8 @@ class _DashBoardState extends State<DashBoard> {
                                     height: 410*fem,
                                     decoration: BoxDecoration (
                                       border: Border.all(color: Color(0xfff8f9fa)),
-                                      color: Color(0xffffffff),
+                                     color: Color(0xffffffff),
+                                       
                                       borderRadius: BorderRadius.circular(20*fem),
                                       boxShadow: [
                                         BoxShadow(
@@ -886,23 +891,24 @@ class _DashBoardState extends State<DashBoard> {
                                         ),
                                       ],
                                     ),
-                                    child: Container(
-                                      // world15p5 (6:448)
-                                      width: double.infinity,
-                                      height: double.infinity,
-                                      child: Center(
-                                        // autogroup26c33F7 (T1eKrTDkhXrQ3jmkK726C3)
-                                        child: SizedBox(
-                                          width: 649.88*fem,
-                                          height: 267.49*fem,
-                                          child: Image.asset(
-                                            'assets/images/auto-group-26c3.png',
-                                            width: 649.88*fem,
-                                            height: 267.49*fem,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                    child:Maopppp()
+                                    // Container(
+                                    //   // world15p5 (6:448)
+                                    //   width: double.infinity,
+                                    //   height: double.infinity,
+                                    //   child: Center(
+                                    //     // autogroup26c33F7 (T1eKrTDkhXrQ3jmkK726C3)
+                                    //     child: SizedBox(
+                                    //       width: 649.88*fem,
+                                    //       height: 267.49*fem,
+                                    //       child: Image.asset(
+                                    //         'assets/images/auto-group-26c3.png',
+                                    //         width: 649.88*fem,
+                                    //         height: 267.49*fem,
+                                    //       ),
+                                    //     ),
+                                    //   ),
+                                    // ),
                                   ),
                                 ),
                                 Positioned(
@@ -911,7 +917,7 @@ class _DashBoardState extends State<DashBoard> {
                                   top: 30.3703689575*fem,
                                   child: Align(
                                     child: SizedBox(
-                                      width: 219*fem,
+                                      width: 225*fem,
                                       height: 32*fem,
                                       child: KText(
                                         text:
@@ -932,8 +938,8 @@ class _DashBoardState extends State<DashBoard> {
                           ),
                           Container(
                             // visitorinsightsq6R (6:216)
-                            width: 720*fem,
-                            height: double.infinity,
+                             width: 720*fem,
+                             height:285 ,
                             decoration: BoxDecoration (
                               borderRadius: BorderRadius.circular(12*fem),
                               image: DecorationImage (
@@ -943,620 +949,622 @@ class _DashBoardState extends State<DashBoard> {
                                 ),
                               ),
                             ),
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  // cardheaderuMB (6:222)
-                                  left: 6.0913696289*fem,
-                                  top: 0*fem,
-                                  child: Container(
-                                    padding: EdgeInsets.fromLTRB(22.91*fem, 24*fem, 22.91*fem, 19.4*fem),
-                                    width: 713.91*fem,
-                                    height: 75.4*fem,
-                                    child: KText(
-                                      text:
-                                      'App Usage',
-                                      style: SafeGoogleFont (
-                                        'Poppins',
-                                        fontSize: 20*ffem,
-                                        fontWeight: FontWeight.w600,
-                                        height: 1.6*ffem/fem,
-                                        color: Color(0xff05004e),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  // axisZRj (6:226)
-                                  left: 62.1319732666*fem,
-                                  top: 109.5689620972*fem,
-                                  child: Container(
-                                    width: 516*fem,
-                                    height: 165*fem,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          // axisU2u (6:231)
-                                          width: double.infinity,
-                                          height: 1*fem,
-                                          decoration: BoxDecoration (
-                                            color: Color(0x0a464e5f),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 40*fem,
-                                        ),
-                                        Container(
-                                          // axisnZP (6:230)
-                                          width: double.infinity,
-                                          height: 1*fem,
-                                          decoration: BoxDecoration (
-                                            color: Color(0x0a464e5f),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 40*fem,
-                                        ),
-                                        Container(
-                                          // axisKJR (6:229)
-                                          width: double.infinity,
-                                          height: 1*fem,
-                                          decoration: BoxDecoration (
-                                            color: Color(0x0a464e5f),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 40*fem,
-                                        ),
-                                        Container(
-                                          // axis4G1 (6:228)
-                                          width: double.infinity,
-                                          height: 1*fem,
-                                          decoration: BoxDecoration (
-                                            color: Color(0x0a464e5f),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 40*fem,
-                                        ),
-                                        Container(
-                                          // axisQ4y (6:227)
-                                          width: double.infinity,
-                                          height: 1*fem,
-                                          decoration: BoxDecoration (
-                                            color: Color(0x0a464e5f),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  // x6V (6:232)
-                                  left: 45.6040649414*fem,
-                                  top: 294.540222168*fem,
-                                  child: Align(
-                                    child: SizedBox(
-                                      width: 8*fem,
-                                      height: 16*fem,
-                                      child: KText(
-                                        text:
-                                        '0',
-                                        //textAlign: TextAlign.right,
-                                        style: SafeGoogleFont (
-                                          'Poppins',
-                                          fontSize: 12*ffem,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.3333333333*ffem/fem,
-                                          color: Color(0xff7a91b0),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  // SXT (6:233)
-                                  left: 34.6040344238*fem,
-                                  top: 246.2356262207*fem,
-                                  child: Align(
-                                    child: SizedBox(
-                                      width: 19*fem,
-                                      height: 16*fem,
-                                      child: KText(
-                                        text:
-                                        '100',
-                                        //textAlign: TextAlign.right,
-                                        style: SafeGoogleFont (
-                                          'Poppins',
-                                          fontSize: 12*ffem,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.3333333333*ffem/fem,
-                                          color: Color(0xff7a91b0),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  // vBj (6:234)
-                                  left: 31.6040496826*fem,
-                                  top: 196.7528686523*fem,
-                                  child: Align(
-                                    child: SizedBox(
-                                      width: 22*fem,
-                                      height: 16*fem,
-                                      child: KText(
-                                       text: '200',
-                                     //   textAlign: TextAlign.right,
-                                        style: SafeGoogleFont (
-                                          'Poppins',
-                                          fontSize: 12*ffem,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.3333333333*ffem/fem,
-                                          color: Color(0xff7a91b0),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  // R8V (6:235)
-                                  left: 30.6040344238*fem,
-                                  top: 149.6264343262*fem,
-                                  child: Align(
-                                    child: SizedBox(
-                                      width: 23*fem,
-                                      height: 16*fem,
-                                      child: KText(
-                                        text:'300',
-                                        //textAlign: TextAlign.right,
-                                        style: SafeGoogleFont (
-                                          'Poppins',
-                                          fontSize: 12*ffem,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.3333333333*ffem/fem,
-                                          color: Color(0xff7a91b0),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  // XBX (6:236)
-                                  left: 30.6040344238*fem,
-                                  top: 101.3218383789*fem,
-                                  child: Align(
-                                    child: SizedBox(
-                                      width: 23*fem,
-                                      height: 16*fem,
-                                      child: KText(
-                                        text:'400',
-                                      //  textAlign: TextAlign.right,
-                                        style: SafeGoogleFont (
-                                          'Poppins',
-                                          fontSize: 12*ffem,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.3333333333*ffem/fem,
-                                          color: Color(0xff7a91b0),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  // jan28H (6:237)
-                                  left: 84.8071136475*fem,
-                                  top: 308.6781616211*fem,
-                                  child: Align(
-                                    child: SizedBox(
-                                      width: 18*fem,
-                                      height: 11*fem,
-                                      child: KText(
-                                       text: 'Jan',
-                                      //  textAlign: TextAlign.center,
-                                        style: SafeGoogleFont (
-                                          'Epilogue',
-                                          fontSize: 10*ffem,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.025*ffem/fem,
-                                          color: Color(0xff464e5f),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  // febW3T (6:238)
-                                  left: 140.8477020264*fem,
-                                  top: 308.6781616211*fem,
-                                  child: Align(
-                                    child: SizedBox(
-                                      width: 18*fem,
-                                      height: 11*fem,
-                                      child: KText(
-                                        text:
-                                        'Feb',
-                                       // textAlign: TextAlign.center,
-                                        style: SafeGoogleFont (
-                                          'Epilogue',
-                                          fontSize: 10*ffem,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.025*ffem/fem,
-                                          color: Color(0xff464e5f),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  // marzzD (6:239)
-                                  left: 182.3781738281*fem,
-                                  top: 308.6781616211*fem,
-                                  child: Align(
-                                    child: SizedBox(
-                                      width: 19*fem,
-                                      height: 11*fem,
-                                      child: KText(
-                                        text: 'Mar',
-                                       // textAlign: TextAlign.center,
-                                        style: SafeGoogleFont (
-                                          'Epilogue',
-                                          fontSize: 10*ffem,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.025*ffem/fem,
-                                          color: Color(0xff464e5f),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  // apruLV (6:240)
-                                  left: 239.4187469482*fem,
-                                  top: 308.6781616211*fem,
-                                  child: Align(
-                                    child: SizedBox(
-                                      width: 17*fem,
-                                      height: 11*fem,
-                                      child: KText(
-                                        text:  'Apr',
-                                       // textAlign: TextAlign.center,
-                                        style: SafeGoogleFont (
-                                          'Epilogue',
-                                          fontSize: 10*ffem,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.025*ffem/fem,
-                                          color: Color(0xff464e5f),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  // maybz1 (6:241)
-                                  left: 294.5685424805*fem,
-                                  top: 308.6781616211*fem,
-                                  child: Align(
-                                    child: SizedBox(
-                                      width: 20*fem,
-                                      height: 11*fem,
-                                      child: KText(
-                                        text:'May',
-                                       // textAlign: TextAlign.center,
-                                        style: SafeGoogleFont (
-                                          'Epilogue',
-                                          fontSize: 10*ffem,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.025*ffem/fem,
-                                          color: Color(0xff464e5f),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  // junVJh (6:242)
-                                  left: 350.3908691406*fem,
-                                  top: 308.6781616211*fem,
-                                  child: Align(
-                                    child: SizedBox(
-                                      width: 18*fem,
-                                      height: 11*fem,
-                                      child: KText(
-                                        text: 'Jun',
-                                        //textAlign: TextAlign.center,
-                                        style: SafeGoogleFont (
-                                          'Epilogue',
-                                          fontSize: 10*ffem,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.025*ffem/fem,
-                                          color: Color(0xff464e5f),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  // junBSR (6:243)
-                                  left: 406.4315185547*fem,
-                                  top: 308.6781616211*fem,
-                                  child: Align(
-                                    child: SizedBox(
-                                      width: 18*fem,
-                                      height: 11*fem,
-                                      child: KText(
-                                        text:  'Jun',
-                                      //  textAlign: TextAlign.center,
-                                        style: SafeGoogleFont (
-                                          'Epilogue',
-                                          fontSize: 10*ffem,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.025*ffem/fem,
-                                          color: Color(0xff464e5f),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  // julUwK (6:244)
-                                  left: 464.4721374512*fem,
-                                  top: 308.6781616211*fem,
-                                  child: Align(
-                                    child: SizedBox(
-                                      width: 14*fem,
-                                      height: 11*fem,
-                                      child: KText(
-                                        text:'Jul',
-                                       // textAlign: TextAlign.center,
-                                        style: SafeGoogleFont (
-                                          'Epilogue',
-                                          fontSize: 10*ffem,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.025*ffem/fem,
-                                          color: Color(0xff464e5f),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  // septmZ3 (6:245)
-                                  left: 503.8299865723*fem,
-                                  top: 308.6781616211*fem,
-                                  child: Align(
-                                    child: SizedBox(
-                                      width: 23*fem,
-                                      height: 11*fem,
-                                      child: KText(
-                                        text:'Sept',
-                                        //textAlign: TextAlign.center,
-                                        style: SafeGoogleFont (
-                                          'Epilogue',
-                                          fontSize: 10*ffem,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.025*ffem/fem,
-                                          color: Color(0xff464e5f),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  // octpXK (6:246)
-                                  left: 561.1522827148*fem,
-                                  top: 308.6781616211*fem,
-                                  child: Align(
-                                    child: SizedBox(
-                                      width: 18*fem,
-                                      height: 11*fem,
-                                      child: KText(
-                                        text: 'Oct',
-                                        //textAlign: TextAlign.center,
-                                        style: SafeGoogleFont (
-                                          'Epilogue',
-                                          fontSize: 10*ffem,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.025*ffem/fem,
-                                          color: Color(0xff464e5f),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  // novvKT (6:247)
-                                  left: 617.3020019531*fem,
-                                  top: 308.6781616211*fem,
-                                  child: Align(
-                                    child: SizedBox(
-                                      width: 19*fem,
-                                      height: 11*fem,
-                                      child: KText(
-                                        text: 'Nov',
-                                        //textAlign: TextAlign.center,
-                                        style: SafeGoogleFont (
-                                          'Epilogue',
-                                          fontSize: 10*ffem,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.025*ffem/fem,
-                                          color: Color(0xff464e5f),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  // desou3 (6:248)
-                                  left: 673.3426513672*fem,
-                                  top: 308.6781616211*fem,
-                                  child: Align(
-                                    child: SizedBox(
-                                      width: 19*fem,
-                                      height: 11*fem,
-                                      child: KText(
-                                        text:  'Des',
-                                        //textAlign: TextAlign.center,
-                                        style: SafeGoogleFont (
-                                          'Epilogue',
-                                          fontSize: 10*ffem,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.025*ffem/fem,
-                                          color: Color(0xff464e5f),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  // frame10Jqo (6:249)
-                                  left: 81.6243896484*fem,
-                                  top: 110.7471237183*fem,
-                                  child: Container(
-                                    width: 589.64*fem,
-                                    height: 192.04*fem,
-                                    child: Center(
-                                      // autogrouperqmEDf (T1eGi8HtX396G1Z4V3ERqM)
-                                      child: SizedBox(
-                                        width: 589.64*fem,
-                                        height: 192.04*fem,
-                                        child: Image.asset(
-                                          'assets/images/auto-group-erqm.png',
-                                          width: 589.64*fem,
-                                          height: 192.04*fem,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  // ellipse40jgD (6:256)
-                                  left: 462.9442138672*fem,
-                                  top: 121.3505783081*fem,
-                                  child: Align(
-                                    child: SizedBox(
-                                      width: 17.06*fem,
-                                      height: 16.49*fem,
-                                      child: Image.asset(
-                                        'assets/images/ellipse-40.png',
-                                        width: 17.06*fem,
-                                        height: 16.49*fem,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  // group10pBs (6:258)
-                                  left: 129.4540100098*fem,
-                                  top: 367.5862121582*fem,
-                                  child: Container(
-                                    width: 383*fem,
-                                    height: 12*fem,
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          // frame9X6H (6:267)
-                                          margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 16*fem, 0*fem),
-                                          padding: EdgeInsets.fromLTRB(0*fem, 0*fem, 48*fem, 0*fem),
-                                          height: double.infinity,
-                                          child: Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                // rectangle2172Yq (6:269)
-                                                margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 4*fem, 0*fem),
-                                                width: 12*fem,
-                                                height: 12*fem,
-                                                decoration: BoxDecoration (
-                                                  borderRadius: BorderRadius.circular(2*fem),
-                                                  color: Color(0xffa700ff),
-                                                ),
-                                              ),
-                                              KText(
-                                                // loyalcustomerswvh (6:270)
-                                                text:'Alumnus',
-                                                style: SafeGoogleFont (
-                                                  'Epilogue',
-                                                  fontSize: 12*ffem,
-                                                  fontWeight: FontWeight.w500,
-                                                  height: 1.025*ffem/fem,
-                                                  color: Color(0xff464e5f),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          // frame8HUm (6:263)
-                                          margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 16*fem, 0*fem),
-                                          padding: EdgeInsets.fromLTRB(0*fem, 0*fem, 39*fem, 0*fem),
-                                          height: double.infinity,
-                                          child: Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                // rectangle2171Qm (6:265)
-                                                margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 4*fem, 0*fem),
-                                                width: 12*fem,
-                                                height: 12*fem,
-                                                decoration: BoxDecoration (
-                                                  borderRadius: BorderRadius.circular(2*fem),
-                                                  color: Color(0xffef4444),
-                                                ),
-                                              ),
-                                              KText(
-                                                // newcustomers8VP (6:266)
-                                                text: 'Students',
-                                                style: SafeGoogleFont (
-                                                  'Epilogue',
-                                                  fontSize: 12*ffem,
-                                                  fontWeight: FontWeight.w500,
-                                                  height: 1.025*ffem/fem,
-                                                  color: Color(0xff464e5f),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          // frame74tq (6:259)
-                                          padding: EdgeInsets.fromLTRB(0*fem, 0*fem, 33*fem, 0*fem),
-                                          height: double.infinity,
-                                          child: Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                // rectangle21713P (6:261)
-                                                margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 4*fem, 0*fem),
-                                                width: 12*fem,
-                                                height: 12*fem,
-                                                decoration: BoxDecoration (
-                                                  borderRadius: BorderRadius.circular(2*fem),
-                                                  color: Color(0xff3cd856),
-                                                ),
-                                              ),
-                                              KText(
-                                                // uniquecustomersjEH (6:262)
-                                                text:'Connections',
-                                                style: SafeGoogleFont (
-                                                  'Epilogue',
-                                                  fontSize: 12*ffem,
-                                                  fontWeight: FontWeight.w500,
-                                                  height: 1.025*ffem/fem,
-                                                  color: Color(0xff464e5f),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                            child: LineChartSample1(),
+                           // LineChartMap(isShowingMainData: true,)
+                            // Stack(
+                            //   children: [
+                            //     Positioned(
+                            //       // cardheaderuMB (6:222)
+                            //       left: 6.0913696289*fem,
+                            //       top: 0*fem,
+                            //       child: Container(
+                            //         padding: EdgeInsets.fromLTRB(22.91*fem, 24*fem, 22.91*fem, 19.4*fem),
+                            //         width: 713.91*fem,
+                            //         height: 75.4*fem,
+                            //         child: KText(
+                            //           text:
+                            //           'App Usage',
+                            //           style: SafeGoogleFont (
+                            //             'Poppins',
+                            //             fontSize: 20*ffem,
+                            //             fontWeight: FontWeight.w600,
+                            //             height: 1.6*ffem/fem,
+                            //             color: Color(0xff05004e),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Positioned(
+                            //       // axisZRj (6:226)
+                            //       left: 62.1319732666*fem,
+                            //       top: 109.5689620972*fem,
+                            //       child: Container(
+                            //         width: 516*fem,
+                            //         height: 165*fem,
+                            //         child: Column(
+                            //           crossAxisAlignment: CrossAxisAlignment.center,
+                            //           children: [
+                            //             Container(
+                            //               // axisU2u (6:231)
+                            //               width: double.infinity,
+                            //               height: 1*fem,
+                            //               decoration: BoxDecoration (
+                            //                 color: Color(0x0a464e5f),
+                            //               ),
+                            //             ),
+                            //             SizedBox(
+                            //               height: 40*fem,
+                            //             ),
+                            //             Container(
+                            //               // axisnZP (6:230)
+                            //               width: double.infinity,
+                            //               height: 1*fem,
+                            //               decoration: BoxDecoration (
+                            //                 color: Color(0x0a464e5f),
+                            //               ),
+                            //             ),
+                            //             SizedBox(
+                            //               height: 40*fem,
+                            //             ),
+                            //             Container(
+                            //               // axisKJR (6:229)
+                            //               width: double.infinity,
+                            //               height: 1*fem,
+                            //               decoration: BoxDecoration (
+                            //                 color: Color(0x0a464e5f),
+                            //               ),
+                            //             ),
+                            //             SizedBox(
+                            //               height: 40*fem,
+                            //             ),
+                            //             Container(
+                            //               // axis4G1 (6:228)
+                            //               width: double.infinity,
+                            //               height: 1*fem,
+                            //               decoration: BoxDecoration (
+                            //                 color: Color(0x0a464e5f),
+                            //               ),
+                            //             ),
+                            //             SizedBox(
+                            //               height: 40*fem,
+                            //             ),
+                            //             Container(
+                            //               // axisQ4y (6:227)
+                            //               width: double.infinity,
+                            //               height: 1*fem,
+                            //               decoration: BoxDecoration (
+                            //                 color: Color(0x0a464e5f),
+                            //               ),
+                            //             ),
+                            //           ],
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Positioned(
+                            //       // x6V (6:232)
+                            //       left: 45.6040649414*fem,
+                            //       top: 294.540222168*fem,
+                            //       child: Align(
+                            //         child: SizedBox(
+                            //           width: 8*fem,
+                            //           height: 16*fem,
+                            //           child: KText(
+                            //             text:
+                            //             '0',
+                            //             //textAlign: TextAlign.right,
+                            //             style: SafeGoogleFont (
+                            //               'Poppins',
+                            //               fontSize: 12*ffem,
+                            //               fontWeight: FontWeight.w400,
+                            //               height: 1.3333333333*ffem/fem,
+                            //               color: Color(0xff7a91b0),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Positioned(
+                            //       // SXT (6:233)
+                            //       left: 34.6040344238*fem,
+                            //       top: 246.2356262207*fem,
+                            //       child: Align(
+                            //         child: SizedBox(
+                            //           width: 19*fem,
+                            //           height: 16*fem,
+                            //           child: KText(
+                            //             text:
+                            //             '100',
+                            //             //textAlign: TextAlign.right,
+                            //             style: SafeGoogleFont (
+                            //               'Poppins',
+                            //               fontSize: 12*ffem,
+                            //               fontWeight: FontWeight.w400,
+                            //               height: 1.3333333333*ffem/fem,
+                            //               color: Color(0xff7a91b0),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Positioned(
+                            //       // vBj (6:234)
+                            //       left: 31.6040496826*fem,
+                            //       top: 196.7528686523*fem,
+                            //       child: Align(
+                            //         child: SizedBox(
+                            //           width: 22*fem,
+                            //           height: 16*fem,
+                            //           child: KText(
+                            //            text: '200',
+                            //          //   textAlign: TextAlign.right,
+                            //             style: SafeGoogleFont (
+                            //               'Poppins',
+                            //               fontSize: 12*ffem,
+                            //               fontWeight: FontWeight.w400,
+                            //               height: 1.3333333333*ffem/fem,
+                            //               color: Color(0xff7a91b0),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Positioned(
+                            //       // R8V (6:235)
+                            //       left: 30.6040344238*fem,
+                            //       top: 149.6264343262*fem,
+                            //       child: Align(
+                            //         child: SizedBox(
+                            //           width: 23*fem,
+                            //           height: 16*fem,
+                            //           child: KText(
+                            //             text:'300',
+                            //             //textAlign: TextAlign.right,
+                            //             style: SafeGoogleFont (
+                            //               'Poppins',
+                            //               fontSize: 12*ffem,
+                            //               fontWeight: FontWeight.w400,
+                            //               height: 1.3333333333*ffem/fem,
+                            //               color: Color(0xff7a91b0),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Positioned(
+                            //       // XBX (6:236)
+                            //       left: 30.6040344238*fem,
+                            //       top: 101.3218383789*fem,
+                            //       child: Align(
+                            //         child: SizedBox(
+                            //           width: 23*fem,
+                            //           height: 16*fem,
+                            //           child: KText(
+                            //             text:'400',
+                            //           //  textAlign: TextAlign.right,
+                            //             style: SafeGoogleFont (
+                            //               'Poppins',
+                            //               fontSize: 12*ffem,
+                            //               fontWeight: FontWeight.w400,
+                            //               height: 1.3333333333*ffem/fem,
+                            //               color: Color(0xff7a91b0),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Positioned(
+                            //       // jan28H (6:237)
+                            //       left: 84.8071136475*fem,
+                            //       top: 308.6781616211*fem,
+                            //       child: Align(
+                            //         child: SizedBox(
+                            //           width: 18*fem,
+                            //           height: 11*fem,
+                            //           child: KText(
+                            //            text: 'Jan',
+                            //           //  textAlign: TextAlign.center,
+                            //             style: SafeGoogleFont (
+                            //               'Epilogue',
+                            //               fontSize: 10*ffem,
+                            //               fontWeight: FontWeight.w400,
+                            //               height: 1.025*ffem/fem,
+                            //               color: Color(0xff464e5f),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Positioned(
+                            //       // febW3T (6:238)
+                            //       left: 140.8477020264*fem,
+                            //       top: 308.6781616211*fem,
+                            //       child: Align(
+                            //         child: SizedBox(
+                            //           width: 18*fem,
+                            //           height: 11*fem,
+                            //           child: KText(
+                            //             text:
+                            //             'Feb',
+                            //            // textAlign: TextAlign.center,
+                            //             style: SafeGoogleFont (
+                            //               'Epilogue',
+                            //               fontSize: 10*ffem,
+                            //               fontWeight: FontWeight.w400,
+                            //               height: 1.025*ffem/fem,
+                            //               color: Color(0xff464e5f),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Positioned(
+                            //       // marzzD (6:239)
+                            //       left: 182.3781738281*fem,
+                            //       top: 308.6781616211*fem,
+                            //       child: Align(
+                            //         child: SizedBox(
+                            //           width: 19*fem,
+                            //           height: 11*fem,
+                            //           child: KText(
+                            //             text: 'Mar',
+                            //            // textAlign: TextAlign.center,
+                            //             style: SafeGoogleFont (
+                            //               'Epilogue',
+                            //               fontSize: 10*ffem,
+                            //               fontWeight: FontWeight.w400,
+                            //               height: 1.025*ffem/fem,
+                            //               color: Color(0xff464e5f),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Positioned(
+                            //       // apruLV (6:240)
+                            //       left: 239.4187469482*fem,
+                            //       top: 308.6781616211*fem,
+                            //       child: Align(
+                            //         child: SizedBox(
+                            //           width: 17*fem,
+                            //           height: 11*fem,
+                            //           child: KText(
+                            //             text:  'Apr',
+                            //            // textAlign: TextAlign.center,
+                            //             style: SafeGoogleFont (
+                            //               'Epilogue',
+                            //               fontSize: 10*ffem,
+                            //               fontWeight: FontWeight.w400,
+                            //               height: 1.025*ffem/fem,
+                            //               color: Color(0xff464e5f),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Positioned(
+                            //       // maybz1 (6:241)
+                            //       left: 294.5685424805*fem,
+                            //       top: 308.6781616211*fem,
+                            //       child: Align(
+                            //         child: SizedBox(
+                            //           width: 20*fem,
+                            //           height: 11*fem,
+                            //           child: KText(
+                            //             text:'May',
+                            //            // textAlign: TextAlign.center,
+                            //             style: SafeGoogleFont (
+                            //               'Epilogue',
+                            //               fontSize: 10*ffem,
+                            //               fontWeight: FontWeight.w400,
+                            //               height: 1.025*ffem/fem,
+                            //               color: Color(0xff464e5f),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Positioned(
+                            //       // junVJh (6:242)
+                            //       left: 350.3908691406*fem,
+                            //       top: 308.6781616211*fem,
+                            //       child: Align(
+                            //         child: SizedBox(
+                            //           width: 18*fem,
+                            //           height: 11*fem,
+                            //           child: KText(
+                            //             text: 'Jun',
+                            //             //textAlign: TextAlign.center,
+                            //             style: SafeGoogleFont (
+                            //               'Epilogue',
+                            //               fontSize: 10*ffem,
+                            //               fontWeight: FontWeight.w400,
+                            //               height: 1.025*ffem/fem,
+                            //               color: Color(0xff464e5f),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Positioned(
+                            //       // junBSR (6:243)
+                            //       left: 406.4315185547*fem,
+                            //       top: 308.6781616211*fem,
+                            //       child: Align(
+                            //         child: SizedBox(
+                            //           width: 18*fem,
+                            //           height: 11*fem,
+                            //           child: KText(
+                            //             text:  'Jun',
+                            //           //  textAlign: TextAlign.center,
+                            //             style: SafeGoogleFont (
+                            //               'Epilogue',
+                            //               fontSize: 10*ffem,
+                            //               fontWeight: FontWeight.w400,
+                            //               height: 1.025*ffem/fem,
+                            //               color: Color(0xff464e5f),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Positioned(
+                            //       // julUwK (6:244)
+                            //       left: 464.4721374512*fem,
+                            //       top: 308.6781616211*fem,
+                            //       child: Align(
+                            //         child: SizedBox(
+                            //           width: 14*fem,
+                            //           height: 11*fem,
+                            //           child: KText(
+                            //             text:'Jul',
+                            //            // textAlign: TextAlign.center,
+                            //             style: SafeGoogleFont (
+                            //               'Epilogue',
+                            //               fontSize: 10*ffem,
+                            //               fontWeight: FontWeight.w400,
+                            //               height: 1.025*ffem/fem,
+                            //               color: Color(0xff464e5f),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Positioned(
+                            //       // septmZ3 (6:245)
+                            //       left: 503.8299865723*fem,
+                            //       top: 308.6781616211*fem,
+                            //       child: Align(
+                            //         child: SizedBox(
+                            //           width: 23*fem,
+                            //           height: 11*fem,
+                            //           child: KText(
+                            //             text:'Sept',
+                            //             //textAlign: TextAlign.center,
+                            //             style: SafeGoogleFont (
+                            //               'Epilogue',
+                            //               fontSize: 10*ffem,
+                            //               fontWeight: FontWeight.w400,
+                            //               height: 1.025*ffem/fem,
+                            //               color: Color(0xff464e5f),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Positioned(
+                            //       // octpXK (6:246)
+                            //       left: 561.1522827148*fem,
+                            //       top: 308.6781616211*fem,
+                            //       child: Align(
+                            //         child: SizedBox(
+                            //           width: 18*fem,
+                            //           height: 11*fem,
+                            //           child: KText(
+                            //             text: 'Oct',
+                            //             //textAlign: TextAlign.center,
+                            //             style: SafeGoogleFont (
+                            //               'Epilogue',
+                            //               fontSize: 10*ffem,
+                            //               fontWeight: FontWeight.w400,
+                            //               height: 1.025*ffem/fem,
+                            //               color: Color(0xff464e5f),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Positioned(
+                            //       // novvKT (6:247)
+                            //       left: 617.3020019531*fem,
+                            //       top: 308.6781616211*fem,
+                            //       child: Align(
+                            //         child: SizedBox(
+                            //           width: 19*fem,
+                            //           height: 11*fem,
+                            //           child: KText(
+                            //             text: 'Nov',
+                            //             //textAlign: TextAlign.center,
+                            //             style: SafeGoogleFont (
+                            //               'Epilogue',
+                            //               fontSize: 10*ffem,
+                            //               fontWeight: FontWeight.w400,
+                            //               height: 1.025*ffem/fem,
+                            //               color: Color(0xff464e5f),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Positioned(
+                            //       // desou3 (6:248)
+                            //       left: 673.3426513672*fem,
+                            //       top: 308.6781616211*fem,
+                            //       child: Align(
+                            //         child: SizedBox(
+                            //           width: 19*fem,
+                            //           height: 11*fem,
+                            //           child: KText(
+                            //             text:  'Des',
+                            //             //textAlign: TextAlign.center,
+                            //             style: SafeGoogleFont (
+                            //               'Epilogue',
+                            //               fontSize: 10*ffem,
+                            //               fontWeight: FontWeight.w400,
+                            //               height: 1.025*ffem/fem,
+                            //               color: Color(0xff464e5f),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Positioned(
+                            //       // frame10Jqo (6:249)
+                            //       left: 81.6243896484*fem,
+                            //       top: 110.7471237183*fem,
+                            //       child: Container(
+                            //         width: 589.64*fem,
+                            //         height: 192.04*fem,
+                            //         child: Center(
+                            //           // autogrouperqmEDf (T1eGi8HtX396G1Z4V3ERqM)
+                            //           child: SizedBox(
+                            //             width: 589.64*fem,
+                            //             height: 192.04*fem,
+                            //             child: Image.asset(
+                            //               'assets/images/auto-group-erqm.png',
+                            //               width: 589.64*fem,
+                            //               height: 192.04*fem,
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Positioned(
+                            //       // ellipse40jgD (6:256)
+                            //       left: 462.9442138672*fem,
+                            //       top: 121.3505783081*fem,
+                            //       child: Align(
+                            //         child: SizedBox(
+                            //           width: 17.06*fem,
+                            //           height: 16.49*fem,
+                            //           child: Image.asset(
+                            //             'assets/images/ellipse-40.png',
+                            //             width: 17.06*fem,
+                            //             height: 16.49*fem,
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Positioned(
+                            //       // group10pBs (6:258)
+                            //       left: 129.4540100098*fem,
+                            //       top: 367.5862121582*fem,
+                            //       child: Container(
+                            //         width: 383*fem,
+                            //         height: 12*fem,
+                            //         child: Row(
+                            //           crossAxisAlignment: CrossAxisAlignment.center,
+                            //           children: [
+                            //             Container(
+                            //               // frame9X6H (6:267)
+                            //               margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 16*fem, 0*fem),
+                            //               padding: EdgeInsets.fromLTRB(0*fem, 0*fem, 48*fem, 0*fem),
+                            //               height: double.infinity,
+                            //               child: Row(
+                            //                 crossAxisAlignment: CrossAxisAlignment.start,
+                            //                 children: [
+                            //                   Container(
+                            //                     // rectangle2172Yq (6:269)
+                            //                     margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 4*fem, 0*fem),
+                            //                     width: 12*fem,
+                            //                     height: 12*fem,
+                            //                     decoration: BoxDecoration (
+                            //                       borderRadius: BorderRadius.circular(2*fem),
+                            //                       color: Color(0xffa700ff),
+                            //                     ),
+                            //                   ),
+                            //                   KText(
+                            //                     // loyalcustomerswvh (6:270)
+                            //                     text:'Alumnus',
+                            //                     style: SafeGoogleFont (
+                            //                       'Epilogue',
+                            //                       fontSize: 12*ffem,
+                            //                       fontWeight: FontWeight.w500,
+                            //                       height: 1.025*ffem/fem,
+                            //                       color: Color(0xff464e5f),
+                            //                     ),
+                            //                   ),
+                            //                 ],
+                            //               ),
+                            //             ),
+                            //             Container(
+                            //               // frame8HUm (6:263)
+                            //               margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 16*fem, 0*fem),
+                            //               padding: EdgeInsets.fromLTRB(0*fem, 0*fem, 39*fem, 0*fem),
+                            //               height: double.infinity,
+                            //               child: Row(
+                            //                 crossAxisAlignment: CrossAxisAlignment.start,
+                            //                 children: [
+                            //                   Container(
+                            //                     // rectangle2171Qm (6:265)
+                            //                     margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 4*fem, 0*fem),
+                            //                     width: 12*fem,
+                            //                     height: 12*fem,
+                            //                     decoration: BoxDecoration (
+                            //                       borderRadius: BorderRadius.circular(2*fem),
+                            //                       color: Color(0xffef4444),
+                            //                     ),
+                            //                   ),
+                            //                   KText(
+                            //                     // newcustomers8VP (6:266)
+                            //                     text: 'Students',
+                            //                     style: SafeGoogleFont (
+                            //                       'Epilogue',
+                            //                       fontSize: 12*ffem,
+                            //                       fontWeight: FontWeight.w500,
+                            //                       height: 1.025*ffem/fem,
+                            //                       color: Color(0xff464e5f),
+                            //                     ),
+                            //                   ),
+                            //                 ],
+                            //               ),
+                            //             ),
+                            //             Container(
+                            //               // frame74tq (6:259)
+                            //               padding: EdgeInsets.fromLTRB(0*fem, 0*fem, 33*fem, 0*fem),
+                            //               height: double.infinity,
+                            //               child: Row(
+                            //                 crossAxisAlignment: CrossAxisAlignment.start,
+                            //                 children: [
+                            //                   Container(
+                            //                     // rectangle21713P (6:261)
+                            //                     margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 4*fem, 0*fem),
+                            //                     width: 12*fem,
+                            //                     height: 12*fem,
+                            //                     decoration: BoxDecoration (
+                            //                       borderRadius: BorderRadius.circular(2*fem),
+                            //                       color: Color(0xff3cd856),
+                            //                     ),
+                            //                   ),
+                            //                   KText(
+                            //                     // uniquecustomersjEH (6:262)
+                            //                     text:'Connections',
+                            //                     style: SafeGoogleFont (
+                            //                       'Epilogue',
+                            //                       fontSize: 12*ffem,
+                            //                       fontWeight: FontWeight.w500,
+                            //                       height: 1.025*ffem/fem,
+                            //                       color: Color(0xff464e5f),
+                            //                     ),
+                            //                   ),
+                            //                 ],
+                            //               ),
+                            //             ),
+                            //           ],
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
                           ),
                         ],
                       ),
@@ -2159,7 +2167,7 @@ class _DashBoardState extends State<DashBoard> {
         color: Color(0xffFFFFFF),
         surfaceTintColor: Color(0xffFFFFFF),
         shadowColor: Colors.black12,
-        position:  const RelativeRect.fromLTRB(550, 70, 200, 500),
+        position:  const RelativeRect.fromLTRB(500, 70, 300, 550),
         items: [
           PopupMenuItem(
             child: PopupMenuButton(
@@ -2339,13 +2347,10 @@ class _DashBoardState extends State<DashBoard> {
             ),
             onTap: () {
               setState(() {
-                changeLocale(context, 'pt');
                 flagvalue= "PT";
+                changeLocale(context, 'pt');
                 langvalue='Portuguese';
                 //changeHomeViewLanguage();
-              });
-              setState(() {
-
               });
             },
           ),
@@ -2364,8 +2369,8 @@ class _DashBoardState extends State<DashBoard> {
             ),
             onTap: () {
               setState(() {
-                changeLocale(context, 'fr');
                 flagvalue= "Fr";
+                changeLocale(context, 'fr');
                 langvalue='French';
                 //changeHomeViewLanguage();
               });
@@ -2387,7 +2392,7 @@ class _DashBoardState extends State<DashBoard> {
             onTap: () {
               setState(() {
                 changeLocale(context, 'nl');
-                flagvalue= "NL";
+                flagvalue= "nl";
                 langvalue='Dutch';
                 //changeHomeViewLanguage();
               });
@@ -2452,8 +2457,8 @@ class _DashBoardState extends State<DashBoard> {
             ),
             onTap: () {
               setState(() {
-                changeLocale(context, 'sv');
                 flagvalue= "SE";
+                changeLocale(context, 'sv');
                 langvalue='Swedish';
                 //changeHomeViewLanguage();
               });
@@ -2474,8 +2479,8 @@ class _DashBoardState extends State<DashBoard> {
             ),
             onTap: () {
               setState(() {
-                changeLocale(context, 'ltz');
                 flagvalue= "lu";
+                changeLocale(context, 'ltz');
                 langvalue='Luxembourish';
                 //changeHomeViewLanguage();
               });

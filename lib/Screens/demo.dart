@@ -5,18 +5,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
-
 import '../Models/Language_Model.dart';
+import 'Setting_Screen.dart';
 import '../utils.dart';
 import 'Events_Screen.dart';
 import 'Gallery_Screen.dart';
 import 'Message_Screen.dart';
 import 'News_Screen.dart';
 import 'Reports_Screen.dart';
-import 'Setting_Screen.dart';
 import 'Signin.dart';
 import 'Users_Screen.dart';
+import 'Setting_Screen.dart';
 
 
 List<bool> isSelected = [true, false, false, false, false,false, false, false, false,false,];
@@ -32,34 +31,36 @@ List<NavElement> navElements = [
   NavElement(),
   NavElement(),
 ];
+
 List<String> texts = [
   'Dashboard',
-  'User Management',
   'Reports',
   'Users',
   'Gallery',
   'Events',
   'News ',
+  'User Management',
   'Messages',
   'Setting',
   'Sign out',
 ];
+
 List<IconData> icons = [
   Icons.data_saver_off,
   Icons.groups,
-  Icons.auto_graph_rounded,
   Icons.person_outlined,
   Icons.image_outlined,
   Icons.event,
   Icons.newspaper_sharp,
+  Icons.auto_graph_rounded,
   Icons.message,
   Icons.settings,
   Icons.logout_sharp,
 ];
 
 class MyWidget extends StatefulWidget {
-  String?Authusertype;
-   MyWidget({this.Authusertype});
+  String?email;
+   MyWidget({this.email});
 
   @override
   _MyWidgetState createState() => _MyWidgetState();
@@ -76,10 +77,18 @@ class _MyWidgetState extends State<MyWidget> {
     }
   }
   var pages;
+
+
+  String userEmail="";
   @override
   void initState() {
+    print("ints funxtionssssssssssssssssssssssssssssssssssssssssssssssssssssss");
+    print(widget.email);
+
     setState(() {
-      pages = DashBoard();
+
+      pages = DashBoard( usermail: widget.email.toString(),);
+
     });
     // TODO: implement initState
     super.initState();
@@ -147,37 +156,37 @@ class _MyWidgetState extends State<MyWidget> {
                                   select(navElements.indexOf(e));
                                   if(navElements.indexOf(e)==0){
                                     setState(() {
-                                      pages=DashBoard();
+                                      pages=DashBoard( usermail: widget.email.toString(),);
                                     });
                                   }
                                   if(navElements.indexOf(e)==1){
                                     setState(() {
-                                      pages=UsersManagement();
+                                      pages=Reports_Screen();
                                     });
                                   }
                                   if(navElements.indexOf(e)==2){
                                     setState(() {
-                                      pages=Reports_Screen();
+                                      pages=Users_Screen();
                                     });
                                   }
                                   if(navElements.indexOf(e)==3){
                                     setState(() {
-                                      pages=Users_Screen();
+                                      pages=Gallery_Screen();
                                     });
                                   }
                                   if(navElements.indexOf(e)==4){
                                     setState(() {
-                                      pages=Gallery_Screen();
+                                      pages=Events_Screen();
                                     });
                                   }
                                   if(navElements.indexOf(e)==5){
                                     setState(() {
-                                      pages=Events_Screen();
+                                      pages=News_Screen();
                                     });
                                   }
                                   if(navElements.indexOf(e)==6){
                                     setState(() {
-                                      pages=News_Screen();
+                                      pages=UsersManagement();
                                     });
                                   }
                                   if(navElements.indexOf(e)==7){
@@ -187,7 +196,7 @@ class _MyWidgetState extends State<MyWidget> {
                                   }
                                   if(navElements.indexOf(e)==8){
                                     setState(() {
-                                      pages=Setting_Screen();
+                                      pages=SettingsTabs();
                                     });
                                   }
                                   if(navElements.indexOf(e)==9){
@@ -364,7 +373,6 @@ class _NavElementState extends State<NavElement> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    print('hello');
     super.initState();
     _tcc = AnimationController(
         duration: Duration(milliseconds: 375),

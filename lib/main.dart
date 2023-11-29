@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: FirebaseAuth.instance.currentUser==null?SigninPage():MyWidget(Authusertype: FirebaseAuth.instance.currentUser!.email),
+        home: FirebaseAuth.instance.currentUser==null?SigninPage():MyWidget(email: FirebaseAuth.instance.currentUser!.email),
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
