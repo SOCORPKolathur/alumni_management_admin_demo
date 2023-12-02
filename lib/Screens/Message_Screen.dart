@@ -23,14 +23,18 @@ class _Message_ScreenState extends State<Message_Screen> with SingleTickerProvid
 
   var expand="";
   var select;
+  bool activeStatus=false;
   String name="";
   String UserImg="";
   String usertoken="";
 
   final TextEditingController message = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   final homecontroller = Get.put(HomeController());
   TabController?tabController;
   int selectTabIndex=0;
+
+  String SerachValue="";
   @override
   void initState() {
     tabController=TabController(length: 3, vsync: this);
@@ -104,6 +108,7 @@ class _Message_ScreenState extends State<Message_Screen> with SingleTickerProvid
                       borderRadius: BorderRadius.circular(5)
                     ),
                     child: TextField(
+                      controller: _searchController,
                       style: SafeGoogleFont (
                         'Nunito',
                         fontSize: width/113.833,
@@ -123,6 +128,13 @@ class _Message_ScreenState extends State<Message_Screen> with SingleTickerProvid
                         contentPadding: EdgeInsets.only(bottom: height/65.1,top: height/65.1),
 
                       ),
+                      onChanged: (value){
+                        setState(() {
+                          SerachValue=value;
+                        });
+                        print(SerachValue);
+                        print("Serach___________________________");
+                      },
 
                     ),
                   ),
@@ -226,362 +238,158 @@ class _Message_ScreenState extends State<Message_Screen> with SingleTickerProvid
                               ListView.builder(
                                 itemCount: snapshot.data!.docs.length,
                                 itemBuilder: (context, index) {
-                                  return
-                                    Padding(
-                                      padding:  EdgeInsets.only(
+                                  if(SerachValue!=""){
 
-                                          left:width/653 ,
-                                          right:width/653 ,
-                                          top:height/328.5 ,
-                                          bottom:height/328.5
-                                      ),
-                                      child: Container(
-                                        margin: EdgeInsets.only(left:  width/273.2,right: width/273.2),
-                                        decoration: BoxDecoration(
-                                            color: select==index?Color(0xffF7F7FF):Colors.transparent,
-                                            border: Border(
-                                                bottom: BorderSide(color: Colors.grey.shade300)
-                                            )
+                                   if(snapshot.data!.docs[index]['Name'].toString().toLowerCase().
+                                   contains(SerachValue.toLowerCase().toString())||
+                                       snapshot.data!.docs[index]['Phone'].toString().toLowerCase().
+                                       contains(SerachValue.toLowerCase().toString())
+
+                                   ){
+                                     return
+                                       Padding(
+                                         padding:  EdgeInsets.only(
+
+                                             left:width/653 ,
+                                             right:width/653 ,
+                                             top:height/328.5 ,
+                                             bottom:height/328.5
+                                         ),
+                                         child: Container(
+                                           margin: EdgeInsets.only(left:  width/273.2,right: width/273.2),
+                                           decoration: BoxDecoration(
+                                               color: select==index?Color(0xffF7F7FF):Colors.transparent,
+                                               border: Border(
+                                                   bottom: BorderSide(color: Colors.grey.shade300)
+                                               )
+                                           ),
+                                           child: ListTile(
+                                             onTap: (){
+                                               ischatfuntion(snapshot.data!.docs[index].id);
+                                               setState(() {
+                                                 select=index;
+                                                 expand= snapshot.data!.docs[index].id;
+                                                 name=snapshot.data!.docs[index]['Name'];
+                                                 usertoken=snapshot.data!.docs[index]['Token'];
+                                                 UserImg=snapshot.data!.docs[index]['UserImg'];
+                                                 activeStatus=snapshot.data!.docs[index]['Active'];
+                                               });
+                                             },
+                                             leading:
+                                             Container(
+                                               height: height/20.9,
+                                               width: width/44.5333,
+                                               decoration: BoxDecoration(
+                                                   color: Color(0xffDFDEFF),
+                                                   borderRadius: BorderRadius.circular(100)
+                                               ),
+                                               child:
+                                               Image.network(snapshot.data!.docs[index]["UserImg"]),
+                                             ),
+                                             title: KText(text:snapshot.data!.docs[index]['Name'].toString(),style:
+                                             SafeGoogleFont (
+                                               'Nunito',
+                                               fontSize: width/113.833,
+                                               fontWeight: FontWeight.w700,
+                                               color: Color(0xff030229),
+                                             ),),
+                                             subtitle:
+                                             KText(text:"${snapshot.data!.docs[index]['department'].toString()} ${snapshot.data!.docs[index]['Batch'].toString()} Batch",
+                                               style: SafeGoogleFont (
+                                                 'Nunito',
+                                                 fontSize: width/113.833,
+                                                 fontWeight: FontWeight.w700,
+                                                 color: Color(0xff68677F),
+                                               ),) ,
+                                             // trailing:  KText(text:"1 min ago",
+                                             //   style: SafeGoogleFont (
+                                             //     'Nunito',
+                                             //     fontSize: width/113.833,
+                                             //     fontWeight: FontWeight.w700,
+                                             //     color: Color(0xff68677F),
+                                             //   ),) ,
+                                           ),
+                                         ),
+                                       );
+                                   }
+                                  }
+                                  else if(SerachValue==""){
+                                    return
+                                      Padding(
+                                        padding:  EdgeInsets.only(
+
+                                            left:width/653 ,
+                                            right:width/653 ,
+                                            top:height/328.5 ,
+                                            bottom:height/328.5
                                         ),
-                                        child: ListTile(
-                                          onTap: (){
-                                            ischatfuntion(snapshot.data!.docs[index].id);
-                                            setState(() {
-                                              select=index;
-                                              expand= snapshot.data!.docs[index].id;
-                                              name=snapshot.data!.docs[index]['Name'];
-                                              usertoken=snapshot.data!.docs[index]['Token'];
-                                              UserImg=snapshot.data!.docs[index]['UserImg'];
-                                            });
-                                          },
-                                          leading:
-                                          Container(
-                                            height: height/20.9,
-                                            width: width/44.5333,
-                                            decoration: BoxDecoration(
-                                                color: Color(0xffDFDEFF),
-                                                borderRadius: BorderRadius.circular(100)
-                                            ),
-                                            child:
-                                            Image.network(snapshot.data!.docs[index]["UserImg"]),
+                                        child: Container(
+                                          margin: EdgeInsets.only(left:  width/273.2,right: width/273.2),
+                                          decoration: BoxDecoration(
+                                              color: select==index?Color(0xffF7F7FF):Colors.transparent,
+                                              border: Border(
+                                                  bottom: BorderSide(color: Colors.grey.shade300)
+                                              )
                                           ),
-                                          title: KText(text:snapshot.data!.docs[index]['Name'].toString(),style:
-                                          SafeGoogleFont (
-                                            'Nunito',
-                                            fontSize: width/113.833,
-                                            fontWeight: FontWeight.w700,
-                                            color: Color(0xff030229),
-                                          ),),
-                                          subtitle:
-                                          KText(text:snapshot.data!.docs[index]['lastchat'].toString(),
-                                            style: SafeGoogleFont (
+                                          child: ListTile(
+                                            onTap: (){
+                                              ischatfuntion(snapshot.data!.docs[index].id);
+                                              setState(() {
+                                                select=index;
+                                                expand= snapshot.data!.docs[index].id;
+                                                name=snapshot.data!.docs[index]['Name'];
+                                                usertoken=snapshot.data!.docs[index]['Token'];
+                                                UserImg=snapshot.data!.docs[index]['UserImg'];
+                                                activeStatus=snapshot.data!.docs[index]['Active'];
+                                              });
+                                            },
+                                            leading:
+                                            Container(
+                                              height: height/20.9,
+                                              width: width/44.5333,
+                                              decoration: BoxDecoration(
+                                                  color: Color(0xffDFDEFF),
+                                                  borderRadius: BorderRadius.circular(100)
+                                              ),
+                                              child:
+                                              Image.network(snapshot.data!.docs[index]["UserImg"]),
+                                            ),
+                                            title: KText(text:snapshot.data!.docs[index]['Name'].toString(),style:
+                                            SafeGoogleFont (
                                               'Nunito',
                                               fontSize: width/113.833,
                                               fontWeight: FontWeight.w700,
-                                              color: Color(0xff68677F),
-                                            ),) ,
-                                          trailing:  KText(text:"1 min ago",
-                                            style: SafeGoogleFont (
-                                              'Nunito',
-                                              fontSize: width/113.833,
-                                              fontWeight: FontWeight.w700,
-                                              color: Color(0xff68677F),
-                                            ),) ,
+                                              color: Color(0xff030229),
+                                            ),),
+                                            subtitle:
+                                            KText(text:"${snapshot.data!.docs[index]['department'].toString()} ${snapshot.data!.docs[index]['Batch'].toString()} Batch",
+                                              style: SafeGoogleFont (
+                                                'Nunito',
+                                                fontSize: width/113.833,
+                                                fontWeight: FontWeight.w700,
+                                                color: Color(0xff68677F),
+                                              ),) ,
+                                            // trailing:  KText(text:"1 min ago",
+                                            //   style: SafeGoogleFont (
+                                            //     'Nunito',
+                                            //     fontSize: width/113.833,
+                                            //     fontWeight: FontWeight.w700,
+                                            //     color: Color(0xff68677F),
+                                            //   ),) ,
+                                          ),
                                         ),
-                                      ),
-                                    );
+                                      );
+                                  }
+
                                 },);
 
                           },
                         ),
 
-                        StreamBuilder<QuerySnapshot>(
-                          stream: FirebaseFirestore.instance.collection("Users").
-                          orderBy('timestamp',descending: true).snapshots(),
-                          builder: (context, snapshot){
-                            if(snapshot.hasData==null){
-                              return Center(
-                                  child: SizedBox(
-                                    height: height / 5.06,
-                                    width: width / 2.61,
-                                    child: Lottie.asset(
-                                        "assets/Loading.json"),
-                                  ));
-                            }
-                            if(!snapshot.hasData){
-                              return Center(
-                                  child: SizedBox(
-                                    height: height / 5.06,
-                                    width: width / 2.61,
-                                    child: Lottie.asset(
-                                        "assets/Loading.json"),
-                                  ));
-                            }
-
-                            return
-                              ListView.builder(
-                                itemCount: snapshot.data!.docs.length,
-                                itemBuilder: (context, index) {
-                                  return
-                                    Padding(
-                                      padding:  EdgeInsets.only(
-
-                                          left:width/653 ,
-                                          right:width/653 ,
-                                          top:height/328.5 ,
-                                          bottom:height/328.5
-                                      ),
-                                      child: Container(
-                                        margin: EdgeInsets.only(left:  width/273.2,right: width/273.2),
-                                        decoration: BoxDecoration(
-                                            color: select==index?Color(0xffF7F7FF):Colors.transparent,
-                                            border: Border(
-                                                bottom: BorderSide(color: Colors.grey.shade300)
-                                            )
-                                        ),
-                                        child: ListTile(
-                                          onTap: (){
-                                            ischatfuntion(snapshot.data!.docs[index].id);
-                                            setState(() {
-                                              select=index;
-                                              expand= snapshot.data!.docs[index].id;
-                                              name=snapshot.data!.docs[index]['Name'];
-                                              usertoken=snapshot.data!.docs[index]['Token'];
-                                              UserImg=snapshot.data!.docs[index]['UserImg'];
-                                            });
-                                          },
-                                          leading:
-                                          Container(
-                                            height: height/20.9,
-                                            width: width/44.5333,
-                                            decoration: BoxDecoration(
-                                                color: Color(0xffDFDEFF),
-                                                borderRadius: BorderRadius.circular(100)
-                                            ),
-                                            child:
-                                            Image.network(snapshot.data!.docs[index]["UserImg"]),
-                                          ),
-                                          title: KText(text:snapshot.data!.docs[index]['Name'].toString(),style:
-                                          SafeGoogleFont (
-                                            'Nunito',
-                                            fontSize: width/113.833,
-                                            fontWeight: FontWeight.w700,
-                                            color: Color(0xff030229),
-                                          ),),
-                                          subtitle:
-                                          KText(text:snapshot.data!.docs[index]['lastchat'].toString(),
-                                            style: SafeGoogleFont (
-                                              'Nunito',
-                                              fontSize: width/113.833,
-                                              fontWeight: FontWeight.w700,
-                                              color: Color(0xff68677F),
-                                            ),) ,
-                                          trailing:  KText(text:"1 min ago",
-                                            style: SafeGoogleFont (
-                                              'Nunito',
-                                              fontSize: width/113.833,
-                                              fontWeight: FontWeight.w700,
-                                              color: Color(0xff68677F),
-                                            ),) ,
-                                        ),
-                                      ),
-                                    );
-                                },);
-
-                          },
-                        ),
-
-                        StreamBuilder<QuerySnapshot>(
-                          stream: FirebaseFirestore.instance.collection("Users").
-                          orderBy('timestamp',descending: true).snapshots(),
-                          builder: (context, snapshot){
-                            if(snapshot.hasData==null){
-                              return Center(
-                                  child: SizedBox(
-                                    height: height / 5.06,
-                                    width: width / 2.61,
-                                    child: Lottie.asset(
-                                        "assets/Loading.json"),
-                                  ));
-                            }
-                            if(!snapshot.hasData){
-                              return Center(
-                                  child: SizedBox(
-                                    height: height / 5.06,
-                                    width: width / 2.61,
-                                    child: Lottie.asset(
-                                        "assets/Loading.json"),
-                                  ));
-                            }
-
-                            return
-                              ListView.builder(
-                                itemCount: snapshot.data!.docs.length,
-                                itemBuilder: (context, index) {
-                                  return
-                                    Padding(
-                                      padding:  EdgeInsets.only(
-
-                                          left:width/653 ,
-                                          right:width/653 ,
-                                          top:height/328.5 ,
-                                          bottom:height/328.5
-                                      ),
-                                      child: Container(
-                                        margin: EdgeInsets.only(left:  width/273.2,right: width/273.2),
-                                        decoration: BoxDecoration(
-                                            color: select==index?Color(0xffF7F7FF):Colors.transparent,
-                                            border: Border(
-                                                bottom: BorderSide(color: Colors.grey.shade300)
-                                            )
-                                        ),
-                                        child: ListTile(
-                                          onTap: (){
-                                            ischatfuntion(snapshot.data!.docs[index].id);
-                                            setState(() {
-                                              select=index;
-                                              expand= snapshot.data!.docs[index].id;
-                                              name=snapshot.data!.docs[index]['Name'];
-                                              usertoken=snapshot.data!.docs[index]['Token'];
-                                              UserImg=snapshot.data!.docs[index]['UserImg'];
-                                            });
-                                          },
-                                          leading:
-                                          Container(
-                                            height: height/20.9,
-                                            width: width/44.5333,
-                                            decoration: BoxDecoration(
-                                                color: Color(0xffDFDEFF),
-                                                borderRadius: BorderRadius.circular(100)
-                                            ),
-                                            child:
-                                            Image.network(snapshot.data!.docs[index]["UserImg"]),
-                                          ),
-                                          title: KText(text:snapshot.data!.docs[index]['Name'].toString(),style:
-                                          SafeGoogleFont (
-                                            'Nunito',
-                                            fontSize: width/113.833,
-                                            fontWeight: FontWeight.w700,
-                                            color: Color(0xff030229),
-                                          ),),
-                                          subtitle:
-                                          KText(text:snapshot.data!.docs[index]['lastchat'].toString(),
-                                            style: SafeGoogleFont (
-                                              'Nunito',
-                                              fontSize: width/113.833,
-                                              fontWeight: FontWeight.w700,
-                                              color: Color(0xff68677F),
-                                            ),) ,
-                                          trailing:  KText(text:"1 min ago",
-                                            style: SafeGoogleFont (
-                                              'Nunito',
-                                              fontSize: width/113.833,
-                                              fontWeight: FontWeight.w700,
-                                              color: Color(0xff68677F),
-                                            ),) ,
-                                        ),
-                                      ),
-                                    );
-                                },);
-
-                          },
-                        ),
                       ],
                     ),
                   ),
 
-
-                  // StreamBuilder<QuerySnapshot>(
-                  //   stream: FirebaseFirestore.instance.collection("Users").
-                  //   orderBy('timestamp',descending: true).snapshots(),
-                  //   builder: (context, snapshot){
-                  //     if(snapshot.hasData==null){
-                  //       return Center(
-                  //           child: SizedBox(
-                  //             height: height / 5.06,
-                  //             width: width / 2.61,
-                  //             child: Lottie.asset(
-                  //                 "assets/Loading.json"),
-                  //           ));
-                  //     }
-                  //     if(!snapshot.hasData){
-                  //       return Center(
-                  //           child: SizedBox(
-                  //             height: height / 5.06,
-                  //             width: width / 2.61,
-                  //             child: Lottie.asset(
-                  //                 "assets/Loading.json"),
-                  //           ));
-                  //     }
-                  //
-                  //     return
-                  //       Flexible(
-                  //         child: ListView.builder(
-                  //           itemCount: snapshot.data!.docs.length,
-                  //           itemBuilder: (context, index) {
-                  //             return
-                  //               Padding(
-                  //               padding:  EdgeInsets.only(
-                  //
-                  //                   left:width/653 ,
-                  //                   right:width/653 ,
-                  //                   top:height/328.5 ,
-                  //                   bottom:height/328.5
-                  //               ),
-                  //               child: Container(
-                  //                 margin: EdgeInsets.only(left: 5,right: 5),
-                  //                 decoration: BoxDecoration(
-                  //                   color: select==index?Color(0xffF7F7FF):Colors.transparent,
-                  //                   border: Border(
-                  //                     bottom: BorderSide(color: Colors.grey.shade300)
-                  //                   )
-                  //                 ),
-                  //                 child: ListTile(
-                  //                   onTap: (){
-                  //                     ischatfuntion(snapshot.data!.docs[index].id);
-                  //                     setState(() {
-                  //                       select=index;
-                  //                       expand= snapshot.data!.docs[index].id;
-                  //                       name=snapshot.data!.docs[index]['Name'];
-                  //                       usertoken=snapshot.data!.docs[index]['Token'];
-                  //                       UserImg=snapshot.data!.docs[index]['UserImg'];
-                  //                     });
-                  //                   },
-                  //                   leading:
-                  //                   Container(
-                  //                     height: height/20.9,
-                  //                     width: width/44.5333,
-                  //                     decoration: BoxDecoration(
-                  //                       color: Color(0xffDFDEFF),
-                  //                       borderRadius: BorderRadius.circular(100)
-                  //                     ),
-                  //                     child:
-                  //                     Image.network(snapshot.data!.docs[index]["UserImg"]),
-                  //                   ),
-                  //                   title: KText(snapshot.data!.docs[index]['Name'].toString(),style:
-                  //                   SafeGoogleFont (
-                  //                     'Nunito',
-                  //                     fontSize: width/113.833,
-                  //                     fontWeight: FontWeight.w700,
-                  //                     color: Color(0xff030229),
-                  //                   ),),
-                  //                   subtitle:KText(snapshot.data!.docs[index]['lastchat'].toString(),
-                  //                     style: SafeGoogleFont (
-                  //                     'Nunito',
-                  //                     fontSize: width/113.833,
-                  //                     fontWeight: FontWeight.w700,
-                  //                     color: Color(0xff68677F),
-                  //                   ),) ,
-                  //                   trailing: snapshot.data!.docs[index]["ischat"]==true?
-                  //                   Icon(Icons.circle,color: Colors.red,size: 18,):SizedBox(),
-                  //                 ),
-                  //               ),
-                  //             );
-                  //           },),
-                  //       );
-                  //
-                  //   },
-                  // ),
                 ],
               ),
             ),
@@ -645,7 +453,7 @@ class _Message_ScreenState extends State<Message_Screen> with SingleTickerProvid
                                         color: Color(0xff030229),
                                       ),),
 
-                                      KText(text:"Online", style: SafeGoogleFont (
+                                      KText(text:activeStatus?"Online":"", style: SafeGoogleFont (
                                         'Nunito',
                                         fontSize: width/113.833,
                                         fontWeight: FontWeight.w700,
@@ -941,17 +749,18 @@ class _Message_ScreenState extends State<Message_Screen> with SingleTickerProvid
 
 
   chatfuntion() {
-    FirebaseFirestore.instance.collection("Users").doc(expand).collection("Chats").doc().set({
+    FirebaseFirestore.instance.collection("Users").doc(expand).collection("Messages").doc().set({
       "Message": message.text,
       "time": DateFormat('hh:mm a').format(DateTime.now()),
       "timestamp": DateTime.now().millisecondsSinceEpoch,
       "From": "Admin",
+      "date":"${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}"
     });
-    FirebaseFirestore.instance.collection("Users").doc(expand).update({
-      "timestamp": DateTime.now().millisecondsSinceEpoch,
-      "lastchat":message.text,
-
-    });
+    // FirebaseFirestore.instance.collection("Users").doc(expand).update({
+    //   "timestamp": DateTime.now().millisecondsSinceEpoch,
+    //   "lastchat":message.text,
+    //
+    // });
   }
 
   ischatfuntion(id){

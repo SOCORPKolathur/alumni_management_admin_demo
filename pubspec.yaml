@@ -68,6 +68,11 @@ dependencies:
   syncfusion_flutter_maps: ^21.2.10
   countries_world_map: ^1.1.1
   fl_chart: ^0.64.0
+  file_picker: ^5.3.3
+  printing: ^5.11.0
+  pdf: ^3.10.4
+  csv: ^5.0.2
+  url_launcher: ^6.1.12
 
 
 

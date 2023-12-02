@@ -1,4 +1,5 @@
 import 'package:alumni_management_admin/Screens/Dashboard.dart';
+import 'package:alumni_management_admin/Screens/Events_Page.dart';
 import 'package:alumni_management_admin/Screens/usersmanagment.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,7 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../Models/Language_Model.dart';
 import 'Setting_Screen.dart';
 import '../utils.dart';
-import 'Events_Screen.dart';
+
 import 'Gallery_Screen.dart';
 import 'Message_Screen.dart';
 import 'News_Screen.dart';
@@ -176,7 +177,7 @@ class _MyWidgetState extends State<MyWidget> {
                                   }
                                   if(navElements.indexOf(e)==4){
                                     setState(() {
-                                      pages=Events_Screen();
+                                      pages=EventsTab();
                                     });
                                   }
                                   if(navElements.indexOf(e)==5){
@@ -202,6 +203,8 @@ class _MyWidgetState extends State<MyWidget> {
                                   if(navElements.indexOf(e)==9){
                                     LogoutPopup();
                                   }
+
+
                                 });
                               },
                             ),
