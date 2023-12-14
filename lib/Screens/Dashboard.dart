@@ -1,10 +1,10 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_flags/country_flags.dart';
-import 'package:fl_chart/fl_chart.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../Demo_Page.dart';
 import '../Line_Graph.dart';
 import '../Models/Language_Model.dart';
@@ -56,8 +56,6 @@ class _DashBoardState extends State<DashBoard> {
 
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final double width=MediaQuery.of(context).size.width;
@@ -66,7 +64,9 @@ class _DashBoardState extends State<DashBoard> {
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
     return  FadeInRight(
-      child: Container(
+      duration: Duration(milliseconds: 600),
+
+      child: SizedBox(
         // autogroupnx99mr9 (T1hGz35EtnvJDP43Jynx99)
         width: 1574*fem,
         height: double.infinity,
@@ -79,7 +79,7 @@ class _DashBoardState extends State<DashBoard> {
                 padding: EdgeInsets.fromLTRB(39*fem, 30*fem, 65*fem, 30*fem),
                 width: double.infinity,
                 height: 120*fem,
-                decoration: BoxDecoration (
+                decoration: const BoxDecoration (
                   color: Color(0xffffffff),
                 ),
                 child: Row(
@@ -97,7 +97,7 @@ class _DashBoardState extends State<DashBoard> {
                           fontSize: 36*ffem,
                           fontWeight: FontWeight.w600,
                           height: 1.3999999364*ffem/fem,
-                          color: Color(0xff151d48),
+                          color: const Color(0xff151d48),
                         ),
                       ),
                     ),
@@ -184,18 +184,18 @@ class _DashBoardState extends State<DashBoard> {
                                       fontSize: 18*ffem,
                                       fontWeight: FontWeight.w600,
                                       height: 1.5*ffem/fem,
-                                      color: Color(0xff374557),
+                                      color: const Color(0xff374557),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            Icon(Icons.arrow_drop_down)
+                            const Icon(Icons.arrow_drop_down)
                           ],
                         ),
                       ),
                     ),
-                    Container(
+                    SizedBox(
                       // menuaMf (6:133)
                       height: double.infinity,
                       child: Row(
@@ -205,7 +205,7 @@ class _DashBoardState extends State<DashBoard> {
                           InkWell(
                             onTap:(){
 
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => Notification_Screen(),));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const Notification_Screen(),));
                             },
                             child: Container(
                               // notifications8PB (6:142)
@@ -254,20 +254,15 @@ class _DashBoardState extends State<DashBoard> {
                                         child: Row(
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
-                                            Container(
-                                              // dineshjGV (6:141)
-                                          //    margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 53*fem, 0*fem),
-                                              child:
-                                              KText(
-                                                text:
-                                                "Admin",
-                                                style: SafeGoogleFont (
-                                                  'Poppins',
-                                                  fontSize: 16*ffem,
-                                                  fontWeight: FontWeight.w500,
-                                                  height: 1.5*ffem/fem,
-                                                  color: Color(0xff151d48),
-                                                ),
+                                            KText(
+                                              text:
+                                              "Admin",
+                                              style: SafeGoogleFont (
+                                                'Poppins',
+                                                fontSize: 16*ffem,
+                                                fontWeight: FontWeight.w500,
+                                                height: 1.5*ffem/fem,
+                                                color: const Color(0xff151d48),
                                               ),
                                             ),
 
@@ -283,7 +278,7 @@ class _DashBoardState extends State<DashBoard> {
                                           fontSize: 14*ffem,
                                           fontWeight: FontWeight.w400,
                                           height: 1.4285714286*ffem/fem,
-                                          color: Color(0xff737791),
+                                          color: const Color(0xff737791),
                                         ),
                                       ),
                                     ],
@@ -320,12 +315,12 @@ class _DashBoardState extends State<DashBoard> {
                         width: double.infinity,
                         height: double.infinity,
                         decoration: BoxDecoration (
-                          border: Border.all(color: Color(0xfff8f9fa)),
-                          color: Color(0xffffffff),
+                          border: Border.all(color: const Color(0xfff8f9fa)),
+                          color: const Color(0xffffffff),
                           borderRadius: BorderRadius.circular(20*fem),
                           boxShadow: [
                             BoxShadow(
-                              color: Color(0x80ededed),
+                              color: const Color(0x80ededed),
                               offset: Offset(0*fem, 4*fem),
                               blurRadius: 10*fem,
                             ),
@@ -334,7 +329,7 @@ class _DashBoardState extends State<DashBoard> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Container(
+                            SizedBox(
                               // autogroup1pexb5j (T1hJpEXHhsKfhmHXMj1peX)
                               height: double.infinity,
                               child: Column(
@@ -358,7 +353,7 @@ class _DashBoardState extends State<DashBoard> {
                                               fontSize: 20*ffem,
                                               fontWeight: FontWeight.w600,
                                               height: 1.6*ffem/fem,
-                                              color: Color(0xff05004e),
+                                              color: const Color(0xff05004e),
                                             ),
                                           ),
                                         ),
@@ -374,7 +369,7 @@ class _DashBoardState extends State<DashBoard> {
                                               fontSize: 16*ffem,
                                               fontWeight: FontWeight.w400,
                                               height: 1.875*ffem/fem,
-                                              color: Color(0xff737791),
+                                              color: const Color(0xff737791),
                                             ),
                                           ),
                                         ),
@@ -387,7 +382,7 @@ class _DashBoardState extends State<DashBoard> {
                                     padding: EdgeInsets.fromLTRB(20*fem, 20*fem, 20*fem, 20*fem),
                                     width: 260*fem,
                                     decoration: BoxDecoration (
-                                      color: Color(0xffffe2e5),
+                                      color: const Color(0xffffe2e5),
                                       borderRadius: BorderRadius.circular(20*fem),
                                     ),
                                     child: Column(
@@ -445,7 +440,7 @@ class _DashBoardState extends State<DashBoard> {
                                               fontSize: 24*ffem,
                                               fontWeight: FontWeight.w600,
                                               height: 1.3333333333*ffem/fem,
-                                              color: Color(0xff151d48),
+                                              color: const Color(0xff151d48),
                                             ),
                                           ),
                                         ),
@@ -458,7 +453,7 @@ class _DashBoardState extends State<DashBoard> {
                                             fontSize: 16*ffem,
                                             fontWeight: FontWeight.w500,
                                             height: 1.5*ffem/fem,
-                                            color: Color(0xff415166),
+                                            color: const Color(0xff415166),
                                           ),
                                         ),
                                       ],
@@ -470,7 +465,7 @@ class _DashBoardState extends State<DashBoard> {
                             SizedBox(
                               width: 32*fem,
                             ),
-                            Container(
+                            SizedBox(
                               // autogroupjenfvaV (T1hK6tiCTeNCNLLmzYjeNf)
                               width: 260*fem,
                               child: Column(
@@ -483,7 +478,7 @@ class _DashBoardState extends State<DashBoard> {
                                     padding: EdgeInsets.fromLTRB(20*fem, 20*fem, 20*fem, 20*fem),
                                     width: double.infinity,
                                     decoration: BoxDecoration (
-                                      color: Color(0xffFFF4DE),
+                                      color: const Color(0xffFFF4DE),
                                       borderRadius: BorderRadius.circular(20*fem),
                                     ),
                                     child: Column(
@@ -541,7 +536,7 @@ class _DashBoardState extends State<DashBoard> {
                                               fontSize: 24*ffem,
                                               fontWeight: FontWeight.w600,
                                               height: 1.3333333333*ffem/fem,
-                                              color: Color(0xff151d48),
+                                              color: const Color(0xff151d48),
                                             ),
                                           ),
                                         ),
@@ -554,7 +549,7 @@ class _DashBoardState extends State<DashBoard> {
                                             fontSize: 16*ffem,
                                             fontWeight: FontWeight.w500,
                                             height: 1.5*ffem/fem,
-                                            color: Color(0xff415166),
+                                            color: const Color(0xff415166),
                                           ),
                                         ),
                                       ],
@@ -566,7 +561,7 @@ class _DashBoardState extends State<DashBoard> {
                             SizedBox(
                               width: 32*fem,
                             ),
-                            Container(
+                            SizedBox(
                               // autogroupjenfvaV (T1hK6tiCTeNCNLLmzYjeNf)
                               width: 260*fem,
                               child: Column(
@@ -579,7 +574,7 @@ class _DashBoardState extends State<DashBoard> {
                                     padding: EdgeInsets.fromLTRB(20*fem, 20*fem, 20*fem, 20*fem),
                                     width: double.infinity,
                                     decoration: BoxDecoration (
-                                      color: Color(0xffDCFCE7),
+                                      color: const Color(0xffDCFCE7),
                                       borderRadius: BorderRadius.circular(20*fem),
                                     ),
                                     child: Column(
@@ -637,7 +632,7 @@ class _DashBoardState extends State<DashBoard> {
                                               fontSize: 24*ffem,
                                               fontWeight: FontWeight.w600,
                                               height: 1.3333333333*ffem/fem,
-                                              color: Color(0xff151d48),
+                                              color: const Color(0xff151d48),
                                             ),
                                           ),
                                         ),
@@ -650,7 +645,7 @@ class _DashBoardState extends State<DashBoard> {
                                             fontSize: 16*ffem,
                                             fontWeight: FontWeight.w500,
                                             height: 1.5*ffem/fem,
-                                            color: Color(0xff415166),
+                                            color: const Color(0xff415166),
                                           ),
                                         ),
                                       ],
@@ -662,7 +657,7 @@ class _DashBoardState extends State<DashBoard> {
                             SizedBox(
                               width: 32*fem,
                             ),
-                            Container(
+                            SizedBox(
                               // autogroupjenfvaV (T1hK6tiCTeNCNLLmzYjeNf)
                               width: 260*fem,
                               child: Column(
@@ -675,7 +670,7 @@ class _DashBoardState extends State<DashBoard> {
                                     padding: EdgeInsets.fromLTRB(20*fem, 20*fem, 20*fem, 20*fem),
                                     width: double.infinity,
                                     decoration: BoxDecoration (
-                                      color: Color(0xffF3E8FF),
+                                      color: const Color(0xffF3E8FF),
                                       borderRadius: BorderRadius.circular(20*fem),
                                     ),
                                     child: Column(
@@ -733,7 +728,7 @@ class _DashBoardState extends State<DashBoard> {
                                               fontSize: 24*ffem,
                                               fontWeight: FontWeight.w600,
                                               height: 1.3333333333*ffem/fem,
-                                              color: Color(0xff151d48),
+                                              color: const Color(0xff151d48),
                                             ),
                                           ),
                                         ),
@@ -746,7 +741,7 @@ class _DashBoardState extends State<DashBoard> {
                                             fontSize: 16*ffem,
                                             fontWeight: FontWeight.w500,
                                             height: 1.5*ffem/fem,
-                                            color: Color(0xff415166),
+                                            color: const Color(0xff415166),
                                           ),
                                         ),
                                       ],
@@ -758,7 +753,7 @@ class _DashBoardState extends State<DashBoard> {
                             SizedBox(
                               width: 32*fem,
                             ),
-                            Container(
+                            SizedBox(
                               // autogroupjenfvaV (T1hK6tiCTeNCNLLmzYjeNf)
                               width: 260*fem,
                               child: Column(
@@ -771,7 +766,7 @@ class _DashBoardState extends State<DashBoard> {
                                     padding: EdgeInsets.fromLTRB(20*fem, 20*fem, 20*fem, 20*fem),
                                     width: double.infinity,
                                     decoration: BoxDecoration (
-                                      color: Color(0xffd4ecff),
+                                      color: const Color(0xffd4ecff),
                                       borderRadius: BorderRadius.circular(20*fem),
                                     ),
                                     child: Column(
@@ -829,7 +824,7 @@ class _DashBoardState extends State<DashBoard> {
                                               fontSize: 24*ffem,
                                               fontWeight: FontWeight.w600,
                                               height: 1.3333333333*ffem/fem,
-                                              color: Color(0xff151d48),
+                                              color: const Color(0xff151d48),
                                             ),
                                           ),
                                         ),
@@ -842,7 +837,7 @@ class _DashBoardState extends State<DashBoard> {
                                             fontSize: 16*ffem,
                                             fontWeight: FontWeight.w500,
                                             height: 1.5*ffem/fem,
-                                            color: Color(0xff415166),
+                                            color: const Color(0xff415166),
                                           ),
                                         ),
                                       ],
@@ -879,19 +874,19 @@ class _DashBoardState extends State<DashBoard> {
                                     width: 718.29*fem,
                                     height: 410*fem,
                                     decoration: BoxDecoration (
-                                      border: Border.all(color: Color(0xfff8f9fa)),
-                                     color: Color(0xffffffff),
-                                       
+                                      border: Border.all(color: const Color(0xfff8f9fa)),
+                                     color: const Color(0xffffffff),
+
                                       borderRadius: BorderRadius.circular(20*fem),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Color(0x80ededed),
+                                          color: const Color(0x80ededed),
                                           offset: Offset(0*fem, 4*fem),
                                           blurRadius: 10*fem,
                                         ),
                                       ],
                                     ),
-                                    child:Maopppp()
+                                    child:const Maopppp()
                                     // Container(
                                     //   // world15p5 (6:448)
                                     //   width: double.infinity,
@@ -927,7 +922,7 @@ class _DashBoardState extends State<DashBoard> {
                                           fontSize: 20*ffem,
                                           fontWeight: FontWeight.w600,
                                           height: 1.6*ffem/fem,
-                                          color: Color(0xff05004e),
+                                          color: const Color(0xff05004e),
                                         ),
                                       ),
                                     ),
@@ -936,20 +931,21 @@ class _DashBoardState extends State<DashBoard> {
                               ],
                             ),
                           ),
+
                           Container(
                             // visitorinsightsq6R (6:216)
                              width: 720*fem,
                              height:285 ,
                             decoration: BoxDecoration (
                               borderRadius: BorderRadius.circular(12*fem),
-                              image: DecorationImage (
+                              image: const DecorationImage (
                                 fit: BoxFit.cover,
                                 image: AssetImage (
                                   'assets/images/auto-group-oznf.png',
                                 ),
                               ),
                             ),
-                            child: LineChartSample1(),
+                            child: const LineChartSample1(),
                            // LineChartMap(isShowingMainData: true,)
                             // Stack(
                             //   children: [
@@ -1580,7 +1576,7 @@ class _DashBoardState extends State<DashBoard> {
                           fontSize: 20*ffem,
                           fontWeight: FontWeight.w600,
                           height: 1.6*ffem/fem,
-                          color: Color(0xff05004e),
+                          color: const Color(0xff05004e),
                         ),
                       ),
                     ),
@@ -1610,7 +1606,7 @@ class _DashBoardState extends State<DashBoard> {
                               width: 1119.87*fem,
                               height: 78.22*fem,
                               decoration: BoxDecoration (
-                                color: Color(0xffffffff),
+                                color: const Color(0xffffffff),
                                 borderRadius: BorderRadius.circular(10*fem),
                               ),
                               child: Row(
@@ -1625,7 +1621,7 @@ class _DashBoardState extends State<DashBoard> {
                                           width: 39.11*fem,
                                           height: double.infinity,
                                           decoration: BoxDecoration (
-                                            color: Color(0xfff6d0d0),
+                                            color: const Color(0xfff6d0d0),
                                             borderRadius: BorderRadius.circular(19.5553703308*fem),
                                           ),
                                           child: Center(
@@ -1657,7 +1653,7 @@ class _DashBoardState extends State<DashBoard> {
                                               fontSize: 18*ffem,
                                               fontWeight: FontWeight.w400,
                                               height: 1.3625*ffem/fem,
-                                              color: Color(0xff030229),
+                                              color: const Color(0xff030229),
                                             ),
                                           ),
                                         ),
@@ -1668,13 +1664,13 @@ class _DashBoardState extends State<DashBoard> {
                                   SizedBox(
                                     width:250,
                                     child: KText(
-                                      text:_userdata['Email'],
+                                      text:_userdata['email'],
                                       style: SafeGoogleFont (
                                         'Nunito',
                                         fontSize: 18*ffem,
                                         fontWeight: FontWeight.w400,
                                         height: 1.3625*ffem/fem,
-                                        color: Color(0xff030229),
+                                        color: const Color(0xff030229),
                                       ),
                                     ),
                                   ),
@@ -1688,7 +1684,7 @@ class _DashBoardState extends State<DashBoard> {
                                         fontSize: 18*ffem,
                                         fontWeight: FontWeight.w400,
                                         height: 1.3625*ffem/fem,
-                                        color: Color(0xff030229),
+                                        color: const Color(0xff030229),
                                       ),
                                     ),
                                   ),
@@ -1702,8 +1698,8 @@ class _DashBoardState extends State<DashBoard> {
                                         height: double.infinity,
                                         decoration: BoxDecoration (
                                           color:_userdata['Gender']=="Male"?
-                                          Color(0x195b92ff):
-                                          Color(0xffFEF3F0),
+                                          const Color(0x195b92ff):
+                                          const Color(0xffFEF3F0),
                                           borderRadius: BorderRadius.circular(33*fem),
                                         ),
                                         child: Center(
@@ -1715,7 +1711,7 @@ class _DashBoardState extends State<DashBoard> {
                                               fontWeight: FontWeight.w400,
                                               height: 1.3625*ffem/fem,
                                               color: _userdata['Gender']=="Male"?
-                                              Color(0xff5b92ff):Color(0xffFE8F6B),
+                                              const Color(0xff5b92ff):const Color(0xffFE8F6B),
                                             ),
                                           ),
                                         ),
@@ -1723,23 +1719,20 @@ class _DashBoardState extends State<DashBoard> {
                                     ),
                                   ),
 
-
-
                                   SizedBox(width:width/17.075),
                                   GestureDetector(
                                     onTap: (){
-                                      // setState(() {
-                                      //   if(isFloatingOpen) floating!.remove();
-                                      //   else {
-                                      //     floating = createFloating(context);
-                                      //     Overlay.of(context).insert(floating!);
-                                      //   }
-                                      //   isFloatingOpen = !isFloatingOpen;
-                                      // });
-                                      setState(() {
-                                        viewDocid=_userdata.id;
-                                        viewUser_details=!viewUser_details;
-                                      });
+
+                                      if(viewDocid=='') {
+                                        setState(() {
+                                          viewDocid = _userdata.id;
+                                        });
+                                      }
+                                      else{
+                                        setState(() {
+                                          viewDocid = '';
+                                        });
+                                      }
                                     },
                                     child: SizedBox(
                                       width:60,
@@ -1749,17 +1742,17 @@ class _DashBoardState extends State<DashBoard> {
                                           width: 18.25*fem,
                                           height: 15.56*fem,
                                           decoration: BoxDecoration(
-                                              color:Color(0xff605bff),
+                                              color:const Color(0xff605bff),
                                               borderRadius: BorderRadius.circular(5)
                                           ),
                                           child: Center(child: KText(
-                                            text:viewUser_details?"Close":
+                                            text:viewDocid==_userdata.id?"Close":
                                             "View" , style: SafeGoogleFont (
                                             'Nunito',
                                             fontSize: 16*ffem,
                                             fontWeight: FontWeight.w400,
                                             height: 1.3625*ffem/fem,
-                                            color: Color(0xffFFFFFF),
+                                            color: const Color(0xffFFFFFF),
                                           ),),)
                                         // Image.asset(
                                         //   'assets/images/menu-fRb.png',
@@ -1773,380 +1766,10 @@ class _DashBoardState extends State<DashBoard> {
                               ),
                             );
                           }
-                          return  SizedBox(
-                            child: Center(child: KText( text:"No data", style:  SafeGoogleFont (
-                              'Poppins',
-                              fontSize: 20*ffem,
-                              fontWeight: FontWeight.w600,
-                            ),)),
-                          );
+                          return  const SizedBox();
                           },);
                       },),
-                    // Container(
-                    //   // table1mwf (8:1251)
-                    //   margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 41.33*fem, 16.85*fem),
-                    //   padding: EdgeInsets.fromLTRB(33.71*fem, 25.28*fem, 50.56*fem, 25.28*fem),
-                    //   height: 101.12*fem,
-                    //   decoration: BoxDecoration (
-                    //     color: Color(0xffffffff),
-                    //     borderRadius: BorderRadius.circular(10*fem),
-                    //     boxShadow: [
-                    //       BoxShadow(
-                    //         color: Color(0x11030229),
-                    //         offset: Offset(1*fem, 17*fem),
-                    //         blurRadius: 22*fem,
-                    //       ),
-                    //     ],
-                    //   ),
-                    //   child: Row(
-                    //     crossAxisAlignment: CrossAxisAlignment.center,
-                    //     children: [
-                    //       Container(
-                    //         // imagebgkYh (8:1255)
-                    //         margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 18.74*fem, 0*fem),
-                    //         width: 50.56*fem,
-                    //         height: double.infinity,
-                    //         decoration: BoxDecoration (
-                    //           color: Color(0xffe4e1fb),
-                    //           borderRadius: BorderRadius.circular(25.2794094086*fem),
-                    //         ),
-                    //         child: Center(
-                    //           // imageETs (8:1257)
-                    //           child: SizedBox(
-                    //             width: double.infinity,
-                    //             height: 50.56*fem,
-                    //             child: Container(
-                    //               decoration: BoxDecoration (
-                    //                 borderRadius: BorderRadius.circular(25.2794094086*fem),
-                    //                 image: DecorationImage (
-                    //                   image: AssetImage (
-                    //                     'assets/images/image-bg-V93.png',
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       Container(
-                    //         // johndeoLG1 (8:1254)
-                    //         margin: EdgeInsets.fromLTRB(0*fem, 5.88*fem, 214.27*fem, 0*fem),
-                    //         child: KText(
-                    //           'John Deo',
-                    //           style: SafeGoogleFont (
-                    //             'Nunito',
-                    //             fontSize: 24*ffem,
-                    //             fontWeight: FontWeight.w400,
-                    //             height: 1.3625*ffem/fem,
-                    //             color: Color(0xff030229),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       Container(
-                    //         // johndoe2211gmailcom2uX (8:1266)
-                    //         margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 207.77*fem, 3.71*fem),
-                    //         child: KText(
-                    //           'johndoe2211@gmail.com',
-                    //           style: SafeGoogleFont (
-                    //             'Nunito',
-                    //             fontSize: 22*ffem,
-                    //             fontWeight: FontWeight.w400,
-                    //             height: 1.3625*ffem/fem,
-                    //             color: Color(0xff030229),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       Container(
-                    //         // 8hf (8:1264)
-                    //         margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 107.28*fem, 3.71*fem),
-                    //         child: KText(
-                    //           '+33757005467',
-                    //           style: SafeGoogleFont (
-                    //             'Nunito',
-                    //             fontSize: 22*ffem,
-                    //             fontWeight: FontWeight.w400,
-                    //             height: 1.3625*ffem/fem,
-                    //             color: Color(0xff030229),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       Container(
-                    //         // buttonr7s (8:1267)
-                    //         margin: EdgeInsets.fromLTRB(0*fem, 3.37*fem, 117.97*fem, 1.69*fem),
-                    //         width: 111.23*fem,
-                    //         height: double.infinity,
-                    //         decoration: BoxDecoration (
-                    //           color: Color(0x195b92ff),
-                    //           borderRadius: BorderRadius.circular(33*fem),
-                    //         ),
-                    //         child: Center(
-                    //           child: KText(
-                    //             'Male',
-                    //             style: SafeGoogleFont (
-                    //               'Nunito',
-                    //               fontSize: 22*ffem,
-                    //               fontWeight: FontWeight.w400,
-                    //               height: 1.3625*ffem/fem,
-                    //               color: Color(0xff5b92ff),
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       Container(
-                    //         // menug6u (8:1258)
-                    //         margin: EdgeInsets.fromLTRB(0*fem, 0.84*fem, 0*fem, 0*fem),
-                    //         width: 23.59*fem,
-                    //         height: 5.9*fem,
-                    //         child: Image.asset(
-                    //           'assets/images/menu-ZtM.png',
-                    //           width: 23.59*fem,
-                    //           height: 5.9*fem,
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    // Container(
-                    //   // bgLSM (8:1233)
-                    //   margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 41.33*fem, 16.85*fem),
-                    //   padding: EdgeInsets.fromLTRB(33.71*fem, 25.28*fem, 50.56*fem, 25.28*fem),
-                    //   height: 101.12*fem,
-                    //   decoration: BoxDecoration (
-                    //     color: Color(0xffffffff),
-                    //     borderRadius: BorderRadius.circular(10*fem),
-                    //   ),
-                    //   child: Row(
-                    //     crossAxisAlignment: CrossAxisAlignment.center,
-                    //     children: [
-                    //       Container(
-                    //         // imgbgc8y (8:1237)
-                    //         margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 18.74*fem, 0*fem),
-                    //         width: 50.56*fem,
-                    //         height: double.infinity,
-                    //         decoration: BoxDecoration (
-                    //           color: Color(0xffcbeaf0),
-                    //           borderRadius: BorderRadius.circular(25.2794094086*fem),
-                    //         ),
-                    //         child: Center(
-                    //           // imgjDb (8:1239)
-                    //           child: SizedBox(
-                    //             width: double.infinity,
-                    //             height: 50.56*fem,
-                    //             child: Container(
-                    //               decoration: BoxDecoration (
-                    //                 borderRadius: BorderRadius.circular(25.2794094086*fem),
-                    //                 image: DecorationImage (
-                    //                   image: AssetImage (
-                    //                     'assets/images/img-bg-Hf7.png',
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       Container(
-                    //         // shelbygoodedpm (8:1236)
-                    //         margin: EdgeInsets.fromLTRB(0*fem, 5.94*fem, 161.27*fem, 0*fem),
-                    //         child: KText(
-                    //           'Shelby Goode',
-                    //           style: SafeGoogleFont (
-                    //             'Nunito',
-                    //             fontSize: 24*ffem,
-                    //             fontWeight: FontWeight.w400,
-                    //             height: 1.3625*ffem/fem,
-                    //             color: Color(0xff030229),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       Container(
-                    //         // shelbygoode481gmailcomLUH (8:1247)
-                    //         margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 172.77*fem, 3.71*fem),
-                    //         child: KText(
-                    //           'shelbygoode481@gmail.com',
-                    //           style: SafeGoogleFont (
-                    //             'Nunito',
-                    //             fontSize: 22*ffem,
-                    //             fontWeight: FontWeight.w400,
-                    //             height: 1.3625*ffem/fem,
-                    //             color: Color(0xff030229),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       Container(
-                    //         // 3Nh (8:1245)
-                    //         margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 107.28*fem, 3.71*fem),
-                    //         child: KText(
-                    //           '+33757005467',
-                    //           style: SafeGoogleFont (
-                    //             'Nunito',
-                    //             fontSize: 22*ffem,
-                    //             fontWeight: FontWeight.w400,
-                    //             height: 1.3625*ffem/fem,
-                    //             color: Color(0xff030229),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       Container(
-                    //         // button6Ly (8:1248)
-                    //         margin: EdgeInsets.fromLTRB(0*fem, 1.69*fem, 102.8*fem, 3.37*fem),
-                    //         width: 126.4*fem,
-                    //         height: double.infinity,
-                    //         decoration: BoxDecoration (
-                    //           color: Color(0x19ff8f6b),
-                    //           borderRadius: BorderRadius.circular(33*fem),
-                    //         ),
-                    //         child: Center(
-                    //           child: KText(
-                    //             'Female',
-                    //             style: SafeGoogleFont (
-                    //               'Nunito',
-                    //               fontSize: 22*ffem,
-                    //               fontWeight: FontWeight.w400,
-                    //               height: 1.3625*ffem/fem,
-                    //               color: Color(0xffff8f6b),
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       Opacity(
-                    //         // menuvqo (8:1240)
-                    //         opacity: 0.3,
-                    //         child: Container(
-                    //           margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 0.84*fem),
-                    //           width: 23.59*fem,
-                    //           height: 5.9*fem,
-                    //           child: Image.asset(
-                    //             'assets/images/menu-YU9.png',
-                    //             width: 23.59*fem,
-                    //             height: 5.9*fem,
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    // Container(
-                    //   // bgpAV (8:1214)
-                    //   margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 41.33*fem, 0*fem),
-                    //   padding: EdgeInsets.fromLTRB(33.71*fem, 25.28*fem, 50.56*fem, 25.28*fem),
-                    //   height: 101.12*fem,
-                    //   decoration: BoxDecoration (
-                    //     color: Color(0xffffffff),
-                    //     borderRadius: BorderRadius.circular(10*fem),
-                    //   ),
-                    //   child: Row(
-                    //     crossAxisAlignment: CrossAxisAlignment.center,
-                    //     children: [
-                    //       Container(
-                    //         // imgbgTz9 (8:1229)
-                    //         margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 18.74*fem, 0*fem),
-                    //         width: 50.56*fem,
-                    //         height: double.infinity,
-                    //         decoration: BoxDecoration (
-                    //           color: Color(0xfff6d0d0),
-                    //           borderRadius: BorderRadius.circular(25.2794094086*fem),
-                    //         ),
-                    //         child: Center(
-                    //           // imgP77 (8:1231)
-                    //           child: SizedBox(
-                    //             width: double.infinity,
-                    //             height: 50.56*fem,
-                    //             child: Container(
-                    //               decoration: BoxDecoration (
-                    //                 borderRadius: BorderRadius.circular(25.2794094086*fem),
-                    //                 image: DecorationImage (
-                    //                   fit: BoxFit.cover,
-                    //                   image: AssetImage (
-                    //                     'assets/images/img-bg-yU5.png',
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       Container(
-                    //         // robertbacinsTMs (8:1228)
-                    //         margin: EdgeInsets.fromLTRB(0*fem, 6*fem, 162.27*fem, 0*fem),
-                    //         child: KText(
-                    //           'Robert Bacins',
-                    //           style: SafeGoogleFont (
-                    //             'Nunito',
-                    //             fontSize: 24*ffem,
-                    //             fontWeight: FontWeight.w400,
-                    //             height: 1.3625*ffem/fem,
-                    //             color: Color(0xff030229),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       Container(
-                    //         // robertbacins4182comjKP (8:1226)
-                    //         margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 218.77*fem, 3.71*fem),
-                    //         child: KText(
-                    //           'robertbacins4182@.com',
-                    //           style: SafeGoogleFont (
-                    //             'Nunito',
-                    //             fontSize: 22*ffem,
-                    //             fontWeight: FontWeight.w400,
-                    //             height: 1.3625*ffem/fem,
-                    //             color: Color(0xff030229),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       Container(
-                    //         // 1nh (8:1224)
-                    //         margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 107.28*fem, 3.71*fem),
-                    //         child: KText(
-                    //           '+33757005467',
-                    //           style: SafeGoogleFont (
-                    //             'Nunito',
-                    //             fontSize: 22*ffem,
-                    //             fontWeight: FontWeight.w400,
-                    //             height: 1.3625*ffem/fem,
-                    //             color: Color(0xff030229),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       Container(
-                    //         // buttonvuf (8:1220)
-                    //         margin: EdgeInsets.fromLTRB(0*fem, 1.69*fem, 117.97*fem, 3.37*fem),
-                    //         width: 111.23*fem,
-                    //         height: double.infinity,
-                    //         decoration: BoxDecoration (
-                    //           color: Color(0x195b92ff),
-                    //           borderRadius: BorderRadius.circular(33*fem),
-                    //         ),
-                    //         child: Center(
-                    //           child: Text(
-                    //             'Male',
-                    //             style: SafeGoogleFont (
-                    //               'Nunito',
-                    //               fontSize: 22*ffem,
-                    //               fontWeight: FontWeight.w400,
-                    //               height: 1.3625*ffem/fem,
-                    //               color: Color(0xff5b92ff),
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       Opacity(
-                    //         // menuP2Z (8:1216)
-                    //         opacity: 0.3,
-                    //         child: Container(
-                    //           margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 0.84*fem),
-                    //           width: 23.59*fem,
-                    //           height: 5.9*fem,
-                    //           child: Image.asset(
-                    //             'assets/images/menu-pSu.png',
-                    //             width: 23.59*fem,
-                    //             height: 5.9*fem,
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
+
                   ],
                 ),
               ),
@@ -2164,15 +1787,15 @@ class _DashBoardState extends State<DashBoard> {
 
     await showMenu(
         context: context,
-        color: Color(0xffFFFFFF),
-        surfaceTintColor: Color(0xffFFFFFF),
+        color: const Color(0xffFFFFFF),
+        surfaceTintColor: const Color(0xffFFFFFF),
         shadowColor: Colors.black12,
         position:  const RelativeRect.fromLTRB(500, 70, 300, 550),
         items: [
           PopupMenuItem(
             child: PopupMenuButton(
-              surfaceTintColor:  Color(0xffFFFFFF),
-              color: Color(0xffFFFFFF),
+              surfaceTintColor:  const Color(0xffFFFFFF),
+              color: const Color(0xffFFFFFF),
               shadowColor: Colors.transparent,
               onSelected: (val) {
                 Navigator.pop(context);

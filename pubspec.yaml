@@ -49,7 +49,7 @@ dependencies:
   http: any
   firebase_auth: ^4.14.0
   firebase_storage: ^11.5.1
-  google_translator: ^1.0.0
+  google_translator: any
   flutter_translate: ^4.0.4
   flutter_localization: ^0.1.13
   translator: any
@@ -73,6 +73,11 @@ dependencies:
   pdf: ^3.10.4
   csv: ^5.0.2
   url_launcher: ^6.1.12
+  geolocator: ^10.1.0
+  device_info_plus: ^9.1.1
+  local_session_timeout: ^2.3.2
+  textfield_tags: ^2.0.2
+
 
 
 

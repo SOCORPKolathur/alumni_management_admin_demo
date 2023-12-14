@@ -155,7 +155,7 @@ class _SettingsTabsState extends State<SettingsTabs> {
             height: size.height * 0.98 ,
             width: size.width * 0.81,
             decoration: BoxDecoration(
-              color: Constants().primaryAppColor,
+              color:Colors.white,
               boxShadow: const [
                 BoxShadow(
                   color: Colors.black26,
@@ -187,19 +187,19 @@ class _SettingsTabsState extends State<SettingsTabs> {
                               Logo != ""
                                   ? Image.network(
                                 Logo,
-                                height: 72,
-                                width: 72,
+                                height: height/10.26388,
+                                width: width/21.3333,
                               )
-                                  : const Icon(
+                                  :  Icon(
                                 Icons.church,
                                 color: Colors.white,
-                                size: 52,
+                                size: width/29.538,
                               ),
                               // Icon(
                               //   Icons.church,
                               //   size: width/7.588,
                               // ),
-                              SizedBox(height: 10),
+                              SizedBox(height: height/73.9),
                               InkWell(
                                 onTap: selectImage,
                                 child: Container(
@@ -207,7 +207,7 @@ class _SettingsTabsState extends State<SettingsTabs> {
                                   width: size.width * 0.1,
                                   decoration: BoxDecoration(
                                     color: Constants().primaryAppColor,
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(3),
                                   ),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -221,7 +221,7 @@ class _SettingsTabsState extends State<SettingsTabs> {
                                           fontSize: 20*ffem,
                                           fontWeight: FontWeight.w700,
                                           height: 1.3625*ffem/fem,
-                                          color: Color(0xff000000),
+                                          color: Color(0xffFFFFFF),
                                         ),
                                       ),
                                     ],
@@ -256,15 +256,19 @@ class _SettingsTabsState extends State<SettingsTabs> {
                                         ),
                                       ),
                                       SizedBox(height: height/108.5),
-                                      SizedBox(
+                                      Container(
                                         height: height/16.275,
                                         width: width/5.553,
+                                        decoration: BoxDecoration(color: const Color(0xffDDDEEE),
+                                            borderRadius: BorderRadius.circular(3)),
+                                        padding: EdgeInsets.only(left:width/307.2,right:width/307.2),
                                         child: TextFormField(
                                           controller:
                                           nameController,
                                           onTap: () {},
                                           decoration:
                                           InputDecoration(
+                                            border: InputBorder.none,
                                             hintStyle:
                                             GoogleFonts
                                                 .openSans(
@@ -291,15 +295,19 @@ class _SettingsTabsState extends State<SettingsTabs> {
                                         ),
                                       ),
                                       SizedBox(height: height/108.5),
-                                      SizedBox(
+                                      Container(
                                         height: height/16.275,
                                         width: width/5.553,
+                                        decoration: BoxDecoration(color: const Color(0xffDDDEEE),
+                                            borderRadius: BorderRadius.circular(3)),
+                                        padding: EdgeInsets.only(left:width/307.2,right:width/307.2),
                                         child: TextFormField(
                                           controller:
                                           phoneController,
                                           onTap: () {},
                                           decoration:
                                           InputDecoration(
+                                            border: InputBorder.none,
                                             hintStyle:
                                             GoogleFonts
                                                 .openSans(
@@ -326,15 +334,19 @@ class _SettingsTabsState extends State<SettingsTabs> {
                                         ),
                                       ),
                                       SizedBox(height: height/108.5),
-                                      SizedBox(
+                                      Container(
                                         height: height/16.275,
                                         width: width/5.553,
+                                        decoration: BoxDecoration(color: const Color(0xffDDDEEE),
+                                            borderRadius: BorderRadius.circular(3)),
+                                        padding: EdgeInsets.only(left:width/307.2,right:width/307.2),
                                         child: TextFormField(
                                           controller:
                                           emailController,
                                           onTap: () {},
                                           decoration:
                                           InputDecoration(
+                                            border: InputBorder.none,
                                             hintStyle:
                                             GoogleFonts
                                                 .openSans(
@@ -365,15 +377,19 @@ class _SettingsTabsState extends State<SettingsTabs> {
                                         ),
                                       ),
                                       SizedBox(height: height/108.5),
-                                      SizedBox(
+                                      Container(
                                         height: height/16.275,
                                         width: width/5.553,
+                                        decoration: BoxDecoration(color: const Color(0xffDDDEEE),
+                                            borderRadius: BorderRadius.circular(3)),
+                                        padding: EdgeInsets.only(left:width/307.2,right:width/307.2),
                                         child: TextFormField(
                                           controller:
                                           buildingnoController,
                                           onTap: () {},
                                           decoration:
                                           InputDecoration(
+                                            border: InputBorder.none,
                                             hintStyle:
                                             GoogleFonts
                                                 .openSans(
@@ -400,15 +416,19 @@ class _SettingsTabsState extends State<SettingsTabs> {
                                         ),
                                       ),
                                       SizedBox(height: height/108.5),
-                                      SizedBox(
+                                      Container(
                                         height: height/16.275,
                                         width: width/5.553,
+                                        decoration: BoxDecoration(color: const Color(0xffDDDEEE),
+                                            borderRadius: BorderRadius.circular(3)),
+                                        padding: EdgeInsets.only(left:width/307.2,right:width/307.2),
                                         child: TextFormField(
                                           controller:
                                           streetController,
                                           onTap: () {},
                                           decoration:
                                           InputDecoration(
+                                            border: InputBorder.none,
                                             hintStyle:
                                             GoogleFonts
                                                 .openSans(
@@ -435,15 +455,19 @@ class _SettingsTabsState extends State<SettingsTabs> {
                                         ),
                                       ),
                                       SizedBox(height: height/108.5),
-                                      SizedBox(
+                                      Container(
                                         height: height/16.275,
                                         width: width/5.553,
+                                        decoration: BoxDecoration(color: const Color(0xffDDDEEE),
+                                            borderRadius: BorderRadius.circular(3)),
+                                        padding: EdgeInsets.only(left:width/307.2,right:width/307.2),
                                         child: TextFormField(
                                           controller:
                                           areaController,
                                           onTap: () {},
                                           decoration:
                                           InputDecoration(
+                                            border: InputBorder.none,
                                             hintStyle:
                                             GoogleFonts
                                                 .openSans(
@@ -474,15 +498,19 @@ class _SettingsTabsState extends State<SettingsTabs> {
                                         ),
                                       ),
                                       SizedBox(height: height/108.5),
-                                      SizedBox(
+                                      Container(
                                         height: height/16.275,
                                         width: width/5.553,
+                                        decoration: BoxDecoration(color: const Color(0xffDDDEEE),
+                                            borderRadius: BorderRadius.circular(3)),
+                                        padding: EdgeInsets.only(left:width/307.2,right:width/307.2),
                                         child: TextFormField(
                                           controller:
                                           cityController,
                                           onTap: () {},
                                           decoration:
                                           InputDecoration(
+                                            border: InputBorder.none,
                                             hintStyle:
                                             GoogleFonts
                                                 .openSans(
@@ -509,15 +537,19 @@ class _SettingsTabsState extends State<SettingsTabs> {
                                         ),
                                       ),
                                       SizedBox(height: height/108.5),
-                                      SizedBox(
+                                      Container(
                                         height: height/16.275,
                                         width: width/5.553,
+                                        decoration: BoxDecoration(color: const Color(0xffDDDEEE),
+                                            borderRadius: BorderRadius.circular(3)),
+                                        padding: EdgeInsets.only(left:width/307.2,right:width/307.2),
                                         child: TextFormField(
                                           controller:
                                           stateController,
                                           onTap: () {},
                                           decoration:
                                           InputDecoration(
+                                            border: InputBorder.none,
                                             hintStyle:
                                             GoogleFonts
                                                 .openSans(
@@ -544,15 +576,19 @@ class _SettingsTabsState extends State<SettingsTabs> {
                                         ),
                                       ),
                                       SizedBox(height: height/108.5),
-                                      SizedBox(
+                                      Container(
                                         height: height/16.275,
                                         width: width/5.553,
+                                        decoration: BoxDecoration(color: const Color(0xffDDDEEE),
+                                            borderRadius: BorderRadius.circular(3)),
+                                        padding: EdgeInsets.only(left:width/307.2,right:width/307.2),
                                         child: TextFormField(
                                           controller:
                                           pincodeController,
                                           onTap: () {},
                                           decoration:
                                           InputDecoration(
+                                            border: InputBorder.none,
                                             hintStyle:
                                             GoogleFonts
                                                 .openSans(
@@ -585,15 +621,19 @@ class _SettingsTabsState extends State<SettingsTabs> {
                                         ),
                                       ),
                                       SizedBox(height: height/108.5),
-                                      SizedBox(
+                                      Container(
                                         height: height/16.275,
                                         width: width/5.553,
+                                        decoration: BoxDecoration(color: const Color(0xffDDDEEE),
+                                            borderRadius: BorderRadius.circular(3)),
+                                        padding: EdgeInsets.only(left:width/307.2,right:width/307.2),
                                         child: TextFormField(
                                           controller:
                                           websiteController,
                                           onTap: () {},
                                           decoration:
                                           InputDecoration(
+                                            border: InputBorder.none,
                                             hintStyle:
                                             GoogleFonts
                                                 .openSans(
@@ -620,15 +660,19 @@ class _SettingsTabsState extends State<SettingsTabs> {
                                         ),
                                       ),
                                       SizedBox(height: height/108.5),
-                                      SizedBox(
+                                      Container(
                                         height: height/16.275,
                                         width: width/5.553,
+                                        decoration: BoxDecoration(color: const Color(0xffDDDEEE),
+                                            borderRadius: BorderRadius.circular(3)),
+                                        padding: EdgeInsets.only(left:width/307.2,right:width/307.2),
                                         child: TextFormField(
                                           controller:
                                           altPhoneController,
                                           onTap: () {},
                                           decoration:
                                           InputDecoration(
+                                            border: InputBorder.none,
                                             hintStyle:
                                             GoogleFonts
                                                 .openSans(
@@ -655,15 +699,19 @@ class _SettingsTabsState extends State<SettingsTabs> {
                                         ),
                                       ),
                                       SizedBox(height: height/108.5),
-                                      SizedBox(
+                                      Container(
                                         height: height/16.275,
                                         width: width/5.553,
+                                        decoration: BoxDecoration(color: const Color(0xffDDDEEE),
+                                            borderRadius: BorderRadius.circular(3)),
+                                        padding: EdgeInsets.only(left:width/307.2,right:width/307.2),
                                         child: TextFormField(
                                           controller:
                                           memberIDPrefixController,
                                           onTap: () {},
                                           decoration:
                                           InputDecoration(
+                                            border: InputBorder.none,
                                             hintStyle:
                                             GoogleFonts
                                                 .openSans(
@@ -697,15 +745,19 @@ class _SettingsTabsState extends State<SettingsTabs> {
                                         ),
                                       ),
                                       SizedBox(height: height/108.5),
-                                      SizedBox(
+                                      Container(
                                         height: height/16.275,
                                         width: width/5.553,
+                                        decoration: BoxDecoration(color: const Color(0xffDDDEEE),
+                                            borderRadius: BorderRadius.circular(3)),
+                                        padding: EdgeInsets.only(left:width/307.2,right:width/307.2),
                                         child: TextFormField(
                                           controller:
                                           familyIDPrefixController,
                                           onTap: () {},
                                           decoration:
                                           InputDecoration(
+                                            border: InputBorder.none,
                                             hintStyle:
                                             GoogleFonts
                                                 .openSans(
@@ -724,47 +776,34 @@ class _SettingsTabsState extends State<SettingsTabs> {
                                 mainAxisAlignment:
                                 MainAxisAlignment.end,
                                 children: [
-                                  InkWell(
+
+                                  GestureDetector(
                                     onTap:(){
 
                                       Updatedatafunc();
 
                                     },
                                     child: Container(
-                                      height:height/18.6,
-                                      decoration: BoxDecoration(
-                                        color: Constants()
-                                            .primaryAppColor,
-                                        borderRadius:
-                                        BorderRadius.circular(
-                                            8),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black26,
-                                            offset: Offset(1, 2),
-                                            blurRadius: 3,
-                                          ),
-                                        ],
-                                      ),
-                                      child: Padding(
-                                        padding:
-                                        EdgeInsets.symmetric(
-                                            horizontal: 6),
+                                        height: height/18.475,
+                                        width: width/12.8,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xffD60A0B),
+                                          borderRadius:
+                                          BorderRadius.circular(4),
+                                        ),
                                         child: Center(
                                           child: KText(
-                                            text: "Update",
-                                            style: SafeGoogleFont (
+                                            text: 'Update',
+                                            style: SafeGoogleFont(
                                               'Nunito',
-                                              fontSize: 20*ffem,
-                                              fontWeight: FontWeight.w700,
-                                              height: 1.3625*ffem/fem,
-                                              color: Color(0xff000000),
+                                              fontSize: width/96,
+                                              fontWeight:
+                                              FontWeight.w600,
+                                              color: Color(0xffFFFFFF),
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                    ),
-                                  )
+                                        )),
+                                  ),
                                 ],
                               ),
                             ],

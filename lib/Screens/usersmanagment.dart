@@ -180,17 +180,17 @@ class _UsersManagementState extends State<UsersManagement> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    SizedBox(width:40),
+                    SizedBox(width:width/38.4),
                     SizedBox(
 
                         child: Row(
                           children: [
-                            SizedBox(width:150),
+                            SizedBox(width:width/10.24),
                             KText( text:"Select the Role  : ",style:
                             SafeGoogleFont (
                               'Poppins',
                             )),
-                            SizedBox(width:10),
+                            SizedBox(width:width/153.6),
                             Material(
                               elevation: 2,
                               borderRadius: BorderRadius.circular(8),
@@ -198,7 +198,6 @@ class _UsersManagementState extends State<UsersManagement> {
                               child: SizedBox(
                                 width:width/5.464,
                                 height:height/13.02,
-
                                 child: DropdownButtonHideUnderline(
                                   child: DropdownButtonFormField2<String>(
                                     isExpanded: true,
@@ -238,7 +237,7 @@ class _UsersManagementState extends State<UsersManagement> {
                           ],
                         )),
 
-                    SizedBox(width:30),
+                    SizedBox(width:width/51.2),
 
                     InkWell(
                       onTap: (){
@@ -259,7 +258,7 @@ class _UsersManagementState extends State<UsersManagement> {
                           ),))
                       ),
                     ),
-                    SizedBox(width:30),
+                    SizedBox(width:width/51.2),
                     InkWell(
                       onTap: (){
                         updatefunction();
@@ -425,7 +424,7 @@ class _UsersManagementState extends State<UsersManagement> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 20,),
+                      SizedBox(height: height/36.95,),
 
                       Row(
                         children: [
@@ -509,7 +508,7 @@ class _UsersManagementState extends State<UsersManagement> {
                         ],
                       ),
 
-                      SizedBox(height: 20,),
+                      SizedBox(height: height/36.95,),
 
 
 
@@ -1201,7 +1200,7 @@ class _UsersManagementState extends State<UsersManagement> {
                             SizedBox(height:height/45.5),
                             Row(
                               children: [
-                                SizedBox(width:85),
+                                SizedBox(width:width/18.0705),
                                 KText( text:"Select the User Type",style:
                                 SafeGoogleFont (
                                   'Poppins',
@@ -1304,7 +1303,7 @@ class _UsersManagementState extends State<UsersManagement> {
                                       ),))
                                   ),
                                 ),
-                                SizedBox(width:10),
+                                SizedBox(width:width/153.6),
 
                                 InkWell(
                                   onTap: (){
@@ -1329,7 +1328,7 @@ class _UsersManagementState extends State<UsersManagement> {
                                       ),))
                                   ),
                                 ),
-                                SizedBox(width:10),
+                                SizedBox(width:width/153.6),
                               ],
                             ),
 

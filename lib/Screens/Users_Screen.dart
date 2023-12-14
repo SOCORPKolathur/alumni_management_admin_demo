@@ -8,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import '../Constant_.dart';
 import '../Models/Language_Model.dart';
@@ -271,10 +272,12 @@ class _Users_ScreenState extends State<Users_Screen> {
   final RegExp _inputPattern = RegExp(r'^\d{4}\s\d{4}\s\d{4}$');
   File? Url;
   var Uploaddocument;
-  var Editimg;
   String imgUrl = "";
+  String userUpdateDocumentID = "";
 
-  GlobalKey popmenukey = GlobalKey();
+
+  //static GlobalKey popMenukey = GlobalKey<PopupMenuButtonState>();
+  //List<GlobalKey> popMenukey = List<GlobalKey>.generate(12, (index) => GlobalKey(debugLabel: 'key_$index'),growable: false);
   TextEditingController firstNamecon = TextEditingController();
   TextEditingController middleNamecon = TextEditingController();
   TextEditingController lastNamecon = TextEditingController();
@@ -289,8 +292,7 @@ class _Users_ScreenState extends State<Users_Screen> {
   TextEditingController citycon = TextEditingController(text: "Select City");
   TextEditingController pinCodecon = TextEditingController();
   TextEditingController statecon = TextEditingController(text: "Select State");
-  TextEditingController countrycon =
-      TextEditingController(text: "Select Country");
+  TextEditingController countrycon = TextEditingController(text: "Select Country");
   TextEditingController yearPassedcon = TextEditingController();
   TextEditingController subjectStremdcon = TextEditingController();
   TextEditingController classcon = TextEditingController();
@@ -303,8 +305,7 @@ class _Users_ScreenState extends State<Users_Screen> {
   TextEditingController occupationcon = TextEditingController();
   TextEditingController designationcon = TextEditingController();
   TextEditingController company_concerncon = TextEditingController();
-  TextEditingController maritalStatuscon =
-      TextEditingController(text: "Marital Status");
+  TextEditingController maritalStatuscon = TextEditingController(text: "Marital Status");
   TextEditingController spouseNamecon = TextEditingController();
   TextEditingController anniversaryDatecon = TextEditingController();
   TextEditingController no_of_childreancon = TextEditingController();
@@ -365,7 +366,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
-                                          SizedBox(width: 5),
+                                          SizedBox(width: width/307.2),
                                           KText(
                                             text: 'Edit Users Details',
                                             style: SafeGoogleFont(
@@ -385,12 +386,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           SizedBox(
-                                            width: 410,
+                                            width: width/3.7463,
                                             child: Row(
                                               children: [
                                                 Container(
-                                                  height: 100,
-                                                  width: 100,
+                                                  height: height/7.39,
+                                                  width: width/15.36,
                                                   decoration: BoxDecoration(
                                                       borderRadius:
                                                           BorderRadius.circular(
@@ -412,20 +413,19 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 ),
                                                               ),
                                                             )
-                                                          : Editimg != null
+                                                          : imgUrl != null
                                                               ? DecorationImage(
                                                                   fit: BoxFit
                                                                       .cover,
                                                                   image: NetworkImage(
-                                                                      Editimg))
+                                                                      imgUrl))
                                                               : DecorationImage(
                                                                   fit: BoxFit
                                                                       .cover,
                                                                   image: AssetImage(
-                                                                      Constants()
-                                                                          .avator))),
+                                                                      Constants().avator))),
                                                 ),
-                                                SizedBox(width: 15),
+                                                SizedBox(width: width/102.4),
                                                 Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
@@ -444,7 +444,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             Color(0xff000000),
                                                       ),
                                                     ),
-                                                    SizedBox(height: 5),
+                                                    SizedBox(height: height/147.8),
                                                     Row(
                                                       children: [
                                                         GestureDetector(
@@ -452,8 +452,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             addImage(size);
                                                           },
                                                           child: Container(
-                                                            height: 30,
-                                                            width: 80,
+                                                            height: height/24.63333,
+                                                            width: width/19.2,
                                                             decoration: BoxDecoration(
                                                                 color: Color(
                                                                     0xffDDDEEE),
@@ -483,7 +483,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             ),
                                                           ),
                                                         ),
-                                                        SizedBox(width: 5),
+                                                        SizedBox(width: width/307.2),
                                                         KText(
                                                           text: Uploaddocument ==
                                                                   null
@@ -509,8 +509,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             ),
                                           ),
                                           SizedBox(
-                                            width: 680,
-                                            height: 250,
+                                            width: width/2.2588,
+                                            height:height/ 2.956,
                                             child: Column(
                                               children: [
                                                 ///first name and last name
@@ -520,7 +520,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           .spaceAround,
                                                   children: [
                                                     SizedBox(
-                                                      height: 60,
+                                                      height: height/11.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -544,10 +544,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: 6),
+                                                          SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: 35,
-                                                              width: 190,
+                                                              height: height/21.1142,
+                                                              width: width/8.0842,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
                                                                       0xffDDDEEE),
@@ -593,7 +593,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                      height: 60,
+                                                       height: height/11.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -617,10 +617,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: 6),
+                                                          SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: 35,
-                                                              width: 190,
+                                                              height: height/21.114,
+                                                              width: width/8.0842,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
                                                                       0xffDDDEEE),
@@ -656,7 +656,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                      height: 60,
+                                                       height: height/11.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -679,10 +679,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: 6),
+                                                          SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: 35,
-                                                              width: 190,
+                                                              height: height/21.114,
+                                                              width: width/8.0842,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
                                                                       0xffDDDEEE),
@@ -727,7 +727,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   ],
                                                 ),
 
-                                                SizedBox(height: 10),
+                                                SizedBox(height: height/73.9),
 
                                                 ///date of birth and
 
@@ -738,7 +738,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   children: [
                                                     ///d date of birth
                                                     SizedBox(
-                                                      height: 60,
+                                                       height: height/11.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -762,10 +762,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: 6),
+                                                          SizedBox(height: height/123.1666),
                                                           Container(
-                                                            height: 35,
-                                                            width: 300,
+                                                            height: height/21.114,
+                                                            width: width/5.12,
                                                             decoration: BoxDecoration(
                                                                 color: const Color(
                                                                     0xffDDDEEE),
@@ -835,7 +835,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     ),
 
                                                     SizedBox(
-                                                      height: 60,
+                                                       height: height/11.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -858,10 +858,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: 6),
+                                                          SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: 35,
-                                                              width: 300,
+                                                              height: height/21.114,
+                                                              width: width/5.12,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
                                                                       0xffDDDEEE),
@@ -898,7 +898,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     ),
                                                   ],
                                                 ),
-                                                SizedBox(height: 10),
+                                                SizedBox(height: height/73.9),
 
                                                 ///adhaaar card and emailid
                                                 Row(
@@ -907,7 +907,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           .spaceAround,
                                                   children: [
                                                     SizedBox(
-                                                      height: 60,
+                                                       height: height/11.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -931,10 +931,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: 6),
+                                                          SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: 35,
-                                                              width: 300,
+                                                              height: height/21.114,
+                                                              width: width/5.12,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
                                                                       0xffDDDEEE),
@@ -949,7 +949,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 inputFormatters: [
                                                                   FilteringTextInputFormatter
                                                                       .allow(RegExp(
-                                                                          "[a-zA-Z@0-9]")),
+                                                                          "[a-zA-Z@0-9.]")),
                                                                 ],
                                                                 decoration:
                                                                     InputDecoration(
@@ -970,7 +970,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                      height: 60,
+                                                       height: height/11.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -994,10 +994,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: 6),
+                                                          SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: 35,
-                                                              width: 300,
+                                                              height: height/21.114,
+                                                              width: width/5.12,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
                                                                       0xffDDDEEE),
@@ -1084,7 +1084,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                       ///contact info
                                       Row(
                                         children: [
-                                          SizedBox(width: 5),
+                                          SizedBox(width: width/307.2),
                                           KText(
                                             text: 'Contact Details',
                                             style: SafeGoogleFont(
@@ -1098,23 +1098,23 @@ class _Users_ScreenState extends State<Users_Screen> {
                                         ],
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.only(
+                                        padding: const EdgeInsets.only(
                                             left: 4,
                                             right: 4,
                                             top: 4,
                                             bottom: 4),
                                         child: Container(
-                                          height: 1,
-                                          width: 1065,
+                                          height: height/739,
+                                          width: width/1.4422,
                                           color: Colors.grey.shade300,
                                         ),
                                       ),
-                                      SizedBox(height: 20),
+                                      SizedBox(height: height/36.95),
                                       Row(
                                         children: [
                                           SizedBox(
-                                              width: 640,
-                                              height: 220,
+                                              width: width/2.4,
+                                              height: height/3.3590,
                                               child: Padding(
                                                 padding: EdgeInsets.all(6.0),
                                                 child: Column(
@@ -1126,7 +1126,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   children: [
                                                     ///phone number
                                                     SizedBox(
-                                                      height: 60,
+                                                       height: height/11.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -1150,10 +1150,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: 6),
+                                                          SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: 35,
-                                                              width: 400,
+                                                              height: height/21.114,
+                                                              width: width/3.84,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
                                                                       0xffDDDEEE),
@@ -1205,7 +1205,7 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                                     /// mobile number
                                                     SizedBox(
-                                                      height: 60,
+                                                       height: height/11.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -1229,10 +1229,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: 6),
+                                                          SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: 35,
-                                                              width: 400,
+                                                              height: height/21.114,
+                                                              width: width/3.84,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
                                                                       0xffDDDEEE),
@@ -1244,6 +1244,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   TextFormField(
                                                                 controller:
                                                                     mobileNumbercon,
+                                                                    maxLength:
+                                                                    10,
                                                                 inputFormatters: [
                                                                   FilteringTextInputFormatter
                                                                       .allow(RegExp(
@@ -1262,6 +1264,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                               2,
                                                                           left:
                                                                               10),
+                                                                        counterText:
+                                                                        ""
                                                                 ),
                                                                 validator:
                                                                     (value) {
@@ -1281,7 +1285,7 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                                     /// Email iD
                                                     SizedBox(
-                                                      height: 60,
+                                                       height: height/11.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -1304,10 +1308,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: 6),
+                                                          SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: 35,
-                                                              width: 400,
+                                                              height: height/21.114,
+                                                              width: width/3.84,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
                                                                       0xffDDDEEE),
@@ -1322,7 +1326,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 inputFormatters: [
                                                                   FilteringTextInputFormatter
                                                                       .allow(RegExp(
-                                                                          "[a-zA-Z@0-9]")),
+                                                                          "[a-zA-Z@0-9.]")),
                                                                 ],
                                                                 decoration:
                                                                     InputDecoration(
@@ -1346,8 +1350,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 ),
                                               )),
                                           SizedBox(
-                                            width: 440,
-                                            height: 220,
+                                            width: width/3.49090,
+                                            height: height/3.3590,
                                             child: Padding(
                                               padding:
                                                   const EdgeInsets.all(2.0),
@@ -1367,10 +1371,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       color: Color(0xff000000),
                                                     ),
                                                   ),
-                                                  SizedBox(height: 6),
+                                                  SizedBox(height: height/123.1666),
                                                   Container(
-                                                      height: 180,
-                                                      width: 430,
+                                                      height: height/4.10555,
+                                                      width: width/3.57209,
                                                       decoration: BoxDecoration(
                                                           color: const Color(
                                                               0xffDDDEEE),
@@ -1410,7 +1414,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                           children: [
                                             ///State Dropdown
                                             SizedBox(
-                                              height: 60,
+                                               height: height/11.369,
                                               child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -1427,10 +1431,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       color: Color(0xff000000),
                                                     ),
                                                   ),
-                                                  SizedBox(height: 6),
+                                                  SizedBox(height: height/123.1666),
                                                   Container(
-                                                    height: 35,
-                                                    width: 240,
+                                                    height: height/21.114,
+                                                    width: width/6.4,
                                                     decoration: BoxDecoration(
                                                         color: const Color(
                                                             0xffDDDEEE),
@@ -1441,6 +1445,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         DropdownButtonHideUnderline(
                                                       child:
                                                           DropdownButtonFormField2<String>(
+
                                                         isExpanded: true,
                                                             hint: Text(
                                                           'Select State',
@@ -1483,6 +1488,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         },
                                                         buttonStyleData:
                                                             ButtonStyleData(
+                                                              
+
                                                           padding: EdgeInsets
                                                               .symmetric(
                                                                   horizontal:
@@ -1500,6 +1507,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 border:
                                                                     InputBorder
                                                                         .none),
+
                                                                         
                                                       ),
                                                     ),
@@ -1507,11 +1515,11 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 ],
                                               ),
                                             ),
-                                            SizedBox(width: 33),
+                                            SizedBox(width: width/46.5454),
 
                                             ///city
                                             SizedBox(
-                                              height: 60,
+                                               height: height/11.369,
                                               child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -1528,10 +1536,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       color: Color(0xff000000),
                                                     ),
                                                   ),
-                                                  SizedBox(height: 6),
+                                                  SizedBox(height: height/123.1666),
                                                   Container(
-                                                    height: 35,
-                                                    width: 240,
+                                                    height: height/21.114,
+                                                    width: width/6.4,
                                                     decoration: BoxDecoration(
                                                         color: const Color(
                                                             0xffDDDEEE),
@@ -1608,11 +1616,11 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 ],
                                               ),
                                             ),
-                                            SizedBox(width: 35),
+                                            SizedBox(width: width/43.8857),
 
                                             ///Pin Code
                                             SizedBox(
-                                              height: 60,
+                                               height: height/11.369,
                                               child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -1629,10 +1637,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       color: Color(0xff000000),
                                                     ),
                                                   ),
-                                                  SizedBox(height: 6),
+                                                  SizedBox(height: height/123.1666),
                                                   Container(
-                                                      height: 35,
-                                                      width: 240,
+                                                      height: height/21.114,
+                                                      width: width/6.4,
                                                       decoration: BoxDecoration(
                                                           color: const Color(
                                                               0xffDDDEEE),
@@ -1673,11 +1681,11 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 ],
                                               ),
                                             ),
-                                            SizedBox(width: 35),
+                                            SizedBox(width: width/43.8857),
 
                                             ///Country Dropdown
                                             SizedBox(
-                                              height: 60,
+                                               height: height/11.369,
                                               child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -1694,10 +1702,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       color: Color(0xff000000),
                                                     ),
                                                   ),
-                                                  SizedBox(height: 6),
+                                                  SizedBox(height: height/123.1666),
                                                   Container(
-                                                    height: 35,
-                                                    width: 240,
+                                                    height: height/21.114,
+                                                    width: width/6.4,
                                                     decoration: BoxDecoration(
                                                         color: const Color(
                                                             0xffDDDEEE),
@@ -1779,10 +1787,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                       ),
 
                                       ///alumni details
-                                      SizedBox(height: 20),
+                                      SizedBox(height: height/36.95),
                                       Row(
                                         children: [
-                                          SizedBox(width: 5),
+                                          SizedBox(width: width/307.2),
                                           KText(
                                             text: 'Alumni Details',
                                             style: SafeGoogleFont(
@@ -1803,17 +1811,17 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             bottom: 4),
                                         child: Container(
                                           height: 1,
-                                          width: 1065,
+                                          width: width/1.4422,
                                           color: Colors.grey.shade300,
                                         ),
                                       ),
-                                      SizedBox(height: 20),
+                                      SizedBox(height: height/36.95),
 
                                       Row(
                                         children: [
                                           SizedBox(
-                                            height: 200,
-                                            width: 700,
+                                            height: height/3.695,
+                                            width: width/2.19428,
                                             child: Column(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.spaceAround,
@@ -1825,7 +1833,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           .spaceBetween,
                                                   children: [
                                                     SizedBox(
-                                                      height: 60,
+                                                       height: height/11.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -1849,10 +1857,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: 6),
+                                                          SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: 35,
-                                                              width: 330,
+                                                              height: height/21.114,
+                                                              width: width/4.6545,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
                                                                       0xffDDDEEE),
@@ -1892,7 +1900,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                      height: 60,
+                                                       height: height/11.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -1916,10 +1924,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: 6),
+                                                          SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: 35,
-                                                              width: 330,
+                                                              height: height/21.114,
+                                                              width: width/4.6545,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
                                                                       0xffDDDEEE),
@@ -1966,7 +1974,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           .spaceBetween,
                                                   children: [
                                                     SizedBox(
-                                                      height: 60,
+                                                       height: height/11.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -1989,10 +1997,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: 6),
+                                                          SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: 35,
-                                                              width: 330,
+                                                              height: height/21.114,
+                                                              width: width/4.6545,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
                                                                       0xffDDDEEE),
@@ -2032,7 +2040,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                      height: 60,
+                                                       height: height/11.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -2055,10 +2063,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: 6),
+                                                          SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: 35,
-                                                              width: 330,
+                                                              height: height/21.114,
+                                                              width: width/4.6545,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
                                                                       0xffDDDEEE),
@@ -2104,7 +2112,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           .spaceBetween,
                                                   children: [
                                                     SizedBox(
-                                                      height: 60,
+                                                       height: height/11.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -2127,10 +2135,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: 6),
+                                                          SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: 35,
-                                                              width: 330,
+                                                              height: height/21.114,
+                                                              width: width/4.6545,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
                                                                       0xffDDDEEE),
@@ -2167,7 +2175,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                      height: 60,
+                                                       height: height/11.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -2191,10 +2199,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: 6),
+                                                          SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: 35,
-                                                              width: 330,
+                                                              height: height/21.114,
+                                                              width: width/4.6545,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
                                                                       0xffDDDEEE),
@@ -2238,8 +2246,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                           Padding(
                                             padding: EdgeInsets.only(left: 25),
                                             child: SizedBox(
-                                              height: 200,
-                                              width: 370,
+                                              height: height/3.695,
+                                              width: width/4.1513,
                                               child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -2256,10 +2264,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       color: Color(0xff000000),
                                                     ),
                                                   ),
-                                                  SizedBox(height: 6),
+                                                  SizedBox(height: height/123.1666),
                                                   Container(
-                                                      height: 170,
-                                                      width: 345,
+                                                      height: height/4.34705,
+                                                      width: width/4.45217,
                                                       decoration: BoxDecoration(
                                                           color: const Color(
                                                               0xffDDDEEE),
@@ -2299,10 +2307,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                       ),
 
                                       ///alumi edscation aualifications
-                                      SizedBox(height: 20),
+                                      SizedBox(height: height/36.95),
                                       Row(
                                         children: [
-                                          SizedBox(width: 5),
+                                          SizedBox(width: width/307.2),
                                           KText(
                                             text: 'Alumni Qualifications',
                                             style: SafeGoogleFont(
@@ -2323,11 +2331,11 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             bottom: 4),
                                         child: Container(
                                           height: 1,
-                                          width: 1065,
+                                          width: width/1.4422,
                                           color: Colors.grey.shade300,
                                         ),
                                       ),
-                                      SizedBox(height: 20),
+                                      SizedBox(height: height/36.95),
 
                                       Row(
                                         mainAxisAlignment:
@@ -2348,10 +2356,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   color: Color(0xff000000),
                                                 ),
                                               ),
-                                              SizedBox(height: 6),
+                                              SizedBox(height: height/123.1666),
                                               Container(
-                                                  height: 70,
-                                                  width: 510,
+                                                  height: height/10.5571,
+                                                  width: width/3.01176,
                                                   decoration: BoxDecoration(
                                                       color: const Color(
                                                           0xffDDDEEE),
@@ -2377,7 +2385,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   ))
                                             ],
                                           ),
-                                          SizedBox(width: 50),
+                                          SizedBox(width: width/30.72),
                                           Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -2393,10 +2401,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   color: Color(0xff000000),
                                                 ),
                                               ),
-                                              SizedBox(height: 6),
+                                              SizedBox(height: height/123.1666),
                                               Container(
-                                                  height: 70,
-                                                  width: 510,
+                                                  height: height/10.5571,
+                                                  width: width/3.01176,
                                                   decoration: BoxDecoration(
                                                       color: const Color(
                                                           0xffDDDEEE),
@@ -2425,10 +2433,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                         ],
                                       ),
 
-                                      SizedBox(height: 20),
+                                      SizedBox(height: height/36.95),
                                       Row(
                                         children: [
-                                          SizedBox(width: 5),
+                                          SizedBox(width: width/307.2),
                                           KText(
                                             text: 'Professional Details',
                                             style: SafeGoogleFont(
@@ -2449,16 +2457,16 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             bottom: 4),
                                         child: Container(
                                           height: 1,
-                                          width: 1065,
+                                          width: width/1.4422,
                                           color: Colors.grey.shade300,
                                         ),
                                       ),
-                                      SizedBox(height: 20),
+                                      SizedBox(height: height/36.95),
 
                                       Row(
                                         children: [
                                           SizedBox(
-                                            height: 60,
+                                             height: height/11.369,
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -2473,10 +2481,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     color: Color(0xff000000),
                                                   ),
                                                 ),
-                                                SizedBox(height: 6),
+                                                SizedBox(height: height/123.1666),
                                                 Container(
-                                                    height: 35,
-                                                    width: 330,
+                                                    height: height/21.114,
+                                                    width: width/4.6545,
                                                     decoration: BoxDecoration(
                                                         color: const Color(
                                                             0xffDDDEEE),
@@ -2505,9 +2513,9 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               ],
                                             ),
                                           ),
-                                          SizedBox(width: 40),
+                                          SizedBox(width: width/38.4),
                                           SizedBox(
-                                            height: 60,
+                                             height: height/11.369,
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -2522,10 +2530,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     color: Color(0xff000000),
                                                   ),
                                                 ),
-                                                SizedBox(height: 6),
+                                                SizedBox(height: height/123.1666),
                                                 Container(
-                                                    height: 35,
-                                                    width: 330,
+                                                    height: height/21.114,
+                                                    width: width/4.6545,
                                                     decoration: BoxDecoration(
                                                         color: const Color(
                                                             0xffDDDEEE),
@@ -2555,9 +2563,9 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               ],
                                             ),
                                           ),
-                                          SizedBox(width: 40),
+                                          SizedBox(width: width/38.4),
                                           SizedBox(
-                                            height: 60,
+                                             height: height/11.369,
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -2573,10 +2581,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     color: Color(0xff000000),
                                                   ),
                                                 ),
-                                                SizedBox(height: 6),
+                                                SizedBox(height: height/123.1666),
                                                 Container(
-                                                    height: 35,
-                                                    width: 330,
+                                                    height: height/21.114,
+                                                    width: width/4.6545,
                                                     decoration: BoxDecoration(
                                                         color: const Color(
                                                             0xffDDDEEE),
@@ -2610,10 +2618,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                       ),
 
                                       ///Material Status
-                                      SizedBox(height: 20),
+                                      SizedBox(height: height/36.95),
                                       Row(
                                         children: [
-                                          SizedBox(width: 5),
+                                          SizedBox(width: width/307.2),
                                           KText(
                                             text: 'Marital Information',
                                             style: SafeGoogleFont(
@@ -2634,15 +2642,15 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             bottom: 4),
                                         child: Container(
                                           height: 1,
-                                          width: 1065,
+                                          width: width/1.4422,
                                           color: Colors.grey.shade300,
                                         ),
                                       ),
-                                      SizedBox(height: 20),
+                                      SizedBox(height: height/36.95),
                                       Row(
                                         children: [
                                           SizedBox(
-                                            height: 60,
+                                             height: height/11.369,
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -2657,10 +2665,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     color: Color(0xff000000),
                                                   ),
                                                 ),
-                                                SizedBox(height: 6),
+                                                SizedBox(height: height/123.1666),
                                                 Container(
-                                                  height: 35,
-                                                  width: 230,
+                                                  height: height/21.114,
+                                                  width: width/6.6782,
                                                   decoration: BoxDecoration(
                                                       color: const Color(
                                                           0xffDDDEEE),
@@ -2730,12 +2738,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               ],
                                             ),
                                           ),
-                                          SizedBox(width: 40),
+                                          SizedBox(width: width/38.4),
                                           maritalStatuscon.text == "Yes"
                                               ? SizedBox(
                                                   child: Row(children: [
                                                   SizedBox(
-                                                    height: 60,
+                                                     height: height/11.369,
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -2755,10 +2763,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 0xff000000),
                                                           ),
                                                         ),
-                                                        SizedBox(height: 6),
+                                                        SizedBox(height: height/123.1666),
                                                         Container(
-                                                            height: 35,
-                                                            width: 240,
+                                                            height: height/21.114,
+                                                            width: width/6.4,
                                                             decoration: BoxDecoration(
                                                                 color: const Color(
                                                                     0xffDDDEEE),
@@ -2793,9 +2801,9 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       ],
                                                     ),
                                                   ),
-                                                  SizedBox(width: 40),
+                                                  SizedBox(width: width/38.4),
                                                   SizedBox(
-                                                    height: 60,
+                                                     height: height/11.369,
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -2816,10 +2824,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 0xff000000),
                                                           ),
                                                         ),
-                                                        SizedBox(height: 6),
+                                                        SizedBox(height: height/123.1666),
                                                         Container(
-                                                            height: 35,
-                                                            width: 240,
+                                                            height: height/21.114,
+                                                            width: width/6.4,
                                                             decoration: BoxDecoration(
                                                                 color: const Color(
                                                                     0xffDDDEEE),
@@ -2883,9 +2891,9 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       ],
                                                     ),
                                                   ),
-                                                  SizedBox(width: 40),
+                                                  SizedBox(width: width/38.4),
                                                   SizedBox(
-                                                    height: 60,
+                                                     height: height/11.369,
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -2906,10 +2914,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 0xff000000),
                                                           ),
                                                         ),
-                                                        SizedBox(height: 6),
+                                                        SizedBox(height: height/123.1666),
                                                         Container(
-                                                            height: 35,
-                                                            width: 240,
+                                                            height: height/21.114,
+                                                            width: width/6.4,
                                                             decoration: BoxDecoration(
                                                                 color: const Color(
                                                                     0xffDDDEEE),
@@ -2949,7 +2957,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               : SizedBox(),
                                         ],
                                       ),
-                                      SizedBox(height: 30),
+                                      SizedBox(height: height/24.633),
 
                                       ///buttons update reset and back
 
@@ -2958,18 +2966,19 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             MainAxisAlignment.end,
                                         children: [
                                           SizedBox(
-                                            width: 670,
+                                            width: width/2.2925,
                                           ),
 
                                           ///Update button
                                           GestureDetector(
                                             onTap: () {
-                                              if (_formkey.currentState!
-                                                  .validate()) {}
+                                              if (_formkey.currentState!.validate()) {
+                                                userDataUpdatefuntio();
+                                              }
                                             },
                                             child: Container(
-                                                height: 40,
-                                                width: 120,
+                                                height: height/18.475,
+                                                width: width/12.8,
                                                 decoration: BoxDecoration(
                                                   color: Color(0xffD60A0B),
                                                   borderRadius:
@@ -2991,7 +3000,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 )),
                                           ),
                                           SizedBox(
-                                            width: 20,
+                                            width: width/76.8,
                                           ),
 
                                           ///Reset Button
@@ -3000,8 +3009,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               controllersclearfunc();
                                             },
                                             child: Container(
-                                                height: 40,
-                                                width: 120,
+                                                height: height/18.475,
+                                                width: width/12.8,
                                                 decoration: BoxDecoration(
                                                   color: Color(0xff00A0E3),
                                                   borderRadius:
@@ -3023,7 +3032,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 )),
                                           ),
                                           SizedBox(
-                                            width: 20,
+                                            width: width/76.8,
                                           ),
 
                                           ///back Button
@@ -3031,12 +3040,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             onTap: () {
                                               setState(() {
                                                 UserEdit = false;
+                                                userUpdateDocumentID="";
                                               });
                                               controllersclearfunc();
                                             },
                                             child: Container(
-                                                height: 40,
-                                                width: 120,
+                                                height: height/18.475,
+                                                width: width/12.8,
                                                 decoration: BoxDecoration(
                                                   color: Colors.green,
                                                   borderRadius:
@@ -3059,7 +3069,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: 30),
+                                      SizedBox(height: height/24.633),
                                     ],
                                   ),
                                 ],
@@ -3104,7 +3114,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.start,
                                               children: [
-                                                SizedBox(width: 5),
+                                                SizedBox(width: width/307.2),
                                                 KText(
                                                   text: 'Add Users Details',
                                                   style: SafeGoogleFont(
@@ -3124,12 +3134,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 SizedBox(
-                                                  width: 410,
+                                                  width: width/3.7463,
                                                   child: Row(
                                                     children: [
                                                       Container(
-                                                        height: 100,
-                                                        width: 100,
+                                                        height:  height/7.39,
+                                                        width: width/15.36,
                                                         decoration: BoxDecoration(
                                                             borderRadius:
                                                                 BorderRadius
@@ -3153,12 +3163,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                       ),
                                                                     ),
                                                                   )
-                                                                : Editimg != null
+                                                                : imgUrl != null
                                                                     ? DecorationImage(
                                                                         fit: BoxFit
                                                                             .cover,
                                                                         image: NetworkImage(
-                                                                            Editimg))
+                                                                            imgUrl))
                                                                     : DecorationImage(
                                                                         fit: BoxFit
                                                                             .cover,
@@ -3166,7 +3176,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                             Constants()
                                                                                 .avator))),
                                                       ),
-                                                      SizedBox(width: 15),
+                                                      SizedBox(width: width/102.4),
                                                       Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -3187,7 +3197,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: 5),
+                                                          SizedBox(height: height/147.8),
                                                           Row(
                                                             children: [
                                                               GestureDetector(
@@ -3195,8 +3205,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   addImage(size);
                                                                 },
                                                                 child: Container(
-                                                                  height: 30,
-                                                                  width: 80,
+                                                                  height: height/24.633,
+                                                                  width: width/19.2,
                                                                   decoration: BoxDecoration(
                                                                       color: Color(
                                                                           0xffDDDEEE),
@@ -3226,7 +3236,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   ),
                                                                 ),
                                                               ),
-                                                              SizedBox(width: 5),
+                                                              SizedBox(width: width/307.2),
                                                               KText(
                                                                 text: Uploaddocument ==
                                                                         null
@@ -3255,8 +3265,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   ),
                                                 ),
                                                 SizedBox(
-                                                  width: 680,
-                                                  height: 250,
+                                                  width: width/2.2588,
+                                                  height: height/3.3590,
                                                   child: Column(
                                                     children: [
                                                       ///first name and last name
@@ -3266,7 +3276,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 .spaceAround,
                                                         children: [
                                                           SizedBox(
-                                                            height: 60,
+                                                             height: height/11.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -3292,10 +3302,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   ),
                                                                 ),
                                                                 SizedBox(
-                                                                    height: 6),
+                                                                    height: height/123.1666),
                                                                 Container(
-                                                                    height: 35,
-                                                                    width: 190,
+                                                                    height: height/21.114,
+                                                                    width: width/8.0842,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
                                                                             0xffDDDEEE),
@@ -3339,7 +3349,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             ),
                                                           ),
                                                           SizedBox(
-                                                            height: 60,
+                                                             height: height/11.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -3365,10 +3375,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   ),
                                                                 ),
                                                                 SizedBox(
-                                                                    height: 6),
+                                                                    height: height/123.1666),
                                                                 Container(
-                                                                    height: 35,
-                                                                    width: 190,
+                                                                    height: height/21.114,
+                                                                    width: width/8.0842,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
                                                                             0xffDDDEEE),
@@ -3401,7 +3411,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             ),
                                                           ),
                                                           SizedBox(
-                                                            height: 60,
+                                                             height: height/11.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -3427,10 +3437,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   ),
                                                                 ),
                                                                 SizedBox(
-                                                                    height: 6),
+                                                                    height: height/123.1666),
                                                                 Container(
-                                                                    height: 35,
-                                                                    width: 190,
+                                                                    height: height/21.114,
+                                                                    width: width/8.0842,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
                                                                             0xffDDDEEE),
@@ -3473,7 +3483,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         ],
                                                       ),
 
-                                                      SizedBox(height: 10),
+                                                      SizedBox(height: height/73.9),
 
                                                       ///date of birth and
 
@@ -3484,7 +3494,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         children: [
                                                           ///d date of birth
                                                           SizedBox(
-                                                            height: 60,
+                                                             height: height/11.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -3510,10 +3520,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   ),
                                                                 ),
                                                                 SizedBox(
-                                                                    height: 6),
+                                                                    height: height/123.1666),
                                                                 Container(
-                                                                  height: 35,
-                                                                  width: 300,
+                                                                  height: height/21.114,
+                                                                  width: width/5.12,
                                                                   decoration: BoxDecoration(
                                                                       color: const Color(
                                                                           0xffDDDEEE),
@@ -3573,7 +3583,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           ),
 
                                                           SizedBox(
-                                                            height: 60,
+                                                             height: height/11.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -3598,10 +3608,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   ),
                                                                 ),
                                                                 SizedBox(
-                                                                    height: 6),
+                                                                    height: height/123.1666),
                                                                 Container(
-                                                                    height: 35,
-                                                                    width: 300,
+                                                                    height: height/21.114,
+                                                                    width: width/5.12,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
                                                                             0xffDDDEEE),
@@ -3635,7 +3645,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           ),
                                                         ],
                                                       ),
-                                                      SizedBox(height: 10),
+                                                      SizedBox(height: height/73.9),
 
                                                       ///adhaaar card and emailid
                                                       Row(
@@ -3644,7 +3654,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 .spaceAround,
                                                         children: [
                                                           SizedBox(
-                                                            height: 60,
+                                                             height: height/11.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -3670,10 +3680,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   ),
                                                                 ),
                                                                 SizedBox(
-                                                                    height: 6),
+                                                                    height: height/123.1666),
                                                                 Container(
-                                                                    height: 35,
-                                                                    width: 300,
+                                                                    height: height/21.114,
+                                                                    width: width/5.12,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
                                                                             0xffDDDEEE),
@@ -3687,7 +3697,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                       inputFormatters: [
                                                                         FilteringTextInputFormatter
                                                                             .allow(
-                                                                                RegExp("[a-zA-Z@0-9]")),
+                                                                                RegExp("[a-zA-Z@0-9.]")),
                                                                       ],
                                                                       decoration:
                                                                           InputDecoration(
@@ -3706,7 +3716,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             ),
                                                           ),
                                                           SizedBox(
-                                                            height: 60,
+                                                             height: height/11.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -3732,10 +3742,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   ),
                                                                 ),
                                                                 SizedBox(
-                                                                    height: 6),
+                                                                    height: height/123.1666),
                                                                 Container(
-                                                                    height: 35,
-                                                                    width: 300,
+                                                                    height: height/21.114,
+                                                                    width: width/5.12,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
                                                                             0xffDDDEEE),
@@ -3813,7 +3823,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             ///contact info
                                             Row(
                                               children: [
-                                                SizedBox(width: 5),
+                                                SizedBox(width: width/307.2),
                                                 KText(
                                                   text: 'Contact Details',
                                                   style: SafeGoogleFont(
@@ -3834,16 +3844,16 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   bottom: 4),
                                               child: Container(
                                                 height: 1,
-                                                width: 1065,
+                                                width: width/1.4422,
                                                 color: Colors.grey.shade300,
                                               ),
                                             ),
-                                            SizedBox(height: 20),
+                                            SizedBox(height: height/36.95),
                                             Row(
                                               children: [
                                                 SizedBox(
-                                                    width: 640,
-                                                    height: 220,
+                                                    width: width/2.4,
+                                                    height: height/3.3590,
                                                     child: Padding(
                                                       padding:
                                                           EdgeInsets.all(6.0),
@@ -3857,7 +3867,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         children: [
                                                           ///phone number
                                                           SizedBox(
-                                                            height: 60,
+                                                             height: height/11.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -3883,10 +3893,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   ),
                                                                 ),
                                                                 SizedBox(
-                                                                    height: 6),
+                                                                    height: height/123.1666),
                                                                 Container(
-                                                                    height: 35,
-                                                                    width: 400,
+                                                                    height: height/21.114,
+                                                                    width: width/3.84,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
                                                                             0xffDDDEEE),
@@ -3933,7 +3943,7 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                                           /// mobile number
                                                           SizedBox(
-                                                            height: 60,
+                                                             height: height/11.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -3959,10 +3969,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   ),
                                                                 ),
                                                                 SizedBox(
-                                                                    height: 6),
+                                                                    height: height/123.1666),
                                                                 Container(
-                                                                    height: 35,
-                                                                    width: 400,
+                                                                    height: height/21.114,
+                                                                    width: width/3.84,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
                                                                             0xffDDDEEE),
@@ -3973,6 +3983,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         TextFormField(
                                                                       controller:
                                                                           mobileNumbercon,
+                                                                          maxLength:
+                                                                          10,
                                                                       inputFormatters: [
                                                                         FilteringTextInputFormatter
                                                                             .allow(
@@ -3982,6 +3994,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                           InputDecoration(
                                                                         border: InputBorder
                                                                             .none,
+                                                                            counterText: "",
                                                                         contentPadding: EdgeInsets.only(
                                                                             bottom:
                                                                                 10,
@@ -4007,7 +4020,7 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                                           /// Email iD
                                                           SizedBox(
-                                                            height: 60,
+                                                             height: height/11.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -4033,10 +4046,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   ),
                                                                 ),
                                                                 SizedBox(
-                                                                    height: 6),
+                                                                    height: height/123.1666),
                                                                 Container(
-                                                                    height: 35,
-                                                                    width: 400,
+                                                                    height: height/21.114,
+                                                                    width: width/3.84,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
                                                                             0xffDDDEEE),
@@ -4050,7 +4063,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                       inputFormatters: [
                                                                         FilteringTextInputFormatter
                                                                             .allow(
-                                                                                RegExp("[a-zA-Z@0-9]")),
+                                                                                RegExp("[a-zA-Z@0-9.]")),
                                                                       ],
                                                                       decoration:
                                                                           InputDecoration(
@@ -4072,8 +4085,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       ),
                                                     )),
                                                 SizedBox(
-                                                  width: 440,
-                                                  height: 220,
+                                                  width: width/3.49090,
+                                                  height: height/3.3590,
                                                   child: Padding(
                                                     padding:
                                                         const EdgeInsets.all(2.0),
@@ -4096,10 +4109,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 Color(0xff000000),
                                                           ),
                                                         ),
-                                                        SizedBox(height: 6),
+                                                        SizedBox(height: height/123.1666),
                                                         Container(
-                                                            height: 180,
-                                                            width: 430,
+                                                            height: height/4.10555,
+                                                            width: width/3.57209,
                                                             decoration: BoxDecoration(
                                                                 color: const Color(
                                                                     0xffDDDEEE),
@@ -4143,7 +4156,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 children: [
                                                   ///State Dropdown
                                                   SizedBox(
-                                                    height: 60,
+                                                     height: height/11.369,
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -4163,10 +4176,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 Color(0xff000000),
                                                           ),
                                                         ),
-                                                        SizedBox(height: 6),
+                                                        SizedBox(height: height/123.1666),
                                                         Container(
-                                                          height: 35,
-                                                          width: 240,
+                                                          height: height/21.114,
+                                                          width: width/6.4,
                                                           decoration: BoxDecoration(
                                                               color: const Color(
                                                                   0xffDDDEEE),
@@ -4253,11 +4266,11 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       ],
                                                     ),
                                                   ),
-                                                  SizedBox(width: 33),
+                                                  SizedBox(width: width/46.5454),
 
                                                   ///city
                                                   SizedBox(
-                                                    height: 60,
+                                                     height: height/11.369,
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -4277,10 +4290,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 Color(0xff000000),
                                                           ),
                                                         ),
-                                                        SizedBox(height: 6),
+                                                        SizedBox(height: height/123.1666),
                                                         Container(
-                                                          height: 35,
-                                                          width: 240,
+                                                          height: height/21.114,
+                                                          width: width/6.4,
                                                           decoration: BoxDecoration(
                                                               color: const Color(
                                                                   0xffDDDEEE),
@@ -4365,11 +4378,11 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       ],
                                                     ),
                                                   ),
-                                                  SizedBox(width: 35),
+                                                  SizedBox(width: width/43.8857),
 
                                                   ///Pin Code
                                                   SizedBox(
-                                                    height: 60,
+                                                     height: height/11.369,
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -4389,10 +4402,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 Color(0xff000000),
                                                           ),
                                                         ),
-                                                        SizedBox(height: 6),
+                                                        SizedBox(height: height/123.1666),
                                                         Container(
-                                                            height: 35,
-                                                            width: 240,
+                                                            height: height/21.114,
+                                                            width: width/6.4,
                                                             decoration: BoxDecoration(
                                                                 color: const Color(
                                                                     0xffDDDEEE),
@@ -4439,11 +4452,11 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       ],
                                                     ),
                                                   ),
-                                                  SizedBox(width: 35),
+                                                  SizedBox(width: width/43.8857),
 
                                                   ///Country Dropdown
                                                   SizedBox(
-                                                    height: 60,
+                                                     height: height/11.369,
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -4463,10 +4476,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 Color(0xff000000),
                                                           ),
                                                         ),
-                                                        SizedBox(height: 6),
+                                                        SizedBox(height: height/123.1666),
                                                         Container(
-                                                          height: 35,
-                                                          width: 240,
+                                                          height: height/21.114,
+                                                          width: width/6.4,
                                                           decoration: BoxDecoration(
                                                               color: const Color(
                                                                   0xffDDDEEE),
@@ -4557,10 +4570,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             ),
 
                                             ///alumni details
-                                            SizedBox(height: 20),
+                                            SizedBox(height: height/36.95),
                                             Row(
                                               children: [
-                                                SizedBox(width: 5),
+                                                SizedBox(width: width/307.2),
                                                 KText(
                                                   text: 'Alumni Details',
                                                   style: SafeGoogleFont(
@@ -4581,17 +4594,17 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   bottom: 4),
                                               child: Container(
                                                 height: 1,
-                                                width: 1065,
+                                                width: width/1.4422,
                                                 color: Colors.grey.shade300,
                                               ),
                                             ),
-                                            SizedBox(height: 20),
+                                            SizedBox(height: height/36.95),
 
                                             Row(
                                               children: [
                                                 SizedBox(
-                                                  height: 200,
-                                                  width: 700,
+                                                  height: height/3.695,
+                                                  width: width/2.19428,
                                                   child: Column(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
@@ -4604,7 +4617,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 .spaceBetween,
                                                         children: [
                                                           SizedBox(
-                                                            height: 60,
+                                                             height: height/11.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -4630,10 +4643,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   ),
                                                                 ),
                                                                 SizedBox(
-                                                                    height: 6),
+                                                                    height: height/123.1666),
                                                                 Container(
-                                                                    height: 35,
-                                                                    width: 330,
+                                                                    height: height/21.114,
+                                                                    width: width/4.6545,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
                                                                             0xffDDDEEE),
@@ -4670,7 +4683,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             ),
                                                           ),
                                                           SizedBox(
-                                                            height: 60,
+                                                             height: height/11.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -4696,10 +4709,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   ),
                                                                 ),
                                                                 SizedBox(
-                                                                    height: 6),
+                                                                    height: height/123.1666),
                                                                 Container(
-                                                                    height: 35,
-                                                                    width: 330,
+                                                                    height: height/21.114,
+                                                                    width: width/4.6545,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
                                                                             0xffDDDEEE),
@@ -4743,7 +4756,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 .spaceBetween,
                                                         children: [
                                                           SizedBox(
-                                                            height: 60,
+                                                             height: height/11.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -4768,10 +4781,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   ),
                                                                 ),
                                                                 SizedBox(
-                                                                    height: 6),
+                                                                    height: height/123.1666),
                                                                 Container(
-                                                                    height: 35,
-                                                                    width: 330,
+                                                                    height: height/21.114,
+                                                                    width: width/4.6545,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
                                                                             0xffDDDEEE),
@@ -4808,7 +4821,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             ),
                                                           ),
                                                           SizedBox(
-                                                            height: 60,
+                                                             height: height/11.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -4833,10 +4846,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   ),
                                                                 ),
                                                                 SizedBox(
-                                                                    height: 6),
+                                                                    height: height/123.1666),
                                                                 Container(
-                                                                    height: 35,
-                                                                    width: 330,
+                                                                    height: height/21.114,
+                                                                    width: width/4.6545,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
                                                                             0xffDDDEEE),
@@ -4879,7 +4892,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 .spaceBetween,
                                                         children: [
                                                           SizedBox(
-                                                            height: 60,
+                                                             height: height/11.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -4904,10 +4917,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   ),
                                                                 ),
                                                                 SizedBox(
-                                                                    height: 6),
+                                                                    height: height/123.1666),
                                                                 Container(
-                                                                    height: 35,
-                                                                    width: 330,
+                                                                    height: height/21.114,
+                                                                    width: width/4.6545,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
                                                                             0xffDDDEEE),
@@ -4941,7 +4954,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             ),
                                                           ),
                                                           SizedBox(
-                                                            height: 60,
+                                                             height: height/11.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -4967,10 +4980,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   ),
                                                                 ),
                                                                 SizedBox(
-                                                                    height: 6),
+                                                                    height: height/123.1666),
                                                                 Container(
-                                                                    height: 35,
-                                                                    width: 330,
+                                                                    height: height/21.114,
+                                                                    width: width/4.6545,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
                                                                             0xffDDDEEE),
@@ -5012,8 +5025,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   padding:
                                                       EdgeInsets.only(left: 25),
                                                   child: SizedBox(
-                                                    height: 200,
-                                                    width: 370,
+                                                    height: height/3.695,
+                                                    width: width/4.1513,
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -5034,10 +5047,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 Color(0xff000000),
                                                           ),
                                                         ),
-                                                        SizedBox(height: 6),
+                                                        SizedBox(height: height/123.1666),
                                                         Container(
-                                                            height: 170,
-                                                            width: 345,
+                                                            height: height/4.34705,
+                                                            width: width/4.45217,
                                                             decoration: BoxDecoration(
                                                                 color: const Color(
                                                                     0xffDDDEEE),
@@ -5080,10 +5093,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             ),
 
                                             ///alumi edscation aualifications
-                                            SizedBox(height: 20),
+                                            SizedBox(height: height/36.95),
                                             Row(
                                               children: [
-                                                SizedBox(width: 5),
+                                                SizedBox(width: width/307.2),
                                                 KText(
                                                   text: 'Alumni Qualifications',
                                                   style: SafeGoogleFont(
@@ -5104,11 +5117,11 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   bottom: 4),
                                               child: Container(
                                                 height: 1,
-                                                width: 1065,
+                                                width: width/1.4422,
                                                 color: Colors.grey.shade300,
                                               ),
                                             ),
-                                            SizedBox(height: 20),
+                                            SizedBox(height: height/36.95),
 
                                             Row(
                                               mainAxisAlignment:
@@ -5131,10 +5144,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         color: Color(0xff000000),
                                                       ),
                                                     ),
-                                                    SizedBox(height: 6),
+                                                    SizedBox(height: height/123.1666),
                                                     Container(
-                                                        height: 70,
-                                                        width: 510,
+                                                        height: height/10.5571,
+                                                        width: width/3.01176,
                                                         decoration: BoxDecoration(
                                                             color: const Color(
                                                                 0xffDDDEEE),
@@ -5162,7 +5175,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         ))
                                                   ],
                                                 ),
-                                                SizedBox(width: 50),
+                                                SizedBox(width: width/30.72),
                                                 Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
@@ -5180,10 +5193,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         color: Color(0xff000000),
                                                       ),
                                                     ),
-                                                    SizedBox(height: 6),
+                                                    SizedBox(height: height/123.1666),
                                                     Container(
-                                                        height: 70,
-                                                        width: 510,
+                                                        height: height/10.5571,
+                                                        width: width/3.01176,
                                                         decoration: BoxDecoration(
                                                             color: const Color(
                                                                 0xffDDDEEE),
@@ -5214,10 +5227,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               ],
                                             ),
 
-                                            SizedBox(height: 20),
+                                            SizedBox(height: height/36.95),
                                             Row(
                                               children: [
-                                                SizedBox(width: 5),
+                                                SizedBox(width: width/307.2),
                                                 KText(
                                                   text: 'Professional Details',
                                                   style: SafeGoogleFont(
@@ -5238,16 +5251,16 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   bottom: 4),
                                               child: Container(
                                                 height: 1,
-                                                width: 1065,
+                                                width: width/1.4422,
                                                 color: Colors.grey.shade300,
                                               ),
                                             ),
-                                            SizedBox(height: 20),
+                                            SizedBox(height: height/36.95),
 
                                             Row(
                                               children: [
                                                 SizedBox(
-                                                  height: 60,
+                                                   height: height/11.369,
                                                   child: Column(
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment.start,
@@ -5265,10 +5278,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               Color(0xff000000),
                                                         ),
                                                       ),
-                                                      SizedBox(height: 6),
+                                                      SizedBox(height: height/123.1666),
                                                       Container(
-                                                          height: 35,
-                                                          width: 330,
+                                                          height: height/21.114,
+                                                          width: width/4.6545,
                                                           decoration: BoxDecoration(
                                                               color: const Color(
                                                                   0xffDDDEEE),
@@ -5299,9 +5312,9 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     ],
                                                   ),
                                                 ),
-                                                SizedBox(width: 40),
+                                                SizedBox(width: width/38.4),
                                                 SizedBox(
-                                                  height: 60,
+                                                   height: height/11.369,
                                                   child: Column(
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment.start,
@@ -5319,10 +5332,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               Color(0xff000000),
                                                         ),
                                                       ),
-                                                      SizedBox(height: 6),
+                                                      SizedBox(height: height/123.1666),
                                                       Container(
-                                                          height: 35,
-                                                          width: 330,
+                                                          height: height/21.114,
+                                                          width: width/4.6545,
                                                           decoration: BoxDecoration(
                                                               color: const Color(
                                                                   0xffDDDEEE),
@@ -5353,9 +5366,9 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     ],
                                                   ),
                                                 ),
-                                                SizedBox(width: 40),
+                                                SizedBox(width: width/38.4),
                                                 SizedBox(
-                                                  height: 60,
+                                                   height: height/11.369,
                                                   child: Column(
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment.start,
@@ -5374,10 +5387,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               Color(0xff000000),
                                                         ),
                                                       ),
-                                                      SizedBox(height: 6),
+                                                      SizedBox(height: height/123.1666),
                                                       Container(
-                                                          height: 35,
-                                                          width: 330,
+                                                          height: height/21.114,
+                                                          width: width/4.6545,
                                                           decoration: BoxDecoration(
                                                               color: const Color(
                                                                   0xffDDDEEE),
@@ -5412,10 +5425,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             ),
 
                                             ///Material Status
-                                            SizedBox(height: 20),
+                                            SizedBox(height: height/36.95),
                                             Row(
                                               children: [
-                                                SizedBox(width: 5),
+                                                SizedBox(width: width/307.2),
                                                 KText(
                                                   text: 'Marital Information',
                                                   style: SafeGoogleFont(
@@ -5436,15 +5449,15 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   bottom: 4),
                                               child: Container(
                                                 height: 1,
-                                                width: 1065,
+                                                width: width/1.4422,
                                                 color: Colors.grey.shade300,
                                               ),
                                             ),
-                                            SizedBox(height: 20),
+                                            SizedBox(height: height/36.95),
                                             Row(
                                               children: [
                                                 SizedBox(
-                                                  height: 60,
+                                                   height: height/11.369,
                                                   child: Column(
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment.start,
@@ -5462,10 +5475,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               Color(0xff000000),
                                                         ),
                                                       ),
-                                                      SizedBox(height: 6),
+                                                      SizedBox(height: height/123.1666),
                                                       Container(
-                                                        height: 35,
-                                                        width: 230,
+                                                        height: height/21.114,
+                                                        width: width/6.6782,
                                                         decoration: BoxDecoration(
                                                             color: const Color(
                                                                 0xffDDDEEE),
@@ -5543,12 +5556,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     ],
                                                   ),
                                                 ),
-                                                SizedBox(width: 40),
+                                                SizedBox(width: width/38.4),
                                                 maritalStatuscon.text == "Yes"
                                                     ? SizedBox(
                                                         child: Row(children: [
                                                         SizedBox(
-                                                          height: 60,
+                                                           height: height/11.369,
                                                           child: Column(
                                                             crossAxisAlignment:
                                                                 CrossAxisAlignment
@@ -5572,10 +5585,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                       0xff000000),
                                                                 ),
                                                               ),
-                                                              SizedBox(height: 6),
+                                                              SizedBox(height: height/123.1666),
                                                               Container(
-                                                                  height: 35,
-                                                                  width: 240,
+                                                                  height: height/21.114,
+                                                                  width: width/6.4,
                                                                   decoration: BoxDecoration(
                                                                       color: const Color(
                                                                           0xffDDDEEE),
@@ -5608,9 +5621,9 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             ],
                                                           ),
                                                         ),
-                                                        SizedBox(width: 40),
+                                                        SizedBox(width: width/38.4),
                                                         SizedBox(
-                                                          height: 60,
+                                                           height: height/11.369,
                                                           child: Column(
                                                             crossAxisAlignment:
                                                                 CrossAxisAlignment
@@ -5634,10 +5647,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                       0xff000000),
                                                                 ),
                                                               ),
-                                                              SizedBox(height: 6),
+                                                              SizedBox(height: height/123.1666),
                                                               Container(
-                                                                  height: 35,
-                                                                  width: 240,
+                                                                  height: height/21.114,
+                                                                  width: width/6.4,
                                                                   decoration: BoxDecoration(
                                                                       color: const Color(
                                                                           0xffDDDEEE),
@@ -5691,9 +5704,9 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             ],
                                                           ),
                                                         ),
-                                                        SizedBox(width: 40),
+                                                        SizedBox(width: width/38.4),
                                                         SizedBox(
-                                                          height: 60,
+                                                           height: height/11.369,
                                                           child: Column(
                                                             crossAxisAlignment:
                                                                 CrossAxisAlignment
@@ -5717,10 +5730,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                       0xff000000),
                                                                 ),
                                                               ),
-                                                              SizedBox(height: 6),
+                                                              SizedBox(height: height/123.1666),
                                                               Container(
-                                                                  height: 35,
-                                                                  width: 240,
+                                                                  height: height/21.114,
+                                                                  width: width/6.4,
                                                                   decoration: BoxDecoration(
                                                                       color: const Color(
                                                                           0xffDDDEEE),
@@ -5759,31 +5772,30 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     : SizedBox(),
                                               ],
                                             ),
-                                            SizedBox(height: 30),
+                                            SizedBox(height: height/24.633),
 
-                                            ///buttons update reset and back
+                                            ///buttons Save reset and back
 
                                             Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.end,
                                               children: [
                                                 SizedBox(
-                                                  width: 670,
+                                                  width: width/2.2925,
                                                 ),
 
                                                 ///save button
                                                 GestureDetector(
                                                   onTap: () {
-                                                    print(
-                                                        "Clied the save Button");
                                                     if (_formkey.currentState!
                                                         .validate()) {
                                                       userdatecreatefunc();
+                                                      userCreateSuccessPopup();
                                                     }
                                                   },
                                                   child: Container(
-                                                      height: 40,
-                                                      width: 120,
+                                                      height: height/18.475,
+                                                      width: width/12.8,
                                                       decoration: BoxDecoration(
                                                         color: Color(0xffD60A0B),
                                                         borderRadius:
@@ -5808,7 +5820,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       )),
                                                 ),
                                                 SizedBox(
-                                                  width: 20,
+                                                  width: width/76.8,
                                                 ),
 
                                                 ///Reset Button
@@ -5817,8 +5829,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     controllersclearfunc();
                                                   },
                                                   child: Container(
-                                                      height: 40,
-                                                      width: 120,
+                                                      height: height/18.475,
+                                                      width: width/12.8,
                                                       decoration: BoxDecoration(
                                                         color: Color(0xff00A0E3),
                                                         borderRadius:
@@ -5843,7 +5855,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       )),
                                                 ),
                                                 SizedBox(
-                                                  width: 20,
+                                                  width: width/76.8,
                                                 ),
 
                                                 ///back Button
@@ -5855,8 +5867,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     controllersclearfunc();
                                                   },
                                                   child: Container(
-                                                      height: 40,
-                                                      width: 120,
+                                                      height: height/18.475,
+                                                      width: width/12.8,
                                                       decoration: BoxDecoration(
                                                         color: Colors.green,
                                                         borderRadius:
@@ -5882,7 +5894,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 ),
                                               ],
                                             ),
-                                            SizedBox(height: 30),
+                                            SizedBox(height: height/24.633),
                                           ],
                                         ),
                                       ],
@@ -5898,7 +5910,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                   : FadeInRight(
                       child: SizedBox(
                         width: 1574 * fem,
-                        height:650,
+                        height:height/1.1369,
                         child: Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: width / 170.75,
@@ -6390,8 +6402,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                               ),
                               SizedBox(height: height / 65.1),
                               StreamBuilder(
-                                stream: FirebaseFirestore.instance
-                                    .collection("Users")
+                                stream: FirebaseFirestore.instance.collection("Users")
                                     .orderBy("Name", descending: filtervalue)
                                     .snapshots(),
                                 builder: (context, snapshot) {
@@ -6412,15 +6423,11 @@ class _Users_ScreenState extends State<Users_Screen> {
                                         const NeverScrollableScrollPhysics(),
                                     itemCount: snapshot.data!.docs.length,
                                     itemBuilder: (context, index) {
-                                      var _userdata =
-                                          snapshot.data!.docs[index];
+                                      var _userdata = snapshot.data!.docs[index];
+                                      List<GlobalKey<State<StatefulWidget>>> popMenuKeys = List.generate(snapshot.data!.docs.length, (index) => GlobalKey(),);
 
                                       return Container(
-                                        padding: EdgeInsets.fromLTRB(
-                                            26.07 * fem,
-                                            19.56 * fem,
-                                            35.11 * fem,
-                                            19.56 * fem),
+                                        padding: EdgeInsets.fromLTRB(26.07 * fem, 19.56 * fem, 35.11 * fem, 19.56 * fem),
                                         width: width / 1.2418,
                                         height: 78.22 * fem,
                                         decoration: BoxDecoration(
@@ -6503,7 +6510,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             SizedBox(
                                               width: width / 6.5,
                                               child: KText(
-                                                text: _userdata['Email'],
+                                                text: _userdata['email'],
                                                 style: SafeGoogleFont(
                                                   'Nunito',
                                                   fontSize: 18 * ffem,
@@ -6585,8 +6592,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               0 * fem),
                                                       padding: EdgeInsets.only(
                                                           left: 5),
-                                                      child: _userdata[
-                                                                  'verifyed'] ==
+                                                      child: _userdata['verifyed'] ==
                                                               true
                                                           ? Icon(
                                                               Icons.verified,
@@ -6620,6 +6626,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               ),
                                             ),
                                             SizedBox(
+
                                               width: width / 10.8,
                                               child: Row(
                                                 crossAxisAlignment:
@@ -6635,7 +6642,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         15.18 * fem,
                                                         0 * fem),
                                                     child: KText(
-                                                      text: "",
+                                                      text: _userdata['date'],
                                                       style: SafeGoogleFont(
                                                         'Nunito',
                                                         fontSize: 16 * ffem,
@@ -6669,26 +6676,32 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               ),
                                             ),
                                             GestureDetector(
+                                              onTap:(){
+                                                Popupmenu(context, _userdata.id,popMenuKeys[index]);
+                                                print(viewUser_details);
+
+                                              },
+                                              child: SizedBox(
+                                                  width: width / 14.0,
+                                                  height: height / 26.04,
+                                                  child: Icon(Icons.more_horiz)),
+                                            ),
+                                            /*GestureDetector(
                                               onTap: () {
                                                 // setState(() {
                                                 //   viewDocid=_userdata.id;
                                                 //   viewUser_details=!viewUser_details;
                                                 // });
-                                                Popupmenu(
-                                                    context, _userdata.id);
+                                                Popupmenu(context, _userdata.id);
                                                 print(viewUser_details);
                                               },
-                                              child: SizedBox(
+                                              child: Container(
                                                   key: popmenukey,
+                                                  color:Colors.red,
                                                   width: width / 14.0,
                                                   height: height / 26.04,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 0),
-                                                    child:
-                                                        Icon(Icons.more_horiz),
-                                                  )),
-                                            ),
+                                                  child: Icon(Icons.more_horiz)),
+                                            ),*/
                                           ],
                                         ),
                                       );
@@ -6776,6 +6789,9 @@ class _Users_ScreenState extends State<Users_Screen> {
       spouseNamecon.clear();
       anniversaryDatecon.clear();
       no_of_childreancon.clear();
+      Uploaddocument=null;
+      imgUrl = "";
+      userUpdateDocumentID = "";
     });
   }
 
@@ -6799,20 +6815,17 @@ class _Users_ScreenState extends State<Users_Screen> {
   }
 
   imageupload() async {
-    var snapshot = await FirebaseStorage.instance
-        .ref()
-        .child('Images')
-        .child("${Url!.name}")
-        .putBlob(Url);
+    var snapshot = await FirebaseStorage.instance.ref().child('Images').child("${Url!.name}").putBlob(Url);
     String downloadUrl = await snapshot.ref.getDownloadURL();
     imgUrl = downloadUrl;
   }
 
-  Popupmenu(BuildContext context, _userid) async {
+  Popupmenu(BuildContext context, _userid,key) async {
     print(
         "Popupmenu open-----------------------------------------------------------");
-    double _width = MediaQuery.of(context).size.width;
-    final render = popmenukey.currentContext!.findRenderObject() as RenderBox;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    final render = key.currentContext!.findRenderObject() as RenderBox;
     await showMenu(
       color: Color(0xffFFFFFF),
       elevation: 0,
@@ -6826,16 +6839,21 @@ class _Users_ScreenState extends State<Users_Screen> {
           .map((item) => PopupMenuItem<String>(
                 enabled: true,
                 onTap: () async {
+                  setState((){
+                    userUpdateDocumentID=_userid;
+                  });
                   if (item == "Edit") {
                     setState(() {
                       UserEdit = !UserEdit;
                     });
                     fetchdate(_userid);
-                  } else if (item == "Delete") {}
+                  } else if (item == "Delete") {
+                    userDetelePopup();
+                  }
                 },
                 value: item,
                 child: Container(
-                  height: 40,
+                  height: height/18.475,
                   decoration: BoxDecoration(
                       color: item == "Edit"
                           ? Color(0xff5B93FF).withOpacity(0.6)
@@ -6877,43 +6895,47 @@ class _Users_ScreenState extends State<Users_Screen> {
 
   fetchdate(id) async {
     var document =
-        await FirebaseFirestore.instance.collection("Users").doc(id).get();
+    await FirebaseFirestore.instance.collection("Users").doc(id).get();
     Map<String, dynamic>? value = document.data();
+    getCity(value!['state'].toString());
     setState(() {
-      firstNamecon.text = value!['Name'];
-      middleNamecon.text = value["middleName"];
-      lastNamecon.text = value["lastName"];
-      lastNamecon.text = value["lastName"];
-      adreesscon.text = value['Address'];
-      emailIDcon.text = value['Email'];
-      gendercon.text = value['Gender'];
-      occupationcon.text = value['Occupation'];
-      phoneNumbercon.text = value['Phone'];
-      dateofBirthcon.text = value['dob'];
-      alterEmailIdcon.text = value['alteremail'];
-      aadhaarNumbercon.text = value['aadhaarNo'];
-      mobileNumbercon.text = value['mobileNo'];
-      citycon.text = value['city'];
-      pinCodecon.text = value['pinCode'];
-      statecon.text = value['state'];
-      countrycon.text = value['country'];
-      yearPassedcon.text = value['yearofpassed'];
-      subjectStremdcon.text = value['subjectStream'];
-      classcon.text = value['class'];
-      rollnocon.text = value['rollNo'];
-      lastvisitcon.text = value['lastvisit'];
-      housecon.text = value['house'];
-      statusmessagecon.text = value['statusmessage'];
-      educationquvalificationcon.text = value['educationquvalification'];
-      additionalquvalificationcon.text = value['additionalquvalification'];
-      designationcon.text = value['designation'];
-      company_concerncon.text = value['company_concern'];
-      maritalStatuscon.text = value['maritalStatus'];
-      spouseNamecon.text = value['spouseName'];
-      anniversaryDatecon.text = value['anniversaryDate'];
-      no_of_childreancon.text = value['childreancount'];
-      Editimg = value['UserImg'];
+      firstNamecon.text = value!['Name'].toString();
+      middleNamecon.text = value["middleName"].toString();
+      lastNamecon.text = value["lastName"].toString();
+      lastNamecon.text = value["lastName"].toString();
+      adreesscon.text = value['Address'].toString();
+      emailIDcon.text = value['Email'].toString();
+      gendercon.text = value['Gender'].toString();
+      occupationcon.text = value['Occupation'].toString();
+      phoneNumbercon.text = value['Phone'].toString();
+      dateofBirthcon.text = value['dob'].toString();
+      alterEmailIdcon.text = value['alteremail'].toString();
+      aadhaarNumbercon.text = value['aadhaarNo'].toString();
+      mobileNumbercon.text = value['mobileNo'].toString();
+      citycon.text = value['city'].toString();
+      pinCodecon.text = value['pinCode'].toString();
+      statecon.text = value['state'].toString();
+      countrycon.text = value['country'].toString();
+      yearPassedcon.text = value['yearofpassed'].toString();
+      subjectStremdcon.text = value['subjectStream'].toString();
+      classcon.text = value['class'].toString();
+      rollnocon.text = value['rollNo'].toString();
+      lastvisitcon.text = value['lastvisit'].toString();
+      housecon.text = value['house'].toString();
+      statusmessagecon.text = value['statusmessage'].toString();
+      educationquvalificationcon.text = value['educationquvalification'].toString();
+      additionalquvalificationcon.text = value['additionalquvalification'].toString();
+      designationcon.text = value['designation'].toString();
+      company_concerncon.text = value['company_concern'].toString();
+      maritalStatuscon.text = value['maritalStatus'].toString();
+      spouseNamecon.text = value['spouseName'].toString();
+      anniversaryDatecon.text = value['anniversaryDate'].toString();
+      no_of_childreancon.text = value['childreancount'].toString();
+      imgUrl = value['UserImg'].toString();
     });
+    print(imgUrl);
+    print("++++++++++++++++++++++++++++++++++++++++++++");
+
   }
 
   String generateRandomString(int len) {
@@ -6927,7 +6949,7 @@ class _Users_ScreenState extends State<Users_Screen> {
   userdatecreatefunc() {
     print("User data Create Functiuon");
     String userid = generateRandomString(16);
-
+    imageupload();
     FirebaseFirestore.instance.collection("Users").doc(userid).set({
       "Address": adreesscon.text,
       "Gender": gendercon.text,
@@ -6963,12 +6985,290 @@ class _Users_ScreenState extends State<Users_Screen> {
       "spouseName": spouseNamecon.text,
       "anniversaryDate": anniversaryDatecon.text,
       "childreancount": no_of_childreancon.text,
-      "date":
-          "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}",
+      "date": "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}",
       "timestamp": DateTime.now().millisecondsSinceEpoch,
       "userDocId": userid,
+      "Active":false,
+      "Token":"",
+      "longtitude":"",
+      "latitude":"",
     });
+    controllersclearfunc();
   }
+  userCreateSuccessPopup(){
+    double height=MediaQuery.of(context).size.height;
+    double width=MediaQuery.of(context).size.width;
+
+    showDialog(
+      barrierColor: Colors.transparent,
+      context: context, builder:(context) {
+      return ZoomIn(
+        duration: Duration(milliseconds: 300),
+        child: Padding(
+          padding:  EdgeInsets.only(top: 160.0,bottom: 160,left: 400,right:400),
+          child: Material(
+            color: Colors.white,
+            shadowColor: Color(0xff245BCA),
+            borderRadius: BorderRadius.circular(8),
+            elevation: 10,
+            child: Container(
+
+              decoration: BoxDecoration(
+                color: Color(0xffFFFFFF),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Scaffold(
+                backgroundColor: Color(0xffFFFFFF),
+                body: Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                       SizedBox(height: height/24.6333),
+                      KText(text:"Add New Alumni Users SuccessFully....",style:
+                      SafeGoogleFont (
+                          'Nunito',
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black,
+                          fontSize: 18
+
+                      )),
+
+                       SizedBox(height: height/36.95),
+
+                      SizedBox(
+                        height: height/4.10555,
+                        width: width/8.53333,
+                        child: SvgPicture.asset(Constants().userSuccessSvg),
+                      ),
+
+                       SizedBox(height: height/36.95),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            splashColor: Colors.transparent,
+                            hoverColor:Colors.transparent,
+                            onTap: (){
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              height: height/18.475,
+                              width: width/8.53333,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Center(
+                                child:KText(text:"Cancel",style:
+                                SafeGoogleFont (
+                                    'Nunito',
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black,
+                                    fontSize: 16
+
+                                )),
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: (){
+                              userDeteleFunction();
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              height: height/18.475,
+                              width: width/8.53333,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  color:  Color(0xff5D5FEF)
+                              ),
+                              child: Center(
+                                child:KText(text:"Okay",
+                                  style:
+                                  SafeGoogleFont (
+                                      'Nunito',
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white,
+                                      fontSize: 16
+
+                                  ),),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    },);
+  }
+
+  userDataUpdatefuntio(){
+    imageupload();
+    FirebaseFirestore.instance.collection("Users").doc(userUpdateDocumentID).update({
+      "Address": adreesscon.text,
+      "Gender": gendercon.text,
+      "Name": firstNamecon.text,
+      "middleName": middleNamecon.text,
+      "lastName": lastNamecon.text,
+      "Occupation": occupationcon.text,
+      "Phone": phoneNumbercon.text,
+      "UserImg": imgUrl,
+      "lastchat": "",
+      "dob": dateofBirthcon.text,
+      "alteremail": alterEmailIdcon.text,
+      "aadhaarNo": aadhaarNumbercon.text,
+      "mobileNo": mobileNumbercon.text,
+      "email": emailIDcon.text,
+      "city": citycon.text,
+      "pinCode": pinCodecon.text,
+      "state": statecon.text,
+      "country": countrycon.text,
+      "yearofpassed": yearPassedcon.text,
+      "subjectStream": subjectStremdcon.text,
+      "class": classcon.text,
+      "rollNo": rollnocon.text,
+      "lastvisit": lastvisitcon.text,
+      "house": housecon.text,
+      "statusmessage": statusmessagecon.text,
+      "educationquvalification": educationquvalificationcon.text,
+      "additionalquvalification": additionalquvalificationcon.text,
+      "designation": designationcon.text,
+      "company_concern": company_concerncon.text,
+      "maritalStatus": maritalStatuscon.text,
+      "spouseName": spouseNamecon.text,
+      "anniversaryDate": anniversaryDatecon.text,
+      "childreancount": no_of_childreancon.text,
+
+    });
+    controllersclearfunc();
+  }
+
+  /// Delete Fucntion ------------------------------------
+  userDetelePopup(){
+    double height=MediaQuery.of(context).size.height;
+    double width=MediaQuery.of(context).size.width;
+
+    showDialog(
+      barrierColor: Colors.transparent,
+      context: context, builder:(context) {
+      return ZoomIn(
+        duration: Duration(milliseconds: 300),
+        child: Padding(
+          padding:  EdgeInsets.only(top: 160.0,bottom: 160,left: 400,right:400),
+          child: Material(
+            color: Colors.white,
+            shadowColor: Color(0xff245BCA),
+            borderRadius: BorderRadius.circular(8),
+            elevation: 10,
+            child: Container(
+
+              decoration: BoxDecoration(
+                color: Color(0xffFFFFFF),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Scaffold(
+                backgroundColor: Color(0xffFFFFFF),
+                body: Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                       SizedBox(height: height/24.6333),
+                      KText(text:"Are You Sure Want to Delete User",style:
+                      SafeGoogleFont (
+                          'Nunito',
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black,
+                          fontSize: 18
+
+                      )),
+
+                       SizedBox(height: height/36.95),
+
+                      SizedBox(
+                        height: height/4.10555,
+                        width: width/8.53333,
+                        child: SvgPicture.asset(Constants().deleteUserSvg),
+                      ),
+
+                       SizedBox(height: height/36.95),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            splashColor: Colors.transparent,
+                            hoverColor:Colors.transparent,
+                            onTap: (){
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              height: height/18.475,
+                              width: width/8.53333,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Center(
+                                child:KText(text:"Cancel",style:
+                                SafeGoogleFont (
+                                    'Nunito',
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black,
+                                    fontSize: 16
+
+                                )),
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: (){
+                              userDeteleFunction();
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              height: height/18.475,
+                              width: width/8.53333,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  color:  Color(0xff5D5FEF)
+                              ),
+                              child: Center(
+                                child:KText(text:"Okay",
+                                  style:
+                                  SafeGoogleFont (
+                                      'Nunito',
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white,
+                                      fontSize: 16
+
+                                  ),),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    },);
+  }
+
+  userDeteleFunction(){
+    FirebaseFirestore.instance.collection("Users").doc(userUpdateDocumentID).delete();
+  }
+
 }
 
 class Location {

@@ -1,11 +1,14 @@
 import 'package:alumni_management_admin/Screens/demo.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:get/get.dart';
 import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:alumni_management_admin/utils.dart';
+import 'package:intl/intl.dart';
 
 import 'Dashboard.dart';
 
@@ -24,12 +27,31 @@ class _SigninPageState extends State<SigninPage> {
   bool _success=false;
   TextEditingController emailController=TextEditingController();
   TextEditingController passwordController=TextEditingController();
+    String ip = '';
+  String deviceLocation = '';
+  String deviceOs = '';
+  String deviceId = '';
+  String ?browsername;
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
+  String adnroidInfo1 = '';
+  String countryData1 = '';
+  String countryDataError = '';
+  
+  
+  @override
+  void initState() {
+    getUserLocation();
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1861;
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
+    double height=MediaQuery.of(context).size.height;
+    double width=MediaQuery.of(context).size.width;
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -256,8 +278,8 @@ class _SigninPageState extends State<SigninPage> {
                             Container(
                               // bgrBj (10:884)
                               padding: EdgeInsets.fromLTRB(17.52*fem, 18.68*fem, 17.52*fem, 17.7*fem),
-                              width: 270,
-                              height: 40,
+                              width: width/5.6888,
+                              height: height/18.475,
                               decoration: BoxDecoration (
                                 color: Color(0xfff7f7f8),
                                 borderRadius: BorderRadius.circular(10*fem),
@@ -305,8 +327,8 @@ class _SigninPageState extends State<SigninPage> {
                             Container(
                               // bgrBj (10:884)
                               padding: EdgeInsets.fromLTRB(17.52*fem, 18.68*fem, 17.52*fem, 17.7*fem),
-                              width: 270,
-                              height: 40,
+                              width: width/5.68888,
+                              height: height/18.475,
                               decoration: BoxDecoration (
                                 color: Color(0xfff7f7f8),
                                 borderRadius: BorderRadius.circular(10*fem),
@@ -602,10 +624,40 @@ class _SigninPageState extends State<SigninPage> {
         print(data.docs[i]['Type']);
         print(data.docs[i]['username']);
         print(data.docs[i]['password']);
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyWidget(email:data.docs[i]['username']),));
+        print(deviceLocation);
+        print(deviceId);
+        print(browsername);
+        FirebaseFirestore.instance.collection('LoginReports').doc(deviceId).set({
+          "date":DateFormat('dd-MM-yyyy').format(DateTime.now()).toString(),
+          "time":DateFormat("hh:mm a").format(DateTime.now()),
+          "timestamp":DateTime.now().millisecondsSinceEpoch,
+          "deviceOs":deviceLocation,
+          "deviceId":deviceId,
+          "Browser":browsername,
+        });
+        print("enter+++++++++++++++++++++++++++++++++++++++++++0");
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyWidget(email:data.docs[i]['username'],),));
       }
     }
 
+  }
+
+
+
+ getUserLocation() async {
+
+    WebBrowserInfo androidInfo = await deviceInfo.webBrowserInfo;
+    setState(() {
+      deviceId = androidInfo.productSub!;
+      deviceLocation = androidInfo.platform!;
+      browsername=androidInfo.browserName.toString();
+    });
+    print("+++++++++++++++++++++++++++++++++++");
+    print("Device Id");
+    print(deviceId);
+    print(deviceLocation);
+    print(browsername);
+    print("+++++++++++++++++++++++++++++++++++");
 
   }
 

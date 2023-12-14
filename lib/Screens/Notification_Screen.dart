@@ -306,8 +306,8 @@ class _Notification_ScreenState extends State<Notification_Screen> with SingleTi
                                                   Visibility(
                                                     visible: snap.data!.docs[i]['isViewed'],
                                                     child: Container(
-                                                      height: 20,
-                                                      width: 80,
+                                                      height: height/36.95,
+                                                      width: width/19.2,
                                                       decoration: BoxDecoration(
                                                           color: Constants().primaryAppColor,
                                                           borderRadius: BorderRadius.circular(30)
@@ -459,7 +459,7 @@ class _Notification_ScreenState extends State<Notification_Screen> with SingleTi
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
-                        height: 100,
+                        height: height/7.39,
                         width: size.width * 0.5,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -495,7 +495,7 @@ class _Notification_ScreenState extends State<Notification_Screen> with SingleTi
                               elevation: 4,
                               borderRadius: BorderRadius.circular(10),
                               child: Container(
-                                height: 35,
+                                height: height/21.1142,
                                 decoration: BoxDecoration(
                                   color: Colors.blue,
                                   borderRadius: BorderRadius.circular(10),
@@ -1008,7 +1008,7 @@ class _Notification_ScreenState extends State<Notification_Screen> with SingleTi
                               elevation: 4,
                               borderRadius: BorderRadius.circular(10),
                               child: Container(
-                                height: 35,
+                                height: height/21.1142,
                                 decoration: BoxDecoration(
                                   color: Colors.green,
                                   borderRadius: BorderRadius.circular(10),
@@ -1045,7 +1045,7 @@ class _Notification_ScreenState extends State<Notification_Screen> with SingleTi
                               elevation: 4,
                               borderRadius: BorderRadius.circular(10),
                               child: Container(
-                                height: 35,
+                                height: height/21.1142,
                                 decoration: BoxDecoration(
                                   color: Colors.red,
                                   borderRadius: BorderRadius.circular(10),

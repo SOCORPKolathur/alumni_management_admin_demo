@@ -86,8 +86,8 @@ class HomeController extends GetxController {
         headers: <String, String>{
           'Content-Type': 'application/json',
           'Authorization':
-              'key=AAAABQUjkBw:APA91bGUiOt74yt1vVxYi_9imVlD77_ZmZvMZH4HTVRQFtVIHGfTe59doiUkPLNl9rbTbQJKbE-5Ksrk3BizwVX5XOvr4g63ngnhP5LwU4LLkmuCfDQXrr-iVKT9eXJHlysUdE24fFoo',
-        },
+          'key=AAAAMbpijGg:APA91bGJh2qke8JHGkBaJvJ5-mSnllb0aAIi-lF2YKt9MejKB-m51-SQZJR2u3tYdC9UsOB0ps_G6n29EuZPGFW5xAp4lHQDFWi11TFSDn65VyXYyFY0c-SzXuwk2fE31ADp9MdryFBB',
+      },
         body: jsonEncode(
           <String, dynamic>{
             'notification': <String, dynamic>{'body': body, 'title': title},

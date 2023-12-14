@@ -5,22 +5,28 @@ import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
+import '../Models/Job_Post_Model.dart';
+
 
 final FirebaseFirestore firestore = FirebaseFirestore.instance;
-final CollectionReference EventCollection = firestore.collection('Batch_events');
+final CollectionReference EventCollection = firestore.collection('JobPosts');
 final FirebaseStorage fs = FirebaseStorage.instance;
 
-class EventsFireCrud {
-  static Stream<List<EventsModel>> fetchEvents() =>
-      EventCollection.orderBy("timestamp", descending: false).snapshots().map((snapshot) => snapshot.docs.map((doc) => EventsModel.fromJson(doc.data() as Map<String,dynamic>)).toList());
+class JobPostFireCrud {
+  static Stream<List<JobPostModel>> fetchJobPost() =>
+      EventCollection
+          .orderBy("timestamp", descending: false)
+          .snapshots().map((snapshot) => snapshot.docs
+          .map((doc) => JobPostModel.fromJson(doc.data() as Map<String,dynamic>))
+          .toList());
 
-  static Stream<List<EventsModel>> fetchEventsWithFilter(DateTime start, DateTime end) =>
+  static Stream<List<JobPostModel>> fetchJobPostWithFilter(DateTime start, DateTime end) =>
       EventCollection
           .orderBy("timestamp", descending: false)
           .snapshots()
           .map((snapshot) => snapshot.docs
           .where((element) => element['timestamp'] < end.add(const Duration(days: 1)).millisecondsSinceEpoch && element['timestamp'] >= start.millisecondsSinceEpoch)
-          .map((doc) => EventsModel.fromJson(doc.data() as Map<String,dynamic>))
+          .map((doc) => JobPostModel.fromJson(doc.data() as Map<String,dynamic>))
           .toList());
 
   static Future<Response> addEvent({
@@ -38,7 +44,7 @@ class EventsFireCrud {
     Response response = Response();
     DocumentReference documentReferencer = EventCollection.doc();
     DateTime tempDate = DateFormat("dd-MM-yyyy").parse(date);
-    EventsModel event = EventsModel(
+    JobPostModel event = JobPostModel(
       time: time,
       title: title,
       timestamp: tempDate.millisecondsSinceEpoch,
@@ -54,7 +60,7 @@ class EventsFireCrud {
     var json = event.toJson();
     var result = await documentReferencer.set(json).whenComplete(() {
       response.code = 200;
-      response.message = "Sucessfully added to the database";
+      response.message = "Successfully added to the database";
     }).catchError((e) {
       response.code = 500;
       response.message = e;
@@ -73,7 +79,7 @@ class EventsFireCrud {
   }
 
   static Future<Response> updateRecord(
-      EventsModel event, File? image, String imgUrl) async {
+      JobPostModel event, File? image, String imgUrl) async {
     Response res = Response();
     if (image != null) {
       String downloadUrl = await uploadImageToStorage(image);
@@ -85,7 +91,7 @@ class EventsFireCrud {
     var result =
     await documentReferencer.update(event.toJson()).whenComplete(() {
       res.code = 200;
-      res.message = "Sucessfully Updated from database";
+      res.message = "Successfully Updated from database";
     }).catchError((e) {
       res.code = 500;
       res.message = e;
@@ -98,7 +104,7 @@ class EventsFireCrud {
     DocumentReference documentReferencer = EventCollection.doc(id);
     var result = await documentReferencer.delete().whenComplete(() {
       res.code = 200;
-      res.message = "Sucessfully Deleted from database";
+      res.message = "Successfully Deleted from database";
     }).catchError((e) {
       res.code = 500;
       res.message = e;
