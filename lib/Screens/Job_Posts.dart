@@ -215,7 +215,7 @@ class _Job_PostsState extends State<Job_Posts> with SingleTickerProviderStateMix
                                 ),
                               )),
                           Padding(
-                            padding: EdgeInsets.only(left: 8),
+                            padding: EdgeInsets.only(left: height/81.375),
                             child: InkWell(
                                 key: ExportDataKeys,
                                 onTap: () {
@@ -264,8 +264,9 @@ class _Job_PostsState extends State<Job_Posts> with SingleTickerProviderStateMix
                                   ),
                                 )),
                           ),
+                          currentTab.toUpperCase() == "ADD"?const SizedBox():
                           Padding(
-                            padding: const EdgeInsets.only(left: 800),
+                            padding:  EdgeInsets.only(left: width/1.88),
                             child: InkWell(
                               key: filterDataKey,
                               onTap: () async {
@@ -3248,7 +3249,7 @@ class _Job_PostsState extends State<Job_Posts> with SingleTickerProviderStateMix
     double height = MediaQuery.of(context).size.height;
     final render = key.currentContext!.findRenderObject() as RenderBox;
     await showMenu(
-      color: Colors.white70,
+      color: Colors.grey.shade200,
       elevation: 0,
       context: context,
       position: RelativeRect.fromLTRB(
@@ -3269,61 +3270,73 @@ class _Job_PostsState extends State<Job_Posts> with SingleTickerProviderStateMix
           }
         },
         value: item,
-        child: Container(
-          height: height / 18.475,
-          decoration: BoxDecoration(
-              color: item == "Print"
-                  ? Color(0xff5B93FF):
-              item == "Copy"
-                  ? Color(0xffE71D36):
-              item == "Csv"
-                  ? Colors.green
-                  : Colors.transparent,
-              borderRadius: BorderRadius.circular(5)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              item == "Print"
-                  ? Icon(
-                Icons.print,
-                color: Colors.white,
-                size: 18,
-              )
-                  : item == "Copy"
-                  ? Icon(
-                Icons.copy,
-                color: Colors.white,
-                size: 18,
-              )
-                  : item == "Csv"
-                  ? Icon(
-                Icons.file_copy_rounded,
-                color: Colors.white,
-                size: 18,
-              )
-                  : Icon(
-                Icons.circle,
-                color: Colors.transparent,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 5),
-                child: Text(
-                  item,
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                    color: item == "Print"
-                        ? Colors.white
-                        : item == "Copy"
-                        ? Colors.white
-                        : item == "Csv"
-                        ? Colors.white
-                        : Colors.white,
-                  ),
-                  overflow: TextOverflow.ellipsis,
+        child: Material(
+          color: item == "Print"
+              ? Color(0xff5B93FF):
+          item == "Copy"
+              ? Color(0xffE71D36):
+          item == "Csv"
+              ? Colors.green
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(5),
+          shadowColor: Colors.black12,
+          elevation: 10,
+          child: Container(
+            height: height / 18.475,
+            decoration: BoxDecoration(
+                color: item == "Print"
+                    ? Color(0xff5B93FF):
+                item == "Copy"
+                    ? Color(0xffE71D36):
+                item == "Csv"
+                    ? Colors.green
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(5)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                item == "Print"
+                    ? Icon(
+                  Icons.print,
+                  color: Colors.white,
+                  size: 18,
+                )
+                    : item == "Copy"
+                    ? Icon(
+                  Icons.copy,
+                  color: Colors.white,
+                  size: 18,
+                )
+                    : item == "Csv"
+                    ? Icon(
+                  Icons.file_copy_rounded,
+                  color: Colors.white,
+                  size: 18,
+                )
+                    : Icon(
+                  Icons.circle,
+                  color: Colors.transparent,
                 ),
-              ),
-            ],
+                Padding(
+                  padding: EdgeInsets.only(left: 5),
+                  child: Text(
+                    item,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: item == "Print"
+                          ? Colors.white
+                          : item == "Copy"
+                          ? Colors.white
+                          : item == "Csv"
+                          ? Colors.white
+                          : Colors.white,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ))

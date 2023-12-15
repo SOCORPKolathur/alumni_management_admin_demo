@@ -77,6 +77,10 @@ dependencies:
   device_info_plus: ^9.1.1
   local_session_timeout: ^2.3.2
   textfield_tags: ^2.0.2
+  syncfusion_flutter_charts: ^21.2.10
+  pie_chart: ^5.1.0
+  percent_indicator: ^4.2.3
+  simple_circular_progress_bar: ^1.0.2
 
 
 

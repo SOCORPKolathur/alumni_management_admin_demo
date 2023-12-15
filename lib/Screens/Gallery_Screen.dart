@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:html';
 import 'dart:html' as html;
 
+import 'package:animate_do/animate_do.dart';
 import 'package:http/http.dart' as http;
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -92,545 +93,589 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
     double baseWidth = 1920;
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: height/81.375, horizontal: width/170.75),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  KText(
-                    text: 'GALLERY',
-                    style: SafeGoogleFont (
-                      'Poppins',
-                      fontSize: 25*ffem,
-                      fontWeight: FontWeight.w600,
-                      height: 1.6*ffem/fem,
-                      color: Color(0xff05004e),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 8),
-                child: Row(
-                  children: [
-                    InkWell(
-                        onTap: () {
-                            addItemPopUp();
-                        },
-                        child: Container(
-                          height: height / 18.6,
-                          width: 140,
-                          decoration: BoxDecoration(
-                            color: Constants().primaryAppColor,
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                offset: Offset(1, 2),
-                                blurRadius: 3,
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: width / 227.66),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                currentTab.toUpperCase() != "VIEW"
-                                    ? const SizedBox()
-                                    : Icon(
-                                  Icons.add,
-                                  color: Colors.white,
-                                ),
-                                KText(
-                                  text: currentTab.toUpperCase() == "VIEW"
-                                      ? "Add Album"
-                                      : "View Album",
-                                  style: SafeGoogleFont(
-                                    'Nunito',
-                                    fontSize: width / 120.07,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )),
-
-                    Padding(
-                      padding: const EdgeInsets.only(left: 950),
-                      child: InkWell(
-                        key: filterDataKey,
-                        onTap: () async {
-                          filterDataMenuItem( context, filterDataKey, size);
-                        },
-                        child: Container(
-                          height: height / 16.275,
-                          decoration: BoxDecoration(
-                            color: Constants().primaryAppColor,
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                offset: Offset(1, 2),
-                                blurRadius: 3,
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: width / 227.66),
-                            child: Row(
-                              children: [
-                                Icon(Icons.filter_list_alt,color:Colors.white),
-                                KText(
-                                  text: " Filter by Date",
-                                  style: SafeGoogleFont(
-                                    'Nunito',
-                                    fontSize: width / 120.571,
-                                    color:Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        addPhoto==true?const SizedBox():  Container(
-            color: Colors.white,
-            width: width / 1.2418,
-            height: height/13.4363,
-            child: Row(
+    return Padding(
+      padding:  EdgeInsets.only(left:width/170.75),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: height/81.375, horizontal: width/170.75),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  color: Colors.white,
-                  width: width/7.2,
-                  height: height/14.78,
-                  alignment: Alignment.center,
-                  child: Center(
-                    child: Row(
-                      crossAxisAlignment:
-                      CrossAxisAlignment.center,
-                      children: [
-                        KText(
-                          text: "Si.No",
-                          style: SafeGoogleFont(
-                            'Nunito',
-                            color: Color(0xff030229),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8),
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                filtervalue = !filtervalue;
-                              });
-                            },
-                            child: Transform.rotate(
-                              angle: filtervalue ? 200 : 0,
-                              child: Opacity(
-                                // arrowdown2TvZ (8:2307)
-                                opacity: 0.7,
-                                child: Container(
-                                  width: width/153.6,
-                                  height: height/73.9,
-                                  child: Image.asset(
-                                    'assets/images/arrow-down-2.png',
-                                    width: width/153.6,
-                                    height: height/73.9,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                Container(
-                  color: Colors.white,
-                  width: width/4.38857,
-                  height: height/14.78,
-                  alignment: Alignment.center,
-                  child: Center(
-                    child: Row(
-                      crossAxisAlignment:
-                      CrossAxisAlignment.center,
-                      children: [
-                        KText(
-                          text: "Name",
-                          style: SafeGoogleFont(
-                            'Nunito',
-                            color: Color(0xff030229),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8),
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                filtervalue = !filtervalue;
-                              });
-                            },
-                            child: Transform.rotate(
-                              angle: filtervalue ? 200 : 0,
-                              child: Opacity(
-                                // arrowdown2TvZ (8:2307)
-                                opacity: 0.7,
-                                child: Container(
-                                  width: width/153.6,
-                                  height: height/73.9,
-                                  child: Image.asset(
-                                    'assets/images/arrow-down-2.png',
-                                    width: width/153.6,
-                                    height: height/73.9,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                Container(
-                  color: Colors.white,
-                  width: width/7.6,
-                  height: height/14.78,
-                  alignment: Alignment.center,
-                  child: Center(
-                    child: Row(
-                      crossAxisAlignment:
-                      CrossAxisAlignment.center,
-                      children: [
-                        KText(
-                          text: "Date",
-                          style: SafeGoogleFont(
-                            'Nunito',
-                            color: Color(0xff030229),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8),
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                filtervalue = !filtervalue;
-                              });
-                            },
-                            child: Transform.rotate(
-                              angle: filtervalue ? 200 : 0,
-                              child: Opacity(
-                                // arrowdown2TvZ (8:2307)
-                                opacity: 0.7,
-                                child: Container(
-                                  width: width/153.6,
-                                  height: height/73.9,
-                                  child: Image.asset(
-                                    'assets/images/arrow-down-2.png',
-                                    width: width/153.6,
-                                    height: height/73.9,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                Container(
-                  color: Colors.white,
-                  width: width/7.6,
-                  height: height/14.78,
-                  alignment: Alignment.center,
-                  child: Center(
-                    child: Row(
-                      crossAxisAlignment:
-                      CrossAxisAlignment.center,
-                      children: [
-                        KText(
-                          text: "Time",
-                          style: SafeGoogleFont(
-                            'Nunito',
-                            color: Color(0xff030229),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8),
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                filtervalue = !filtervalue;
-                              });
-                            },
-                            child: Transform.rotate(
-                              angle: filtervalue ? 200 : 0,
-                              child: Opacity(
-                                // arrowdown2TvZ (8:2307)
-                                opacity: 0.7,
-                                child: Container(
-                                  width: width/153.6,
-                                  height: height/73.9,
-                                  child: Image.asset(
-                                    'assets/images/arrow-down-2.png',
-                                    width: width/153.6,
-                                    height: height/73.9,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                SizedBox(
-                  width: width/7.6,
-                  height: height/14.78,
-                  child: Center(
-                    child: Row(
-                      crossAxisAlignment:
-                      CrossAxisAlignment.center,
-                      children: [
-                        KText(
-                          text: "Actions",
-                          style: SafeGoogleFont(
-                            'Nunito',
-                            color: Color(0xff030229),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8),
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                filtervalue = !filtervalue;
-                              });
-                            },
-                            child: Transform.rotate(
-                              angle: filtervalue ? 200 : 0,
-                              child: Opacity(
-                                // arrowdown2TvZ (8:2307)
-                                opacity: 0.7,
-                                child: Container(
-                                  width: width/153.6,
-                                  height: height/73.9,
-                                  child: Image.asset(
-                                    'assets/images/arrow-down-2.png',
-                                    width: width/153.6,
-                                    height: height/73.9,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            )),
-        addPhoto==true?
-        Container(
-          height: size.height * 0.3,
-          width: width/1.2418,
-          decoration: BoxDecoration(
-            color: Constants().primaryAppColor,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                offset: Offset(1, 2),
-                blurRadius: 3,
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              SizedBox(
-                height: size.height * 0.1,
-                width: double.infinity,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: width/68.3),
+                Padding(
+                  padding:  EdgeInsets.only(top:height/50.0769),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-
-                      Row(
-                        children: [
-                          InkWell(
-                              onTap: (){
-                                setState(() {
-                                  addPhoto=false;
-                                  isEditSI=false;
-                                  addphotoDocummentValue='';
-                                });
-                              },
-                              child: Icon(Icons.arrow_back,color: Colors.white,)),
-                          Padding(
-                            padding:  EdgeInsets.only(left:width/192),
-                            child: KText(
-                              text:addphotoDocummentValue==""?"Images": addphotoDocummentValue.toString(),
-                              style :SafeGoogleFont (
-                                'Poppins',
-                                fontSize: 22*ffem,
-                                fontWeight: FontWeight.w500,
-                                height: 1.6*ffem/fem,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
+                      KText(
+                        text: 'GALLERY',
+                        style: SafeGoogleFont (
+                          'Poppins',
+                          fontSize: 25*ffem,
+                          fontWeight: FontWeight.w600,
+                          height: 1.6*ffem/fem,
+                          color: Color(0xff05004e),
+                        ),
                       ),
-                      Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              addImage(addphotoDocummentValue,size);
-                            },
-                            child: KText(
-                              text: "ADD",
-                              style: SafeGoogleFont (
-                                'Poppins',
-                                fontSize: 20*ffem,
-                                fontWeight: FontWeight.w500,
-                                height: 1.6*ffem/fem,
-                                color: Colors.white,
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: height/81.375),
+                  child: Row(
+                    children: [
+                      InkWell(
+                          onTap: () {
+                              addItemPopUp();
+                          },
+                          child: Container(
+                            height: height / 18.6,
+                            width: width/10.9714,
+                            decoration: BoxDecoration(
+                              color: Constants().primaryAppColor,
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  offset: Offset(1, 2),
+                                  blurRadius: 3,
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: width / 227.66),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  currentTab.toUpperCase() != "VIEW"
+                                      ? const SizedBox()
+                                      : Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                  ),
+                                  KText(
+                                    text: currentTab.toUpperCase() == "VIEW"
+                                        ? "Add Album"
+                                        : "View Album",
+                                    style: SafeGoogleFont(
+                                      'Nunito',
+                                      fontSize: width / 120.07,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )),
+                      addPhoto==true?const SizedBox():
+                      Padding(
+                        padding:  EdgeInsets.only(left: width/1.6),
+                        child: InkWell(
+                          key: filterDataKey,
+                          onTap: () async {
+                            filterDataMenuItem( context, filterDataKey, size);
+                          },
+                          child: Container(
+                            height: height / 16.275,
+                            decoration: BoxDecoration(
+                              color: Constants().primaryAppColor,
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  offset: Offset(1, 2),
+                                  blurRadius: 3,
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: width / 227.66),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.filter_list_alt,color:Colors.white),
+                                  KText(
+                                    text: " Filter by Date",
+                                    style: SafeGoogleFont(
+                                      'Nunito',
+                                      fontSize: width / 120.571,
+                                      color:Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                          SizedBox(width:width/307.2),
-                          Icon(
-                            Icons.add_circle,
-                            color: Colors.white,
-                          ),
-                          SizedBox(width: width/91.06),
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                isEditSI = !isEditSI;
-                              });
-                            },
-                            child: KText(
-                              text: isEditSI?"CLOSE":"EDIT",
-                              style: SafeGoogleFont (
-                                'Poppins',
-                                fontSize: 20*ffem,
-                                fontWeight: FontWeight.w500,
-                                height: 1.6*ffem/fem,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width:width/307.2),
-                          Icon(
-                            Icons.edit_note,
-                            color: Colors.white,
-                          ),
-                          SizedBox(width: width/91.06),
-                          InkWell(
-                            onTap: () {
-                              showImageGidView(context, addphotoDocummentValue);
-                            },
-                            child: KText(
-                              text: "VIEW MORE",
-                              style: SafeGoogleFont (
-                                'Poppins',
-                                fontSize: 20*ffem,
-                                fontWeight: FontWeight.w500,
-                                height: 1.6*ffem/fem,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width:width/307.2),
-                          RotatedBox(
-                            quarterTurns: 3,
-                            child: Icon(
-                              Icons.expand_circle_down_outlined,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
+                        ),
                       )
                     ],
                   ),
                 ),
-              ),
-              Container(
-                height: size.height * 0.2,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
+              ],
+            ),
+          ),
+
+          addPhoto==true?const SizedBox():
+          FadeInRight(
+            child: Container(
+                color: Colors.white,
+                width: width/1.2418,
+                height: height/13.4363,
+                child: Row(
+                  children: [
+                    Container(
+                      color: Colors.white,
+                      width: width/7.2,
+                      height: height/14.78,
+                      alignment: Alignment.center,
+                      child: Center(
+                        child: Row(
+                          crossAxisAlignment:
+                          CrossAxisAlignment.center,
+                          children: [
+                            KText(
+                              text: "Si.No",
+                              style: SafeGoogleFont(
+                                'Nunito',
+                                color: Color(0xff030229),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8),
+                              child: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    filtervalue = !filtervalue;
+                                  });
+                                },
+                                child: Transform.rotate(
+                                  angle: filtervalue ? 200 : 0,
+                                  child: Opacity(
+                                    // arrowdown2TvZ (8:2307)
+                                    opacity: 0.7,
+                                    child: Container(
+                                      width: width/153.6,
+                                      height: height/73.9,
+                                      child: Image.asset(
+                                        'assets/images/arrow-down-2.png',
+                                        width: width/153.6,
+                                        height: height/73.9,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    Container(
+                      color: Colors.white,
+                      width: width/4.38857,
+                      height: height/14.78,
+                      alignment: Alignment.center,
+                      child: Center(
+                        child: Row(
+                          crossAxisAlignment:
+                          CrossAxisAlignment.center,
+                          children: [
+                            KText(
+                              text: "Name",
+                              style: SafeGoogleFont(
+                                'Nunito',
+                                color: Color(0xff030229),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8),
+                              child: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    filtervalue = !filtervalue;
+                                  });
+                                },
+                                child: Transform.rotate(
+                                  angle: filtervalue ? 200 : 0,
+                                  child: Opacity(
+                                    // arrowdown2TvZ (8:2307)
+                                    opacity: 0.7,
+                                    child: Container(
+                                      width: width/153.6,
+                                      height: height/73.9,
+                                      child: Image.asset(
+                                        'assets/images/arrow-down-2.png',
+                                        width: width/153.6,
+                                        height: height/73.9,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    Container(
+                      color: Colors.white,
+                      width: width/7.6,
+                      height: height/14.78,
+                      alignment: Alignment.center,
+                      child: Center(
+                        child: Row(
+                          crossAxisAlignment:
+                          CrossAxisAlignment.center,
+                          children: [
+                            KText(
+                              text: "Date",
+                              style: SafeGoogleFont(
+                                'Nunito',
+                                color: Color(0xff030229),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8),
+                              child: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    filtervalue = !filtervalue;
+                                  });
+                                },
+                                child: Transform.rotate(
+                                  angle: filtervalue ? 200 : 0,
+                                  child: Opacity(
+                                    // arrowdown2TvZ (8:2307)
+                                    opacity: 0.7,
+                                    child: Container(
+                                      width: width/153.6,
+                                      height: height/73.9,
+                                      child: Image.asset(
+                                        'assets/images/arrow-down-2.png',
+                                        width: width/153.6,
+                                        height: height/73.9,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    Container(
+                      color: Colors.white,
+                      width: width/7.6,
+                      height: height/14.78,
+                      alignment: Alignment.center,
+                      child: Center(
+                        child: Row(
+                          crossAxisAlignment:
+                          CrossAxisAlignment.center,
+                          children: [
+                            KText(
+                              text: "Time",
+                              style: SafeGoogleFont(
+                                'Nunito',
+                                color: Color(0xff030229),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8),
+                              child: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    filtervalue = !filtervalue;
+                                  });
+                                },
+                                child: Transform.rotate(
+                                  angle: filtervalue ? 200 : 0,
+                                  child: Opacity(
+                                    // arrowdown2TvZ (8:2307)
+                                    opacity: 0.7,
+                                    child: Container(
+                                      width: width/153.6,
+                                      height: height/73.9,
+                                      child: Image.asset(
+                                        'assets/images/arrow-down-2.png',
+                                        width: width/153.6,
+                                        height: height/73.9,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(
+                      width: width/7.6,
+                      height: height/14.78,
+                      child: Center(
+                        child: Row(
+                          crossAxisAlignment:
+                          CrossAxisAlignment.center,
+                          children: [
+                            KText(
+                              text: "Actions",
+                              style: SafeGoogleFont(
+                                'Nunito',
+                                color: Color(0xff030229),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8),
+                              child: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    filtervalue = !filtervalue;
+                                  });
+                                },
+                                child: Transform.rotate(
+                                  angle: filtervalue ? 200 : 0,
+                                  child: Opacity(
+                                    // arrowdown2TvZ (8:2307)
+                                    opacity: 0.7,
+                                    child: Container(
+                                      width: width/153.6,
+                                      height: height/73.9,
+                                      child: Image.asset(
+                                        'assets/images/arrow-down-2.png',
+                                        width: width/153.6,
+                                        height: height/73.9,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                )),
+          ),
+          addPhoto==true?
+          FadeInRight(
+            child: Container(
+              height: size.height * 0.3,
+              width: width/1.2418,
+              decoration: BoxDecoration(
+                color: Constants().primaryAppColor,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    offset: Offset(1, 2),
+                    blurRadius: 3,
                   ),
-                ),
-                child: StreamBuilder(
-                  stream: FirebaseFirestore.instance.collection("Photos").doc(addphotoDocummentValue.toString()).
-                  collection(addphotoDocummentValue.toString()).orderBy('timestamp').snapshots(),
-                  builder: (context, snapshot) {
-                    if(!snapshot.hasData){
-                      return const Center(child:CircularProgressIndicator());
-                    }
-                    if(snapshot.hasData==null){
-                      return const Center(child:CircularProgressIndicator());
-                    }
-                    return ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (ctx, i) {
-                        var allData=snapshot.data!.docs[i];
-                        return InkWell(
-                          onTap: () {
-                            showImageModel(context, allData["imgUrl"]);
-                          },
-                          child: isEditSI
-                              ? Stack(
-                            alignment: Alignment.topRight,
+                ],
+              ),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: size.height * 0.1,
+                    width: double.infinity,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width/68.3),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+
+                          Row(
                             children: [
-                              Container(
+                              InkWell(
+                                  onTap: (){
+                                    setState(() {
+                                      addPhoto=false;
+                                      isEditSI=false;
+                                      addphotoDocummentValue='';
+                                    });
+                                  },
+                                  child: Icon(Icons.arrow_back,color: Colors.white,)),
+                              Padding(
+                                padding:  EdgeInsets.only(left:width/192),
+                                child: KText(
+                                  text:addphotoDocummentValue==""?"Images": addphotoDocummentValue.toString(),
+                                  style :SafeGoogleFont (
+                                    'Poppins',
+                                    fontSize: 22*ffem,
+                                    fontWeight: FontWeight.w500,
+                                    height: 1.6*ffem/fem,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  addImage(addphotoDocummentValue,size);
+                                },
+                                child: KText(
+                                  text: "ADD",
+                                  style: SafeGoogleFont (
+                                    'Poppins',
+                                    fontSize: 20*ffem,
+                                    fontWeight: FontWeight.w500,
+                                    height: 1.6*ffem/fem,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width:width/307.2),
+                              Icon(
+                                Icons.add_circle,
+                                color: Colors.white,
+                              ),
+                              SizedBox(width: width/91.06),
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    isEditSI = !isEditSI;
+                                  });
+                                },
+                                child: KText(
+                                  text: isEditSI?"CLOSE":"EDIT",
+                                  style: SafeGoogleFont (
+                                    'Poppins',
+                                    fontSize: 20*ffem,
+                                    fontWeight: FontWeight.w500,
+                                    height: 1.6*ffem/fem,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width:width/307.2),
+                              Icon(
+                                Icons.edit_note,
+                                color: Colors.white,
+                              ),
+                              SizedBox(width: width/91.06),
+                              InkWell(
+                                onTap: () {
+                                  showImageGidView(context, addphotoDocummentValue);
+                                },
+                                child: KText(
+                                  text: "VIEW MORE",
+                                  style: SafeGoogleFont (
+                                    'Poppins',
+                                    fontSize: 20*ffem,
+                                    fontWeight: FontWeight.w500,
+                                    height: 1.6*ffem/fem,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width:width/307.2),
+                              RotatedBox(
+                                quarterTurns: 3,
+                                child: Icon(
+                                  Icons.expand_circle_down_outlined,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: size.height * 0.2,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10),
+                      ),
+                    ),
+                    child: StreamBuilder(
+                      stream: FirebaseFirestore.instance.collection("Photos").doc(addphotoDocummentValue.toString()).
+                      collection(addphotoDocummentValue.toString()).orderBy('timestamp').snapshots(),
+                      builder: (context, snapshot) {
+                        if(!snapshot.hasData){
+                          return const Center(child:CircularProgressIndicator());
+                        }
+                        if(snapshot.hasData==null){
+                          return const Center(child:CircularProgressIndicator());
+                        }
+                        return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (ctx, i) {
+                            var allData=snapshot.data!.docs[i];
+                            return InkWell(
+                              onTap: () {
+                                showImageModel(context, allData["imgUrl"]);
+                              },
+                              child: isEditSI
+                                  ? Stack(
+                                alignment: Alignment.topRight,
+                                children: [
+                                  Container(
+                                    height: height/5.007,
+                                    width: width/13.66,
+                                    margin: EdgeInsets.symmetric(horizontal: width/68.3, vertical: height/32.55),
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                      BorderRadius.circular(10),
+                                      image: DecorationImage(
+                                        fit: BoxFit.fill,
+                                        image: NetworkImage(
+                                          allData['imgUrl'],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    right: width/136.6,
+                                    top: height/65.1,
+                                    child: InkWell(
+                                      onTap: () {
+                                        FirebaseFirestore.instance.collection("Photos").doc(addphotoDocummentValue).
+                                        collection(addphotoDocummentValue).doc(allData.id).delete();
+                                      },
+                                      child: CircleAvatar(
+                                        radius: 15,
+                                        backgroundColor: Colors.red,
+                                        child: Icon(
+                                          Icons.remove_circle_outline,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+
+                                ],
+                              )
+                                  : Container(
                                 height: height/5.007,
                                 width: width/13.66,
                                 margin: EdgeInsets.symmetric(horizontal: width/68.3, vertical: height/32.55),
                                 decoration: BoxDecoration(
-                                  borderRadius:
-                                  BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(10),
                                   image: DecorationImage(
                                     fit: BoxFit.fill,
                                     image: NetworkImage(
@@ -639,172 +684,140 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                                   ),
                                 ),
                               ),
-                              Positioned(
-                                right: width/136.6,
-                                top: height/65.1,
-                                child: InkWell(
-                                  onTap: () {
-                                    FirebaseFirestore.instance.collection("Photos").doc(addphotoDocummentValue).
-                                    collection(addphotoDocummentValue).doc(allData.id).delete();
-                                  },
-                                  child: CircleAvatar(
-                                    radius: 15,
-                                    backgroundColor: Colors.red,
-                                    child: Icon(
-                                      Icons.remove_circle_outline,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-
-                            ],
-                          )
-                              : Container(
-                            height: height/5.007,
-                            width: width/13.66,
-                            margin: EdgeInsets.symmetric(horizontal: width/68.3, vertical: height/32.55),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              image: DecorationImage(
-                                fit: BoxFit.fill,
-                                image: NetworkImage(
-                                  allData['imgUrl'],
-                                ),
-                              ),
-                            ),
-                          ),
+                            );
+                          },
                         );
                       },
-                    );
-                  },
-                ),
-              )
-            ],
-          ),
-        ):
-        SizedBox(
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ):
+          FadeInRight(
+            child: SizedBox(
+              height: height/1.34363,
+              width: width/1.2418,
+              child: StreamBuilder(
+                stream: FirebaseFirestore.instance.collection("Photos").snapshots(),
+                builder: (context, snapshot) {
 
-          height: height/1.34363, width: width/1.2288,
-          child: StreamBuilder(
-            stream: FirebaseFirestore.instance.collection("Photos").snapshots(),
-            builder: (context, snapshot) {
+                  if(snapshot.hasData==null){
+                    return const Center(child: CircularProgressIndicator(),);
+                  }
+                  if(!snapshot.hasData){
+                    return const Center(child: CircularProgressIndicator(),);
+                  }
+                  return ListView.builder(
+                    physics: const ScrollPhysics(),
+                    itemCount: snapshot.data!.docs.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
 
-              if(snapshot.hasData==null){
-                return const Center(child: CircularProgressIndicator(),);
-              }
-              if(!snapshot.hasData){
-                return const Center(child: CircularProgressIndicator(),);
-              }
-              return ListView.builder(
-                physics: const ScrollPhysics(),
-                itemCount: snapshot.data!.docs.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
+                      var Value=snapshot.data!.docs[index];
 
-                  var Value=snapshot.data!.docs[index];
+                      return SizedBox(
 
-                  return Container(
-                      color: Colors.white,
-                      width: width / 1.2418,
-                      height: height/13.4363,
-                      child: Row(
-                        children: [
-                          Container(
-                            color: Colors.white,
-                            width: width/7.2,
-                            height: height/14.78,
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding:  EdgeInsets.only(left:width/102.4),
-                              child: KText(
-                                text: (index+1).toString(),
-                                style: SafeGoogleFont(
-                                  'Nunito',
-                                  color: Color(0xff030229),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            color: Colors.white,
-                            width: width/4.38857,
-                            height: height/14.78,
-                            alignment: Alignment.centerLeft,
-                            child: KText(
-                              text: Value['name'].toString(),
-                              style: SafeGoogleFont(
-                                'Nunito',
-                                color: Color(0xff030229),
-                              ),
-                            ),
-                          ),
-
-                          Container(
-                            color: Colors.white,
-                            width: width/7.6,
-                            height: height/14.78,
-                            alignment: Alignment.centerLeft,
-                            child: KText(
-                              text: Value['date'].toString(),
-                              style: SafeGoogleFont(
-                                'Nunito',
-                                color: Color(0xff030229),
-                              ),
-                            ),
-                          ),
-
-                          Container(
-                            color: Colors.white,
-                            width: width/7.6,
-                            height: height/14.78,
-                            alignment: Alignment.centerLeft,
-                            child: KText(
-                              text: Value['time'].toString(),
-                              style: SafeGoogleFont(
-                                'Nunito',
-                                color: Color(0xff030229),
-                              ),
-                            ),
-                          ),
-
-                          SizedBox(
-
-                            width: width/7.6,
-                            height: height/14.78,
-                            child: InkWell(
-                              onTap: (){
-                                setState(() {
-                                  addPhoto=true;
-                                  addphotoDocummentValue=Value.id;
-                                });
-                                print(addphotoDocummentValue);
-                                print("00000000000000000000000000000000000000000000000000000000000000");
-                              },
-                              child: Container(
-                                margin: EdgeInsets.only(right:width/12.8,top:height/73.9,bottom: height/73.9),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: Constants().primaryAppColor,
-                                ),
-                                child: Center(
+                          width: width / 1.2418,
+                          height: height/13.4363,
+                          child: Row(
+                            children: [
+                              Container(
+                                color: Colors.transparent,
+                                width: width/7.2,
+                                height: height/14.78,
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding:  EdgeInsets.only(left:width/102.4),
                                   child: KText(
-                                    text: "Add",
+                                    text: (index+1).toString(),
                                     style: SafeGoogleFont(
                                       'Nunito',
-                                      color: Color(0xffFFFFFF),
+                                      color: Color(0xff030229),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
-                        ],
-                      ));
-                },);
-            },),
-        )
-      ],
+                              Container(
+                                color: Colors.transparent,
+                                width: width/4.38857,
+                                height: height/14.78,
+                                alignment: Alignment.centerLeft,
+                                child: KText(
+                                  text: Value['name'].toString(),
+                                  style: SafeGoogleFont(
+                                    'Nunito',
+                                    color: Color(0xff030229),
+                                  ),
+                                ),
+                              ),
+
+                              Container(
+                                color: Colors.transparent,
+                                width: width/7.6,
+                                height: height/14.78,
+                                alignment: Alignment.centerLeft,
+                                child: KText(
+                                  text: Value['date'].toString(),
+                                  style: SafeGoogleFont(
+                                    'Nunito',
+                                    color: Color(0xff030229),
+                                  ),
+                                ),
+                              ),
+
+                              Container(
+                                color: Colors.transparent,
+                                width: width/7.6,
+                                height: height/14.78,
+                                alignment: Alignment.centerLeft,
+                                child: KText(
+                                  text: Value['time'].toString(),
+                                  style: SafeGoogleFont(
+                                    'Nunito',
+                                    color: Color(0xff030229),
+                                  ),
+                                ),
+                              ),
+
+                              SizedBox(
+                                width: width/7.6,
+                                height: height/14.78,
+                                child: InkWell(
+                                  onTap: (){
+                                    setState(() {
+                                      addPhoto=true;
+                                      addphotoDocummentValue=Value.id;
+                                    });
+                                    print(addphotoDocummentValue);
+                                    print("00000000000000000000000000000000000000000000000000000000000000");
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.only(right:width/15.8,top:height/73.9,bottom: height/73.9),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: Constants().primaryAppColor,
+                                    ),
+                                    child: Center(
+                                      child: KText(
+                                        text: "View Album",
+                                        style: SafeGoogleFont(
+                                          'Nunito',
+                                          color: Color(0xffFFFFFF),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ));
+                    },);
+                },),
+            ),
+          )
+        ],
+      ),
     );
   }
 

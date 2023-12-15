@@ -1,5 +1,6 @@
 import 'package:alumni_management_admin/Screens/Dashboard.dart';
 import 'package:alumni_management_admin/Screens/Events_Page.dart';
+import 'package:alumni_management_admin/Screens/Job_Reports.dart';
 import 'package:alumni_management_admin/Screens/usersmanagment.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -43,6 +44,7 @@ List<bool> isSelected = [
   false,
   false,
   false,
+  false,
   false
 ];
 List<NavElement> navElements = [
@@ -63,7 +65,9 @@ List<NavElement> navElements = [
   NavElement(),
   NavElement(),
   NavElement(),
+  NavElement(),
 ];
+
 
 List<String> texts = [
   'Dashboard',
@@ -72,7 +76,7 @@ List<String> texts = [
   'Gallery',
   'Events',
   'Job Post',
-  'Clg Activity',
+  'College Activity',
   'Academic Year',
   'Department',
   'User Management',
@@ -82,6 +86,7 @@ List<String> texts = [
   'SMS',
   'Email',
   'Notification',
+  'Jobs Reports',
   'Sign out',
 ];
 
@@ -91,17 +96,18 @@ List<IconData> icons = [
   Icons.person_outlined,
   Icons.image_outlined,
   Icons.event,
-  Icons.event,
-  Icons.event,
+  Icons.post_add,
+  Icons.pending_actions,
   Icons.event,
   Icons.document_scanner_sharp,
   Icons.auto_graph_rounded,
   Icons.message,
-  Icons.message,
   Icons.settings,
+  Icons.report,
   Icons.mail,
   Icons.mail,
   Icons.notifications,
+  Icons.auto_graph_rounded,
   Icons.logout_sharp,
 ];
 
@@ -118,7 +124,7 @@ class MyWidget extends StatefulWidget {
 class _MyWidgetState extends State<MyWidget> {
 
   void select(int n) {
-    for (int i = 0; i < 17; i++) {
+    for (int i = 0; i < 18; i++) {
       if (i == n)
         isSelected[i] = true;
       else
@@ -165,7 +171,7 @@ class _MyWidgetState extends State<MyWidget> {
                 elevation: 1,
                 borderRadius: BorderRadius.circular(20.0),
                 child: Container(
-                  height: height / 1.10298,
+                  height: height / 1.0,
                   width: width / 6.6782,
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -2000,6 +2006,12 @@ class _MyWidgetState extends State<MyWidget> {
                                   }
 
                                   if(navElements.indexOf(e)==16){
+                                    setState(() {
+                                      pages=Job_Reports();
+                                    });
+                                  }
+
+                                  if(navElements.indexOf(e)==17){
                                     LogoutPopup();
                                   }
                                 });

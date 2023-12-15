@@ -149,22 +149,386 @@ class _UsersManagementState extends State<UsersManagement> {
     double ffem = fem * 0.97;
     return
       Padding(
-        padding:  EdgeInsets.only(left:width/170.75,right: width/170.75),
-        child: Container(
-          height:height/1.0015,
-          child: SingleChildScrollView(
-            physics:const  ScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding:  EdgeInsets.only(top: height/61.43),
-                      child: KText(
+        padding:  EdgeInsets.only(left:width/160.75,right: width/170.75,top:height/30.0769),
+        child: FadeInRight(
+          child: SizedBox(
+            height:height/1.0015,
+            child: SingleChildScrollView(
+              physics:const  ScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      KText(
                         text:"User Managements",
                       style:  SafeGoogleFont (
+                          'Poppins',
+                        fontSize: width / 82.538,
+                          fontWeight: FontWeight.w600,
+                          height: 1.6*ffem/fem,
+                          color: Color(0xff05004e),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: height/41.143,),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      SizedBox(width:width/38.4),
+                      SizedBox(
+
+                          child: Row(
+                            children: [
+                              SizedBox(width:width/10.24),
+                              KText( text:"Select the Role  : ",style:
+                              SafeGoogleFont (
+                                'Poppins',
+                              )),
+                              SizedBox(width:width/153.6),
+                              Material(
+                                elevation: 2,
+                                borderRadius: BorderRadius.circular(8),
+                                color: Color(0xffFFFFFF),
+                                child: SizedBox(
+                                  width:width/5.464,
+                                  height:height/13.02,
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButtonFormField2<String>(
+                                      isExpanded: true,
+                                      hint: KText(
+                                          text:'Select',
+                                        style:
+                                        SafeGoogleFont (
+                                          'Poppins',
+                                        )
+                                      ),
+                                      items: list.map((String item) => DropdownMenuItem<String>(
+                                        value: item,
+                                        child: KText(
+                                            text: item,
+                                          style:  SafeGoogleFont (
+                                            'Poppins',
+                                          )
+                                        ),
+                                      ))
+                                          .toList(),
+                                      value: Uservalue,
+                                      onChanged: (String? value) {
+                                        setState(() {
+                                          Uservalue = value!;
+                                        });
+                                        setthevalue(value);
+                                      },
+                                      buttonStyleData:  ButtonStyleData(
+                                      ),decoration: InputDecoration(
+                                        border: InputBorder.none
+                                    ),
+
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )),
+
+                      SizedBox(width:width/51.2),
+
+                      InkWell(
+                        onTap: (){
+                          adduserdialogBox();
+                        },
+                        child: Container(
+                            width: width/10.5076,
+                            height: height/16.275,
+                            decoration: BoxDecoration(
+                                color: Color(0xff5D5FEF),
+                                borderRadius: BorderRadius.circular(8)
+                            ),
+                            child:  Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.add,color: Colors.white,),
+                                Padding(
+                                  padding:  EdgeInsets.only(left:width/170.75),
+                                  child: KText( text:"Add User",style:
+                                  SafeGoogleFont (
+                                    'Poppins',
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white
+                                  ),),
+                                ),
+                              ],
+                            )
+                        ),
+                      ),
+                      SizedBox(width:width/51.2),
+                      InkWell(
+                        onTap: (){
+                          updatefunction();
+                          successpopuop("Permission Add Successfully....");
+                        },
+                        child: Container(
+                            width: width/10.5076,
+                            height: height/16.275,
+                            decoration: BoxDecoration(
+                                color: Color(0xff5D5FEF),
+                                borderRadius: BorderRadius.circular(8)
+                            ),
+                            child:  Center(child:  KText( text:"Add Permission",style:SafeGoogleFont (
+                                'Poppins',
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white
+                            ),))
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: height/41.143,),
+
+                  Padding(
+                    padding:  EdgeInsets.symmetric(
+                      horizontal: width/170.75,
+                      vertical: height/81.375
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+
+                        SizedBox(height: height/32.55,),
+
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: width/6.83,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                      value: dashboard,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          dashboard = !dashboard;
+                                        });
+                                        if (dashboard == true) {
+                                          PermissionLis.add("dashboard");
+                                        }
+                                        else{
+                                          PermissionLis.remove("dashboard");
+                                        }
+                                      }),
+                                  SizedBox(width: width/273.2,),
+                                  KText( text:"DashBoard"
+                                      ,style:SafeGoogleFont (
+                                    'Poppins',
+                                  )),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: width/6.83,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                      value: userManagement,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          userManagement =
+                                          !userManagement;
+                                          if (userManagement == true) {
+                                            PermissionLis.add("userManagement");
+                                          }
+                                          else{
+                                            PermissionLis.remove("userManagement");
+                                          }
+                                        });
+                                      }),
+                                  SizedBox(width: width/273.2,),
+                                  KText( text:"User Management",style:SafeGoogleFont (
+                                    'Poppins',
+                                  )),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: width/6.83,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                      value: reports,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          reports =
+                                          !reports;
+                                        });
+                                        if (reports == true) {
+                                          PermissionLis.add("reports");
+                                        }
+                                        else{
+                                          PermissionLis.remove("reports");
+                                        }
+                                      }),
+                                  SizedBox(width: width/273.2,),
+                                  KText( text:"Reports",style:SafeGoogleFont (
+                                    'Poppins',
+                                  )),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: width/6.83,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                      value: users,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          users =
+                                          !users;
+                                        });
+                                        if (users == true) {
+                                          PermissionLis.add("users");
+                                        }
+                                        else{
+                                          PermissionLis.remove("users");
+                                        }
+
+                                      }),
+                                  SizedBox(width: width/273.2,),
+                                  KText( text:"Users",style:SafeGoogleFont (
+                                    'Poppins',
+                                  )),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: width/6.83,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                      value: gallery,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          gallery =
+                                          !gallery;
+                                        });
+                                        if (gallery == true) {
+                                          PermissionLis.add("gallery");
+                                        }
+                                        else{
+                                          PermissionLis.remove("gallery");
+                                        }
+                                      }),
+                                  SizedBox(width: width/273.2,),
+                                  KText( text:"Gallery",style:SafeGoogleFont (
+                                    'Poppins',
+                                  )),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: height/36.95,),
+
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: width/6.83,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                      value: events,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          events =
+                                          !events;
+                                        });
+                                        if (events == true) {
+                                          PermissionLis.add("events");
+                                        }
+                                        else{
+                                          PermissionLis.remove("events");
+                                        }
+                                      }),
+                                  SizedBox(width: width/273.2,),
+                                  KText( text:"Events",style:SafeGoogleFont (
+                                    'Poppins',
+                                  )),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: width/6.83,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                      value: news,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          news =
+                                          !news;
+                                        });
+                                        if (news == true) {
+                                          PermissionLis.add("news");
+                                        }
+                                        else{
+                                          PermissionLis.remove("news");
+                                        }
+                                      }),
+                                  SizedBox(width: width/273.2,),
+                                  KText( text:"News",style:SafeGoogleFont (
+                                    'Poppins',
+                                  )),
+                                ],
+                              ),
+                            ),
+
+                            SizedBox(
+                              width: width/6.83,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                      value: setting,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          setting =
+                                          !setting;
+                                        });
+                                        if (setting == true) {
+                                          PermissionLis.add("setting");
+                                        }
+                                        else{
+                                          PermissionLis.remove("setting");
+                                        }
+                                      }),
+                                  SizedBox(width: width/273.2,),
+                                  KText( text:"Setting",style:SafeGoogleFont (
+                                    'Poppins',
+                                  )),
+                                ],
+                              ),
+                            ),
+
+                          ],
+                        ),
+
+                        SizedBox(height: height/36.95,),
+
+
+
+                      ],
+                    ),
+                  ),
+
+                  SizedBox(height: height/130.2,),
+                  Row(
+                    children: [
+                      KText(
+                        text:"Users Lists",
+                        style:  SafeGoogleFont (
                           'Poppins',
                           fontSize: 25*ffem,
                           fontWeight: FontWeight.w600,
@@ -172,576 +536,220 @@ class _UsersManagementState extends State<UsersManagement> {
                           color: Color(0xff05004e),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: height/41.143,),
+                    ],
+                  ),
+                  SizedBox(height:height/130.2),
+                  SizedBox(
+                    width:width/1.2418,
+                    child:
+                    SingleChildScrollView(
+                      physics: const ScrollPhysics(),
+                      child: Column(
+                        children: [
+                          Container(
+                            height:height/13.02,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              color:  const Color(0xffDDDEEE),
+                            ),
+                            child: Row(
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    SizedBox(width:width/38.4),
-                    SizedBox(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
 
-                        child: Row(
-                          children: [
-                            SizedBox(width:width/10.24),
-                            KText( text:"Select the Role  : ",style:
-                            SafeGoogleFont (
-                              'Poppins',
-                            )),
-                            SizedBox(width:width/153.6),
-                            Material(
-                              elevation: 2,
-                              borderRadius: BorderRadius.circular(8),
-                              color: Color(0xffFFFFFF),
-                              child: SizedBox(
-                                width:width/5.464,
-                                height:height/13.02,
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButtonFormField2<String>(
-                                    isExpanded: true,
-                                    hint: KText(
-                                        text:'Select',
+                                SizedBox(
+                                  width: width/27.32,
+                                  height: height/16.275,
+                                  child: Center(
+                                    child: KText(
+                                      text: "Si.No",
                                       style:
                                       SafeGoogleFont (
                                         'Poppins',
-                                      )
-                                    ),
-                                    items: list.map((String item) => DropdownMenuItem<String>(
-                                      value: item,
-                                      child: KText(
-                                          text: item,
-                                        style:  SafeGoogleFont (
-                                          'Poppins',
-                                        )
-                                      ),
-                                    ))
-                                        .toList(),
-                                    value: Uservalue,
-                                    onChanged: (String? value) {
-                                      setState(() {
-                                        Uservalue = value!;
-                                      });
-                                      setthevalue(value);
-                                    },
-                                    buttonStyleData:  ButtonStyleData(
-                                    ),decoration: InputDecoration(
-                                      border: InputBorder.none
-                                  ),
-
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )),
-
-                    SizedBox(width:width/51.2),
-
-                    InkWell(
-                      onTap: (){
-                        adduserdialogBox();
-                      },
-                      child: Container(
-                          width: width/10.5076,
-                          height: height/16.275,
-                          decoration: BoxDecoration(
-                              color: Color(0xff5D5FEF),
-                              borderRadius: BorderRadius.circular(8)
-                          ),
-                          child:  Center(child:  KText( text:"Add User",style:
-                          SafeGoogleFont (
-                            'Poppins',
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white
-                          ),))
-                      ),
-                    ),
-                    SizedBox(width:width/51.2),
-                    InkWell(
-                      onTap: (){
-                        updatefunction();
-                        successpopuop("Permission Add Successfully....");
-                      },
-                      child: Container(
-                          width: width/10.5076,
-                          height: height/16.275,
-                          decoration: BoxDecoration(
-                              color: Color(0xff5D5FEF),
-                              borderRadius: BorderRadius.circular(8)
-                          ),
-                          child:  Center(child:  KText( text:"Add Permission",style:SafeGoogleFont (
-                              'Poppins',
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white
-                          ),))
-                      ),
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: height/41.143,),
-
-                Padding(
-                  padding:  EdgeInsets.symmetric(
-                    horizontal: width/170.75,
-                    vertical: height/81.375
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-
-                      SizedBox(height: height/32.55,),
-
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: width/6.83,
-                            child: Row(
-                              children: [
-                                Checkbox(
-                                    value: dashboard,
-                                    onChanged: (val) {
-                                      setState(() {
-                                        dashboard = !dashboard;
-                                      });
-                                      if (dashboard == true) {
-                                        PermissionLis.add("dashboard");
-                                      }
-                                      else{
-                                        PermissionLis.remove("dashboard");
-                                      }
-                                    }),
-                                SizedBox(width: width/273.2,),
-                                KText( text:"DashBoard"
-                                    ,style:SafeGoogleFont (
-                                  'Poppins',
-                                )),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: width/6.83,
-                            child: Row(
-                              children: [
-                                Checkbox(
-                                    value: userManagement,
-                                    onChanged: (val) {
-                                      setState(() {
-                                        userManagement =
-                                        !userManagement;
-                                        if (userManagement == true) {
-                                          PermissionLis.add("userManagement");
-                                        }
-                                        else{
-                                          PermissionLis.remove("userManagement");
-                                        }
-                                      });
-                                    }),
-                                SizedBox(width: width/273.2,),
-                                KText( text:"User Management",style:SafeGoogleFont (
-                                  'Poppins',
-                                )),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: width/6.83,
-                            child: Row(
-                              children: [
-                                Checkbox(
-                                    value: reports,
-                                    onChanged: (val) {
-                                      setState(() {
-                                        reports =
-                                        !reports;
-                                      });
-                                      if (reports == true) {
-                                        PermissionLis.add("reports");
-                                      }
-                                      else{
-                                        PermissionLis.remove("reports");
-                                      }
-                                    }),
-                                SizedBox(width: width/273.2,),
-                                KText( text:"Reports",style:SafeGoogleFont (
-                                  'Poppins',
-                                )),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: width/6.83,
-                            child: Row(
-                              children: [
-                                Checkbox(
-                                    value: users,
-                                    onChanged: (val) {
-                                      setState(() {
-                                        users =
-                                        !users;
-                                      });
-                                      if (users == true) {
-                                        PermissionLis.add("users");
-                                      }
-                                      else{
-                                        PermissionLis.remove("users");
-                                      }
-
-                                    }),
-                                SizedBox(width: width/273.2,),
-                                KText( text:"Users",style:SafeGoogleFont (
-                                  'Poppins',
-                                )),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: width/6.83,
-                            child: Row(
-                              children: [
-                                Checkbox(
-                                    value: gallery,
-                                    onChanged: (val) {
-                                      setState(() {
-                                        gallery =
-                                        !gallery;
-                                      });
-                                      if (gallery == true) {
-                                        PermissionLis.add("gallery");
-                                      }
-                                      else{
-                                        PermissionLis.remove("gallery");
-                                      }
-                                    }),
-                                SizedBox(width: width/273.2,),
-                                KText( text:"Gallery",style:SafeGoogleFont (
-                                  'Poppins',
-                                )),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: height/36.95,),
-
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: width/6.83,
-                            child: Row(
-                              children: [
-                                Checkbox(
-                                    value: events,
-                                    onChanged: (val) {
-                                      setState(() {
-                                        events =
-                                        !events;
-                                      });
-                                      if (events == true) {
-                                        PermissionLis.add("events");
-                                      }
-                                      else{
-                                        PermissionLis.remove("events");
-                                      }
-                                    }),
-                                SizedBox(width: width/273.2,),
-                                KText( text:"Events",style:SafeGoogleFont (
-                                  'Poppins',
-                                )),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: width/6.83,
-                            child: Row(
-                              children: [
-                                Checkbox(
-                                    value: news,
-                                    onChanged: (val) {
-                                      setState(() {
-                                        news =
-                                        !news;
-                                      });
-                                      if (news == true) {
-                                        PermissionLis.add("news");
-                                      }
-                                      else{
-                                        PermissionLis.remove("news");
-                                      }
-                                    }),
-                                SizedBox(width: width/273.2,),
-                                KText( text:"News",style:SafeGoogleFont (
-                                  'Poppins',
-                                )),
-                              ],
-                            ),
-                          ),
-
-                          SizedBox(
-                            width: width/6.83,
-                            child: Row(
-                              children: [
-                                Checkbox(
-                                    value: setting,
-                                    onChanged: (val) {
-                                      setState(() {
-                                        setting =
-                                        !setting;
-                                      });
-                                      if (setting == true) {
-                                        PermissionLis.add("setting");
-                                      }
-                                      else{
-                                        PermissionLis.remove("setting");
-                                      }
-                                    }),
-                                SizedBox(width: width/273.2,),
-                                KText( text:"Setting",style:SafeGoogleFont (
-                                  'Poppins',
-                                )),
-                              ],
-                            ),
-                          ),
-
-                        ],
-                      ),
-
-                      SizedBox(height: height/36.95,),
-
-
-
-                    ],
-                  ),
-                ),
-
-                SizedBox(height: height/130.2,),
-                Row(
-                  children: [
-                    KText(
-                      text:"Users Lists",
-                      style:  SafeGoogleFont (
-                        'Poppins',
-                        fontSize: 25*ffem,
-                        fontWeight: FontWeight.w600,
-                        height: 1.6*ffem/fem,
-                        color: Color(0xff05004e),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height:height/130.2),
-                SizedBox(
-                  width:width/1.2418,
-                  child:
-                  SingleChildScrollView(
-                    physics: const ScrollPhysics(),
-                    child: Column(
-                      children: [
-                        Container(
-                          height:height/13.02,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            color:  const Color(0xffDDDEEE),
-                          ),
-                          child: Row(
-
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-
-                              SizedBox(
-                                width: width/27.32,
-                                height: height/16.275,
-                                child: Center(
-                                  child: KText(
-                                    text: "Si.No",
-                                    style:
-                                    SafeGoogleFont (
-                                      'Poppins',
-                                      fontSize: 19*ffem,
-                                      color: Color(0xff000000)
-                                    ),
-                                  ),
-                                ),
-                              ),
-
-                              SizedBox(
-                                width: width/2.1015,
-                                height: height/16.275,
-                                child: Center(
-                                  child: KText(
-                                    text:"User Name",
-                                    style:
-                                    SafeGoogleFont (
-                                      'Poppins',
-                                      fontSize: 19*ffem,
+                                        fontSize: 19*ffem,
                                         color: Color(0xff000000)
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
 
-                              SizedBox(
-                                width: width/6.83,
-                                height: height/16.275,
-                                child: Center(
-                                  child: KText(
-                                    text:"Password",
-                                    style:
-                                    SafeGoogleFont (
-                                      'Poppins',
-                                      fontSize: 19*ffem, color: Color(0xff000000)
+                                SizedBox(
+                                  width: width/2.1015,
+                                  height: height/16.275,
+                                  child: Center(
+                                    child: KText(
+                                      text:"User Name",
+                                      style:
+                                      SafeGoogleFont (
+                                        'Poppins',
+                                        fontSize: 19*ffem,
+                                          color: Color(0xff000000)
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
 
-                              SizedBox(
-                                width: width/6.83,
-                                height: height/16.275,
-                                child: Center(
-                                  child: KText(
-                                    text: "Actions",
-                                    style:
-                                    SafeGoogleFont (
-                                      'Poppins',
-                                      fontSize: 19*ffem,
-                                       color: Color(0xff000000)
+                                SizedBox(
+                                  width: width/6.83,
+                                  height: height/16.275,
+                                  child: Center(
+                                    child: KText(
+                                      text:"Password",
+                                      style:
+                                      SafeGoogleFont (
+                                        'Poppins',
+                                        fontSize: 19*ffem, color: Color(0xff000000)
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
+
+                                SizedBox(
+                                  width: width/6.83,
+                                  height: height/16.275,
+                                  child: Center(
+                                    child: KText(
+                                      text: "Actions",
+                                      style:
+                                      SafeGoogleFont (
+                                        'Poppins',
+                                        fontSize: 19*ffem,
+                                         color: Color(0xff000000)
+                                      ),
+                                    ),
+                                  ),
+                                ),
 
 
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(height:height/81.375),
-                        StreamBuilder(
-                          stream: FirebaseFirestore.instance.collection("AdminUser").orderBy("timestamp").snapshots(),
-                          builder: (context, snapshot) {
+                          SizedBox(height:height/81.375),
+                          StreamBuilder(
+                            stream: FirebaseFirestore.instance.collection("AdminUser").orderBy("timestamp").snapshots(),
+                            builder: (context, snapshot) {
 
-                            if(snapshot.hasData==null){
-                              return const Center(child: CircularProgressIndicator(),);
-                            }
-                            if(!snapshot.hasData){
-                              return const Center(child: CircularProgressIndicator(),);
-                            }
+                              if(snapshot.hasData==null){
+                                return const Center(child: CircularProgressIndicator(),);
+                              }
+                              if(!snapshot.hasData){
+                                return const Center(child: CircularProgressIndicator(),);
+                              }
 
-                            return ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: snapshot.data!.docs.length,
-                              itemBuilder: (context, index) {
+                              return ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: snapshot.data!.docs.length,
+                                itemBuilder: (context, index) {
 
-                                var data=snapshot.data!.docs[index];
-                                return
-                                  Padding(
-                                    padding:  EdgeInsets.only(bottom:height/81.375),
-                                    child: Material(
-                                      color: Color(0xffFFFFFF),
-                                      elevation: 20,
-                                      borderRadius: BorderRadius.circular(4),
-                                      shadowColor: Colors.black12,
-                                      child: SizedBox(
-                                        height:height/13.02,
-                                        child: Row(
+                                  var data=snapshot.data!.docs[index];
+                                  return
+                                    Padding(
+                                      padding:  EdgeInsets.only(bottom:height/81.375),
+                                      child: Material(
+                                        color: Color(0xffFFFFFF),
+                                        elevation: 20,
+                                        borderRadius: BorderRadius.circular(4),
+                                        shadowColor: Colors.black12,
+                                        child: SizedBox(
+                                          height:height/13.02,
+                                          child: Row(
 
-                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
 
-                                          children: [
+                                            children: [
 
 
-                                            SizedBox(
-                                              width: width/27.32,
-                                              height: height/14.466,
-                                              child: Center(
-                                                child: KText(
-                                                  text: (index+1).toString(),
-                                                  style:
-                                                  SafeGoogleFont (
-                                                    'Poppins',
-                                                    fontSize: 19*ffem,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-
-                                            SizedBox(
-                                              width: width/2.1015,
-                                              height: height/14.466,
-                                              child: Center(
-                                                child: KText(
-                                                  text:   data['username'].toString(),
-                                                  style:
-                                                  SafeGoogleFont (
-                                                    'Poppins',
-                                                    fontSize: 19*ffem,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-
-                                            SizedBox(
-                                              width: width/6.83,
-                                              height: height/14.466,
-                                              child: Center(
-                                                child: KText(
-                                                  text:   data['password'].toString(),
-                                                  style:
-                                                  SafeGoogleFont (
-                                                    'Poppins',
-                                                    fontSize: 19*ffem,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-
-                                            SizedBox(
-                                              width: width/6.83,
-                                              height: height/14.466,
-                                              child:
-                                              Center(
-                                                child: InkWell(
-                                                  onTap:(){
-                                                    _deletepopup(data.id);
-                                                  },
-                                                  child: Material(
-
-                                                    borderRadius: BorderRadius.circular(100),
-                                                    color: Colors.white,
-                                                    child: Container(
-                                                      height:height/21,
-                                                      width:width/17.075,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius: BorderRadius.circular(100),
-                                                          color: Colors.white
-                                                      ),
-                                                      child: Center(child: Icon(Icons.delete)),
+                                              SizedBox(
+                                                width: width/27.32,
+                                                height: height/14.466,
+                                                child: Center(
+                                                  child: KText(
+                                                    text: (index+1).toString(),
+                                                    style:
+                                                    SafeGoogleFont (
+                                                      'Poppins',
+                                                      fontSize: 19*ffem,
                                                     ),
-                                                    elevation: 10,
                                                   ),
                                                 ),
                                               ),
-                                            ),
+
+                                              SizedBox(
+                                                width: width/2.1015,
+                                                height: height/14.466,
+                                                child: Center(
+                                                  child: KText(
+                                                    text:   data['username'].toString(),
+                                                    style:
+                                                    SafeGoogleFont (
+                                                      'Poppins',
+                                                      fontSize: 19*ffem,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+
+                                              SizedBox(
+                                                width: width/6.83,
+                                                height: height/14.466,
+                                                child: Center(
+                                                  child: KText(
+                                                    text:   data['password'].toString(),
+                                                    style:
+                                                    SafeGoogleFont (
+                                                      'Poppins',
+                                                      fontSize: 19*ffem,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+
+                                              SizedBox(
+                                                width: width/6.83,
+                                                height: height/14.466,
+                                                child:
+                                                Center(
+                                                  child: InkWell(
+                                                    onTap:(){
+                                                      _deletepopup(data.id);
+                                                    },
+                                                    child: Material(
+
+                                                      borderRadius: BorderRadius.circular(100),
+                                                      color: Colors.white,
+                                                      child: Container(
+                                                        height:height/21,
+                                                        width:width/17.075,
+                                                        decoration: BoxDecoration(
+                                                            borderRadius: BorderRadius.circular(100),
+                                                            color: Colors.white
+                                                        ),
+                                                        child: Center(child: Icon(Icons.delete)),
+                                                      ),
+                                                      elevation: 10,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
 
 
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                              },);
-                          },
-                        ),
-                      ],
+                                    );
+                                },);
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height:height/32.55),
+                  SizedBox(height:height/32.55),
 
-              ],
+                ],
+              ),
             ),
           ),
         ),

@@ -1,6 +1,7 @@
 
 import 'package:alumni_management_admin/Models/Language_Model.dart';
 import 'package:alumni_management_admin/utils.dart';
+import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -31,295 +32,297 @@ class _Acadamic_YearState extends State<Acadamic_Year> {
     Size size = MediaQuery.of(context).size;
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    return Column(
+    return Padding(
+      padding:  EdgeInsets.only(left:width/170.75),
+      child: FadeInRight(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
 
-      children: [
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: height/81.375, horizontal: width/170.75),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: height/81.375, horizontal: width/170.75),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-            children: [
-              GestureDetector(
-                onTap:(){
-                  print(height);
-                  print(width);
-                },
-                child: KText(
-                  text: "Academic Year",
-                  style: SafeGoogleFont (
-                      'Nunito',
-                      fontSize: width/82.538,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black),
-                ),
-              ),
-
-              Padding(
-                padding:  EdgeInsets.only(left:width/1.6),
-                child: InkWell(
-                  onTap: () async {
-
-                    addItemPopUp();
-                  },
-                  child: Container(
-                    height: height / 16.275,
-                    width:width/15.36,
-                    decoration: BoxDecoration(
-                      color: Constants().primaryAppColor,
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black26,
-                          offset: Offset(1, 2),
-                          blurRadius: 3,
-                        ),
-                      ],
+                children: [
+                  Padding(
+                    padding:  EdgeInsets.only(top:height/50.0769),
+                    child: KText(
+                      text: "Academic Year",
+                      style: SafeGoogleFont (
+                          'Nunito',
+                          fontSize: width / 82.538,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.black),
                     ),
-                    child:
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: width / 227.66),
+                  ),
+
+                  Padding(
+                    padding:  EdgeInsets.only(left:width/1.6,top:height/50.0769),
+                    child: InkWell(
+                      onTap: () async {
+
+                        addItemPopUp();
+                      },
+                      child: Container(
+                        height: height / 16.275,
+                        width:width/15.36,
+                        decoration: BoxDecoration(
+                          color: Constants().primaryAppColor,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black26,
+                              offset: Offset(1, 2),
+                              blurRadius: 3,
+                            ),
+                          ],
+                        ),
+                        child:
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: width / 227.66),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.add,color:Colors.white),
+                              KText(
+                                text: "Add",
+                                style: SafeGoogleFont(
+                                  'Nunito',
+                                  fontSize: width / 120.571,
+                                  color:Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+
+
+                ],
+              ),
+            ),
+
+            Container(
+              width:width/1.26,
+              height:height/12.316666,
+              color: Colors.transparent,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: width/455.33,vertical: height/217),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width:width/12.075,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.add,color:Colors.white),
                           KText(
-                            text: "Add",
-                            style: SafeGoogleFont(
+                            text: "No.",
+                            style:  SafeGoogleFont (
                               'Nunito',
-                              fontSize: width / 120.571,
-                              color:Colors.white,
-                              fontWeight: FontWeight.bold,
+                              fontSize:width/115.07,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 8),
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  filtervalue = !filtervalue;
+                                });
+                              },
+                              child: Transform.rotate(
+                                angle: filtervalue ? 200 : 0,
+                                child: Opacity(
+                                  // arrowdown2TvZ (8:2307)
+                                  opacity: 0.7,
+                                  child: Container(
+                                    width: width/153.6,
+                                    height: height/73.9,
+                                    child: Image.asset(
+                                      'assets/images/arrow-down-2.png',
+                                      width: width/153.6,
+                                      height: height/73.9,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                ),
-              )
+                    SizedBox(
 
-
-            ],
-          ),
-        ),
-
-        Container(
-          width:width/1.26,
-          height:height/12.316666,
-          color: Colors.transparent,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: width/455.33,vertical: height/217),
-            child: Row(
-              children: [
-                SizedBox(
-                  width:width/12.075,
-                  child: Row(
-                    children: [
-                      KText(
-                        text: "No.",
-                        style:  SafeGoogleFont (
-                          'Nunito',
-                          fontSize:width/115.07,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 8),
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              filtervalue = !filtervalue;
-                            });
-                          },
-                          child: Transform.rotate(
-                            angle: filtervalue ? 200 : 0,
-                            child: Opacity(
-                              // arrowdown2TvZ (8:2307)
-                              opacity: 0.7,
-                              child: Container(
-                                width: width/153.6,
-                                height: height/73.9,
-                                child: Image.asset(
-                                  'assets/images/arrow-down-2.png',
-                                  width: width/153.6,
-                                  height: height/73.9,
+                      width: width/1.9,
+                      child: Row(
+                        children: [
+                          KText(
+                            text: "Name",
+                            style:  SafeGoogleFont (
+                              'Nunito',
+                              fontSize:width/115.07,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 8),
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  filtervalue = !filtervalue;
+                                });
+                              },
+                              child: Transform.rotate(
+                                angle: filtervalue ? 200 : 0,
+                                child: Opacity(
+                                  // arrowdown2TvZ (8:2307)
+                                  opacity: 0.7,
+                                  child: Container(
+                                    width: width/153.6,
+                                    height: height/73.9,
+                                    child: Image.asset(
+                                      'assets/images/arrow-down-2.png',
+                                      width: width/153.6,
+                                      height: height/73.9,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-
-                  width: width/1.9,
-                  child: Row(
-                    children: [
-                      KText(
-                        text: "Name",
-                        style:  SafeGoogleFont (
-                          'Nunito',
-                          fontSize:width/115.07,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 8),
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              filtervalue = !filtervalue;
-                            });
-                          },
-                          child: Transform.rotate(
-                            angle: filtervalue ? 200 : 0,
-                            child: Opacity(
-                              // arrowdown2TvZ (8:2307)
-                              opacity: 0.7,
-                              child: Container(
-                                width: width/153.6,
-                                height: height/73.9,
-                                child: Image.asset(
-                                  'assets/images/arrow-down-2.png',
-                                  width: width/153.6,
-                                  height: height/73.9,
+                    ),
+                    SizedBox(
+                      width:width/7.588,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          KText(
+                            text: "Actions",
+                            style:  SafeGoogleFont (
+                              'Nunito',
+                              fontSize:width/115.07,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 8),
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  filtervalue = !filtervalue;
+                                });
+                              },
+                              child: Transform.rotate(
+                                angle: filtervalue ? 200 : 0,
+                                child: Opacity(
+                                  // arrowdown2TvZ (8:2307)
+                                  opacity: 0.7,
+                                  child: Container(
+                                    width: width/153.6,
+                                    height: height/73.9,
+                                    child: Image.asset(
+                                      'assets/images/arrow-down-2.png',
+                                      width: width/153.6,
+                                      height: height/73.9,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  width:width/7.588,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      KText(
-                        text: "Actions",
-                        style:  SafeGoogleFont (
-                          'Nunito',
-                          fontSize:width/115.07,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 8),
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              filtervalue = !filtervalue;
-                            });
-                          },
-                          child: Transform.rotate(
-                            angle: filtervalue ? 200 : 0,
-                            child: Opacity(
-                              // arrowdown2TvZ (8:2307)
-                              opacity: 0.7,
-                              child: Container(
-                                width: width/153.6,
-                                height: height/73.9,
-                                child: Image.asset(
-                                  'assets/images/arrow-down-2.png',
-                                  width: width/153.6,
-                                  height: height/73.9,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: width/68.3, vertical: height/32.55),
+              child: SizedBox(
+                width:width/1.26,
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance.collection("AcademicYear").orderBy("timestamp").snapshots(),
+                  builder: (context, snapshot) {
+
+                    if(snapshot.hasData==null){
+                      return const Center(child: CircularProgressIndicator(),);
+                    }
+                    if(!snapshot.hasData){
+                      return const Center(child: CircularProgressIndicator(),);
+                    }
+
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: ScrollPhysics(),
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      List<GlobalKey<State<StatefulWidget>>>popMenuKeys = List.generate(snapshot.data!.docs.length, (index) => GlobalKey(),);
+                    return SizedBox(
+                      height: height/15.850,
+                      width: double.infinity,
+
+                      child: Row(
+
+                        children: [
+                          SizedBox(
+                            width:width/12.075,
+                            child:
+                            KText(
+                              text: (index + 1).toString(),
+                              style:  SafeGoogleFont (
+                                'Nunito',
+                                fontSize:width/105.07,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: width/1.9,
+                            child:
+                            KText(
+                              text: snapshot.data!.docs[index]['name'].toString(),
+                              style:  SafeGoogleFont (
+                                'Nunito',
+                                fontSize:width/105.07,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+
+                          ),
+
+                          GestureDetector(
+                            onTap: () {
+                              Popupmenu(context, popMenuKeys[index], size,snapshot.data!.docs[index]['name'].toString(),snapshot.data!.docs[index].id);
+                            },
+                            child: SizedBox(
+                                key: popMenuKeys[index],
+                                width:width/7.588,
+                                child: Icon(
+                                    Icons.more_horiz)),
+                          ),
+
+                        ],
+                      ),
+
+                    );
+                  },);
+                },),
+              ),
+            )
+          ],
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: width/68.3, vertical: height/32.55),
-          child: SizedBox(
-            width:width/1.26,
-            child: StreamBuilder(
-              stream: FirebaseFirestore.instance.collection("AcademicYear").orderBy("timestamp").snapshots(),
-              builder: (context, snapshot) {
-
-                if(snapshot.hasData==null){
-                  return const Center(child: CircularProgressIndicator(),);
-                }
-                if(!snapshot.hasData){
-                  return const Center(child: CircularProgressIndicator(),);
-                }
-
-              return ListView.builder(
-                shrinkWrap: true,
-                physics: ScrollPhysics(),
-                itemCount: snapshot.data!.docs.length,
-                itemBuilder: (context, index) {
-                  List<GlobalKey<State<StatefulWidget>>>popMenuKeys = List.generate(snapshot.data!.docs.length, (index) => GlobalKey(),);
-                return SizedBox(
-                  height: height/15.850,
-                  width: double.infinity,
-
-                  child: Row(
-
-                    children: [
-                      SizedBox(
-                        width:width/12.075,
-                        child:
-                        KText(
-                          text: (index + 1).toString(),
-                          style:  SafeGoogleFont (
-                            'Nunito',
-                            fontSize:width/105.07,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: width/1.9,
-                        child:
-                        KText(
-                          text: snapshot.data!.docs[index]['name'].toString(),
-                          style:  SafeGoogleFont (
-                            'Nunito',
-                            fontSize:width/105.07,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-
-                      ),
-
-                      GestureDetector(
-                        onTap: () {
-                          Popupmenu(context, popMenuKeys[index], size,snapshot.data!.docs[index]['name'].toString(),snapshot.data!.docs[index].id);
-                        },
-                        child: SizedBox(
-                            key: popMenuKeys[index],
-                            width:width/7.588,
-                            child: Icon(
-                                Icons.more_horiz)),
-                      ),
-
-                    ],
-                  ),
-
-                );
-              },);
-            },),
-          ),
-        )
-      ],
+      ),
     );
   }
 

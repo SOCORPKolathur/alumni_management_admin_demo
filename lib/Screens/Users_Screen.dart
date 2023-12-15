@@ -257,6 +257,8 @@ const List<String> coutryList = <String>[
 
 const List<String> MaritalStatusList = ['Marital Status', 'Yes', 'No'];
 
+const List<String> WorkingEmpList = [ 'No', 'Yes'];
+
 class _Users_ScreenState extends State<Users_Screen> {
   bool viewUser_details = false;
   GlobalKey floatingKey = LabeledGlobalKey("Floating");
@@ -309,6 +311,7 @@ class _Users_ScreenState extends State<Users_Screen> {
   TextEditingController spouseNamecon = TextEditingController();
   TextEditingController anniversaryDatecon = TextEditingController();
   TextEditingController no_of_childreancon = TextEditingController();
+  TextEditingController alumniEmployedController = TextEditingController(text: "No");
 
   List usereditlist = [
     "Edit",
@@ -323,6 +326,23 @@ class _Users_ScreenState extends State<Users_Screen> {
     //     widgets: Icon(Icons.delete)
     // ),
   ];
+
+  @override
+  void initState() {
+    userCounta();
+    // TODO: implement initState
+    super.initState();
+  }
+
+  int billcount=0;
+
+  userCounta()async{
+    var user =await FirebaseFirestore.instance.collection("Users").get();
+    setState(() {
+      billcount=user.docs.length+1;
+    });
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -2466,6 +2486,112 @@ class _Users_ScreenState extends State<Users_Screen> {
                                       Row(
                                         children: [
                                           SizedBox(
+                                            height: height/11.369,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                KText(
+                                                  text: 'Are You Working',
+                                                  style: SafeGoogleFont(
+                                                    'Nunito',
+                                                    fontSize: 20 * ffem,
+                                                    fontWeight:
+                                                    FontWeight.w700,
+                                                    height:
+                                                    1.3625 * ffem / fem,
+                                                    color:
+                                                    Color(0xff000000),
+                                                  ),
+                                                ),
+                                                SizedBox(height: height/123.1666),
+                                                Container(
+                                                  height: height/21.114,
+                                                  width: width/6.6782,
+                                                  decoration: BoxDecoration(
+                                                      color: const Color(
+                                                          0xffDDDEEE),
+                                                      borderRadius:
+                                                      BorderRadius
+                                                          .circular(3)),
+                                                  child:
+                                                  DropdownButtonHideUnderline(
+                                                    child:
+                                                    DropdownButtonFormField2<
+                                                        String>(
+                                                      isExpanded: true,
+                                                      hint: Text(
+                                                        'Working',
+                                                        style:
+                                                        SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize:
+                                                          20 * ffem,
+                                                        ),
+                                                      ),
+                                                      items: WorkingEmpList
+                                                          .map((String
+                                                      item) =>
+                                                          DropdownMenuItem<
+                                                              String>(
+                                                            value: item,
+                                                            child: Text(
+                                                              item,
+                                                              style:
+                                                              SafeGoogleFont(
+                                                                'Nunito',
+                                                                fontSize:
+                                                                20 *
+                                                                    ffem,
+                                                              ),
+                                                            ),
+                                                          )).toList(),
+                                                      value:
+                                                      alumniEmployedController
+                                                          .text,
+                                                      onChanged:
+                                                          (String? value) {
+                                                        setState(() {
+                                                          alumniEmployedController
+                                                              .text =
+                                                          value!;
+                                                        });
+                                                      },
+                                                      buttonStyleData:
+                                                      ButtonStyleData(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                            horizontal:
+                                                            width /
+                                                                22.5),
+                                                        height:
+                                                        height / 18.9,
+                                                        width:
+                                                        width / 2.571,
+                                                      ),
+                                                      menuItemStyleData:
+                                                      MenuItemStyleData(
+                                                        height:
+                                                        height / 18.9,
+                                                      ),
+                                                      decoration:
+                                                      InputDecoration(
+                                                          border:
+                                                          InputBorder
+                                                              .none),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+
+                                        ],
+                                      ),
+                                      SizedBox(height: height/36.95),
+                                      Row(
+                                        children: [
+                                          SizedBox(
                                              height: height/11.369,
                                             child: Column(
                                               crossAxisAlignment:
@@ -3090,6 +3216,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                           children: [
                             SizedBox(
                               width: 1574 * fem,
+                            
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: width / 170.75,
@@ -5092,7 +5219,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               ],
                                             ),
 
-                                            ///alumi edscation aualifications
+                                            ///alumni education Qualifications
                                             SizedBox(height: height/36.95),
                                             Row(
                                               children: [
@@ -5266,7 +5393,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         CrossAxisAlignment.start,
                                                     children: [
                                                       KText(
-                                                        text: 'Occupations',
+                                                        text: 'Are You Working',
                                                         style: SafeGoogleFont(
                                                           'Nunito',
                                                           fontSize: 20 * ffem,
@@ -5280,32 +5407,138 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       ),
                                                       SizedBox(height: height/123.1666),
                                                       Container(
+                                                        height: height/21.114,
+                                                        width: width/6.6782,
+                                                        decoration: BoxDecoration(
+                                                            color: const Color(
+                                                                0xffDDDEEE),
+                                                            borderRadius:
+                                                            BorderRadius
+                                                                .circular(3)),
+                                                        child:
+                                                        DropdownButtonHideUnderline(
+                                                          child:
+                                                          DropdownButtonFormField2<
+                                                              String>(
+                                                            isExpanded: true,
+                                                            hint: Text(
+                                                              'Working',
+                                                              style:
+                                                              SafeGoogleFont(
+                                                                'Nunito',
+                                                                fontSize:
+                                                                20 * ffem,
+                                                              ),
+                                                            ),
+                                                            items: WorkingEmpList
+                                                                .map((String
+                                                            item) =>
+                                                                DropdownMenuItem<
+                                                                    String>(
+                                                                  value: item,
+                                                                  child: Text(
+                                                                    item,
+                                                                    style:
+                                                                    SafeGoogleFont(
+                                                                      'Nunito',
+                                                                      fontSize:
+                                                                      20 *
+                                                                          ffem,
+                                                                    ),
+                                                                  ),
+                                                                )).toList(),
+                                                            value:
+                                                            alumniEmployedController
+                                                                .text,
+                                                            onChanged:
+                                                                (String? value) {
+                                                              setState(() {
+                                                                alumniEmployedController
+                                                                    .text =
+                                                                value!;
+                                                              });
+                                                            },
+                                                            buttonStyleData:
+                                                            ButtonStyleData(
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal:
+                                                                  width /
+                                                                      22.5),
+                                                              height:
+                                                              height / 18.9,
+                                                              width:
+                                                              width / 2.571,
+                                                            ),
+                                                            menuItemStyleData:
+                                                            MenuItemStyleData(
+                                                              height:
+                                                              height / 18.9,
+                                                            ),
+                                                            decoration:
+                                                            InputDecoration(
+                                                                border:
+                                                                InputBorder
+                                                                    .none),
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+
+                                              ],
+                                            ),
+                                            SizedBox(height: height/36.95),
+                                            Row(
+                                              children: [
+                                                SizedBox(
+                                                  height: height/11.369,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                    children: [
+                                                      KText(
+                                                        text: 'Occupations',
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: 20 * ffem,
+                                                          fontWeight:
+                                                          FontWeight.w700,
+                                                          height:
+                                                          1.3625 * ffem / fem,
+                                                          color:
+                                                          Color(0xff000000),
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: height/123.1666),
+                                                      Container(
                                                           height: height/21.114,
                                                           width: width/4.6545,
                                                           decoration: BoxDecoration(
                                                               color: const Color(
                                                                   0xffDDDEEE),
                                                               borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          3)),
+                                                              BorderRadius
+                                                                  .circular(
+                                                                  3)),
                                                           child: TextFormField(
                                                             controller:
-                                                                occupationcon,
+                                                            occupationcon,
                                                             inputFormatters: [
                                                               FilteringTextInputFormatter
                                                                   .allow(RegExp(
-                                                                      "[a-zA-Z]")),
+                                                                  "[a-zA-Z]")),
                                                             ],
                                                             decoration:
-                                                                InputDecoration(
+                                                            InputDecoration(
                                                               border: InputBorder
                                                                   .none,
                                                               contentPadding:
-                                                                  EdgeInsets.only(
-                                                                      bottom: 10,
-                                                                      top: 2,
-                                                                      left: 10),
+                                                              EdgeInsets.only(
+                                                                  bottom: 10,
+                                                                  top: 2,
+                                                                  left: 10),
                                                             ),
                                                             // validator: (value) => value!.isEmpty ? 'Field is required' : null,
                                                           ))
@@ -5314,10 +5547,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 ),
                                                 SizedBox(width: width/38.4),
                                                 SizedBox(
-                                                   height: height/11.369,
+                                                  height: height/11.369,
                                                   child: Column(
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment.start,
+                                                    CrossAxisAlignment.start,
                                                     children: [
                                                       KText(
                                                         text: 'Designation',
@@ -5325,11 +5558,11 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           'Nunito',
                                                           fontSize: 20 * ffem,
                                                           fontWeight:
-                                                              FontWeight.w700,
+                                                          FontWeight.w700,
                                                           height:
-                                                              1.3625 * ffem / fem,
+                                                          1.3625 * ffem / fem,
                                                           color:
-                                                              Color(0xff000000),
+                                                          Color(0xff000000),
                                                         ),
                                                       ),
                                                       SizedBox(height: height/123.1666),
@@ -5340,26 +5573,26 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               color: const Color(
                                                                   0xffDDDEEE),
                                                               borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          3)),
+                                                              BorderRadius
+                                                                  .circular(
+                                                                  3)),
                                                           child: TextFormField(
                                                             controller:
-                                                                designationcon,
+                                                            designationcon,
                                                             inputFormatters: [
                                                               FilteringTextInputFormatter
                                                                   .allow(RegExp(
-                                                                      "[a-zA-Z]")),
+                                                                  "[a-zA-Z]")),
                                                             ],
                                                             decoration:
-                                                                InputDecoration(
+                                                            InputDecoration(
                                                               border: InputBorder
                                                                   .none,
                                                               contentPadding:
-                                                                  EdgeInsets.only(
-                                                                      bottom: 10,
-                                                                      top: 2,
-                                                                      left: 10),
+                                                              EdgeInsets.only(
+                                                                  bottom: 10,
+                                                                  top: 2,
+                                                                  left: 10),
                                                             ),
                                                             //validator: (value) => value!.isEmpty ? 'Field is required' : null,
                                                           ))
@@ -5368,23 +5601,23 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 ),
                                                 SizedBox(width: width/38.4),
                                                 SizedBox(
-                                                   height: height/11.369,
+                                                  height: height/11.369,
                                                   child: Column(
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment.start,
+                                                    CrossAxisAlignment.start,
                                                     children: [
                                                       KText(
                                                         text:
-                                                            "Company/Concern's Name",
+                                                        "Company/Concern's Name",
                                                         style: SafeGoogleFont(
                                                           'Nunito',
                                                           fontSize: 20 * ffem,
                                                           fontWeight:
-                                                              FontWeight.w700,
+                                                          FontWeight.w700,
                                                           height:
-                                                              1.3625 * ffem / fem,
+                                                          1.3625 * ffem / fem,
                                                           color:
-                                                              Color(0xff000000),
+                                                          Color(0xff000000),
                                                         ),
                                                       ),
                                                       SizedBox(height: height/123.1666),
@@ -5395,26 +5628,26 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               color: const Color(
                                                                   0xffDDDEEE),
                                                               borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          3)),
+                                                              BorderRadius
+                                                                  .circular(
+                                                                  3)),
                                                           child: TextFormField(
                                                             controller:
-                                                                company_concerncon,
+                                                            company_concerncon,
                                                             inputFormatters: [
                                                               FilteringTextInputFormatter
                                                                   .allow(RegExp(
-                                                                      "[a-zA-Z]")),
+                                                                  "[a-zA-Z]")),
                                                             ],
                                                             decoration:
-                                                                InputDecoration(
+                                                            InputDecoration(
                                                               border: InputBorder
                                                                   .none,
                                                               contentPadding:
-                                                                  EdgeInsets.only(
-                                                                      bottom: 10,
-                                                                      top: 2,
-                                                                      left: 10),
+                                                              EdgeInsets.only(
+                                                                  bottom: 10,
+                                                                  top: 2,
+                                                                  left: 10),
                                                             ),
                                                             // validator: (value) => value!.isEmpty ? 'Field is required' : null,
                                                           ))
@@ -5910,7 +6143,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                   : FadeInRight(
                       child: SizedBox(
                         width: 1574 * fem,
-                        height:height/1.1369,
+                        height: height/1.05,
                         child: Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: width / 170.75,
@@ -5918,7 +6151,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                           child: Column(
                             children: [
                               ///Alumni text
-                              SizedBox(height: height / 26.04),
+                             // SizedBox(height: height / 26.04),
                               Row(
                                 children: [
                                   SizedBox(
@@ -6682,6 +6915,7 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                               },
                                               child: SizedBox(
+                                                key:popMenuKeys[index] ,
                                                   width: width / 14.0,
                                                   height: height / 26.04,
                                                   child: Icon(Icons.more_horiz)),
@@ -6786,6 +7020,7 @@ class _Users_ScreenState extends State<Users_Screen> {
       designationcon.clear();
       company_concerncon.clear();
       maritalStatuscon.text = "Marital Status";
+      alumniEmployedController.text="No";
       spouseNamecon.clear();
       anniversaryDatecon.clear();
       no_of_childreancon.clear();
@@ -6932,6 +7167,7 @@ class _Users_ScreenState extends State<Users_Screen> {
       anniversaryDatecon.text = value['anniversaryDate'].toString();
       no_of_childreancon.text = value['childreancount'].toString();
       imgUrl = value['UserImg'].toString();
+      alumniEmployedController.text=value['workingStatus'].toString();
     });
     print(imgUrl);
     print("++++++++++++++++++++++++++++++++++++++++++++");
@@ -6990,8 +7226,10 @@ class _Users_ScreenState extends State<Users_Screen> {
       "userDocId": userid,
       "Active":false,
       "Token":"",
-      "longtitude":"",
-      "latitude":"",
+      "longtitude":0,
+      "latitude":0,
+      'workingStatus':alumniEmployedController.text,
+       "regno" :"Al${(billcount).toString().padLeft(2, "0")}"
     });
     controllersclearfunc();
   }
@@ -7072,7 +7310,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                           ),
                           InkWell(
                             onTap: (){
-                              userDeteleFunction();
+
                               Navigator.pop(context);
                             },
                             child: Container(
@@ -7145,6 +7383,7 @@ class _Users_ScreenState extends State<Users_Screen> {
       "spouseName": spouseNamecon.text,
       "anniversaryDate": anniversaryDatecon.text,
       "childreancount": no_of_childreancon.text,
+      'workingStatus':alumniEmployedController.text
 
     });
     controllersclearfunc();

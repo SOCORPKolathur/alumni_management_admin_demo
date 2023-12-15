@@ -5,6 +5,7 @@ import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 
+import '../Constant_.dart';
 import '../Demo_Page.dart';
 import '../Line_Graph.dart';
 import '../Models/Language_Model.dart';
@@ -25,8 +26,7 @@ class _DashBoardState extends State<DashBoard> {
 
 
 
-  var flagvalue= "en";
-  var langvalue='English';
+
 
 
   @override
@@ -74,6 +74,7 @@ class _DashBoardState extends State<DashBoard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+
               Container(
                 // topbar7QD (6:110)
                 padding: EdgeInsets.fromLTRB(39*fem, 30*fem, 65*fem, 30*fem),
@@ -143,7 +144,7 @@ class _DashBoardState extends State<DashBoard> {
                    // SizedBox(width:  580*fem,),
                     InkWell(
                       onTap:(){
-                        _showPopupMenu();
+                        _showPopupMenu(context);
                       },
                       child: Container(
                         width:width/7.58888,
@@ -169,7 +170,7 @@ class _DashBoardState extends State<DashBoard> {
                                     height: 42.5*fem,
                                     child:
                                     CountryFlag.fromLanguageCode(
-                                      flagvalue,
+                                      Constants.flagvalue.toString(),
                                       borderRadius: 20,
                                       // width: 9.94*fem,
                                       // height: 6*fem,
@@ -178,7 +179,7 @@ class _DashBoardState extends State<DashBoard> {
                                   KText(
                                     text:
                                     // engusYQy (6:130)
-                                    langvalue.toString(),
+                                     Constants.langvalue.toString(),
                                     style: SafeGoogleFont (
                                       'Poppins',
                                       fontSize: 18*ffem,
@@ -294,6 +295,7 @@ class _DashBoardState extends State<DashBoard> {
                   ],
                 ),
               ),
+
               Container(
                 // autogroupa3et6mF (T1hJTpwdBSbRLch6BRA3ET)
                 padding: EdgeInsets.fromLTRB(32*fem, 51*fem, 44*fem, 0*fem),
@@ -1781,12 +1783,12 @@ class _DashBoardState extends State<DashBoard> {
   }
 
 
-  _showPopupMenu() async {
-    double height=MediaQuery.of(context).size.height;
-    double width=MediaQuery.of(context).size.width;
+  _showPopupMenu(cxt) async {
+    double height=MediaQuery.of(cxt).size.height;
+    double width=MediaQuery.of(cxt).size.width;
 
     await showMenu(
-        context: context,
+        context: cxt,
         color: const Color(0xffFFFFFF),
         surfaceTintColor: const Color(0xffFFFFFF),
         shadowColor: Colors.black12,
@@ -1798,7 +1800,7 @@ class _DashBoardState extends State<DashBoard> {
               color: const Color(0xffFFFFFF),
               shadowColor: Colors.transparent,
               onSelected: (val) {
-                Navigator.pop(context);
+                Navigator.pop(cxt);
               },
               position: PopupMenuPosition.over,
               itemBuilder: (ctx) {
@@ -1807,9 +1809,9 @@ class _DashBoardState extends State<DashBoard> {
                     value: 'ta',
                     child:  const Text('Tamil'),
                     onTap: () {
-                      changeLocale(context, 'ta');
-                      flagvalue= "hi";
-                      langvalue='Tamil';
+                      changeLocale(cxt, 'ta');
+                      Constants.flagvalue= "hi";
+                      Constants.langvalue='Tamil';
                     },
                   ),
                   PopupMenuItem<String>(
@@ -1817,9 +1819,9 @@ class _DashBoardState extends State<DashBoard> {
                     child:  const Text('Hindi'),
                     onTap: () {
                       setState(() {
-                        changeLocale(context, 'hi');
-                        flagvalue= "hi";
-                        langvalue='Hindi';
+                        changeLocale(cxt, 'hi');
+                        Constants. flagvalue= "hi";
+                        Constants.langvalue='Hindi';
                       });
                     },
                   ),
@@ -1827,9 +1829,9 @@ class _DashBoardState extends State<DashBoard> {
                     value: 'te',
                     child:  const Text('Telugu'),
                     onTap: () {
-                      changeLocale(context, 'te');
-                      flagvalue= "hi";
-                      langvalue='Telugu';
+                      changeLocale(cxt, 'te');
+                      Constants. flagvalue= "hi";
+                      Constants.langvalue='Telugu';
                     },
                   ),
                   PopupMenuItem<String>(
@@ -1837,9 +1839,9 @@ class _DashBoardState extends State<DashBoard> {
                     child:  const Text('Malayalam'),
                     onTap: () {
                       setState(() {
-                        changeLocale(context, 'ml');
-                        flagvalue= "hi";
-                        langvalue='Malayalam';
+                        changeLocale(cxt, 'ml');
+                        Constants. flagvalue= "hi";
+                        Constants.langvalue='Malayalam';
                       });
                     },
                   ),
@@ -1848,9 +1850,9 @@ class _DashBoardState extends State<DashBoard> {
                     child:  const Text('Kannada'),
                     onTap: () {
                       setState(() {
-                        changeLocale(context, 'kn');
-                        flagvalue= "hi";
-                        langvalue='Kannada';
+                        changeLocale(cxt, 'kn');
+                        Constants.flagvalue= "hi";
+                        Constants. langvalue='Kannada';
                       });
                     },
                   ),
@@ -1859,9 +1861,9 @@ class _DashBoardState extends State<DashBoard> {
                     child:  const Text('Marathi'),
                     onTap: () {
                       setState(() {
-                        changeLocale(context, 'mr');
-                        flagvalue= "hi";
-                        langvalue='Marathi';
+                        changeLocale(cxt, 'mr');
+                        Constants.flagvalue= "hi";
+                        Constants.langvalue='Marathi';
                       });
                     },
                   ),
@@ -1870,9 +1872,9 @@ class _DashBoardState extends State<DashBoard> {
                     child:  const Text('Gujarati'),
                     onTap: () {
                       setState(() {
-                        changeLocale(context, 'gu');
-                        flagvalue= "hi";
-                        langvalue='Gujarati';
+                        changeLocale(cxt, 'gu');
+                        Constants.flagvalue= "hi";
+                        Constants.langvalue='Gujarati';
                       });
                     },
                   ),
@@ -1881,9 +1883,9 @@ class _DashBoardState extends State<DashBoard> {
                     child:  const Text('Odia'),
                     onTap: () {
                       setState(() {
-                        changeLocale(context, 'or');
-                        flagvalue= "hi";
-                        langvalue='Odia';
+                        changeLocale(cxt, 'or');
+                        Constants. flagvalue= "hi";
+                        Constants.langvalue='Odia';
                       });
                     },
                   ),
@@ -1892,9 +1894,9 @@ class _DashBoardState extends State<DashBoard> {
                     child:  const Text('Bengali'),
                     onTap: () {
                       setState(() {
-                        changeLocale(context, 'bn');
-                        flagvalue= "hi";
-                        langvalue='Bengali';
+                        changeLocale(cxt, 'bn');
+                        Constants.flagvalue= "hi";
+                        Constants.langvalue='Bengali';
                       });
                     },
                   ),
@@ -1927,9 +1929,11 @@ class _DashBoardState extends State<DashBoard> {
               ],
             ),
             onTap: () {
-              changeLocale(context, 'en_US');
-              flagvalue= "en";
-              langvalue='English';
+           setState(() {
+             changeLocale(cxt, 'en_US');
+             Constants.flagvalue= "en";
+             Constants. langvalue='English';
+           });
               //changeHomeViewLanguage();
             },
           ),
@@ -1948,9 +1952,9 @@ class _DashBoardState extends State<DashBoard> {
             ),
             onTap: () {
               setState(() {
-                changeLocale(context, 'es');
-                flagvalue= "es";
-                langvalue='Spanish';
+                changeLocale(cxt, 'es');
+                Constants.flagvalue= "es";
+                Constants. langvalue='Spanish';
                 //changeHomeViewLanguage();
               });
             },
@@ -1970,9 +1974,9 @@ class _DashBoardState extends State<DashBoard> {
             ),
             onTap: () {
               setState(() {
-                flagvalue= "PT";
-                changeLocale(context, 'pt');
-                langvalue='Portuguese';
+                Constants.flagvalue= "PT";
+                changeLocale(cxt, 'pt');
+                Constants.langvalue='Portuguese';
                 //changeHomeViewLanguage();
               });
             },
@@ -1992,9 +1996,9 @@ class _DashBoardState extends State<DashBoard> {
             ),
             onTap: () {
               setState(() {
-                flagvalue= "Fr";
-                changeLocale(context, 'fr');
-                langvalue='French';
+                Constants.flagvalue= "Fr";
+                changeLocale(cxt, 'fr');
+                Constants.langvalue='French';
                 //changeHomeViewLanguage();
               });
             },
@@ -2014,9 +2018,9 @@ class _DashBoardState extends State<DashBoard> {
             ),
             onTap: () {
               setState(() {
-                changeLocale(context, 'nl');
-                flagvalue= "nl";
-                langvalue='Dutch';
+                changeLocale(cxt, 'nl');
+                Constants.flagvalue= "nl";
+                Constants.langvalue='Dutch';
                 //changeHomeViewLanguage();
               });
             },
@@ -2036,9 +2040,9 @@ class _DashBoardState extends State<DashBoard> {
             ),
             onTap: () {
               setState(() {
-                changeLocale(context, 'de');
-                flagvalue= "de";
-                langvalue='German';
+                changeLocale(cxt, 'de');
+                Constants.flagvalue= "de";
+                Constants.langvalue='German';
                 //changeHomeViewLanguage();
               });
             },
@@ -2058,9 +2062,9 @@ class _DashBoardState extends State<DashBoard> {
             ),
             onTap: () {
               setState(() {
-                changeLocale(context, 'it');
-                flagvalue= "it";
-                langvalue='Italian';
+                changeLocale(cxt, 'it');
+                Constants.flagvalue= "it";
+                Constants.langvalue='Italian';
                 //changeHomeViewLanguage();
               });
             },
@@ -2080,9 +2084,9 @@ class _DashBoardState extends State<DashBoard> {
             ),
             onTap: () {
               setState(() {
-                flagvalue= "SE";
-                changeLocale(context, 'sv');
-                langvalue='Swedish';
+                Constants.flagvalue= "SE";
+                changeLocale(cxt, 'sv');
+                Constants.langvalue='Swedish';
                 //changeHomeViewLanguage();
               });
             },
@@ -2102,9 +2106,9 @@ class _DashBoardState extends State<DashBoard> {
             ),
             onTap: () {
               setState(() {
-                flagvalue= "lu";
-                changeLocale(context, 'ltz');
-                langvalue='Luxembourish';
+                Constants.flagvalue= "lu";
+                changeLocale(cxt, 'ltz');
+                Constants.langvalue='Luxembourish';
                 //changeHomeViewLanguage();
               });
             },
@@ -2112,10 +2116,6 @@ class _DashBoardState extends State<DashBoard> {
         ],
         elevation: 8.0,
         useRootNavigator: true);
-
-    setState(() {
-
-    });
   }
 
 }
