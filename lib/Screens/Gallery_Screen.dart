@@ -94,14 +94,13 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
     return Padding(
-      padding:  EdgeInsets.only(left:width/170.75),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: height/81.375, horizontal: width/170.75),
-            child: Column(
+      padding:  EdgeInsets.only(left:width/170.75,top:height/65.1),
+      child: FadeInRight(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
@@ -122,7 +121,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: height/81.375),
+                  padding: EdgeInsets.only(top: height/81.375,left: width/136.6),
                   child: Row(
                     children: [
                       InkWell(
@@ -173,7 +172,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                           )),
                       addPhoto==true?const SizedBox():
                       Padding(
-                        padding:  EdgeInsets.only(left: width/1.6),
+                        padding:  EdgeInsets.only(left: width/1.59,),
                         child: InkWell(
                           key: filterDataKey,
                           onTap: () async {
@@ -218,11 +217,8 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                 ),
               ],
             ),
-          ),
-
-          addPhoto==true?const SizedBox():
-          FadeInRight(
-            child: Container(
+            addPhoto==true?const SizedBox():
+            Container(
                 color: Colors.white,
                 width: width/1.2418,
                 height: height/13.4363,
@@ -276,7 +272,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                         ),
                       ),
                     ),
-
+            
                     Container(
                       color: Colors.white,
                       width: width/4.38857,
@@ -325,7 +321,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                         ),
                       ),
                     ),
-
+            
                     Container(
                       color: Colors.white,
                       width: width/7.6,
@@ -374,7 +370,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                         ),
                       ),
                     ),
-
+            
                     Container(
                       color: Colors.white,
                       width: width/7.6,
@@ -423,7 +419,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                         ),
                       ),
                     ),
-
+            
                     SizedBox(
                       width: width/7.6,
                       height: height/14.78,
@@ -472,10 +468,8 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                     ),
                   ],
                 )),
-          ),
-          addPhoto==true?
-          FadeInRight(
-            child: Container(
+            addPhoto==true?
+            Container(
               height: size.height * 0.3,
               width: width/1.2418,
               decoration: BoxDecoration(
@@ -499,7 +493,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-
+            
                           Row(
                             children: [
                               InkWell(
@@ -667,7 +661,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                                       ),
                                     ),
                                   ),
-
+            
                                 ],
                               )
                                   : Container(
@@ -692,16 +686,14 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                   )
                 ],
               ),
-            ),
-          ):
-          FadeInRight(
-            child: SizedBox(
+            ):
+            SizedBox(
               height: height/1.34363,
               width: width/1.2418,
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance.collection("Photos").snapshots(),
                 builder: (context, snapshot) {
-
+            
                   if(snapshot.hasData==null){
                     return const Center(child: CircularProgressIndicator(),);
                   }
@@ -713,11 +705,11 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                     itemCount: snapshot.data!.docs.length,
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
-
+            
                       var Value=snapshot.data!.docs[index];
-
+            
                       return SizedBox(
-
+            
                           width: width / 1.2418,
                           height: height/13.4363,
                           child: Row(
@@ -751,7 +743,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                                   ),
                                 ),
                               ),
-
+            
                               Container(
                                 color: Colors.transparent,
                                 width: width/7.6,
@@ -765,7 +757,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                                   ),
                                 ),
                               ),
-
+            
                               Container(
                                 color: Colors.transparent,
                                 width: width/7.6,
@@ -779,7 +771,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                                   ),
                                 ),
                               ),
-
+            
                               SizedBox(
                                 width: width/7.6,
                                 height: height/14.78,
@@ -814,9 +806,10 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                           ));
                     },);
                 },),
-            ),
-          )
-        ],
+            )
+        
+          ],
+        ),
       ),
     );
   }

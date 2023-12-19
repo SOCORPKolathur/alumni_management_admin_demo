@@ -32,7 +32,7 @@ class _Department_ScreenState extends State<Department_Screen> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Padding(
-      padding:  EdgeInsets.only(left:width/170.75),
+      padding:  EdgeInsets.only(left:width/170.75,top: height/54.25),
       child: FadeInRight(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,65 +44,68 @@ class _Department_ScreenState extends State<Department_Screen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
                 children: [
-                  Padding(
-                    padding:  EdgeInsets.only(top:height/50.0769),
-                    child: KText(
-                      text: "Department",
-                      style: SafeGoogleFont (
-                          'Nunito',
-                          fontSize: width / 82.538,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.black),
-                    ),
+                  KText(
+                    text: "Department",
+                    style: SafeGoogleFont (
+                        'Nunito',
+                        fontSize: width / 82.538,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.black),
                   ),
 
-                  Padding(
-                    padding:  EdgeInsets.only(left:width/1.561,top:height/50.0769),
-                    child: InkWell(
-                      onTap: () async {
-                        addItemPopUp();
-                      },
-                      child: Container(
-                        height: height / 16.275,
-                        width:width/15.36,
-                        decoration: BoxDecoration(
-                          color: Constants().primaryAppColor,
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black26,
-                              offset: Offset(1, 2),
-                              blurRadius: 3,
-                            ),
-                          ],
-                        ),
-                        child:
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: width / 227.66),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.add,color:Colors.white),
-                              KText(
-                                text: "Add",
-                                style: SafeGoogleFont(
-                                  'Nunito',
-                                  fontSize: width / 120.571,
-                                  color:Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
+
 
 
                 ],
               ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding:  EdgeInsets.only(left:width/1.39),
+                  child: InkWell(
+                    onTap: () async {
+                      addItemPopUp();
+                    },
+                    child: Container(
+                      height: height / 16.275,
+                      width: width/10.9714,
+                      decoration: BoxDecoration(
+                        color: Constants().primaryAppColor,
+                        borderRadius: BorderRadius.circular(8),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            offset: Offset(1, 2),
+                            blurRadius: 3,
+                          ),
+                        ],
+                      ),
+                      child:
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: width / 227.66),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.add,color:Colors.white),
+                            KText(
+                              text: "Add",
+                              style: SafeGoogleFont(
+                                'Nunito',
+                                fontSize: width / 120.571,
+                                color:Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
             ),
 
             Container(
@@ -121,7 +124,6 @@ class _Department_ScreenState extends State<Department_Screen> {
                             text: "No.",
                             style:  SafeGoogleFont (
                               'Nunito',
-                              fontSize:width/115.07,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -164,7 +166,6 @@ class _Department_ScreenState extends State<Department_Screen> {
                             text: "Name",
                             style:  SafeGoogleFont (
                               'Nunito',
-                              fontSize:width/115.07,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -207,7 +208,6 @@ class _Department_ScreenState extends State<Department_Screen> {
                             text: "Actions",
                             style:  SafeGoogleFont (
                               'Nunito',
-                              fontSize:width/115.07,
                               fontWeight: FontWeight.w600,
                             ),
                           ),

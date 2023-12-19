@@ -139,104 +139,52 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
       padding: EdgeInsets.symmetric(
           vertical: height / 81.375, horizontal: width / 170.75),
       child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
+          child: FadeInRight(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
 
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    vertical: height / 81.375, horizontal: width / 170.75),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        KText(
-                          text: "College Activity",
-                          style: SafeGoogleFont('Nunito',
-                              fontSize: width / 82.538,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.black),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: height/81.375),
-                      child: Row(
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: height / 81.375, horizontal: width / 170.75),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          InkWell(
-                              onTap: () {
-                                if (currentTab.toUpperCase() == "VIEW") {
-                                  setState(() {
-                                    currentTab = "Add";
-                                  });
-                                } else {
-                                  setState(() {
-                                    currentTab = 'View';
-                                  });
-                                  //clearTextControllers();
-                                }
-                              },
-                              child: Container(
-                                height: height / 18.6,
-                                width: width/10.9714,
-                                decoration: BoxDecoration(
-                                  color: Constants().primaryAppColor,
-                                  borderRadius: BorderRadius.circular(8),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black26,
-                                      offset: Offset(1, 2),
-                                      blurRadius: 3,
-                                    ),
-                                  ],
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: width / 227.66),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      currentTab.toUpperCase() != "VIEW"
-                                          ? const SizedBox()
-                                          : Icon(
-                                        Icons.add,
-                                        color: Colors.white,
-                                      ),
-                                      KText(
-                                        text: currentTab.toUpperCase() == "VIEW"
-                                            ? "Add Activity"
-                                            : "View Activity",
-                                        style: SafeGoogleFont(
-                                          'Nunito',
-                                          fontSize: width / 120.07,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              )),
-                          Padding(
-                            padding: EdgeInsets.only(left: width/170.75),
-                            child: InkWell(
-                                key: ExportDataKeys,
+                          KText(
+                            text: "College Activity",
+                            style: SafeGoogleFont('Nunito',
+                                fontSize: width / 82.538,
+                                fontWeight: FontWeight.w800,
+                                color: Colors.black),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: height/81.375),
+                        child: Row(
+                          children: [
+                            InkWell(
                                 onTap: () {
-                                  menuItemExportData(
-                                      context,
-                                      exportdataListFromStream,
-                                      ExportDataKeys,
-                                      size);
+                                  if (currentTab.toUpperCase() == "VIEW") {
+                                    setState(() {
+                                      currentTab = "Add";
+                                    });
+                                  } else {
+                                    setState(() {
+                                      currentTab = 'View';
+                                    });
+                                    //clearTextControllers();
+                                  }
                                 },
                                 child: Container(
-                                  height: height / 16.6,
+                                  height: height / 18.6,
                                   width: width/10.9714,
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: Constants().primaryAppColor,
                                     borderRadius: BorderRadius.circular(8),
                                     boxShadow: [
                                       BoxShadow(
@@ -253,16 +201,20 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Icon(
-                                          Icons.logout_rounded,
-                                          color: Colors.black,
+                                        currentTab.toUpperCase() != "VIEW"
+                                            ? const SizedBox()
+                                            : Icon(
+                                          Icons.add,
+                                          color: Colors.white,
                                         ),
                                         KText(
-                                          text: "Export Data",
+                                          text: currentTab.toUpperCase() == "VIEW"
+                                              ? "Add Activity"
+                                              : "View Activity",
                                           style: SafeGoogleFont(
                                             'Nunito',
                                             fontSize: width / 120.07,
-                                            color: Colors.black,
+                                            color: Colors.white,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -270,61 +222,109 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                     ),
                                   ),
                                 )),
-                          ),
-                          currentTab.toUpperCase() == "ADD"?const SizedBox():
-                          Padding(
-                            padding:  EdgeInsets.only(left: width/1.88),
-                            child: InkWell(
-                              key: filterDataKey,
-                              onTap: () async {
-                                filterDataMenuItem( context, filterDataKey, size);
-                              },
-                              child: Container(
-                                height: height / 16.275,
-                                decoration: BoxDecoration(
-                                  color: Constants().primaryAppColor,
-                                  borderRadius: BorderRadius.circular(8),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black26,
-                                      offset: Offset(1, 2),
-                                      blurRadius: 3,
-                                    ),
-                                  ],
-                                ),
-                                child:
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: width / 227.66),
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.filter_list_alt,color:Colors.white),
-                                      KText(
-                                        text: " Filter by Date",
-                                        style: SafeGoogleFont(
-                                          'Nunito',
-                                          fontSize: width / 120.571,
-                                          color:Colors.white,
-                                          fontWeight: FontWeight.bold,
+                            Padding(
+                              padding: EdgeInsets.only(left: width/170.75),
+                              child: InkWell(
+                                  key: ExportDataKeys,
+                                  onTap: () {
+                                    menuItemExportData(
+                                        context,
+                                        exportdataListFromStream,
+                                        ExportDataKeys,
+                                        size);
+                                  },
+                                  child: Container(
+                                    height: height / 16.6,
+                                    width: width/10.9714,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black26,
+                                          offset: Offset(1, 2),
+                                          blurRadius: 3,
                                         ),
+                                      ],
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: width / 227.66),
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.logout_rounded,
+                                            color: Colors.black,
+                                          ),
+                                          KText(
+                                            text: "Export Data",
+                                            style: SafeGoogleFont(
+                                              'Nunito',
+                                              fontSize: width / 120.07,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )),
+                            ),
+                            currentTab.toUpperCase() == "ADD"?const SizedBox():
+                            Padding(
+                              padding:  EdgeInsets.only(left: width/1.88),
+                              child: InkWell(
+                                key: filterDataKey,
+                                onTap: () async {
+                                  filterDataMenuItem( context, filterDataKey, size);
+                                },
+                                child: Container(
+                                  height: height / 16.275,
+                                  decoration: BoxDecoration(
+                                    color: Constants().primaryAppColor,
+                                    borderRadius: BorderRadius.circular(8),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black26,
+                                        offset: Offset(1, 2),
+                                        blurRadius: 3,
                                       ),
                                     ],
                                   ),
+                                  child:
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: width / 227.66),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.filter_list_alt,color:Colors.white),
+                                        KText(
+                                          text: " Filter by Date",
+                                          style: SafeGoogleFont(
+                                            'Nunito',
+                                            fontSize: width / 120.571,
+                                            color:Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
 
 
-              currentTab.toUpperCase() == "ADD"
-                  ? FadeInRight(
-                    child: Container(
+                currentTab.toUpperCase() == "ADD"
+                    ? Container(
                                     width: width / 1.26,
                                     height: height/1.231666,
                                     //       margin: EdgeInsets.symmetric(
@@ -912,12 +912,10 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                       ),
                     ],
                                     ),
-                                  ),
-                  )
-                  : currentTab.toUpperCase() == "VIEW"
-                  ? dateRangeStart != null
-                  ? FadeInRight(
-                    child: Column(children: [
+                                  )
+                    : currentTab.toUpperCase() == "VIEW"
+                    ? dateRangeStart != null
+                    ? Column(children: [
 
                     Container(
                         color: Colors.white,
@@ -1351,10 +1349,8 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                         },
                       ),
                     ),
-                                    ],),
-                  )
-                  : FadeInRight(
-                    child: Column(children: [
+                                    ],)
+                    : Column(children: [
                                     Container(
                       color: Colors.white,
                       width: width / 1.2418,
@@ -1789,10 +1785,10 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                         },
                       ),
                     ),
-                                    ],),
-                  )
-                  : Container()
-            ],
+                                    ],)
+                    : Container()
+              ],
+            ),
           )),
     );
   }

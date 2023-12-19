@@ -86,7 +86,7 @@ List<String> texts = [
   'SMS',
   'Email',
   'Notification',
-  'Jobs Reports',
+  'Alumni Tracking',
   'Sign out',
 ];
 
@@ -161,6 +161,7 @@ class _MyWidgetState extends State<MyWidget> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(
+
         color: const Color(0xFFFAFBFC),
         child: Row(
           children: [
