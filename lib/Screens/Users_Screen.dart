@@ -257,7 +257,7 @@ const List<String> coutryList = <String>[
 
 const List<String> MaritalStatusList = ['Marital Status', 'Yes', 'No'];
 
-const List<String> WorkingEmpList = [ 'No', 'Yes'];
+const List<String> WorkingEmpList = [ 'No', 'Yes',"Own Business"];
 
 class _Users_ScreenState extends State<Users_Screen> {
   bool viewUser_details = false;
@@ -269,7 +269,7 @@ class _Users_ScreenState extends State<Users_Screen> {
   bool UserEdit = false;
   bool Useradd = false;
 
-  final _formkey = GlobalKey<FormState>();
+  GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
   final RegExp _inputPattern = RegExp(r'^\d{4}\s\d{4}\s\d{4}$');
   File? Url;
@@ -311,6 +311,7 @@ class _Users_ScreenState extends State<Users_Screen> {
   TextEditingController spouseNamecon = TextEditingController();
   TextEditingController anniversaryDatecon = TextEditingController();
   TextEditingController no_of_childreancon = TextEditingController();
+  TextEditingController ownBussinesscon = TextEditingController();
   TextEditingController alumniEmployedController = TextEditingController(text: "No");
 
   List usereditlist = [
@@ -343,12 +344,13 @@ class _Users_ScreenState extends State<Users_Screen> {
     });
 
   }
-
+  
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
     Size size = MediaQuery.of(context).size;
+    
     double baseWidth = 1920;
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
@@ -368,9 +370,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                           padding: EdgeInsets.symmetric(
                               horizontal: width / 170.75,
                               vertical: height / 81.375),
-                          child: Form(
-                            key: _formkey,
-                            child: SizedBox(
+                          child:  SizedBox(
                               width: 1550 * fem,
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -394,7 +394,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               fontSize: 24 * ffem,
                                               fontWeight: FontWeight.w700,
                                               height: 1.3625 * ffem / fem,
-                                              color: Color(0xff030229),
+                                              color: const Color(0xff030229),
                                             ),
                                           ),
                                         ],
@@ -416,7 +416,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               100),
-                                                      color: Color(0xffDDDEEE),
+                                                      color: const Color(0xffDDDEEE),
                                                       image: Uploaddocument !=
                                                               null
                                                           ? DecorationImage(
@@ -461,7 +461,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         height:
                                                             1.3625 * ffem / fem,
                                                         color:
-                                                            Color(0xff000000),
+                                                            const Color(0xff000000),
                                                       ),
                                                     ),
                                                     SizedBox(height: height/147.8),
@@ -475,10 +475,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             height: height/24.63333,
                                                             width: width/19.2,
                                                             decoration: BoxDecoration(
-                                                                color: Color(
+                                                                color: const Color(
                                                                     0xffDDDEEE),
                                                                 border: Border.all(
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff000000))),
                                                             child: Center(
                                                               child: KText(
@@ -496,7 +496,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                       1.3625 *
                                                                           ffem /
                                                                           fem,
-                                                                  color: Color(
+                                                                  color: const Color(
                                                                       0xff000000),
                                                                 ),
                                                               ),
@@ -517,7 +517,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             height: 1.3625 *
                                                                 ffem /
                                                                 fem,
-                                                            color: Color(
+                                                            color: const Color(
                                                                 0xff000000),
                                                           ),
                                                         ),
@@ -530,7 +530,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                           ),
                                           SizedBox(
                                             width: width/2.2588,
-                                            height:height/ 2.956,
+                                            height:height/ 2.8,
                                             child: Column(
                                               children: [
                                                 ///first name and last name
@@ -540,7 +540,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           .spaceAround,
                                                   children: [
                                                     SizedBox(
-                                                      height: height/11.369,
+                                                      height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -560,13 +560,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               height: 1.3625 *
                                                                   ffem /
                                                                   fem,
-                                                              color: Color(
+                                                              color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
                                                           SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: height/21.1142,
+                                                              height: height/15.1142,
                                                               width: width/8.0842,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
@@ -577,8 +577,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                               3)),
                                                               child:
                                                                   TextFormField(
-                                                                controller:
-                                                                    firstNamecon,
+                                                                controller: firstNamecon,
                                                                 inputFormatters: [
                                                                   FilteringTextInputFormatter
                                                                       .allow(RegExp(
@@ -586,7 +585,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 ],
                                                                 maxLength: 45,
                                                                 decoration:
-                                                                    InputDecoration(
+                                                                    const InputDecoration(
                                                                   border:
                                                                       InputBorder
                                                                           .none,
@@ -607,13 +606,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                       .isEmpty) {
                                                                     return 'Field is required';
                                                                   }
+                                                                  return null;
                                                                 },
                                                               ))
                                                         ],
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                       height: height/11.369,
+                                                       height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -633,13 +633,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               height: 1.3625 *
                                                                   ffem /
                                                                   fem,
-                                                              color: Color(
+                                                              color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
                                                           SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: height/21.114,
+                                                              height: height/15.114,
                                                               width: width/8.0842,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
@@ -658,7 +658,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                           "[a-zA-Z ]")),
                                                                 ],
                                                                 decoration:
-                                                                    InputDecoration(
+                                                                    const InputDecoration(
                                                                   border:
                                                                       InputBorder
                                                                           .none,
@@ -676,7 +676,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                       height: height/11.369,
+                                                       height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -695,13 +695,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               height: 1.3625 *
                                                                   ffem /
                                                                   fem,
-                                                              color: Color(
+                                                              color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
                                                           SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: height/21.114,
+                                                              height: height/15.114,
                                                               width: width/8.0842,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
@@ -721,7 +721,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 ],
                                                                 maxLength: 45,
                                                                 decoration:
-                                                                    InputDecoration(
+                                                                    const InputDecoration(
                                                                   border:
                                                                       InputBorder
                                                                           .none,
@@ -758,7 +758,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   children: [
                                                     ///d date of birth
                                                     SizedBox(
-                                                       height: height/11.369,
+                                                       height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -778,13 +778,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               height: 1.3625 *
                                                                   ffem /
                                                                   fem,
-                                                              color: Color(
+                                                              color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
                                                           SizedBox(height: height/123.1666),
                                                           Container(
-                                                            height: height/21.114,
+                                                            height: height/15.114,
                                                             width: width/5.12,
                                                             decoration: BoxDecoration(
                                                                 color: const Color(
@@ -798,7 +798,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               controller:
                                                                   dateofBirthcon,
                                                               decoration:
-                                                                  InputDecoration(
+                                                                  const InputDecoration(
                                                                 border:
                                                                     InputBorder
                                                                         .none,
@@ -855,7 +855,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     ),
 
                                                     SizedBox(
-                                                       height: height/11.369,
+                                                       height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -874,13 +874,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               height: 1.3625 *
                                                                   ffem /
                                                                   fem,
-                                                              color: Color(
+                                                              color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
                                                           SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: height/21.114,
+                                                              height: height/15.114,
                                                               width: width/5.12,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
@@ -899,7 +899,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                           "[a-zA-Z]")),
                                                                 ],
                                                                 decoration:
-                                                                    InputDecoration(
+                                                                    const InputDecoration(
                                                                   border:
                                                                       InputBorder
                                                                           .none,
@@ -927,7 +927,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           .spaceAround,
                                                   children: [
                                                     SizedBox(
-                                                       height: height/11.369,
+                                                       height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -947,13 +947,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               height: 1.3625 *
                                                                   ffem /
                                                                   fem,
-                                                              color: Color(
+                                                              color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
                                                           SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: height/21.114,
+                                                              height: height/15.114,
                                                               width: width/5.12,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
@@ -972,7 +972,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                           "[a-zA-Z@0-9.]")),
                                                                 ],
                                                                 decoration:
-                                                                    InputDecoration(
+                                                                    const InputDecoration(
                                                                   border:
                                                                       InputBorder
                                                                           .none,
@@ -990,7 +990,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                       height: height/11.369,
+                                                       height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -1010,13 +1010,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               height: 1.3625 *
                                                                   ffem /
                                                                   fem,
-                                                              color: Color(
+                                                              color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
                                                           SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: height/21.114,
+                                                              height: height/15.114,
                                                               width: width/5.12,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
@@ -1074,7 +1074,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   }),
                                                                 ],
                                                                 decoration:
-                                                                    InputDecoration(
+                                                                    const InputDecoration(
                                                                   border:
                                                                       InputBorder
                                                                           .none,
@@ -1112,7 +1112,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               fontSize: 25 * ffem,
                                               fontWeight: FontWeight.w700,
                                               height: 1.3625 * ffem / fem,
-                                              color: Color(0xff000000),
+                                              color: const Color(0xff000000),
                                             ),
                                           ),
                                         ],
@@ -1134,9 +1134,9 @@ class _Users_ScreenState extends State<Users_Screen> {
                                         children: [
                                           SizedBox(
                                               width: width/2.4,
-                                              height: height/3.3590,
+                                              height: height/2.8,
                                               child: Padding(
-                                                padding: EdgeInsets.all(6.0),
+                                                padding: const EdgeInsets.all(6.0),
                                                 child: Column(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
@@ -1146,7 +1146,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   children: [
                                                     ///phone number
                                                     SizedBox(
-                                                       height: height/11.369,
+                                                       height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -1166,13 +1166,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               height: 1.3625 *
                                                                   ffem /
                                                                   fem,
-                                                              color: Color(
+                                                              color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
                                                           SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: height/21.114,
+                                                              height: height/15.114,
                                                               width: width/3.84,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
@@ -1192,7 +1192,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                           "[0-9]")),
                                                                 ],
                                                                 decoration:
-                                                                    InputDecoration(
+                                                                    const InputDecoration(
                                                                   border:
                                                                       InputBorder
                                                                           .none,
@@ -1217,6 +1217,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                       return 'Enter the Phone no correctly';
                                                                     }
                                                                   }
+                                                                  return null;
                                                                 },
                                                               ))
                                                         ],
@@ -1225,7 +1226,7 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                                     /// mobile number
                                                     SizedBox(
-                                                       height: height/11.369,
+                                                       height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -1245,13 +1246,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               height: 1.3625 *
                                                                   ffem /
                                                                   fem,
-                                                              color: Color(
+                                                              color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
                                                           SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: height/21.114,
+                                                              height: height/15.114,
                                                               width: width/3.84,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
@@ -1272,7 +1273,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                           "[0-9]")),
                                                                 ],
                                                                 decoration:
-                                                                    InputDecoration(
+                                                                    const InputDecoration(
                                                                   border:
                                                                       InputBorder
                                                                           .none,
@@ -1297,6 +1298,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                       return 'Enter the Mobile no correctly';
                                                                     }
                                                                   }
+                                                                  return null;
                                                                 },
                                                               ))
                                                         ],
@@ -1305,7 +1307,7 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                                     /// Email iD
                                                     SizedBox(
-                                                       height: height/11.369,
+                                                       height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -1324,13 +1326,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               height: 1.3625 *
                                                                   ffem /
                                                                   fem,
-                                                              color: Color(
+                                                              color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
                                                           SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: height/21.114,
+                                                              height: height/15.114,
                                                               width: width/3.84,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
@@ -1349,7 +1351,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                           "[a-zA-Z@0-9.]")),
                                                                 ],
                                                                 decoration:
-                                                                    InputDecoration(
+                                                                    const InputDecoration(
                                                                   border:
                                                                       InputBorder
                                                                           .none,
@@ -1371,7 +1373,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               )),
                                           SizedBox(
                                             width: width/3.49090,
-                                            height: height/3.3590,
+                                            height: height/2.8,
                                             child: Padding(
                                               padding:
                                                   const EdgeInsets.all(2.0),
@@ -1388,12 +1390,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           FontWeight.w700,
                                                       height:
                                                           1.3625 * ffem / fem,
-                                                      color: Color(0xff000000),
+                                                      color: const Color(0xff000000),
                                                     ),
                                                   ),
                                                   SizedBox(height: height/123.1666),
                                                   Container(
-                                                      height: height/4.10555,
+                                                      height: height/3.3,
                                                       width: width/3.57209,
                                                       decoration: BoxDecoration(
                                                           color: const Color(
@@ -1411,7 +1413,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   "[a-zA-Z0-9]")),
                                                         ],
                                                         decoration:
-                                                            InputDecoration(
+                                                            const InputDecoration(
                                                           border:
                                                               InputBorder.none,
                                                           contentPadding:
@@ -1429,12 +1431,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                       ),
 
                                       Padding(
-                                        padding: EdgeInsets.only(left: 5),
+                                        padding: const EdgeInsets.only(left: 5),
                                         child: Row(
                                           children: [
                                             ///State Dropdown
                                             SizedBox(
-                                               height: height/11.369,
+                                               height: height/9.369,
                                               child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -1448,12 +1450,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           FontWeight.w700,
                                                       height:
                                                           1.3625 * ffem / fem,
-                                                      color: Color(0xff000000),
+                                                      color: const Color(0xff000000),
                                                     ),
                                                   ),
                                                   SizedBox(height: height/123.1666),
                                                   Container(
-                                                    height: height/21.114,
+                                                    height: height/15.114,
                                                     width: width/6.4,
                                                     decoration: BoxDecoration(
                                                         color: const Color(
@@ -1461,32 +1463,38 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(3)),
+                                                    padding:const EdgeInsets.only(left:5),
                                                     child:
                                                         DropdownButtonHideUnderline(
                                                       child:
                                                           DropdownButtonFormField2<String>(
-
-                                                        isExpanded: true,
-                                                            hint: Text(
-                                                          'Select State',
-                                                          style: SafeGoogleFont(
-                                                            'Nunito',
-                                                            fontSize: 20 * ffem,
-                                                          ),
-                                                        ),
+                                                            isExpanded:true,
+                                                            hint: Padding(
+                                                              padding: const EdgeInsets.only(left:8.0),
+                                                              child: Text(
+                                                                                                                        'Select State',
+                                                                                                                        style: SafeGoogleFont(
+                                                              'Nunito',
+                                                              fontSize: 20 * ffem,
+                                                                                                                        ),
+                                                                                                                      ),
+                                                            ),
                                                         items: StateList.map(
                                                             (String item) =>
                                                                 DropdownMenuItem<
                                                                     String>(
                                                                   value: item,
-                                                                  child: Text(
-                                                                    item,
-                                                                    style:
-                                                                        SafeGoogleFont(
-                                                                      'Nunito',
-                                                                      fontSize:
-                                                                          20 *
-                                                                              ffem,
+                                                                  child: Padding(
+                                                                    padding: const EdgeInsets.all(8.0),
+                                                                    child: Text(
+                                                                      item,
+                                                                      style:
+                                                                          SafeGoogleFont(
+                                                                        'Nunito',
+                                                                        fontSize:
+                                                                            20 *
+                                                                                ffem,
+                                                                      ),
                                                                     ),
                                                                   ),
                                                                 )).toList(),
@@ -1496,34 +1504,24 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               "Select State") {
                                                             return 'Please Select the State';
                                                           }
+                                                          return null;
                                                         },
                                                         onChanged:
                                                             (String? value) {
-                                                          getCity(
-                                                              value.toString());
-                                                          setState(() {
-                                                            statecon.text =
-                                                                value!;
+                                                          getCity(value.toString());
+                                                          setState(() {statecon.text = value!;
                                                           });
                                                         },
                                                         buttonStyleData:
-                                                            ButtonStyleData(
-                                                              
+                                                            const ButtonStyleData(
 
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  horizontal:
-                                                                      width /
-                                                                          22.5),
-                                                          height: height / 18.9,
-                                                          width: width / 2.571,
                                                         ),
                                                         menuItemStyleData:
-                                                            MenuItemStyleData(
-                                                          height: height / 18.9,
+                                                            const MenuItemStyleData(
+
                                                         ),
                                                         decoration:
-                                                            InputDecoration(
+                                                            const InputDecoration(
                                                                 border:
                                                                     InputBorder
                                                                         .none),
@@ -1539,7 +1537,7 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                             ///city
                                             SizedBox(
-                                               height: height/11.369,
+                                               height: height/9.369,
                                               child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -1553,12 +1551,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           FontWeight.w700,
                                                       height:
                                                           1.3625 * ffem / fem,
-                                                      color: Color(0xff000000),
+                                                      color: const Color(0xff000000),
                                                     ),
                                                   ),
                                                   SizedBox(height: height/123.1666),
                                                   Container(
-                                                    height: height/21.114,
+                                                    height: height/15.114,
                                                     width: width/6.4,
                                                     decoration: BoxDecoration(
                                                         color: const Color(
@@ -1571,7 +1569,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       child:
                                                           DropdownButtonFormField2<
                                                               String>(
-                                                        isExpanded: true,
+                                                            isExpanded:true,
                                                         hint: Text(
                                                           'Select City',
                                                           style: SafeGoogleFont(
@@ -1603,6 +1601,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               "Select City") {
                                                             return 'Please Select the City';
                                                           }
+                                                          return null;
                                                         },
                                                         onChanged:
                                                             (String? value) {
@@ -1612,21 +1611,15 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           });
                                                         },
                                                         buttonStyleData:
-                                                            ButtonStyleData(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  horizontal:
-                                                                      width /
-                                                                          22.5),
-                                                          height: height / 18.9,
-                                                          width: width / 2.571,
+                                                            const ButtonStyleData(
+
                                                         ),
                                                         menuItemStyleData:
-                                                            MenuItemStyleData(
-                                                          height: height / 18.9,
+                                                            const MenuItemStyleData(
+
                                                         ),
                                                         decoration:
-                                                            InputDecoration(
+                                                            const InputDecoration(
                                                                 border:
                                                                     InputBorder
                                                                         .none),
@@ -1640,7 +1633,7 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                             ///Pin Code
                                             SizedBox(
-                                               height: height/11.369,
+                                               height: height/9.369,
                                               child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -1654,12 +1647,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           FontWeight.w700,
                                                       height:
                                                           1.3625 * ffem / fem,
-                                                      color: Color(0xff000000),
+                                                      color: const Color(0xff000000),
                                                     ),
                                                   ),
                                                   SizedBox(height: height/123.1666),
                                                   Container(
-                                                      height: height/21.114,
+                                                      height: height/15.114,
                                                       width: width/6.4,
                                                       decoration: BoxDecoration(
                                                           color: const Color(
@@ -1676,7 +1669,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   "[0-9]")),
                                                         ],
                                                         decoration:
-                                                            InputDecoration(
+                                                            const InputDecoration(
                                                           border:
                                                               InputBorder.none,
                                                           contentPadding:
@@ -1696,6 +1689,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               return 'Pin code Minimum 6 Characters';
                                                             }
                                                           }
+                                                          return null;
                                                         },
                                                       ))
                                                 ],
@@ -1705,7 +1699,7 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                             ///Country Dropdown
                                             SizedBox(
-                                               height: height/11.369,
+                                               height: height/9.369,
                                               child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -1719,12 +1713,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           FontWeight.w700,
                                                       height:
                                                           1.3625 * ffem / fem,
-                                                      color: Color(0xff000000),
+                                                      color: const Color(0xff000000),
                                                     ),
                                                   ),
                                                   SizedBox(height: height/123.1666),
                                                   Container(
-                                                    height: height/21.114,
+                                                    height: height/15.114,
                                                     width: width/6.4,
                                                     decoration: BoxDecoration(
                                                         color: const Color(
@@ -1735,9 +1729,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     child:
                                                         DropdownButtonHideUnderline(
                                                       child:
-                                                          DropdownButtonFormField2<
-                                                              String>(
-                                                        isExpanded: true,
+                                                          DropdownButtonFormField2<String>(
+                                                            isExpanded:true,
                                                         hint: Text(
                                                           'Select Country',
                                                           style: SafeGoogleFont(
@@ -1769,6 +1762,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               "Select Country") {
                                                             return 'Please Select the Country';
                                                           }
+                                                          return null;
                                                         },
                                                         onChanged:
                                                             (String? value) {
@@ -1778,21 +1772,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           });
                                                         },
                                                         buttonStyleData:
-                                                            ButtonStyleData(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  horizontal:
-                                                                      width /
-                                                                          22.5),
-                                                          height: height / 18.9,
-                                                          width: width / 2.571,
+                                                            const ButtonStyleData(
                                                         ),
                                                         menuItemStyleData:
-                                                            MenuItemStyleData(
-                                                          height: height / 18.9,
+                                                            const MenuItemStyleData(
+
                                                         ),
                                                         decoration:
-                                                            InputDecoration(
+                                                            const InputDecoration(
                                                                 border:
                                                                     InputBorder
                                                                         .none),
@@ -1818,13 +1805,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               fontSize: 25 * ffem,
                                               fontWeight: FontWeight.w700,
                                               height: 1.3625 * ffem / fem,
-                                              color: Color(0xff000000),
+                                              color: const Color(0xff000000),
                                             ),
                                           ),
                                         ],
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.only(
+                                        padding: const EdgeInsets.only(
                                             left: 4,
                                             right: 4,
                                             top: 4,
@@ -1840,7 +1827,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                       Row(
                                         children: [
                                           SizedBox(
-                                            height: height/3.695,
+                                            height: height/2.8,
                                             width: width/2.19428,
                                             child: Column(
                                               mainAxisAlignment:
@@ -1853,7 +1840,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           .spaceBetween,
                                                   children: [
                                                     SizedBox(
-                                                       height: height/11.369,
+                                                       height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -1873,13 +1860,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               height: 1.3625 *
                                                                   ffem /
                                                                   fem,
-                                                              color: Color(
+                                                              color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
                                                           SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: height/21.114,
+                                                              height: height/15.114,
                                                               width: width/4.6545,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
@@ -1898,7 +1885,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                           "[0-9]")),
                                                                 ],
                                                                 decoration:
-                                                                    InputDecoration(
+                                                                    const InputDecoration(
                                                                   border:
                                                                       InputBorder
                                                                           .none,
@@ -1920,7 +1907,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                       height: height/11.369,
+                                                       height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -1940,13 +1927,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               height: 1.3625 *
                                                                   ffem /
                                                                   fem,
-                                                              color: Color(
+                                                              color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
                                                           SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: height/21.114,
+                                                              height: height/15.114,
                                                               width: width/4.6545,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
@@ -1965,7 +1952,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                           "[a-zA-Z]")),
                                                                 ],
                                                                 decoration:
-                                                                    InputDecoration(
+                                                                    const InputDecoration(
                                                                   border:
                                                                       InputBorder
                                                                           .none,
@@ -1994,7 +1981,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           .spaceBetween,
                                                   children: [
                                                     SizedBox(
-                                                       height: height/11.369,
+                                                       height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -2013,13 +2000,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               height: 1.3625 *
                                                                   ffem /
                                                                   fem,
-                                                              color: Color(
+                                                              color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
                                                           SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: height/21.114,
+                                                              height: height/15.114,
                                                               width: width/4.6545,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
@@ -2038,7 +2025,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                           "[a-zA-Z]")),
                                                                 ],
                                                                 decoration:
-                                                                    InputDecoration(
+                                                                    const InputDecoration(
                                                                   border:
                                                                       InputBorder
                                                                           .none,
@@ -2060,7 +2047,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                       height: height/11.369,
+                                                       height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -2079,13 +2066,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               height: 1.3625 *
                                                                   ffem /
                                                                   fem,
-                                                              color: Color(
+                                                              color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
                                                           SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: height/21.114,
+                                                              height: height/15.114,
                                                               width: width/4.6545,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
@@ -2104,7 +2091,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                           "[a-zA-Z0-9]")),
                                                                 ],
                                                                 decoration:
-                                                                    InputDecoration(
+                                                                    const InputDecoration(
                                                                   border:
                                                                       InputBorder
                                                                           .none,
@@ -2132,7 +2119,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           .spaceBetween,
                                                   children: [
                                                     SizedBox(
-                                                       height: height/11.369,
+                                                       height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -2151,13 +2138,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               height: 1.3625 *
                                                                   ffem /
                                                                   fem,
-                                                              color: Color(
+                                                              color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
                                                           SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: height/21.114,
+                                                              height: height/15.114,
                                                               width: width/4.6545,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
@@ -2176,7 +2163,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                           "[a-zA-Z0-9]")),
                                                                 ],
                                                                 decoration:
-                                                                    InputDecoration(
+                                                                    const InputDecoration(
                                                                   border:
                                                                       InputBorder
                                                                           .none,
@@ -2195,7 +2182,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                       height: height/11.369,
+                                                       height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -2215,13 +2202,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               height: 1.3625 *
                                                                   ffem /
                                                                   fem,
-                                                              color: Color(
+                                                              color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
                                                           SizedBox(height: height/123.1666),
                                                           Container(
-                                                              height: height/21.114,
+                                                              height: height/15.114,
                                                               width: width/4.6545,
                                                               decoration: BoxDecoration(
                                                                   color: const Color(
@@ -2240,7 +2227,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                           "[a-zA-Z0-9]")),
                                                                 ],
                                                                 decoration:
-                                                                    InputDecoration(
+                                                                    const InputDecoration(
                                                                   border:
                                                                       InputBorder
                                                                           .none,
@@ -2264,9 +2251,9 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             ),
                                           ),
                                           Padding(
-                                            padding: EdgeInsets.only(left: 25),
+                                            padding: const EdgeInsets.only(left: 25),
                                             child: SizedBox(
-                                              height: height/3.695,
+                                              height: height/2.8,
                                               width: width/4.1513,
                                               child: Column(
                                                 crossAxisAlignment:
@@ -2281,12 +2268,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           FontWeight.w700,
                                                       height:
                                                           1.3625 * ffem / fem,
-                                                      color: Color(0xff000000),
+                                                      color: const Color(0xff000000),
                                                     ),
                                                   ),
                                                   SizedBox(height: height/123.1666),
                                                   Container(
-                                                      height: height/4.34705,
+                                                      height: height/3.15,
                                                       width: width/4.45217,
                                                       decoration: BoxDecoration(
                                                           color: const Color(
@@ -2305,7 +2292,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   "[a-zA-Z]")),
                                                         ],
                                                         decoration:
-                                                            InputDecoration(
+                                                            const InputDecoration(
                                                           border:
                                                               InputBorder.none,
                                                           contentPadding:
@@ -2338,13 +2325,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               fontSize: 25 * ffem,
                                               fontWeight: FontWeight.w700,
                                               height: 1.3625 * ffem / fem,
-                                              color: Color(0xff000000),
+                                              color: const Color(0xff000000),
                                             ),
                                           ),
                                         ],
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.only(
+                                        padding: const EdgeInsets.only(
                                             left: 4,
                                             right: 4,
                                             top: 4,
@@ -2373,7 +2360,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   fontSize: 20 * ffem,
                                                   fontWeight: FontWeight.w700,
                                                   height: 1.3625 * ffem / fem,
-                                                  color: Color(0xff000000),
+                                                  color: const Color(0xff000000),
                                                 ),
                                               ),
                                               SizedBox(height: height/123.1666),
@@ -2394,7 +2381,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           .allow(RegExp(
                                                               "[a-zA-Z]")),
                                                     ],
-                                                    decoration: InputDecoration(
+                                                    decoration: const InputDecoration(
                                                       border: InputBorder.none,
                                                       contentPadding:
                                                           EdgeInsets.only(
@@ -2418,7 +2405,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   fontSize: 20 * ffem,
                                                   fontWeight: FontWeight.w700,
                                                   height: 1.3625 * ffem / fem,
-                                                  color: Color(0xff000000),
+                                                  color: const Color(0xff000000),
                                                 ),
                                               ),
                                               SizedBox(height: height/123.1666),
@@ -2439,7 +2426,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           .allow(RegExp(
                                                               "[a-zA-Z]")),
                                                     ],
-                                                    decoration: InputDecoration(
+                                                    decoration: const InputDecoration(
                                                       border: InputBorder.none,
                                                       contentPadding:
                                                           EdgeInsets.only(
@@ -2464,13 +2451,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               fontSize: 25 * ffem,
                                               fontWeight: FontWeight.w700,
                                               height: 1.3625 * ffem / fem,
-                                              color: Color(0xff000000),
+                                              color: const Color(0xff000000),
                                             ),
                                           ),
                                         ],
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.only(
+                                        padding: const EdgeInsets.only(
                                             left: 4,
                                             right: 4,
                                             top: 4,
@@ -2486,7 +2473,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                       Row(
                                         children: [
                                           SizedBox(
-                                            height: height/11.369,
+                                            height: height/9.369,
                                             child: Column(
                                               crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -2501,12 +2488,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     height:
                                                     1.3625 * ffem / fem,
                                                     color:
-                                                    Color(0xff000000),
+                                                    const Color(0xff000000),
                                                   ),
                                                 ),
                                                 SizedBox(height: height/123.1666),
                                                 Container(
-                                                  height: height/21.114,
+                                                  height: height/15.114,
                                                   width: width/6.6782,
                                                   decoration: BoxDecoration(
                                                       color: const Color(
@@ -2519,7 +2506,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     child:
                                                     DropdownButtonFormField2<
                                                         String>(
-                                                      isExpanded: true,
+                                                      isExpanded:true,
                                                       hint: Text(
                                                         'Working',
                                                         style:
@@ -2558,24 +2545,15 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         });
                                                       },
                                                       buttonStyleData:
-                                                      ButtonStyleData(
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                            horizontal:
-                                                            width /
-                                                                22.5),
-                                                        height:
-                                                        height / 18.9,
-                                                        width:
-                                                        width / 2.571,
+                                                      const ButtonStyleData(
+                                                     
                                                       ),
                                                       menuItemStyleData:
-                                                      MenuItemStyleData(
-                                                        height:
-                                                        height / 18.9,
+                                                      const MenuItemStyleData(
+                                                      
                                                       ),
                                                       decoration:
-                                                      InputDecoration(
+                                                      const InputDecoration(
                                                           border:
                                                           InputBorder
                                                               .none),
@@ -2585,6 +2563,60 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               ],
                                             ),
                                           ),
+                                        /*  ///ownBussinesscon
+                                          Padding(
+                                              padding:EdgeInsets.only(left:width/68.0666),
+                                              child:
+                                              SizedBox(
+                                                height: height/9.369,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                                  children: [
+                                                    KText(
+                                                      text: 'Own Business',
+                                                      style: SafeGoogleFont(
+                                                        'Nunito',
+                                                        fontSize: 20 * ffem,
+                                                        fontWeight: FontWeight.w700,
+                                                        height: 1.3625 * ffem / fem,
+                                                        color: const Color(0xff000000),
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: height/123.1666),
+                                                    Container(
+                                                        height: height/15.114,
+                                                        width: width/4.6545,
+                                                        decoration: BoxDecoration(
+                                                            color: const Color(
+                                                                0xffDDDEEE),
+                                                            borderRadius:
+                                                            BorderRadius
+                                                                .circular(3)),
+                                                        child: TextFormField(
+                                                          controller: ownBussinesscon,
+                                                          inputFormatters: [
+                                                            FilteringTextInputFormatter
+                                                                .allow(RegExp(
+                                                                "[a-zA-Z]")),
+                                                          ],
+                                                          decoration:
+                                                          const InputDecoration(
+                                                            border:
+                                                            InputBorder.none,
+                                                            contentPadding:
+                                                            EdgeInsets.only(
+                                                                bottom: 10,
+                                                                top: 2,
+                                                                left: 10),
+                                                          ),
+                                                          // validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                                        ))
+                                                  ],
+                                                ),
+                                              )),*/
+                                          
+                                        
 
                                         ],
                                       ),
@@ -2592,7 +2624,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                       Row(
                                         children: [
                                           SizedBox(
-                                             height: height/11.369,
+                                             height: height/9.369,
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -2604,12 +2636,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     fontSize: 20 * ffem,
                                                     fontWeight: FontWeight.w700,
                                                     height: 1.3625 * ffem / fem,
-                                                    color: Color(0xff000000),
+                                                    color: const Color(0xff000000),
                                                   ),
                                                 ),
                                                 SizedBox(height: height/123.1666),
                                                 Container(
-                                                    height: height/21.114,
+                                                    height: height/15.114,
                                                     width: width/4.6545,
                                                     decoration: BoxDecoration(
                                                         color: const Color(
@@ -2625,7 +2657,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 "[a-zA-Z]")),
                                                       ],
                                                       decoration:
-                                                          InputDecoration(
+                                                          const InputDecoration(
                                                         border:
                                                             InputBorder.none,
                                                         contentPadding:
@@ -2641,7 +2673,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                           ),
                                           SizedBox(width: width/38.4),
                                           SizedBox(
-                                             height: height/11.369,
+                                             height: height/9.369,
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -2653,12 +2685,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     fontSize: 20 * ffem,
                                                     fontWeight: FontWeight.w700,
                                                     height: 1.3625 * ffem / fem,
-                                                    color: Color(0xff000000),
+                                                    color: const Color(0xff000000),
                                                   ),
                                                 ),
                                                 SizedBox(height: height/123.1666),
                                                 Container(
-                                                    height: height/21.114,
+                                                    height: height/15.114,
                                                     width: width/4.6545,
                                                     decoration: BoxDecoration(
                                                         color: const Color(
@@ -2675,7 +2707,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 "[a-zA-Z]")),
                                                       ],
                                                       decoration:
-                                                          InputDecoration(
+                                                          const InputDecoration(
                                                         border:
                                                             InputBorder.none,
                                                         contentPadding:
@@ -2691,7 +2723,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                           ),
                                           SizedBox(width: width/38.4),
                                           SizedBox(
-                                             height: height/11.369,
+                                             height: height/9.369,
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -2704,12 +2736,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     fontSize: 20 * ffem,
                                                     fontWeight: FontWeight.w700,
                                                     height: 1.3625 * ffem / fem,
-                                                    color: Color(0xff000000),
+                                                    color: const Color(0xff000000),
                                                   ),
                                                 ),
                                                 SizedBox(height: height/123.1666),
                                                 Container(
-                                                    height: height/21.114,
+                                                    height: height/15.114,
                                                     width: width/4.6545,
                                                     decoration: BoxDecoration(
                                                         color: const Color(
@@ -2726,7 +2758,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 "[a-zA-Z]")),
                                                       ],
                                                       decoration:
-                                                          InputDecoration(
+                                                          const InputDecoration(
                                                         border:
                                                             InputBorder.none,
                                                         contentPadding:
@@ -2755,13 +2787,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               fontSize: 25 * ffem,
                                               fontWeight: FontWeight.w700,
                                               height: 1.3625 * ffem / fem,
-                                              color: Color(0xff000000),
+                                              color: const Color(0xff000000),
                                             ),
                                           ),
                                         ],
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.only(
+                                        padding: const EdgeInsets.only(
                                             left: 4,
                                             right: 4,
                                             top: 4,
@@ -2776,7 +2808,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                       Row(
                                         children: [
                                           SizedBox(
-                                             height: height/11.369,
+                                             height: height/9.369,
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -2788,12 +2820,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     fontSize: 20 * ffem,
                                                     fontWeight: FontWeight.w700,
                                                     height: 1.3625 * ffem / fem,
-                                                    color: Color(0xff000000),
+                                                    color: const Color(0xff000000),
                                                   ),
                                                 ),
                                                 SizedBox(height: height/123.1666),
                                                 Container(
-                                                  height: height/21.114,
+                                                  height: height/15.114,
                                                   width: width/6.6782,
                                                   decoration: BoxDecoration(
                                                       color: const Color(
@@ -2804,9 +2836,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   child:
                                                       DropdownButtonHideUnderline(
                                                     child:
-                                                        DropdownButtonFormField2<
-                                                            String>(
-                                                      isExpanded: true,
+                                                        DropdownButtonFormField2<String>(
+                                                          isExpanded:true,
                                                       hint: Text(
                                                         'Marital Status',
                                                         style: SafeGoogleFont(
@@ -2840,21 +2871,15 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         });
                                                       },
                                                       buttonStyleData:
-                                                          ButtonStyleData(
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal:
-                                                                    width /
-                                                                        22.5),
-                                                        height: height / 18.9,
-                                                        width: width / 2.571,
+                                                          const ButtonStyleData(
+                                                       
+                                                      
                                                       ),
                                                       menuItemStyleData:
-                                                          MenuItemStyleData(
-                                                        height: height / 18.9,
+                                                          const MenuItemStyleData(
                                                       ),
                                                       decoration:
-                                                          InputDecoration(
+                                                          const InputDecoration(
                                                               border:
                                                                   InputBorder
                                                                       .none),
@@ -2869,7 +2894,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               ? SizedBox(
                                                   child: Row(children: [
                                                   SizedBox(
-                                                     height: height/11.369,
+                                                     height: height/9.369,
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -2885,13 +2910,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             height: 1.3625 *
                                                                 ffem /
                                                                 fem,
-                                                            color: Color(
+                                                            color: const Color(
                                                                 0xff000000),
                                                           ),
                                                         ),
                                                         SizedBox(height: height/123.1666),
                                                         Container(
-                                                            height: height/21.114,
+                                                            height: height/15.114,
                                                             width: width/6.4,
                                                             decoration: BoxDecoration(
                                                                 color: const Color(
@@ -2910,7 +2935,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         "[a-zA-Z]")),
                                                               ],
                                                               decoration:
-                                                                  InputDecoration(
+                                                                  const InputDecoration(
                                                                 border:
                                                                     InputBorder
                                                                         .none,
@@ -2929,7 +2954,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   ),
                                                   SizedBox(width: width/38.4),
                                                   SizedBox(
-                                                     height: height/11.369,
+                                                     height: height/9.369,
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -2946,13 +2971,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             height: 1.3625 *
                                                                 ffem /
                                                                 fem,
-                                                            color: Color(
+                                                            color: const Color(
                                                                 0xff000000),
                                                           ),
                                                         ),
                                                         SizedBox(height: height/123.1666),
                                                         Container(
-                                                            height: height/21.114,
+                                                            height: height/15.114,
                                                             width: width/6.4,
                                                             decoration: BoxDecoration(
                                                                 color: const Color(
@@ -2967,7 +2992,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               controller:
                                                                   anniversaryDatecon,
                                                               decoration:
-                                                                  InputDecoration(
+                                                                  const InputDecoration(
                                                                 border:
                                                                     InputBorder
                                                                         .none,
@@ -3019,7 +3044,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   ),
                                                   SizedBox(width: width/38.4),
                                                   SizedBox(
-                                                     height: height/11.369,
+                                                     height: height/9.369,
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -3036,13 +3061,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             height: 1.3625 *
                                                                 ffem /
                                                                 fem,
-                                                            color: Color(
+                                                            color: const Color(
                                                                 0xff000000),
                                                           ),
                                                         ),
                                                         SizedBox(height: height/123.1666),
                                                         Container(
-                                                            height: height/21.114,
+                                                            height: height/15.114,
                                                             width: width/6.4,
                                                             decoration: BoxDecoration(
                                                                 color: const Color(
@@ -3062,7 +3087,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         "[0-9]")),
                                                               ],
                                                               decoration:
-                                                                  InputDecoration(
+                                                                  const InputDecoration(
                                                                 border:
                                                                     InputBorder
                                                                         .none,
@@ -3080,7 +3105,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     ),
                                                   ),
                                                 ]))
-                                              : SizedBox(),
+                                              : const SizedBox(),
                                         ],
                                       ),
                                       SizedBox(height: height/24.633),
@@ -3098,15 +3123,15 @@ class _Users_ScreenState extends State<Users_Screen> {
                                           ///Update button
                                           GestureDetector(
                                             onTap: () {
-                                              if (_formkey.currentState!.validate()) {
+
                                                 userDataUpdatefuntio();
-                                              }
+
                                             },
                                             child: Container(
                                                 height: height/18.475,
                                                 width: width/12.8,
                                                 decoration: BoxDecoration(
-                                                  color: Color(0xffD60A0B),
+                                                  color: const Color(0xffD60A0B),
                                                   borderRadius:
                                                       BorderRadius.circular(4),
                                                 ),
@@ -3120,7 +3145,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           FontWeight.w400,
                                                       height:
                                                           1.3625 * ffem / fem,
-                                                      color: Color(0xffFFFFFF),
+                                                      color: const Color(0xffFFFFFF),
                                                     ),
                                                   ),
                                                 )),
@@ -3138,7 +3163,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 height: height/18.475,
                                                 width: width/12.8,
                                                 decoration: BoxDecoration(
-                                                  color: Color(0xff00A0E3),
+                                                  color: const Color(0xff00A0E3),
                                                   borderRadius:
                                                       BorderRadius.circular(4),
                                                 ),
@@ -3152,7 +3177,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           FontWeight.w400,
                                                       height:
                                                           1.3625 * ffem / fem,
-                                                      color: Color(0xffFFFFFF),
+                                                      color: const Color(0xffFFFFFF),
                                                     ),
                                                   ),
                                                 )),
@@ -3188,7 +3213,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           FontWeight.w400,
                                                       height:
                                                           1.3625 * ffem / fem,
-                                                      color: Color(0xffFFFFFF),
+                                                      color: const Color(0xffFFFFFF),
                                                     ),
                                                   ),
                                                 )),
@@ -3201,7 +3226,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                 ],
                               ),
                             ),
-                          ),
+                      
                         ),
                       ),
                     ],
@@ -3249,7 +3274,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     fontSize: 24 * ffem,
                                                     fontWeight: FontWeight.w700,
                                                     height: 1.3625 * ffem / fem,
-                                                    color: Color(0xff030229),
+                                                    color: const Color(0xff030229),
                                                   ),
                                                 ),
                                               ],
@@ -3273,7 +3298,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                     .circular(
                                                                         100),
                                                             color:
-                                                                Color(0xffDDDEEE),
+                                                                const Color(0xffDDDEEE),
                                                             image: Uploaddocument !=
                                                                     null
                                                                 ? DecorationImage(
@@ -3320,7 +3345,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               height: 1.3625 *
                                                                   ffem /
                                                                   fem,
-                                                              color: Color(
+                                                              color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
@@ -3335,10 +3360,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   height: height/24.633,
                                                                   width: width/19.2,
                                                                   decoration: BoxDecoration(
-                                                                      color: Color(
+                                                                      color: const Color(
                                                                           0xffDDDEEE),
                                                                       border: Border.all(
-                                                                          color: Color(
+                                                                          color: const Color(
                                                                               0xff000000))),
                                                                   child: Center(
                                                                     child: KText(
@@ -3356,7 +3381,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         height: 1.3625 *
                                                                             ffem /
                                                                             fem,
-                                                                        color: Color(
+                                                                        color: const Color(
                                                                             0xff000000),
                                                                       ),
                                                                     ),
@@ -3380,7 +3405,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   height: 1.3625 *
                                                                       ffem /
                                                                       fem,
-                                                                  color: Color(
+                                                                  color: const Color(
                                                                       0xff000000),
                                                                 ),
                                                               ),
@@ -3393,7 +3418,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 ),
                                                 SizedBox(
                                                   width: width/2.2588,
-                                                  height: height/3.3590,
+                                                  height: height/2.8,
                                                   child: Column(
                                                     children: [
                                                       ///first name and last name
@@ -3403,7 +3428,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 .spaceAround,
                                                         children: [
                                                           SizedBox(
-                                                             height: height/11.369,
+                                                             height: height/9.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -3424,14 +3449,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         1.3625 *
                                                                             ffem /
                                                                             fem,
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff000000),
                                                                   ),
                                                                 ),
                                                                 SizedBox(
                                                                     height: height/123.1666),
                                                                 Container(
-                                                                    height: height/21.114,
+                                                                    height: height/15.114,
                                                                     width: width/8.0842,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
@@ -3441,17 +3466,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                                 3)),
                                                                     child:
                                                                         TextFormField(
-                                                                      controller:
-                                                                          firstNamecon,
+                                                                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                                                                      controller:firstNamecon,
                                                                       inputFormatters: [
-                                                                        FilteringTextInputFormatter
-                                                                            .allow(
+                                                                        FilteringTextInputFormatter.allow(
                                                                                 RegExp("[a-zA-Z ]")),
                                                                       ],
-                                                                      maxLength:
-                                                                          45,
-                                                                      decoration:
-                                                                          InputDecoration(
+                                                                      maxLength: 45,
+                                                                      decoration: const InputDecoration(
                                                                         border: InputBorder
                                                                             .none,
                                                                         contentPadding: EdgeInsets.only(
@@ -3464,19 +3486,18 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         counterText:
                                                                             "",
                                                                       ),
-                                                                      validator:
-                                                                          (value) {
-                                                                        if (value!
-                                                                            .isEmpty) {
+                                                                      validator: (value) {
+                                                                        if (value!.isEmpty) {
                                                                           return 'Field is required';
                                                                         }
+                                                                        return null;
                                                                       },
-                                                                    ))
+                                                                    )),
                                                               ],
                                                             ),
                                                           ),
                                                           SizedBox(
-                                                             height: height/11.369,
+                                                             height: height/9.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -3497,14 +3518,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         1.3625 *
                                                                             ffem /
                                                                             fem,
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff000000),
                                                                   ),
                                                                 ),
                                                                 SizedBox(
                                                                     height: height/123.1666),
                                                                 Container(
-                                                                    height: height/21.114,
+                                                                    height: height/15.114,
                                                                     width: width/8.0842,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
@@ -3514,6 +3535,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                                 3)),
                                                                     child:
                                                                         TextFormField(
+
                                                                       controller:
                                                                           middleNamecon,
                                                                       inputFormatters: [
@@ -3522,7 +3544,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                                 RegExp("[a-zA-Z ]")),
                                                                       ],
                                                                       decoration:
-                                                                          InputDecoration(
+                                                                          const InputDecoration(
                                                                         border: InputBorder
                                                                             .none,
                                                                         contentPadding: EdgeInsets.only(
@@ -3538,7 +3560,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             ),
                                                           ),
                                                           SizedBox(
-                                                             height: height/11.369,
+                                                             height: height/9.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -3559,14 +3581,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         1.3625 *
                                                                             ffem /
                                                                             fem,
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff000000),
                                                                   ),
                                                                 ),
                                                                 SizedBox(
                                                                     height: height/123.1666),
                                                                 Container(
-                                                                    height: height/21.114,
+                                                                    height: height/15.114,
                                                                     width: width/8.0842,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
@@ -3576,6 +3598,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                                 3)),
                                                                     child:
                                                                         TextFormField(
+                                                                            autovalidateMode: AutovalidateMode.onUserInteraction,
                                                                       controller:
                                                                           lastNamecon,
                                                                       inputFormatters: [
@@ -3586,7 +3609,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                       maxLength:
                                                                           45,
                                                                       decoration:
-                                                                          InputDecoration(
+                                                                          const InputDecoration(
                                                                         border: InputBorder
                                                                             .none,
                                                                         counterText:
@@ -3621,7 +3644,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         children: [
                                                           ///d date of birth
                                                           SizedBox(
-                                                             height: height/11.369,
+                                                             height: height/9.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -3642,14 +3665,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         1.3625 *
                                                                             ffem /
                                                                             fem,
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff000000),
                                                                   ),
                                                                 ),
                                                                 SizedBox(
                                                                     height: height/123.1666),
                                                                 Container(
-                                                                  height: height/21.114,
+                                                                  height: height/15.114,
                                                                   width: width/5.12,
                                                                   decoration: BoxDecoration(
                                                                       color: const Color(
@@ -3659,10 +3682,11 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                               3)),
                                                                   child:
                                                                       TextFormField(
+                                                                          autovalidateMode: AutovalidateMode.onUserInteraction,
                                                                     controller:
                                                                         dateofBirthcon,
                                                                     decoration:
-                                                                        InputDecoration(
+                                                                        const InputDecoration(
                                                                       border:
                                                                           InputBorder
                                                                               .none,
@@ -3710,7 +3734,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           ),
 
                                                           SizedBox(
-                                                             height: height/11.369,
+                                                             height: height/9.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -3730,14 +3754,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         1.3625 *
                                                                             ffem /
                                                                             fem,
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff000000),
                                                                   ),
                                                                 ),
                                                                 SizedBox(
                                                                     height: height/123.1666),
                                                                 Container(
-                                                                    height: height/21.114,
+                                                                    height: height/15.114,
                                                                     width: width/5.12,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
@@ -3755,7 +3779,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                                 RegExp("[a-zA-Z]")),
                                                                       ],
                                                                       decoration:
-                                                                          InputDecoration(
+                                                                          const InputDecoration(
                                                                         border: InputBorder
                                                                             .none,
                                                                         contentPadding: EdgeInsets.only(
@@ -3781,7 +3805,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 .spaceAround,
                                                         children: [
                                                           SizedBox(
-                                                             height: height/11.369,
+                                                             height: height/9.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -3802,14 +3826,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         1.3625 *
                                                                             ffem /
                                                                             fem,
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff000000),
                                                                   ),
                                                                 ),
                                                                 SizedBox(
                                                                     height: height/123.1666),
                                                                 Container(
-                                                                    height: height/21.114,
+                                                                    height: height/15.114,
                                                                     width: width/5.12,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
@@ -3827,7 +3851,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                                 RegExp("[a-zA-Z@0-9.]")),
                                                                       ],
                                                                       decoration:
-                                                                          InputDecoration(
+                                                                          const InputDecoration(
                                                                         border: InputBorder
                                                                             .none,
                                                                         contentPadding: EdgeInsets.only(
@@ -3843,7 +3867,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             ),
                                                           ),
                                                           SizedBox(
-                                                             height: height/11.369,
+                                                             height: height/9.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -3864,14 +3888,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         1.3625 *
                                                                             ffem /
                                                                             fem,
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff000000),
                                                                   ),
                                                                 ),
                                                                 SizedBox(
                                                                     height: height/123.1666),
                                                                 Container(
-                                                                    height: height/21.114,
+                                                                    height: height/15.114,
                                                                     width: width/5.12,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
@@ -3922,7 +3946,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         }),
                                                                       ],
                                                                       decoration:
-                                                                          InputDecoration(
+                                                                          const InputDecoration(
                                                                         border: InputBorder
                                                                             .none,
                                                                         counterText:
@@ -3958,13 +3982,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     fontSize: 25 * ffem,
                                                     fontWeight: FontWeight.w700,
                                                     height: 1.3625 * ffem / fem,
-                                                    color: Color(0xff000000),
+                                                    color: const Color(0xff000000),
                                                   ),
                                                 ),
                                               ],
                                             ),
                                             Padding(
-                                              padding: EdgeInsets.only(
+                                              padding: const EdgeInsets.only(
                                                   left: 4,
                                                   right: 4,
                                                   top: 4,
@@ -3980,10 +4004,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               children: [
                                                 SizedBox(
                                                     width: width/2.4,
-                                                    height: height/3.3590,
+                                                    height: height/2.8,
                                                     child: Padding(
                                                       padding:
-                                                          EdgeInsets.all(6.0),
+                                                          const EdgeInsets.all(6.0),
                                                       child: Column(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -3994,7 +4018,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         children: [
                                                           ///phone number
                                                           SizedBox(
-                                                             height: height/11.369,
+                                                             height: height/9.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -4015,14 +4039,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         1.3625 *
                                                                             ffem /
                                                                             fem,
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff000000),
                                                                   ),
                                                                 ),
                                                                 SizedBox(
                                                                     height: height/123.1666),
                                                                 Container(
-                                                                    height: height/21.114,
+                                                                    height: height/15.114,
                                                                     width: width/3.84,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
@@ -4032,6 +4056,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                                 3)),
                                                                     child:
                                                                         TextFormField(
+                                                                            autovalidateMode: AutovalidateMode.onUserInteraction,
                                                                       controller:
                                                                           phoneNumbercon,
                                                                       maxLength:
@@ -4041,7 +4066,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                             .allow(
                                                                                 RegExp("[0-9]")),
                                                                       ],
-                                                                      decoration: InputDecoration(
+                                                                      decoration: const InputDecoration(
                                                                           border: InputBorder
                                                                               .none,
                                                                           contentPadding: EdgeInsets.only(
@@ -4062,6 +4087,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                             return 'Enter the Phone no correctly';
                                                                           }
                                                                         }
+                                                                        return null;
                                                                       },
                                                                     ))
                                                               ],
@@ -4070,7 +4096,7 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                                           /// mobile number
                                                           SizedBox(
-                                                             height: height/11.369,
+                                                             height: height/9.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -4091,14 +4117,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         1.3625 *
                                                                             ffem /
                                                                             fem,
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff000000),
                                                                   ),
                                                                 ),
                                                                 SizedBox(
                                                                     height: height/123.1666),
                                                                 Container(
-                                                                    height: height/21.114,
+                                                                    height: height/15.114,
                                                                     width: width/3.84,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
@@ -4108,6 +4134,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                                 3)),
                                                                     child:
                                                                         TextFormField(
+                                                                            autovalidateMode: AutovalidateMode.onUserInteraction,
                                                                       controller:
                                                                           mobileNumbercon,
                                                                           maxLength:
@@ -4118,7 +4145,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                                 RegExp("[0-9]")),
                                                                       ],
                                                                       decoration:
-                                                                          InputDecoration(
+                                                                          const InputDecoration(
                                                                         border: InputBorder
                                                                             .none,
                                                                             counterText: "",
@@ -4130,8 +4157,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                             left:
                                                                                 10),
                                                                       ),
-                                                                      validator:
-                                                                          (value) {
+                                                                      validator: (value) {
                                                                         if (value!
                                                                             .isNotEmpty) {
                                                                           if (value.length !=
@@ -4139,6 +4165,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                             return 'Enter the Mobile no correctly';
                                                                           }
                                                                         }
+                                                                        return null;
                                                                       },
                                                                     ))
                                                               ],
@@ -4147,7 +4174,7 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                                           /// Email iD
                                                           SizedBox(
-                                                             height: height/11.369,
+                                                             height: height/9.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -4168,14 +4195,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         1.3625 *
                                                                             ffem /
                                                                             fem,
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff000000),
                                                                   ),
                                                                 ),
                                                                 SizedBox(
                                                                     height: height/123.1666),
                                                                 Container(
-                                                                    height: height/21.114,
+                                                                    height: height/15.114,
                                                                     width: width/3.84,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
@@ -4193,7 +4220,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                                 RegExp("[a-zA-Z@0-9.]")),
                                                                       ],
                                                                       decoration:
-                                                                          InputDecoration(
+                                                                          const InputDecoration(
                                                                         border: InputBorder
                                                                             .none,
                                                                         contentPadding: EdgeInsets.only(
@@ -4213,7 +4240,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     )),
                                                 SizedBox(
                                                   width: width/3.49090,
-                                                  height: height/3.3590,
+                                                  height: height/2.8,
                                                   child: Padding(
                                                     padding:
                                                         const EdgeInsets.all(2.0),
@@ -4233,12 +4260,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 ffem /
                                                                 fem,
                                                             color:
-                                                                Color(0xff000000),
+                                                                const Color(0xff000000),
                                                           ),
                                                         ),
                                                         SizedBox(height: height/123.1666),
                                                         Container(
-                                                            height: height/4.10555,
+                                                            height: height/3.3,
                                                             width: width/3.57209,
                                                             decoration: BoxDecoration(
                                                                 color: const Color(
@@ -4258,7 +4285,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         "[a-zA-Z0-9]")),
                                                               ],
                                                               decoration:
-                                                                  InputDecoration(
+                                                                  const InputDecoration(
                                                                 border:
                                                                     InputBorder
                                                                         .none,
@@ -4278,12 +4305,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             ),
 
                                             Padding(
-                                              padding: EdgeInsets.only(left: 5),
+                                              padding: const EdgeInsets.only(left: 5),
                                               child: Row(
                                                 children: [
                                                   ///State Dropdown
                                                   SizedBox(
-                                                     height: height/11.369,
+                                                     height: height/9.369,
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -4300,12 +4327,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 ffem /
                                                                 fem,
                                                             color:
-                                                                Color(0xff000000),
+                                                                const Color(0xff000000),
                                                           ),
                                                         ),
                                                         SizedBox(height: height/123.1666),
                                                         Container(
-                                                          height: height/21.114,
+                                                          height: height/15.114,
                                                           width: width/6.4,
                                                           decoration: BoxDecoration(
                                                               color: const Color(
@@ -4314,20 +4341,21 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   BorderRadius
                                                                       .circular(
                                                                           3)),
+                                                          padding:const EdgeInsets.only(left:5),
                                                           child:
                                                               DropdownButtonHideUnderline(
-                                                            child:
-                                                                DropdownButtonFormField2<
-                                                                    String>(
-                                                              isExpanded: true,
-                                                         
-                                                              hint: Text(
-                                                                'Select State',
-                                                                style:
-                                                                    SafeGoogleFont(
-                                                                  'Nunito',
-                                                                  fontSize:
-                                                                      20 * ffem,
+                                                                child: DropdownButtonFormField2<String>(
+                                                                    isExpanded:true,
+                                                                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                                                              hint: Padding(
+                                                                padding: const EdgeInsets.only(left:8.0),
+                                                                child: Text(
+                                                                  'Select State',
+                                                                  style:
+                                                                  SafeGoogleFont('Nunito',
+                                                                    fontSize:
+                                                                       20 * ffem,
+                                                                  ),
                                                                 ),
                                                               ),
                                                               items: StateList
@@ -4335,60 +4363,49 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                           item) =>
                                                                       DropdownMenuItem<
                                                                           String>(
+                                                              
                                                                         value:
                                                                             item,
                                                                         child:
                                                                             Text(
-                                                                          item,
-                                                                          style:
+                                                                              item,
+                                                                              style:
                                                                               SafeGoogleFont(
                                                                             'Nunito',
                                                                             fontSize:
                                                                                 20 * ffem,
-                                                                          ),
-                                                                        ),
+                                                                                                                                                      ),
+                                                                                                                                                    ),
                                                                       )).toList(),
-                                                              value:
-                                                                  statecon.text,
+                                                              value: statecon.text,
                                                               validator: (value) {
                                                                 if (value ==
                                                                     "Select State") {
                                                                   return 'Please Select the State';
                                                                 }
+                                                                return null;
                                                               },
                                                               onChanged: (String?
                                                                   value) {
-                                                                getCity(value
-                                                                    .toString());
+                                                                getCity(value.toString());
                                                                 setState(() {
                                                                   statecon.text =
                                                                       value!;
                                                                 });
                                                               },
                                                               buttonStyleData:
-                                                                  ButtonStyleData(
-                                                                padding: EdgeInsets
-                                                                    .symmetric(
-                                                                        horizontal:
-                                                                            width /
-                                                                                22.5),
-                                                                height:
-                                                                    height / 18.9,
+                                                              ButtonStyleData(height:20,
                                                                 width:
-                                                                    width / 2.571,
+                                                                width / 2.571,
                                                               ),
-                                                              menuItemStyleData:
-                                                                  MenuItemStyleData(
-                                                                height:
-                                                                    height / 18.9,
-                                                              ),
+                                                              menuItemStyleData: const MenuItemStyleData(),
                                                               decoration:
-                                                                  InputDecoration(
+                                                                  const InputDecoration(
                                                                       border:
                                                                           InputBorder
                                                                               .none),
-                                                            ),
-                                                          ),
+                                                                                                                          ),
+                                                                                                                        ),
                                                         )
                                                       ],
                                                     ),
@@ -4397,7 +4414,7 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                                   ///city
                                                   SizedBox(
-                                                     height: height/11.369,
+                                                     height: height/9.369,
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -4414,12 +4431,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 ffem /
                                                                 fem,
                                                             color:
-                                                                Color(0xff000000),
+                                                                const Color(0xff000000),
                                                           ),
                                                         ),
                                                         SizedBox(height: height/123.1666),
                                                         Container(
-                                                          height: height/21.114,
+                                                          height: height/15.114,
                                                           width: width/6.4,
                                                           decoration: BoxDecoration(
                                                               color: const Color(
@@ -4433,8 +4450,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             child:
                                                                 DropdownButtonFormField2<
                                                                     String>(
-                                                              isExpanded: true,
-                                                          
+                                                                  isExpanded:true,
+                                                                  autovalidateMode: AutovalidateMode.onUserInteraction,
                                                               hint: Text(
                                                                 'Select City',
                                                                 style:
@@ -4469,6 +4486,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                     "Select City") {
                                                                   return 'Please Select the City';
                                                                 }
+                                                                return null;
                                                               },
                                                               onChanged: (String?
                                                                   value) {
@@ -4478,24 +4496,16 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 });
                                                               },
                                                               buttonStyleData:
-                                                                  ButtonStyleData(
-                                                                padding: EdgeInsets
-                                                                    .symmetric(
-                                                                        horizontal:
-                                                                            width /
-                                                                                22.5),
-                                                                height:
-                                                                    height / 18.9,
-                                                                width:
-                                                                    width / 2.571,
+                                                                  const ButtonStyleData(
+                                                               
+                                                              
                                                               ),
                                                               menuItemStyleData:
-                                                                  MenuItemStyleData(
-                                                                height:
-                                                                    height / 18.9,
+                                                                  const MenuItemStyleData(
+                                                               
                                                               ),
                                                               decoration:
-                                                                  InputDecoration(
+                                                                  const InputDecoration(
                                                                       border:
                                                                           InputBorder
                                                                               .none),
@@ -4509,7 +4519,7 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                                   ///Pin Code
                                                   SizedBox(
-                                                     height: height/11.369,
+                                                     height: height/9.369,
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -4526,12 +4536,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 ffem /
                                                                 fem,
                                                             color:
-                                                                Color(0xff000000),
+                                                                const Color(0xff000000),
                                                           ),
                                                         ),
                                                         SizedBox(height: height/123.1666),
                                                         Container(
-                                                            height: height/21.114,
+                                                            height: height/15.114,
                                                             width: width/6.4,
                                                             decoration: BoxDecoration(
                                                                 color: const Color(
@@ -4544,13 +4554,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               controller:
                                                                   pinCodecon,
                                                               maxLength: 9,
+                                                              autovalidateMode: AutovalidateMode.onUserInteraction,
                                                               inputFormatters: [
                                                                 FilteringTextInputFormatter
                                                                     .allow(RegExp(
                                                                         "[0-9]")),
                                                               ],
                                                               decoration:
-                                                                  InputDecoration(
+                                                                  const InputDecoration(
                                                                 border:
                                                                     InputBorder
                                                                         .none,
@@ -4574,6 +4585,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                     return 'Pin code Minimum 6 Characters';
                                                                   }
                                                                 }
+                                                                return null;
                                                               },
                                                             ))
                                                       ],
@@ -4583,7 +4595,7 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                                   ///Country Dropdown
                                                   SizedBox(
-                                                     height: height/11.369,
+                                                     height: height/9.369,
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -4600,12 +4612,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 ffem /
                                                                 fem,
                                                             color:
-                                                                Color(0xff000000),
+                                                                const Color(0xff000000),
                                                           ),
                                                         ),
                                                         SizedBox(height: height/123.1666),
                                                         Container(
-                                                          height: height/21.114,
+                                                          height: height/15.114,
                                                           width: width/6.4,
                                                           decoration: BoxDecoration(
                                                               color: const Color(
@@ -4616,10 +4628,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                           3)),
                                                           child:
                                                               DropdownButtonHideUnderline(
+
                                                             child:
                                                                 DropdownButtonFormField2<
                                                                     String>(
-                                                              isExpanded: true,
+                                                                  isExpanded:true,
+                                                                  autovalidateMode: AutovalidateMode.onUserInteraction,
                                                               hint: Text(
                                                                 'Select Country',
                                                                 style:
@@ -4655,6 +4669,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                     "Select Country") {
                                                                   return 'Please Select the Country';
                                                                 }
+                                                                return null;
                                                               },
                                                               onChanged: (String?
                                                                   value) {
@@ -4663,26 +4678,18 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                           .text =
                                                                       value!;
                                                                 });
+
                                                               },
                                                               buttonStyleData:
-                                                                  ButtonStyleData(
-                                                                padding: EdgeInsets
-                                                                    .symmetric(
-                                                                        horizontal:
-                                                                            width /
-                                                                                22.5),
-                                                                height:
-                                                                    height / 18.9,
-                                                                width:
-                                                                    width / 2.571,
+                                                                  const ButtonStyleData(
+                                                               
                                                               ),
                                                               menuItemStyleData:
-                                                                  MenuItemStyleData(
-                                                                height:
-                                                                    height / 18.9,
+                                                                  const MenuItemStyleData(
+                                                              
                                                               ),
                                                               decoration:
-                                                                  InputDecoration(
+                                                                  const InputDecoration(
                                                                       border:
                                                                           InputBorder
                                                                               .none),
@@ -4708,13 +4715,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     fontSize: 25 * ffem,
                                                     fontWeight: FontWeight.w700,
                                                     height: 1.3625 * ffem / fem,
-                                                    color: Color(0xff000000),
+                                                    color: const Color(0xff000000),
                                                   ),
                                                 ),
                                               ],
                                             ),
                                             Padding(
-                                              padding: EdgeInsets.only(
+                                              padding: const EdgeInsets.only(
                                                   left: 4,
                                                   right: 4,
                                                   top: 4,
@@ -4730,7 +4737,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             Row(
                                               children: [
                                                 SizedBox(
-                                                  height: height/3.695,
+                                                  height: height/2.8,
                                                   width: width/2.19428,
                                                   child: Column(
                                                     mainAxisAlignment:
@@ -4744,7 +4751,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 .spaceBetween,
                                                         children: [
                                                           SizedBox(
-                                                             height: height/11.369,
+                                                             height: height/9.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -4765,14 +4772,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         1.3625 *
                                                                             ffem /
                                                                             fem,
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff000000),
                                                                   ),
                                                                 ),
                                                                 SizedBox(
                                                                     height: height/123.1666),
                                                                 Container(
-                                                                    height: height/21.114,
+                                                                    height: height/15.114,
                                                                     width: width/4.6545,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
@@ -4782,6 +4789,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                                 3)),
                                                                     child:
                                                                         TextFormField(
+                                                                            autovalidateMode: AutovalidateMode.onUserInteraction,
                                                                       controller:
                                                                           yearPassedcon,
                                                                       inputFormatters: [
@@ -4790,7 +4798,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                                 RegExp("[0-9]")),
                                                                       ],
                                                                       decoration:
-                                                                          InputDecoration(
+                                                                          const InputDecoration(
                                                                         border: InputBorder
                                                                             .none,
                                                                         contentPadding: EdgeInsets.only(
@@ -4810,7 +4818,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             ),
                                                           ),
                                                           SizedBox(
-                                                             height: height/11.369,
+                                                             height: height/9.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -4831,14 +4839,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         1.3625 *
                                                                             ffem /
                                                                             fem,
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff000000),
                                                                   ),
                                                                 ),
                                                                 SizedBox(
                                                                     height: height/123.1666),
                                                                 Container(
-                                                                    height: height/21.114,
+                                                                    height: height/15.114,
                                                                     width: width/4.6545,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
@@ -4856,7 +4864,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                                 RegExp("[a-zA-Z]")),
                                                                       ],
                                                                       decoration:
-                                                                          InputDecoration(
+                                                                          const InputDecoration(
                                                                         border: InputBorder
                                                                             .none,
                                                                         contentPadding: EdgeInsets.only(
@@ -4883,7 +4891,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 .spaceBetween,
                                                         children: [
                                                           SizedBox(
-                                                             height: height/11.369,
+                                                             height: height/9.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -4903,14 +4911,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         1.3625 *
                                                                             ffem /
                                                                             fem,
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff000000),
                                                                   ),
                                                                 ),
                                                                 SizedBox(
                                                                     height: height/123.1666),
                                                                 Container(
-                                                                    height: height/21.114,
+                                                                    height: height/15.114,
                                                                     width: width/4.6545,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
@@ -4920,6 +4928,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                                 3)),
                                                                     child:
                                                                         TextFormField(
+                                                                            autovalidateMode: AutovalidateMode.onUserInteraction,
                                                                       controller:
                                                                           classcon,
                                                                       inputFormatters: [
@@ -4928,7 +4937,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                                 RegExp("[a-zA-Z]")),
                                                                       ],
                                                                       decoration:
-                                                                          InputDecoration(
+                                                                          const InputDecoration(
                                                                         border: InputBorder
                                                                             .none,
                                                                         contentPadding: EdgeInsets.only(
@@ -4948,7 +4957,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             ),
                                                           ),
                                                           SizedBox(
-                                                             height: height/11.369,
+                                                             height: height/9.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -4968,14 +4977,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         1.3625 *
                                                                             ffem /
                                                                             fem,
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff000000),
                                                                   ),
                                                                 ),
                                                                 SizedBox(
                                                                     height: height/123.1666),
                                                                 Container(
-                                                                    height: height/21.114,
+                                                                    height: height/15.114,
                                                                     width: width/4.6545,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
@@ -4993,7 +5002,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                                 RegExp("[a-zA-Z0-9]")),
                                                                       ],
                                                                       decoration:
-                                                                          InputDecoration(
+                                                                          const InputDecoration(
                                                                         border: InputBorder
                                                                             .none,
                                                                         contentPadding: EdgeInsets.only(
@@ -5019,7 +5028,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 .spaceBetween,
                                                         children: [
                                                           SizedBox(
-                                                             height: height/11.369,
+                                                             height: height/9.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -5039,14 +5048,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         1.3625 *
                                                                             ffem /
                                                                             fem,
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff000000),
                                                                   ),
                                                                 ),
                                                                 SizedBox(
                                                                     height: height/123.1666),
                                                                 Container(
-                                                                    height: height/21.114,
+                                                                    height: height/15.114,
                                                                     width: width/4.6545,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
@@ -5064,7 +5073,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                                 RegExp("[a-zA-Z0-9]")),
                                                                       ],
                                                                       decoration:
-                                                                          InputDecoration(
+                                                                          const InputDecoration(
                                                                         border: InputBorder
                                                                             .none,
                                                                         contentPadding: EdgeInsets.only(
@@ -5081,7 +5090,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             ),
                                                           ),
                                                           SizedBox(
-                                                             height: height/11.369,
+                                                             height: height/9.369,
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
@@ -5102,14 +5111,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         1.3625 *
                                                                             ffem /
                                                                             fem,
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff000000),
                                                                   ),
                                                                 ),
                                                                 SizedBox(
                                                                     height: height/123.1666),
                                                                 Container(
-                                                                    height: height/21.114,
+                                                                    height: height/15.114,
                                                                     width: width/4.6545,
                                                                     decoration: BoxDecoration(
                                                                         color: const Color(
@@ -5127,7 +5136,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                                 RegExp("[a-zA-Z0-9]")),
                                                                       ],
                                                                       decoration:
-                                                                          InputDecoration(
+                                                                          const InputDecoration(
                                                                         border: InputBorder
                                                                             .none,
                                                                         contentPadding: EdgeInsets.only(
@@ -5150,9 +5159,9 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 ),
                                                 Padding(
                                                   padding:
-                                                      EdgeInsets.only(left: 25),
+                                                      const EdgeInsets.only(left: 25),
                                                   child: SizedBox(
-                                                    height: height/3.695,
+                                                    height: height/2.8,
                                                     width: width/4.1513,
                                                     child: Column(
                                                       crossAxisAlignment:
@@ -5171,12 +5180,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 ffem /
                                                                 fem,
                                                             color:
-                                                                Color(0xff000000),
+                                                                const Color(0xff000000),
                                                           ),
                                                         ),
                                                         SizedBox(height: height/123.1666),
                                                         Container(
-                                                            height: height/4.34705,
+                                                            height: height/3.15,
                                                             width: width/4.45217,
                                                             decoration: BoxDecoration(
                                                                 color: const Color(
@@ -5188,6 +5197,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             child: TextFormField(
                                                               controller:
                                                                   statusmessagecon,
+                                                              autovalidateMode: AutovalidateMode.onUserInteraction,
                                                               maxLines: null,
                                                               expands: true,
                                                               inputFormatters: [
@@ -5196,7 +5206,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         "[a-zA-Z]")),
                                                               ],
                                                               decoration:
-                                                                  InputDecoration(
+                                                                  const InputDecoration(
                                                                 border:
                                                                     InputBorder
                                                                         .none,
@@ -5231,13 +5241,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     fontSize: 25 * ffem,
                                                     fontWeight: FontWeight.w700,
                                                     height: 1.3625 * ffem / fem,
-                                                    color: Color(0xff000000),
+                                                    color: const Color(0xff000000),
                                                   ),
                                                 ),
                                               ],
                                             ),
                                             Padding(
-                                              padding: EdgeInsets.only(
+                                              padding: const EdgeInsets.only(
                                                   left: 4,
                                                   right: 4,
                                                   top: 4,
@@ -5268,7 +5278,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             FontWeight.w700,
                                                         height:
                                                             1.3625 * ffem / fem,
-                                                        color: Color(0xff000000),
+                                                        color: const Color(0xff000000),
                                                       ),
                                                     ),
                                                     SizedBox(height: height/123.1666),
@@ -5290,7 +5300,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                     "[a-zA-Z]")),
                                                           ],
                                                           decoration:
-                                                              InputDecoration(
+                                                              const InputDecoration(
                                                             border:
                                                                 InputBorder.none,
                                                             contentPadding:
@@ -5317,7 +5327,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             FontWeight.w700,
                                                         height:
                                                             1.3625 * ffem / fem,
-                                                        color: Color(0xff000000),
+                                                        color: const Color(0xff000000),
                                                       ),
                                                     ),
                                                     SizedBox(height: height/123.1666),
@@ -5339,7 +5349,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                     "[a-zA-Z]")),
                                                           ],
                                                           decoration:
-                                                              InputDecoration(
+                                                              const InputDecoration(
                                                             border:
                                                                 InputBorder.none,
                                                             contentPadding:
@@ -5365,13 +5375,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     fontSize: 25 * ffem,
                                                     fontWeight: FontWeight.w700,
                                                     height: 1.3625 * ffem / fem,
-                                                    color: Color(0xff000000),
+                                                    color: const Color(0xff000000),
                                                   ),
                                                 ),
                                               ],
                                             ),
                                             Padding(
-                                              padding: EdgeInsets.only(
+                                              padding: const EdgeInsets.only(
                                                   left: 4,
                                                   right: 4,
                                                   top: 4,
@@ -5387,7 +5397,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             Row(
                                               children: [
                                                 SizedBox(
-                                                   height: height/11.369,
+                                                   height: height/9.369,
                                                   child: Column(
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment.start,
@@ -5402,12 +5412,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           height:
                                                               1.3625 * ffem / fem,
                                                           color:
-                                                              Color(0xff000000),
+                                                              const Color(0xff000000),
                                                         ),
                                                       ),
                                                       SizedBox(height: height/123.1666),
                                                       Container(
-                                                        height: height/21.114,
+                                                        height: height/15.114,
                                                         width: width/6.6782,
                                                         decoration: BoxDecoration(
                                                             color: const Color(
@@ -5420,7 +5430,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           child:
                                                           DropdownButtonFormField2<
                                                               String>(
-                                                            isExpanded: true,
+                                                            isExpanded:true,
                                                             hint: Text(
                                                               'Working',
                                                               style:
@@ -5457,26 +5467,19 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                     .text =
                                                                 value!;
                                                               });
+
                                                             },
                                                             buttonStyleData:
-                                                            ButtonStyleData(
-                                                              padding: EdgeInsets
-                                                                  .symmetric(
-                                                                  horizontal:
-                                                                  width /
-                                                                      22.5),
-                                                              height:
-                                                              height / 18.9,
-                                                              width:
-                                                              width / 2.571,
+                                                            const ButtonStyleData(
+                                                           
+                                                            
                                                             ),
                                                             menuItemStyleData:
-                                                            MenuItemStyleData(
-                                                              height:
-                                                              height / 18.9,
+                                                            const MenuItemStyleData(
+                                                            
                                                             ),
                                                             decoration:
-                                                            InputDecoration(
+                                                            const InputDecoration(
                                                                 border:
                                                                 InputBorder
                                                                     .none),
@@ -5486,6 +5489,59 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     ],
                                                   ),
                                                 ),
+                                                /*    ///ownBussinesscon
+
+                                                    Padding(
+                                                    padding:EdgeInsets.only(left:width/68.0666),
+                                                child:
+                                                SizedBox(
+                                                  height: height/9.369,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                    children: [
+                                                      KText(
+                                                        text: 'Own Business',
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: 20 * ffem,
+                                                          fontWeight: FontWeight.w700,
+                                                          height: 1.3625 * ffem / fem,
+                                                          color: const Color(0xff000000),
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: height/123.1666),
+                                                      Container(
+                                                          height: height/15.114,
+                                                          width: width/4.6545,
+                                                          decoration: BoxDecoration(
+                                                              color: const Color(
+                                                                  0xffDDDEEE),
+                                                              borderRadius:
+                                                              BorderRadius
+                                                                  .circular(3)),
+                                                          child: TextFormField(
+                                                            controller: ownBussinesscon,
+                                                            inputFormatters: [
+                                                              FilteringTextInputFormatter
+                                                                  .allow(RegExp(
+                                                                  "[a-zA-Z]")),
+                                                            ],
+                                                            decoration:
+                                                            const InputDecoration(
+                                                              border:
+                                                              InputBorder.none,
+                                                              contentPadding:
+                                                              EdgeInsets.only(
+                                                                  bottom: 10,
+                                                                  top: 2,
+                                                                  left: 10),
+                                                            ),
+                                                            // validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                                          ))
+                                                    ],
+                                                  ),
+                                                )),*/
 
                                               ],
                                             ),
@@ -5493,7 +5549,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             Row(
                                               children: [
                                                 SizedBox(
-                                                  height: height/11.369,
+                                                  height: height/9.369,
                                                   child: Column(
                                                     crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -5508,12 +5564,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           height:
                                                           1.3625 * ffem / fem,
                                                           color:
-                                                          Color(0xff000000),
+                                                          const Color(0xff000000),
                                                         ),
                                                       ),
                                                       SizedBox(height: height/123.1666),
                                                       Container(
-                                                          height: height/21.114,
+                                                          height: height/15.114,
                                                           width: width/4.6545,
                                                           decoration: BoxDecoration(
                                                               color: const Color(
@@ -5531,7 +5587,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   "[a-zA-Z]")),
                                                             ],
                                                             decoration:
-                                                            InputDecoration(
+                                                            const InputDecoration(
                                                               border: InputBorder
                                                                   .none,
                                                               contentPadding:
@@ -5547,7 +5603,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 ),
                                                 SizedBox(width: width/38.4),
                                                 SizedBox(
-                                                  height: height/11.369,
+                                                  height: height/9.369,
                                                   child: Column(
                                                     crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -5562,12 +5618,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           height:
                                                           1.3625 * ffem / fem,
                                                           color:
-                                                          Color(0xff000000),
+                                                          const Color(0xff000000),
                                                         ),
                                                       ),
                                                       SizedBox(height: height/123.1666),
                                                       Container(
-                                                          height: height/21.114,
+                                                          height: height/15.114,
                                                           width: width/4.6545,
                                                           decoration: BoxDecoration(
                                                               color: const Color(
@@ -5585,7 +5641,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   "[a-zA-Z]")),
                                                             ],
                                                             decoration:
-                                                            InputDecoration(
+                                                            const InputDecoration(
                                                               border: InputBorder
                                                                   .none,
                                                               contentPadding:
@@ -5601,7 +5657,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 ),
                                                 SizedBox(width: width/38.4),
                                                 SizedBox(
-                                                  height: height/11.369,
+                                                  height: height/9.369,
                                                   child: Column(
                                                     crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -5617,12 +5673,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           height:
                                                           1.3625 * ffem / fem,
                                                           color:
-                                                          Color(0xff000000),
+                                                          const Color(0xff000000),
                                                         ),
                                                       ),
                                                       SizedBox(height: height/123.1666),
                                                       Container(
-                                                          height: height/21.114,
+                                                          height: height/15.114,
                                                           width: width/4.6545,
                                                           decoration: BoxDecoration(
                                                               color: const Color(
@@ -5640,7 +5696,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   "[a-zA-Z]")),
                                                             ],
                                                             decoration:
-                                                            InputDecoration(
+                                                            const InputDecoration(
                                                               border: InputBorder
                                                                   .none,
                                                               contentPadding:
@@ -5669,13 +5725,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     fontSize: 25 * ffem,
                                                     fontWeight: FontWeight.w700,
                                                     height: 1.3625 * ffem / fem,
-                                                    color: Color(0xff000000),
+                                                    color: const Color(0xff000000),
                                                   ),
                                                 ),
                                               ],
                                             ),
                                             Padding(
-                                              padding: EdgeInsets.only(
+                                              padding: const EdgeInsets.only(
                                                   left: 4,
                                                   right: 4,
                                                   top: 4,
@@ -5690,7 +5746,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             Row(
                                               children: [
                                                 SizedBox(
-                                                   height: height/11.369,
+                                                   height: height/9.369,
                                                   child: Column(
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment.start,
@@ -5705,12 +5761,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           height:
                                                               1.3625 * ffem / fem,
                                                           color:
-                                                              Color(0xff000000),
+                                                              const Color(0xff000000),
                                                         ),
                                                       ),
                                                       SizedBox(height: height/123.1666),
                                                       Container(
-                                                        height: height/21.114,
+                                                        height: height/15.114,
                                                         width: width/6.6782,
                                                         decoration: BoxDecoration(
                                                             color: const Color(
@@ -5720,10 +5776,11 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                     .circular(3)),
                                                         child:
                                                             DropdownButtonHideUnderline(
+
                                                           child:
                                                               DropdownButtonFormField2<
                                                                   String>(
-                                                            isExpanded: true,
+                                                                isExpanded:true,
                                                             hint: Text(
                                                               'Marital Status',
                                                               style:
@@ -5762,24 +5819,16 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               });
                                                             },
                                                             buttonStyleData:
-                                                                ButtonStyleData(
-                                                              padding: EdgeInsets
-                                                                  .symmetric(
-                                                                      horizontal:
-                                                                          width /
-                                                                              22.5),
-                                                              height:
-                                                                  height / 18.9,
-                                                              width:
-                                                                  width / 2.571,
+                                                                const ButtonStyleData(
+                                                          
+                                                           
                                                             ),
                                                             menuItemStyleData:
-                                                                MenuItemStyleData(
-                                                              height:
-                                                                  height / 18.9,
+                                                                const MenuItemStyleData(
+                                                             
                                                             ),
                                                             decoration:
-                                                                InputDecoration(
+                                                                const InputDecoration(
                                                                     border:
                                                                         InputBorder
                                                                             .none),
@@ -5794,7 +5843,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     ? SizedBox(
                                                         child: Row(children: [
                                                         SizedBox(
-                                                           height: height/11.369,
+                                                           height: height/9.369,
                                                           child: Column(
                                                             crossAxisAlignment:
                                                                 CrossAxisAlignment
@@ -5814,13 +5863,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   height: 1.3625 *
                                                                       ffem /
                                                                       fem,
-                                                                  color: Color(
+                                                                  color: const Color(
                                                                       0xff000000),
                                                                 ),
                                                               ),
                                                               SizedBox(height: height/123.1666),
                                                               Container(
-                                                                  height: height/21.114,
+                                                                  height: height/15.114,
                                                                   width: width/6.4,
                                                                   decoration: BoxDecoration(
                                                                       color: const Color(
@@ -5838,7 +5887,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                               "[a-zA-Z]")),
                                                                     ],
                                                                     decoration:
-                                                                        InputDecoration(
+                                                                        const InputDecoration(
                                                                       border:
                                                                           InputBorder
                                                                               .none,
@@ -5856,7 +5905,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         ),
                                                         SizedBox(width: width/38.4),
                                                         SizedBox(
-                                                           height: height/11.369,
+                                                           height: height/9.369,
                                                           child: Column(
                                                             crossAxisAlignment:
                                                                 CrossAxisAlignment
@@ -5876,13 +5925,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   height: 1.3625 *
                                                                       ffem /
                                                                       fem,
-                                                                  color: Color(
+                                                                  color: const Color(
                                                                       0xff000000),
                                                                 ),
                                                               ),
                                                               SizedBox(height: height/123.1666),
                                                               Container(
-                                                                  height: height/21.114,
+                                                                  height: height/15.114,
                                                                   width: width/6.4,
                                                                   decoration: BoxDecoration(
                                                                       color: const Color(
@@ -5897,7 +5946,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                     controller:
                                                                         anniversaryDatecon,
                                                                     decoration:
-                                                                        InputDecoration(
+                                                                        const InputDecoration(
                                                                       border:
                                                                           InputBorder
                                                                               .none,
@@ -5939,7 +5988,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         ),
                                                         SizedBox(width: width/38.4),
                                                         SizedBox(
-                                                           height: height/11.369,
+                                                           height: height/9.369,
                                                           child: Column(
                                                             crossAxisAlignment:
                                                                 CrossAxisAlignment
@@ -5959,13 +6008,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   height: 1.3625 *
                                                                       ffem /
                                                                       fem,
-                                                                  color: Color(
+                                                                  color: const Color(
                                                                       0xff000000),
                                                                 ),
                                                               ),
                                                               SizedBox(height: height/123.1666),
                                                               Container(
-                                                                  height: height/21.114,
+                                                                  height: height/15.114,
                                                                   width: width/6.4,
                                                                   decoration: BoxDecoration(
                                                                       color: const Color(
@@ -5984,7 +6033,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                               "[0-9]")),
                                                                     ],
                                                                     decoration:
-                                                                        InputDecoration(
+                                                                        const InputDecoration(
                                                                       border:
                                                                           InputBorder
                                                                               .none,
@@ -6002,7 +6051,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           ),
                                                         ),
                                                       ]))
-                                                    : SizedBox(),
+                                                    : const SizedBox(),
                                               ],
                                             ),
                                             SizedBox(height: height/24.633),
@@ -6023,14 +6072,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     if (_formkey.currentState!
                                                         .validate()) {
                                                       userdatecreatefunc();
-                                                      userCreateSuccessPopup();
+
                                                     }
                                                   },
                                                   child: Container(
                                                       height: height/18.475,
                                                       width: width/12.8,
                                                       decoration: BoxDecoration(
-                                                        color: Color(0xffD60A0B),
+                                                        color: const Color(0xffD60A0B),
                                                         borderRadius:
                                                             BorderRadius.circular(
                                                                 4),
@@ -6047,7 +6096,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 ffem /
                                                                 fem,
                                                             color:
-                                                                Color(0xffFFFFFF),
+                                                                const Color(0xffFFFFFF),
                                                           ),
                                                         ),
                                                       )),
@@ -6065,7 +6114,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       height: height/18.475,
                                                       width: width/12.8,
                                                       decoration: BoxDecoration(
-                                                        color: Color(0xff00A0E3),
+                                                        color: const Color(0xff00A0E3),
                                                         borderRadius:
                                                             BorderRadius.circular(
                                                                 4),
@@ -6082,7 +6131,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 ffem /
                                                                 fem,
                                                             color:
-                                                                Color(0xffFFFFFF),
+                                                                const Color(0xffFFFFFF),
                                                           ),
                                                         ),
                                                       )),
@@ -6120,7 +6169,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 ffem /
                                                                 fem,
                                                             color:
-                                                                Color(0xffFFFFFF),
+                                                                const Color(0xffFFFFFF),
                                                           ),
                                                         ),
                                                       )),
@@ -6143,44 +6192,34 @@ class _Users_ScreenState extends State<Users_Screen> {
                   : FadeInRight(
                       child: SizedBox(
                         width: 1574 * fem,
-                        height: height/1.05,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: width / 170.75,
-                              vertical: height / 81.375),
+                        height: height/1.08,
+                        child: SingleChildScrollView(
+                          physics: const ScrollPhysics(),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               ///Alumni text
-                             // SizedBox(height: height / 26.04),
+                              // SizedBox(height: height / 26.04),
+                              KText(
+                                text: 'Alumni List',
+                                style: SafeGoogleFont(
+                                  'Nunito',
+                                  fontSize: 24 * ffem,
+                                  fontWeight: FontWeight.w700,
+                                  height: 1.3625 * ffem / fem,
+                                  color: const Color(0xff030229),
+                                ),
+                              ),
                               Row(
                                 children: [
-                                  SizedBox(
-                                    width: width / 1.2418,
+                                  Container(
+                                    width: width / 1.220,
                                     height: 54.96 * fem,
+                                    margin:EdgeInsets.only(top:height/65.1),
                                     child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.end,
                                       children: [
-                                        Container(
-                                          // alumnilistFYu (8:2323)
-                                          margin: EdgeInsets.fromLTRB(
-                                              0 * fem,
-                                              0 * fem,
-                                              775.46 * fem,
-                                              6.11 * fem),
-                                          child: KText(
-                                            text: 'Alumni List',
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              fontSize: 24 * ffem,
-                                              fontWeight: FontWeight.w700,
-                                              height: 1.3625 * ffem / fem,
-                                              color: Color(0xff030229),
-                                            ),
-                                          ),
-                                        ),
                                         GestureDetector(
                                           onTap: () {
                                             setState(() {
@@ -6196,16 +6235,16 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 12.72 * fem),
                                             height: double.infinity,
                                             decoration: BoxDecoration(
-                                              color: Color(0xff605bff),
+                                              color: const Color(0xff605bff),
                                               borderRadius:
-                                                  BorderRadius.circular(
-                                                      10 * fem),
+                                              BorderRadius.circular(
+                                                  10 * fem),
                                             ),
                                             child: Row(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
+                                              CrossAxisAlignment.center,
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                              MainAxisAlignment.center,
                                               children: [
                                                 Container(
                                                   // plusUAm (8:2329)
@@ -6232,403 +6271,702 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     fontSize: 18 * ffem,
                                                     fontWeight: FontWeight.w400,
                                                     height: 1.3625 * ffem / fem,
-                                                    color: Color(0xffffffff),
+                                                    color: const Color(0xffffffff),
                                                   ),
                                                 ),
                                               ],
                                             ),
                                           ),
                                         ),
+
+
                                       ],
                                     ),
                                   ),
                                 ],
                               ),
+
                               SizedBox(height: height / 26.04),
 
                               ///stream titles text
                               Row(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.center,
                                 children: [
-                                  Container(
-                                    padding: EdgeInsets.fromLTRB(26.07 * fem,
-                                        19.56 * fem, 39.11 * fem, 19.56 * fem),
-                                    width: width / 1.2418,
-                                    height: 55.22 * fem,
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        SizedBox(
-                                          width: width / 6.5,
-                                          height: double.infinity,
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Container(
-                                                // namekWM (8:2306)
-                                                margin: EdgeInsets.fromLTRB(
-                                                    0 * fem,
-                                                    0 * fem,
-                                                    14.75 * fem,
-                                                    0 * fem),
-                                                child: KText(
-                                                  text: 'Name',
-                                                  style: SafeGoogleFont(
-                                                    'Nunito',
-                                                    fontSize: 15 * ffem,
-                                                    fontWeight: FontWeight.w400,
-                                                    height: 1.3625 * ffem / fem,
-                                                    color: Color(0xff030229),
-                                                  ),
-                                                ),
-                                              ),
-                                              InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    filtervalue = !filtervalue;
-                                                  });
-                                                },
-                                                child: Transform.rotate(
-                                                  angle: filtervalue ? 200 : 0,
-                                                  child: Opacity(
-                                                    // arrowdown2TvZ (8:2307)
-                                                    opacity: 0.7,
-                                                    child: Container(
-                                                      margin:
-                                                          EdgeInsets.fromLTRB(
-                                                              0 * fem,
-                                                              1.6 * fem,
-                                                              0 * fem,
-                                                              0 * fem),
-                                                      width: 7.82 * fem,
-                                                      height: 6.52 * fem,
-                                                      child: Image.asset(
-                                                        'assets/images/arrow-down-2.png',
-                                                        width: 7.82 * fem,
-                                                        height: 6.52 * fem,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: width / 6.5,
-                                          height: double.infinity,
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Container(
-                                                // emailfv9 (8:2312)
-                                                margin: EdgeInsets.fromLTRB(
-                                                    0 * fem,
-                                                    0 * fem,
-                                                    14.15 * fem,
-                                                    0 * fem),
-                                                child: KText(
-                                                  text: 'Email',
-                                                  style: SafeGoogleFont(
-                                                    'Nunito',
-                                                    fontSize: 15 * ffem,
-                                                    fontWeight: FontWeight.w400,
-                                                    height: 1.3625 * ffem / fem,
-                                                    color: Color(0xff030229),
-                                                  ),
-                                                ),
-                                              ),
-                                              InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    filtervalue = !filtervalue;
-                                                  });
-                                                },
-                                                child: Transform.rotate(
-                                                  angle: filtervalue ? 200 : 0,
-                                                  child: Opacity(
-                                                    // arrowdown2TvZ (8:2307)
-                                                    opacity: 0.7,
-                                                    child: Container(
-                                                      margin:
-                                                          EdgeInsets.fromLTRB(
-                                                              0 * fem,
-                                                              1.6 * fem,
-                                                              0 * fem,
-                                                              0 * fem),
-                                                      width: 7.82 * fem,
-                                                      height: 6.52 * fem,
-                                                      child: Image.asset(
-                                                        'assets/images/arrow-down-2.png',
-                                                        width: 7.82 * fem,
-                                                        height: 6.52 * fem,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: width / 10.1066,
-                                          height: double.infinity,
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Container(
-                                                // phonenumberntH (8:2316)
-                                                margin: EdgeInsets.fromLTRB(
-                                                    0 * fem,
-                                                    0 * fem,
-                                                    18.33 * fem,
-                                                    0 * fem),
-                                                child: KText(
-                                                  text: 'Phone number',
-                                                  style: SafeGoogleFont(
-                                                    'Nunito',
-                                                    fontSize: 15 * ffem,
-                                                    fontWeight: FontWeight.w400,
-                                                    height: 1.3625 * ffem / fem,
-                                                    color: Color(0xff030229),
-                                                  ),
-                                                ),
-                                              ),
-                                              InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    filtervalue = !filtervalue;
-                                                  });
-                                                },
-                                                child: Transform.rotate(
-                                                  angle: filtervalue ? 200 : 0,
-                                                  child: Opacity(
-                                                    // arrowdown2TvZ (8:2307)
-                                                    opacity: 0.7,
-                                                    child: Container(
-                                                      margin:
-                                                          EdgeInsets.fromLTRB(
-                                                              0 * fem,
-                                                              1.6 * fem,
-                                                              0 * fem,
-                                                              0 * fem),
-                                                      width: 7.82 * fem,
-                                                      height: 6.52 * fem,
-                                                      child: Image.asset(
-                                                        'assets/images/arrow-down-2.png',
-                                                        width: 7.82 * fem,
-                                                        height: 6.52 * fem,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: width / 10.2,
-                                          height: double.infinity,
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              SizedBox(width: width / 54.64),
-                                              Container(
-                                                // gender8qf (8:2320)
-                                                margin: EdgeInsets.fromLTRB(
-                                                    0 * fem,
-                                                    0 * fem,
-                                                    15.18 * fem,
-                                                    0 * fem),
-                                                child: KText(
-                                                  text: 'Gender',
-                                                  style: SafeGoogleFont(
-                                                    'Nunito',
-                                                    fontSize: 15 * ffem,
-                                                    fontWeight: FontWeight.w400,
-                                                    height: 1.3625 * ffem / fem,
-                                                    color: Color(0xff030229),
-                                                  ),
-                                                ),
-                                              ),
-                                              InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    filtervalue = !filtervalue;
-                                                  });
-                                                },
-                                                child: Transform.rotate(
-                                                  angle: filtervalue ? 200 : 0,
-                                                  child: Opacity(
-                                                    // arrowdown2TvZ (8:2307)
-                                                    opacity: 0.7,
-                                                    child: Container(
-                                                      margin:
-                                                          EdgeInsets.fromLTRB(
-                                                              0 * fem,
-                                                              1.6 * fem,
-                                                              0 * fem,
-                                                              0 * fem),
-                                                      width: 7.82 * fem,
-                                                      height: 6.52 * fem,
-                                                      child: Image.asset(
-                                                        'assets/images/arrow-down-2.png',
-                                                        width: 7.82 * fem,
-                                                        height: 6.52 * fem,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: width / 10.8,
-                                          height: double.infinity,
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              SizedBox(width: width / 54.64),
-                                              Container(
-                                                // gender8qf (8:2320)
-                                                margin: EdgeInsets.fromLTRB(
-                                                    0 * fem,
-                                                    0 * fem,
-                                                    15.18 * fem,
-                                                    0 * fem),
-                                                child: KText(
-                                                  text: 'Status',
-                                                  style: SafeGoogleFont(
-                                                    'Nunito',
-                                                    fontSize: 15 * ffem,
-                                                    fontWeight: FontWeight.w400,
-                                                    height: 1.3625 * ffem / fem,
-                                                    color: Color(0xff030229),
-                                                  ),
-                                                ),
-                                              ),
-                                              Opacity(
-                                                // arrowdown5rFs (8:2318)
-                                                opacity: 0.0,
-                                                child: Container(
+                                  /* SizedBox(
+                                            width: width / 6.5,
+                                            height: double.infinity,
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  // namekWM (8:2306)
                                                   margin: EdgeInsets.fromLTRB(
                                                       0 * fem,
-                                                      1.6 * fem,
                                                       0 * fem,
+                                                      14.75 * fem,
                                                       0 * fem),
-                                                  width: 7.82 * fem,
-                                                  height: 6.52 * fem,
-                                                  child: Image.asset(
-                                                    'assets/images/arrow-down-5.png',
-                                                    width: 7.82 * fem,
-                                                    height: 6.52 * fem,
+                                                  child: KText(
+                                                    text: 'Name',
+                                                    style: SafeGoogleFont(
+                                                      'Nunito',
+                                                      fontSize: 15 * ffem,
+                                                      fontWeight: FontWeight.w400,
+                                                      height: 1.3625 * ffem / fem,
+                                                      color: const Color(0xff030229),
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
+                                                InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      filtervalue = !filtervalue;
+                                                    });
+                                                  },
+                                                  child: Transform.rotate(
+                                                    angle: filtervalue ? 200 : 0,
+                                                    child: Opacity(
+                                                      // arrowdown2TvZ (8:2307)
+                                                      opacity: 0.7,
+                                                      child: Container(
+                                                        margin:
+                                                            EdgeInsets.fromLTRB(
+                                                                0 * fem,
+                                                                1.6 * fem,
+                                                                0 * fem,
+                                                                0 * fem),
+                                                        width: 7.82 * fem,
+                                                        height: 6.52 * fem,
+                                                        child: Image.asset(
+                                                          'assets/images/arrow-down-2.png',
+                                                          width: 7.82 * fem,
+                                                          height: 6.52 * fem,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: width / 10.8,
-                                          height: double.infinity,
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              SizedBox(width: width / 54.64),
-                                              Container(
-                                                // gender8qf (8:2320)
-                                                margin: EdgeInsets.fromLTRB(
-                                                    0 * fem,
-                                                    0 * fem,
-                                                    15.18 * fem,
-                                                    0 * fem),
-                                                child: KText(
+                                          SizedBox(
+                                            width: width / 6.5,
+                                            height: double.infinity,
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  // emailfv9 (8:2312)
+                                                  margin: EdgeInsets.fromLTRB(
+                                                      0 * fem,
+                                                      0 * fem,
+                                                      14.15 * fem,
+                                                      0 * fem),
+                                                  child: KText(
+                                                    text: 'Email',
+                                                    style: SafeGoogleFont(
+                                                      'Nunito',
+                                                      fontSize: 15 * ffem,
+                                                      fontWeight: FontWeight.w400,
+                                                      height: 1.3625 * ffem / fem,
+                                                      color: const Color(0xff030229),
+                                                    ),
+                                                  ),
+                                                ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      filtervalue = !filtervalue;
+                                                    });
+                                                  },
+                                                  child: Transform.rotate(
+                                                    angle: filtervalue ? 200 : 0,
+                                                    child: Opacity(
+                                                      // arrowdown2TvZ (8:2307)
+                                                      opacity: 0.7,
+                                                      child: Container(
+                                                        margin:
+                                                            EdgeInsets.fromLTRB(
+                                                                0 * fem,
+                                                                1.6 * fem,
+                                                                0 * fem,
+                                                                0 * fem),
+                                                        width: 7.82 * fem,
+                                                        height: 6.52 * fem,
+                                                        child: Image.asset(
+                                                          'assets/images/arrow-down-2.png',
+                                                          width: 7.82 * fem,
+                                                          height: 6.52 * fem,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: width / 10.1066,
+                                            height: double.infinity,
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  // phonenumberntH (8:2316)
+                                                  margin: EdgeInsets.fromLTRB(
+                                                      0 * fem,
+                                                      0 * fem,
+                                                      18.33 * fem,
+                                                      0 * fem),
+                                                  child: KText(
+                                                    text: 'Phone number',
+                                                    style: SafeGoogleFont(
+                                                      'Nunito',
+                                                      fontSize: 15 * ffem,
+                                                      fontWeight: FontWeight.w400,
+                                                      height: 1.3625 * ffem / fem,
+                                                      color: const Color(0xff030229),
+                                                    ),
+                                                  ),
+                                                ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      filtervalue = !filtervalue;
+                                                    });
+                                                  },
+                                                  child: Transform.rotate(
+                                                    angle: filtervalue ? 200 : 0,
+                                                    child: Opacity(
+                                                      // arrowdown2TvZ (8:2307)
+                                                      opacity: 0.7,
+                                                      child: Container(
+                                                        margin:
+                                                            EdgeInsets.fromLTRB(
+                                                                0 * fem,
+                                                                1.6 * fem,
+                                                                0 * fem,
+                                                                0 * fem),
+                                                        width: 7.82 * fem,
+                                                        height: 6.52 * fem,
+                                                        child: Image.asset(
+                                                          'assets/images/arrow-down-2.png',
+                                                          width: 7.82 * fem,
+                                                          height: 6.52 * fem,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: width / 10.2,
+                                            height: double.infinity,
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                SizedBox(width: width / 54.64),
+                                                Container(
+                                                  // gender8qf (8:2320)
+                                                  margin: EdgeInsets.fromLTRB(
+                                                      0 * fem,
+                                                      0 * fem,
+                                                      15.18 * fem,
+                                                      0 * fem),
+                                                  child: KText(
+                                                    text: 'Gender',
+                                                    style: SafeGoogleFont(
+                                                      'Nunito',
+                                                      fontSize: 15 * ffem,
+                                                      fontWeight: FontWeight.w400,
+                                                      height: 1.3625 * ffem / fem,
+                                                      color: const Color(0xff030229),
+                                                    ),
+                                                  ),
+                                                ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      filtervalue = !filtervalue;
+                                                    });
+                                                  },
+                                                  child: Transform.rotate(
+                                                    angle: filtervalue ? 200 : 0,
+                                                    child: Opacity(
+                                                      // arrowdown2TvZ (8:2307)
+                                                      opacity: 0.7,
+                                                      child: Container(
+                                                        margin:
+                                                            EdgeInsets.fromLTRB(
+                                                                0 * fem,
+                                                                1.6 * fem,
+                                                                0 * fem,
+                                                                0 * fem),
+                                                        width: 7.82 * fem,
+                                                        height: 6.52 * fem,
+                                                        child: Image.asset(
+                                                          'assets/images/arrow-down-2.png',
+                                                          width: 7.82 * fem,
+                                                          height: 6.52 * fem,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: width / 10.8,
+                                            height: double.infinity,
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(width: width / 54.64),
+                                                Container(
+                                                  // gender8qf (8:2320)
+                                                  margin: EdgeInsets.fromLTRB(
+                                                      0 * fem,
+                                                      0 * fem,
+                                                      15.18 * fem,
+                                                      0 * fem),
+                                                  child: KText(
+                                                    text: 'Status',
+                                                    style: SafeGoogleFont(
+                                                      'Nunito',
+                                                      fontSize: 15 * ffem,
+                                                      fontWeight: FontWeight.w400,
+                                                      height: 1.3625 * ffem / fem,
+                                                      color: const Color(0xff030229),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Opacity(
+                                                  // arrowdown5rFs (8:2318)
+                                                  opacity: 0.0,
+                                                  child: Container(
+                                                    margin: EdgeInsets.fromLTRB(
+                                                        0 * fem,
+                                                        1.6 * fem,
+                                                        0 * fem,
+                                                        0 * fem),
+                                                    width: 7.82 * fem,
+                                                    height: 6.52 * fem,
+                                                    child: Image.asset(
+                                                      'assets/images/arrow-down-5.png',
+                                                      width: 7.82 * fem,
+                                                      height: 6.52 * fem,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: width / 10.8,
+                                            height: double.infinity,
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                KText(
                                                   text: 'Create On',
                                                   style: SafeGoogleFont(
                                                     'Nunito',
-                                                    fontSize: 15 * ffem,
-                                                    fontWeight: FontWeight.w400,
-                                                    height: 1.3625 * ffem / fem,
-                                                    color: Color(0xff030229),
+
+                                                    color: const Color(0xff030229),
                                                   ),
                                                 ),
-                                              ),
-                                              Opacity(
-                                                // arrowdown5rFs (8:2318)
-                                                opacity: 0.0,
-                                                child: Container(
-                                                  margin: EdgeInsets.fromLTRB(
-                                                      0 * fem,
-                                                      1.6 * fem,
-                                                      0 * fem,
-                                                      0 * fem),
-                                                  width: 7.82 * fem,
-                                                  height: 6.52 * fem,
-                                                  child: Image.asset(
-                                                    'assets/images/arrow-down-5.png',
-                                                    width: 7.82 * fem,
-                                                    height: 6.52 * fem,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
+
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: width / 14.8,
-                                          height: double.infinity,
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              SizedBox(width: width / 54.64),
-                                              Container(
-                                                // gender8qf (8:2320)
-                                                margin: EdgeInsets.fromLTRB(
-                                                    0 * fem,
-                                                    0 * fem,
-                                                    15.18 * fem,
-                                                    0 * fem),
-                                                child: KText(
+                                          SizedBox(
+                                            width: width / 14.8,
+                                            height: double.infinity,
+                                            child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                KText(
                                                   text: 'Actions',
                                                   style: SafeGoogleFont(
                                                     'Nunito',
-                                                    fontSize: 15 * ffem,
-                                                    fontWeight: FontWeight.w400,
-                                                    height: 1.3625 * ffem / fem,
-                                                    color: Color(0xff030229),
+                                                    color: const Color(0xff030229),
                                                   ),
                                                 ),
-                                              ),
-                                              Opacity(
-                                                // arrowdown5rFs (8:2318)
-                                                opacity: 0.0,
-                                                child: Container(
-                                                  margin: EdgeInsets.fromLTRB(
-                                                      0 * fem,
-                                                      1.6 * fem,
-                                                      0 * fem,
-                                                      0 * fem),
-                                                  width: 7.82 * fem,
-                                                  height: 6.52 * fem,
-                                                  child: Image.asset(
-                                                    'assets/images/arrow-down-5.png',
+                                                Opacity(
+                                                  // arrowdown5rFs (8:2318)
+                                                  opacity: 0.0,
+                                                  child: Container(
+                                                    margin: EdgeInsets.fromLTRB(
+                                                        0 * fem,
+                                                        1.6 * fem,
+                                                        0 * fem,
+                                                        0 * fem),
                                                     width: 7.82 * fem,
                                                     height: 6.52 * fem,
+                                                    child: Image.asset(
+                                                      'assets/images/arrow-down-5.png',
+                                                      width: 7.82 * fem,
+                                                      height: 6.52 * fem,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),*/
+                                  ///NAme
+                                  Container(
+                                    color: Colors.white,
+                                    width: width/7.2,
+                                    height: height/14.78,
+                                    alignment: Alignment.center,
+                                    padding:EdgeInsets.only(left:width/68.3)
+                                    ,                                      child: Center(
+                                    child: Row(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                      children: [
+                                        KText(
+                                          text: "Name",
+                                          style: SafeGoogleFont(
+                                            'Nunito',
+                                            color: const Color(0xff030229),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 8),
+                                          child: InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                filtervalue = !filtervalue;
+                                              });
+                                            },
+                                            child: Transform.rotate(
+                                              angle: filtervalue ? 200 : 0,
+                                              child: Opacity(
+                                                // arrowdown2TvZ (8:2307)
+                                                opacity: 0.7,
+                                                child: Container(
+                                                  width: width/153.6,
+                                                  height: height/73.9,
+                                                  child: Image.asset(
+                                                    'assets/images/arrow-down-2.png',
+                                                    width: width/153.6,
+                                                    height: height/73.9,
                                                   ),
                                                 ),
                                               ),
-                                            ],
+                                            ),
                                           ),
                                         ),
                                       ],
+                                    ),
+                                  ),
+                                  ),
+
+                                  Container(
+                                    color: Colors.white,
+                                    width: width/6.2,
+                                    height: height/14.78,
+                                    alignment: Alignment.center,
+                                    padding:EdgeInsets.only(left:width/34.15),
+                                    child: Center(
+                                      child: Row(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                        children: [
+                                          KText(
+                                            text: "Email",
+                                            style: SafeGoogleFont(
+                                              'Nunito',
+                                              color: const Color(0xff030229),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 8),
+                                            child: InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  filtervalue = !filtervalue;
+                                                });
+                                              },
+                                              child: Transform.rotate(
+                                                angle: filtervalue ? 200 : 0,
+                                                child: Opacity(
+                                                  // arrowdown2TvZ (8:2307)
+                                                  opacity: 0.7,
+                                                  child: Container(
+                                                    width: width/153.6,
+                                                    height: height/73.9,
+                                                    child: Image.asset(
+                                                      'assets/images/arrow-down-2.png',
+                                                      width: width/153.6,
+                                                      height: height/73.9,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+
+                                  Container(
+                                    color: Colors.white,
+                                    width: width/7.2,
+                                    height: height/14.78,
+                                    alignment: Alignment.center,
+                                    padding:EdgeInsets.only(left:width/45.533),
+                                    child: Center(
+                                      child: Row(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                        children: [
+                                          KText(
+                                            text: "Phone Number",
+                                            style: SafeGoogleFont(
+                                              'Nunito',
+                                              color: const Color(0xff030229),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 8),
+                                            child: InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  filtervalue = !filtervalue;
+                                                });
+                                              },
+                                              child: Transform.rotate(
+                                                angle: filtervalue ? 200 : 0,
+                                                child: Opacity(
+                                                  // arrowdown2TvZ (8:2307)
+                                                  opacity: 0.7,
+                                                  child: Container(
+                                                    width: width/153.6,
+                                                    height: height/73.9,
+                                                    child: Image.asset(
+                                                      'assets/images/arrow-down-2.png',
+                                                      width: width/153.6,
+                                                      height: height/73.9,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+
+                                  Container(
+                                    color: Colors.white,
+                                    width: width/10,
+                                    height: height/14.78,
+                                    alignment: Alignment.center,
+                                    child: Center(
+                                      child: Row(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                        children: [
+                                          KText(
+                                            text: "Gender",
+                                            style: SafeGoogleFont(
+                                              'Nunito',
+                                              color: const Color(0xff030229),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 8),
+                                            child: InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  filtervalue = !filtervalue;
+                                                });
+                                              },
+                                              child: Transform.rotate(
+                                                angle: filtervalue ? 200 : 0,
+                                                child: Opacity(
+                                                  // arrowdown2TvZ (8:2307)
+                                                  opacity: 0.7,
+                                                  child: Container(
+                                                    width: width/153.6,
+                                                    height: height/73.9,
+                                                    child: Image.asset(
+                                                      'assets/images/arrow-down-2.png',
+                                                      width: width/153.6,
+                                                      height: height/73.9,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+
+                                  Container(
+                                    color: Colors.white,
+                                    width: width/11.5,
+                                    height: height/14.78,
+                                    alignment: Alignment.center,
+
+                                    child: Center(
+                                      child: Row(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                        children: [
+                                          KText(
+                                            text: "Status",
+                                            style: SafeGoogleFont(
+                                              'Nunito',
+                                              color: const Color(0xff030229),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 8),
+                                            child: InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  filtervalue = !filtervalue;
+                                                });
+                                              },
+                                              child: Transform.rotate(
+                                                angle: filtervalue ? 200 : 0,
+                                                child: Opacity(
+                                                  // arrowdown2TvZ (8:2307)
+                                                  opacity: 0.7,
+                                                  child: Container(
+                                                    width: width/153.6,
+                                                    height: height/73.9,
+                                                    child: Image.asset(
+                                                      'assets/images/arrow-down-2.png',
+                                                      width: width/153.6,
+                                                      height: height/73.9,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+
+                                  Container(
+                                    color: Colors.white,
+                                    width: width/11,
+                                    height: height/14.78,
+                                    alignment: Alignment.center,
+                                    child: Center(
+                                      child: Row(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                        children: [
+                                          KText(
+                                            text: "Created on",
+                                            style: SafeGoogleFont(
+                                              'Nunito',
+                                              color: const Color(0xff030229),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 8),
+                                            child: InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  filtervalue = !filtervalue;
+                                                });
+                                              },
+                                              child: Transform.rotate(
+                                                angle: filtervalue ? 200 : 0,
+                                                child: Opacity(
+                                                  // arrowdown2TvZ (8:2307)
+                                                  opacity: 0.7,
+                                                  child: Container(
+                                                    width: width/153.6,
+                                                    height: height/73.9,
+                                                    child: Image.asset(
+                                                      'assets/images/arrow-down-2.png',
+                                                      width: width/153.6,
+                                                      height: height/73.9,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+
+                                  Container(
+                                    color: Colors.white,
+                                    width: width/9.98,
+                                    height: height/14.78,
+                                    alignment: Alignment.center,
+                                    child: Center(
+                                      child: Row(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                        children: [
+                                          KText(
+                                            text: "Actions",
+                                            style: SafeGoogleFont(
+                                              'Nunito',
+                                              color: const Color(0xff030229),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 8),
+                                            child: InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  filtervalue = !filtervalue;
+                                                });
+                                              },
+                                              child: Transform.rotate(
+                                                angle: filtervalue ? 200 : 0,
+                                                child: Opacity(
+                                                  // arrowdown2TvZ (8:2307)
+                                                  opacity: 0.7,
+                                                  child: Container(
+                                                    width: width/153.6,
+                                                    height: height/73.9,
+                                                    child: Image.asset(
+                                                      'assets/images/arrow-down-2.png',
+                                                      width: width/153.6,
+                                                      height: height/73.9,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -6653,7 +6991,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                   return ListView.builder(
                                     shrinkWrap: true,
                                     physics:
-                                        const NeverScrollableScrollPhysics(),
+                                    const NeverScrollableScrollPhysics(),
                                     itemCount: snapshot.data!.docs.length,
                                     itemBuilder: (context, index) {
                                       var _userdata = snapshot.data!.docs[index];
@@ -6664,13 +7002,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                         width: width / 1.2418,
                                         height: 78.22 * fem,
                                         decoration: BoxDecoration(
-                                          color: Color(0xffffffff),
+                                          color: const Color(0xffffffff),
                                           borderRadius:
-                                              BorderRadius.circular(10 * fem),
+                                          BorderRadius.circular(10 * fem),
                                         ),
                                         child: Row(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                          CrossAxisAlignment.center,
                                           children: [
                                             SizedBox(
                                               width: width / 6.5,
@@ -6685,11 +7023,11 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     width: 39.11 * fem,
                                                     height: double.infinity,
                                                     decoration: BoxDecoration(
-                                                      color: Color(0xfff6d0d0),
+                                                      color: const Color(0xfff6d0d0),
                                                       borderRadius:
-                                                          BorderRadius.circular(
-                                                              19.5553703308 *
-                                                                  fem),
+                                                      BorderRadius.circular(
+                                                          19.5553703308 *
+                                                              fem),
                                                     ),
                                                     child: Center(
                                                       // imgFVB (8:2248)
@@ -6698,18 +7036,18 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         height: 39.11 * fem,
                                                         child: Container(
                                                           decoration:
-                                                              BoxDecoration(
+                                                          BoxDecoration(
                                                             borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        19.5553703308 *
-                                                                            fem),
+                                                            BorderRadius
+                                                                .circular(
+                                                                19.5553703308 *
+                                                                    fem),
                                                             image:
-                                                                DecorationImage(
+                                                            DecorationImage(
                                                               fit: BoxFit.cover,
                                                               image: NetworkImage(
                                                                   _userdata[
-                                                                          'UserImg']
+                                                                  'UserImg']
                                                                       .toString()),
                                                             ),
                                                           ),
@@ -6729,11 +7067,11 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         'Nunito',
                                                         fontSize: 18 * ffem,
                                                         fontWeight:
-                                                            FontWeight.w400,
+                                                        FontWeight.w400,
                                                         height:
-                                                            1.3625 * ffem / fem,
+                                                        1.3625 * ffem / fem,
                                                         color:
-                                                            Color(0xff030229),
+                                                        const Color(0xff030229),
                                                       ),
                                                     ),
                                                   ),
@@ -6749,7 +7087,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   fontSize: 18 * ffem,
                                                   fontWeight: FontWeight.w400,
                                                   height: 1.3625 * ffem / fem,
-                                                  color: Color(0xff030229),
+                                                  color: const Color(0xff030229),
                                                 ),
                                               ),
                                             ),
@@ -6763,7 +7101,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   fontSize: 18 * ffem,
                                                   fontWeight: FontWeight.w400,
                                                   height: 1.3625 * ffem / fem,
-                                                  color: Color(0xff030229),
+                                                  color: const Color(0xff030229),
                                                 ),
                                               ),
                                             ),
@@ -6778,13 +7116,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   height: double.infinity,
                                                   decoration: BoxDecoration(
                                                     color:
-                                                        _userdata['Gender'] ==
-                                                                "Male"
-                                                            ? Color(0x195b92ff)
-                                                            : Color(0xffFEF3F0),
+                                                    _userdata['Gender'] ==
+                                                        "Male"
+                                                        ? const Color(0x195b92ff)
+                                                        : const Color(0xffFEF3F0),
                                                     borderRadius:
-                                                        BorderRadius.circular(
-                                                            33 * fem),
+                                                    BorderRadius.circular(
+                                                        33 * fem),
                                                   ),
                                                   child: Center(
                                                     child: KText(
@@ -6793,14 +7131,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         'Nunito',
                                                         fontSize: 16 * ffem,
                                                         fontWeight:
-                                                            FontWeight.w400,
+                                                        FontWeight.w400,
                                                         height:
-                                                            1.3625 * ffem / fem,
+                                                        1.3625 * ffem / fem,
                                                         color: _userdata[
-                                                                    'Gender'] ==
-                                                                "Male"
-                                                            ? Color(0xff5b92ff)
-                                                            : Color(0xffFE8F6B),
+                                                        'Gender'] ==
+                                                            "Male"
+                                                            ? const Color(0xff5b92ff)
+                                                            : const Color(0xffFE8F6B),
                                                       ),
                                                     ),
                                                   ),
@@ -6811,41 +7149,41 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               width: width / 10.8,
                                               child: Row(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                                 children: [
                                                   SizedBox(
                                                       width: width / 54.64),
                                                   Container(
-                                                      // gender8qf (8:2320)
+                                                    // gender8qf (8:2320)
                                                       margin:
-                                                          EdgeInsets.fromLTRB(
-                                                              0 * fem,
-                                                              0 * fem,
-                                                              15.18 * fem,
-                                                              0 * fem),
-                                                      padding: EdgeInsets.only(
+                                                      EdgeInsets.fromLTRB(
+                                                          0 * fem,
+                                                          0 * fem,
+                                                          15.18 * fem,
+                                                          0 * fem),
+                                                      padding: const EdgeInsets.only(
                                                           left: 5),
                                                       child: _userdata['verifyed'] ==
-                                                              true
-                                                          ? Icon(
-                                                              Icons.verified,
-                                                              color:
-                                                                  Colors.green,
-                                                            )
-                                                          : Icon(
-                                                              Icons
-                                                                  .verified_outlined,
-                                                            )),
+                                                          true
+                                                          ? const Icon(
+                                                        Icons.verified,
+                                                        color:
+                                                        Colors.green,
+                                                      )
+                                                          : const Icon(
+                                                        Icons
+                                                            .verified_outlined,
+                                                      )),
                                                   Opacity(
                                                     // arrowdown5rFs (8:2318)
                                                     opacity: 0.0,
                                                     child: Container(
                                                       margin:
-                                                          EdgeInsets.fromLTRB(
-                                                              0 * fem,
-                                                              1.6 * fem,
-                                                              0 * fem,
-                                                              0 * fem),
+                                                      EdgeInsets.fromLTRB(
+                                                          0 * fem,
+                                                          1.6 * fem,
+                                                          0 * fem,
+                                                          0 * fem),
                                                       width: 7.82 * fem,
                                                       height: 6.52 * fem,
                                                       child: Image.asset(
@@ -6863,7 +7201,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               width: width / 10.8,
                                               child: Row(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                                 children: [
                                                   SizedBox(
                                                       width: width / 54.64),
@@ -6880,9 +7218,9 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         'Nunito',
                                                         fontSize: 16 * ffem,
                                                         fontWeight:
-                                                            FontWeight.w400,
+                                                        FontWeight.w400,
                                                         height:
-                                                            1.3625 * ffem / fem,
+                                                        1.3625 * ffem / fem,
                                                       ),
                                                     ),
                                                   ),
@@ -6891,11 +7229,11 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     opacity: 0.0,
                                                     child: Container(
                                                       margin:
-                                                          EdgeInsets.fromLTRB(
-                                                              0 * fem,
-                                                              1.6 * fem,
-                                                              0 * fem,
-                                                              0 * fem),
+                                                      EdgeInsets.fromLTRB(
+                                                          0 * fem,
+                                                          1.6 * fem,
+                                                          0 * fem,
+                                                          0 * fem),
                                                       width: 7.82 * fem,
                                                       height: 6.52 * fem,
                                                       child: Image.asset(
@@ -6915,27 +7253,27 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                               },
                                               child: SizedBox(
-                                                key:popMenuKeys[index] ,
+                                                  key:popMenuKeys[index] ,
                                                   width: width / 14.0,
                                                   height: height / 26.04,
-                                                  child: Icon(Icons.more_horiz)),
+                                                  child: const Icon(Icons.more_horiz)),
                                             ),
                                             /*GestureDetector(
-                                              onTap: () {
-                                                // setState(() {
-                                                //   viewDocid=_userdata.id;
-                                                //   viewUser_details=!viewUser_details;
-                                                // });
-                                                Popupmenu(context, _userdata.id);
-                                                print(viewUser_details);
-                                              },
-                                              child: Container(
-                                                  key: popmenukey,
-                                                  color:Colors.red,
-                                                  width: width / 14.0,
-                                                  height: height / 26.04,
-                                                  child: Icon(Icons.more_horiz)),
-                                            ),*/
+                                                onTap: () {
+                                                  // setState(() {
+                                                  //   viewDocid=_userdata.id;
+                                                  //   viewUser_details=!viewUser_details;
+                                                  // });
+                                                  Popupmenu(context, _userdata.id);
+                                                  print(viewUser_details);
+                                                },
+                                                child: Container(
+                                                    key: popmenukey,
+                                                    color:Colors.red,
+                                                    width: width / 14.0,
+                                                    height: height / 26.04,
+                                                    child: Icon(Icons.more_horiz)),
+                                              ),*/
                                           ],
                                         ),
                                       );
@@ -7009,6 +7347,7 @@ class _Users_ScreenState extends State<Users_Screen> {
       countrycon.text = "Select Country";
       yearPassedcon.clear();
       subjectStremdcon.clear();
+      //ownBussinesscon.clear();
       classcon.clear();
       rollnocon.clear();
       lastvisitcon.clear();
@@ -7044,6 +7383,7 @@ class _Users_ScreenState extends State<Users_Screen> {
         setState(() {
           Url = file;
           Uploaddocument = reader.result;
+          imgUrl="";
         });
       });
     });
@@ -7052,7 +7392,9 @@ class _Users_ScreenState extends State<Users_Screen> {
   imageupload() async {
     var snapshot = await FirebaseStorage.instance.ref().child('Images').child("${Url!.name}").putBlob(Url);
     String downloadUrl = await snapshot.ref.getDownloadURL();
-    imgUrl = downloadUrl;
+    setState(() {
+      imgUrl = downloadUrl;
+    });
   }
 
   Popupmenu(BuildContext context, _userid,key) async {
@@ -7062,7 +7404,7 @@ class _Users_ScreenState extends State<Users_Screen> {
     double height = MediaQuery.of(context).size.height;
     final render = key.currentContext!.findRenderObject() as RenderBox;
     await showMenu(
-      color: Color(0xffFFFFFF),
+      color: const Color(0xffFFFFFF),
       elevation: 0,
       context: context,
       position: RelativeRect.fromLTRB(
@@ -7091,28 +7433,28 @@ class _Users_ScreenState extends State<Users_Screen> {
                   height: height/18.475,
                   decoration: BoxDecoration(
                       color: item == "Edit"
-                          ? Color(0xff5B93FF).withOpacity(0.6)
-                          : Color(0xffE71D36).withOpacity(0.6),
+                          ? const Color(0xff5B93FF).withOpacity(0.6)
+                          : const Color(0xffE71D36).withOpacity(0.6),
                       borderRadius: BorderRadius.circular(5)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       item == "Edit"
-                          ? Icon(
+                          ? const Icon(
                               Icons.edit,
                               color: Colors.white,
                               size: 18,
                             )
-                          : Icon(
+                          : const Icon(
                               Icons.delete,
                               color: Colors.white,
                               size: 18,
                             ),
                       Padding(
-                        padding: EdgeInsets.only(left: 5),
+                        padding: const EdgeInsets.only(left: 5),
                         child: Text(
                           item,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -7137,9 +7479,8 @@ class _Users_ScreenState extends State<Users_Screen> {
       firstNamecon.text = value!['Name'].toString();
       middleNamecon.text = value["middleName"].toString();
       lastNamecon.text = value["lastName"].toString();
-      lastNamecon.text = value["lastName"].toString();
       adreesscon.text = value['Address'].toString();
-      emailIDcon.text = value['Email'].toString();
+      emailIDcon.text = value['email'].toString();
       gendercon.text = value['Gender'].toString();
       occupationcon.text = value['Occupation'].toString();
       phoneNumbercon.text = value['Phone'].toString();
@@ -7168,8 +7509,41 @@ class _Users_ScreenState extends State<Users_Screen> {
       no_of_childreancon.text = value['childreancount'].toString();
       imgUrl = value['UserImg'].toString();
       alumniEmployedController.text=value['workingStatus'].toString();
+     // ownBussinesscon.text=value['Ownbusiness'].toString();
     });
+    print(adreesscon.text);
+    print(gendercon.text);
+    print(firstNamecon.text);
+    print(middleNamecon.text);
+    print(lastNamecon.text);
+    print(occupationcon.text);
+    print(phoneNumbercon.text);
     print(imgUrl);
+    print(dateofBirthcon.text);
+    print(alterEmailIdcon.text);
+    print(aadhaarNumbercon.text);
+    print(mobileNumbercon.text);
+    print(emailIDcon.text);
+    print(citycon.text);
+    print(pinCodecon.text);
+    print(statecon.text);
+    print(countrycon.text);
+    print(yearPassedcon.text);
+    print(subjectStremdcon.text);
+    print(classcon.text);
+    print(rollnocon.text);
+    print(lastvisitcon.text);
+    print(housecon.text);
+    print(statusmessagecon.text);
+    print(educationquvalificationcon.text);
+    print(additionalquvalificationcon.text);
+    print(designationcon.text);
+    print(company_concerncon.text);
+    print(maritalStatuscon.text);
+    print(spouseNamecon.text);
+    print(anniversaryDatecon.text);
+    print(no_of_childreancon.text);
+    print(alumniEmployedController.text);
     print("++++++++++++++++++++++++++++++++++++++++++++");
 
   }
@@ -7182,57 +7556,126 @@ class _Users_ScreenState extends State<Users_Screen> {
         .join();
   }
 
-  userdatecreatefunc() {
-    print("User data Create Functiuon");
+  userdatecreatefunc() async {
+
+    print("Craete Funtion Entered+++++++++++++++++++++++++++");
     String userid = generateRandomString(16);
-    imageupload();
-    FirebaseFirestore.instance.collection("Users").doc(userid).set({
-      "Address": adreesscon.text,
-      "Gender": gendercon.text,
-      "Name": firstNamecon.text,
-      "middleName": middleNamecon.text,
-      "lastName": lastNamecon.text,
-      "Occupation": occupationcon.text,
-      "Phone": phoneNumbercon.text,
-      "UserImg": imgUrl,
-      "lastchat": "",
-      "verifyed": false,
-      "dob": dateofBirthcon.text,
-      "alteremail": alterEmailIdcon.text,
-      "aadhaarNo": aadhaarNumbercon.text,
-      "mobileNo": mobileNumbercon.text,
-      "email": emailIDcon.text,
-      "city": citycon.text,
-      "pinCode": pinCodecon.text,
-      "state": statecon.text,
-      "country": countrycon.text,
-      "yearofpassed": yearPassedcon.text,
-      "subjectStream": subjectStremdcon.text,
-      "class": classcon.text,
-      "rollNo": rollnocon.text,
-      "lastvisit": lastvisitcon.text,
-      "house": housecon.text,
-      "statusmessage": statusmessagecon.text,
-      "educationquvalification": educationquvalificationcon.text,
-      "additionalquvalification": additionalquvalificationcon.text,
-      "designation": designationcon.text,
-      "company_concern": company_concerncon.text,
-      "maritalStatus": maritalStatuscon.text,
-      "spouseName": spouseNamecon.text,
-      "anniversaryDate": anniversaryDatecon.text,
-      "childreancount": no_of_childreancon.text,
-      "date": "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}",
-      "timestamp": DateTime.now().millisecondsSinceEpoch,
-      "userDocId": userid,
-      "Active":false,
-      "Token":"",
-      "longtitude":0,
-      "latitude":0,
-      'workingStatus':alumniEmployedController.text,
-       "regno" :"Al${(billcount).toString().padLeft(2, "0")}"
-    });
+
+    if(Uploaddocument!=null){
+      var snapshot = await FirebaseStorage.instance.ref().child('Images').child("${Url!.name}").putBlob(Url);
+      String downloadUrl = await snapshot.ref.getDownloadURL();
+      setState(() {
+        imgUrl = downloadUrl;
+      });
+      print("Img Url Validate_+++++++++++++++++++++++++++++++++++++++++++++");
+      await FirebaseFirestore.instance.collection("Users").doc(userid).set({
+        "Address": adreesscon.text,
+        "Gender": gendercon.text,
+        "Name": firstNamecon.text,
+        "middleName": middleNamecon.text,
+        "lastName": lastNamecon.text,
+        "Occupation": occupationcon.text,
+        "Phone": phoneNumbercon.text,
+        "UserImg": imgUrl,
+        "lastchat": "",
+        "verifyed": false,
+        "dob": dateofBirthcon.text,
+        "alteremail": alterEmailIdcon.text,
+        "aadhaarNo": aadhaarNumbercon.text,
+        "mobileNo": mobileNumbercon.text,
+        "email": emailIDcon.text,
+        "city": citycon.text,
+        "pinCode": pinCodecon.text,
+        "state": statecon.text,
+        "country": countrycon.text,
+        "yearofpassed": yearPassedcon.text,
+        "subjectStream": subjectStremdcon.text,
+        "class": classcon.text,
+        "rollNo": rollnocon.text,
+        "lastvisit": lastvisitcon.text,
+        "house": housecon.text,
+        "statusmessage": statusmessagecon.text,
+        "educationquvalification": educationquvalificationcon.text,
+        "additionalquvalification": additionalquvalificationcon.text,
+        "designation": designationcon.text,
+        "company_concern": company_concerncon.text,
+        "maritalStatus": maritalStatuscon.text,
+        "spouseName": spouseNamecon.text,
+        "anniversaryDate": anniversaryDatecon.text,
+        "childreancount": no_of_childreancon.text,
+       // "Ownbusiness": ownBussinesscon.text,
+        "date": "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}",
+        "timestamp": DateTime.now().millisecondsSinceEpoch,
+        "userDocId": userid,
+        "Active":false,
+        "Token":"",
+        "longtitude":0,
+        "latitude":0,
+        'workingStatus':alumniEmployedController.text,
+        "regno" :"Al${(billcount).toString().padLeft(2, "0")}"
+      });
+      setState(() {
+        Useradd=false;
+      });
+    }
+    else{
+
+      print("Else Fucntion_+++++++++++++++++++++++++++++++++++++++++++++");
+      FirebaseFirestore.instance.collection("Users").doc(userid).set({
+        "Address": adreesscon.text,
+        "Gender": gendercon.text,
+        "Name": firstNamecon.text,
+        "middleName": middleNamecon.text,
+        "lastName": lastNamecon.text,
+        "Occupation": occupationcon.text,
+        "Phone": phoneNumbercon.text,
+        "UserImg": imgUrl,
+        "lastchat": "",
+        "verifyed": false,
+        "dob": dateofBirthcon.text,
+        "alteremail": alterEmailIdcon.text,
+        "aadhaarNo": aadhaarNumbercon.text,
+        "mobileNo": mobileNumbercon.text,
+        "email": emailIDcon.text,
+        "city": citycon.text,
+        "pinCode": pinCodecon.text,
+        "state": statecon.text,
+        "country": countrycon.text,
+        "yearofpassed": yearPassedcon.text,
+        "subjectStream": subjectStremdcon.text,
+        "class": classcon.text,
+        "rollNo": rollnocon.text,
+        "lastvisit": lastvisitcon.text,
+        "house": housecon.text,
+        "statusmessage": statusmessagecon.text,
+        "educationquvalification": educationquvalificationcon.text,
+        "additionalquvalification": additionalquvalificationcon.text,
+        "designation": designationcon.text,
+        "company_concern": company_concerncon.text,
+        "maritalStatus": maritalStatuscon.text,
+        "spouseName": spouseNamecon.text,
+        "anniversaryDate": anniversaryDatecon.text,
+        "childreancount": no_of_childreancon.text,
+     //  "Ownbusiness": ownBussinesscon.text,
+        "date": "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}",
+        "timestamp": DateTime.now().millisecondsSinceEpoch,
+        "userDocId": userid,
+        "Active":false,
+        "Token":"",
+        "longtitude":0,
+        "latitude":0,
+        'workingStatus':alumniEmployedController.text,
+        "regno" :"Al${(billcount).toString().padLeft(2, "0")}"
+      });
+      setState(() {
+        Useradd=false;
+      });
+    }
+    userCreateSuccessPopup();
     controllersclearfunc();
+
   }
+
   userCreateSuccessPopup(){
     double height=MediaQuery.of(context).size.height;
     double width=MediaQuery.of(context).size.width;
@@ -7241,22 +7684,22 @@ class _Users_ScreenState extends State<Users_Screen> {
       barrierColor: Colors.transparent,
       context: context, builder:(context) {
       return ZoomIn(
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         child: Padding(
-          padding:  EdgeInsets.only(top: 160.0,bottom: 160,left: 400,right:400),
+          padding:  const EdgeInsets.only(top: 160.0,bottom: 160,left: 400,right:400),
           child: Material(
             color: Colors.white,
-            shadowColor: Color(0xff245BCA),
+            shadowColor: const Color(0xff245BCA),
             borderRadius: BorderRadius.circular(8),
             elevation: 10,
             child: Container(
 
               decoration: BoxDecoration(
-                color: Color(0xffFFFFFF),
+                color: const Color(0xffFFFFFF),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Scaffold(
-                backgroundColor: Color(0xffFFFFFF),
+                backgroundColor: const Color(0xffFFFFFF),
                 body: Center(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -7318,7 +7761,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                               width: width/8.53333,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(4),
-                                  color:  Color(0xff5D5FEF)
+                                  color:  const Color(0xff5D5FEF)
                               ),
                               child: Center(
                                 child:KText(text:"Okay",
@@ -7347,45 +7790,171 @@ class _Users_ScreenState extends State<Users_Screen> {
     },);
   }
 
-  userDataUpdatefuntio(){
-    imageupload();
-    FirebaseFirestore.instance.collection("Users").doc(userUpdateDocumentID).update({
-      "Address": adreesscon.text,
-      "Gender": gendercon.text,
-      "Name": firstNamecon.text,
-      "middleName": middleNamecon.text,
-      "lastName": lastNamecon.text,
-      "Occupation": occupationcon.text,
-      "Phone": phoneNumbercon.text,
-      "UserImg": imgUrl,
-      "lastchat": "",
-      "dob": dateofBirthcon.text,
-      "alteremail": alterEmailIdcon.text,
-      "aadhaarNo": aadhaarNumbercon.text,
-      "mobileNo": mobileNumbercon.text,
-      "email": emailIDcon.text,
-      "city": citycon.text,
-      "pinCode": pinCodecon.text,
-      "state": statecon.text,
-      "country": countrycon.text,
-      "yearofpassed": yearPassedcon.text,
-      "subjectStream": subjectStremdcon.text,
-      "class": classcon.text,
-      "rollNo": rollnocon.text,
-      "lastvisit": lastvisitcon.text,
-      "house": housecon.text,
-      "statusmessage": statusmessagecon.text,
-      "educationquvalification": educationquvalificationcon.text,
-      "additionalquvalification": additionalquvalificationcon.text,
-      "designation": designationcon.text,
-      "company_concern": company_concerncon.text,
-      "maritalStatus": maritalStatuscon.text,
-      "spouseName": spouseNamecon.text,
-      "anniversaryDate": anniversaryDatecon.text,
-      "childreancount": no_of_childreancon.text,
-      'workingStatus':alumniEmployedController.text
+  userDataUpdatefuntio() async {
+    print("UPdate Fucntion++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+    print(userUpdateDocumentID);
+    print("1");
+    print(adreesscon.text);
+    print("2");
+    print(gendercon.text);
+    print("3");
+    print(firstNamecon.text);
+    print("4");
+    print(middleNamecon.text);
+    print("5");
+    print(lastNamecon.text);
+    print("6");
+    print(occupationcon.text);
+    print("7");
+    print(phoneNumbercon.text);
+    print("8");
+    print(phoneNumbercon.text);
+    print("9");
+    print(imgUrl);
+    print("10");
+    print(dateofBirthcon.text);
+    print("11");
+    print(alterEmailIdcon.text);
+    print("12");
+    print(aadhaarNumbercon.text);
+    print("13");
+    print(mobileNumbercon.text);
+    print("14");
+    print(emailIDcon.text);
+    print("15");
+    print(citycon.text);
+    print("16");
+    print(pinCodecon.text);
+    print("17");
+    print(statecon.text);
+    print("18");
+    print(countrycon.text);
+    print("19");
+    print(yearPassedcon.text);
+    print("20");
+    print(subjectStremdcon.text);
+    print("21");
+    print(classcon.text);
+    print("22");
+    print(rollnocon.text);
+    print("23");
+    print(lastvisitcon.text);
+    print("24");
+    print(housecon.text);
+    print("25");
+    print(statusmessagecon.text);
+    print("26");
+    print(educationquvalificationcon.text);
+    print("27");
+    print(additionalquvalificationcon.text);
+    print("28");
+    print(designationcon.text);
+    print("29");
+    print(company_concerncon.text);
+    print("30");
+    print(maritalStatuscon.text);
+    print("31");
+    print(spouseNamecon.text);
+    print("32");
+    print(anniversaryDatecon.text);
+    print("33");
+    print(no_of_childreancon.text);
+    print("34");
+    print(alumniEmployedController.text);
+    print("--------------------------------------------------------");
+    if(imgUrl!=""){
+      print("If Fucntion+++++++++++++++++++++++++++++++++++++++++++++++++++++");
+      await FirebaseFirestore.instance.collection("Users").doc(userUpdateDocumentID).update({
+        "Address": adreesscon.text,
+        "Gender": gendercon.text,
+        "Name": firstNamecon.text,
+        "middleName": middleNamecon.text,
+        "lastName": lastNamecon.text,
+        "Occupation": occupationcon.text,
+        "Phone": phoneNumbercon.text,
+        "UserImg": imgUrl,
+        "lastchat": "",
+        "dob": dateofBirthcon.text,
+        "alteremail": alterEmailIdcon.text,
+        "aadhaarNo": aadhaarNumbercon.text,
+        "mobileNo": mobileNumbercon.text,
+        "email": emailIDcon.text,
+        "city": citycon.text,
+        "pinCode": pinCodecon.text,
+        "state": statecon.text,
+        "country": countrycon.text,
+        "yearofpassed": yearPassedcon.text,
+        "subjectStream": subjectStremdcon.text,
+        "class": classcon.text,
+        "rollNo": rollnocon.text,
+        "lastvisit": lastvisitcon.text,
+        "house": housecon.text,
+        "statusmessage": statusmessagecon.text,
+        "educationquvalification": educationquvalificationcon.text,
+        "additionalquvalification": additionalquvalificationcon.text,
+        "designation": designationcon.text,
+        "company_concern": company_concerncon.text,
+        "maritalStatus": maritalStatuscon.text,
+        "spouseName": spouseNamecon.text,
+        "anniversaryDate": anniversaryDatecon.text,
+        "childreancount": no_of_childreancon.text,
+        'workingStatus':alumniEmployedController.text,
+       // "Ownbusiness": ownBussinesscon.text,
 
-    });
+      });
+      setState(() {
+        UserEdit=false;
+      });
+    }
+    else{
+      print("Else Fucntion+++++++++++++++++++++++++++++++++++++++++++++++++++++");
+      var snapshot = await FirebaseStorage.instance.ref().child('Images').child("${Url!.name}").putBlob(Url);
+      String downloadUrl = await snapshot.ref.getDownloadURL();
+      setState(() {
+        imgUrl = downloadUrl;
+      });
+      await FirebaseFirestore.instance.collection("Users").doc(userUpdateDocumentID).update({
+        "Address": adreesscon.text,
+        "Gender": gendercon.text,
+        "Name": firstNamecon.text,
+        "middleName": middleNamecon.text,
+        "lastName": lastNamecon.text,
+        "Occupation": occupationcon.text,
+        "Phone": phoneNumbercon.text,
+        "UserImg": imgUrl,
+        "lastchat": "",
+        "dob": dateofBirthcon.text,
+        "alteremail": alterEmailIdcon.text,
+        "aadhaarNo": aadhaarNumbercon.text,
+        "mobileNo": mobileNumbercon.text,
+        "email": emailIDcon.text,
+        "city": citycon.text,
+        "pinCode": pinCodecon.text,
+        "state": statecon.text,
+        "country": countrycon.text,
+        "yearofpassed": yearPassedcon.text,
+        "subjectStream": subjectStremdcon.text,
+        "class": classcon.text,
+        "rollNo": rollnocon.text,
+        "lastvisit": lastvisitcon.text,
+        "house": housecon.text,
+        "statusmessage": statusmessagecon.text,
+        "educationquvalification": educationquvalificationcon.text,
+        "additionalquvalification": additionalquvalificationcon.text,
+        "designation": designationcon.text,
+        "company_concern": company_concerncon.text,
+        "maritalStatus": maritalStatuscon.text,
+        "spouseName": spouseNamecon.text,
+        "anniversaryDate": anniversaryDatecon.text,
+        "childreancount": no_of_childreancon.text,
+        'workingStatus':alumniEmployedController.text,
+        //"Ownbusiness": ownBussinesscon.text,
+
+      });
+      setState(() {
+        UserEdit=false;
+      });
+    }
     controllersclearfunc();
   }
 
@@ -7398,22 +7967,22 @@ class _Users_ScreenState extends State<Users_Screen> {
       barrierColor: Colors.transparent,
       context: context, builder:(context) {
       return ZoomIn(
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         child: Padding(
-          padding:  EdgeInsets.only(top: 160.0,bottom: 160,left: 400,right:400),
+          padding:  const EdgeInsets.only(top: 160.0,bottom: 160,left: 400,right:400),
           child: Material(
             color: Colors.white,
-            shadowColor: Color(0xff245BCA),
+            shadowColor: const Color(0xff245BCA),
             borderRadius: BorderRadius.circular(8),
             elevation: 10,
             child: Container(
 
               decoration: BoxDecoration(
-                color: Color(0xffFFFFFF),
+                color: const Color(0xffFFFFFF),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Scaffold(
-                backgroundColor: Color(0xffFFFFFF),
+                backgroundColor: const Color(0xffFFFFFF),
                 body: Center(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -7475,7 +8044,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                               width: width/8.53333,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(4),
-                                  color:  Color(0xff5D5FEF)
+                                  color:  const Color(0xff5D5FEF)
                               ),
                               child: Center(
                                 child:KText(text:"Okay",

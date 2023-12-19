@@ -1,10 +1,16 @@
 
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:flutter/widgets.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
+
+import 'Constant_.dart';
+import 'PieChart_all_department.dart';
 
 class TestINg_Pages extends StatefulWidget {
   const TestINg_Pages({super.key});
@@ -16,13 +22,31 @@ class TestINg_Pages extends StatefulWidget {
 class _TestINg_PagesState extends State<TestINg_Pages> {
 
   // Data for the pie chart
-  Map<String, double> dataMap = {
-    "Food Items": 30.47,
-    "Clothes": 17.70,
-    "Technology": 4.25,
-    "Cosmetics": 3.51,
-    "Other": 2.83,
-  };
+
+
+  List<String> name =["sd"];
+  List<double> vl =[0];
+
+
+  late Map<String, double> dataMap={};
+
+   Map<String, double> dataMap2={
+     "Computer":20.00,
+     "Computer":40.00,
+     "Computer":60.00,
+     "Computer":80.00,
+     "Computer":90.00,
+   };
+
+  /*setval(){
+    for(int i=0;i<name.length;i++){
+      dataMap = {
+        name[i]:vl[i]
+      };
+    }
+    print(dataMap);
+  */
+
 
   // Colors for each segment
   // of the pie chart
@@ -50,7 +74,10 @@ class _TestINg_PagesState extends State<TestINg_Pages> {
       Color.fromRGBO(254, 154, 92, 1),
     ]
   ];
+  GlobalKey _key = GlobalKey();
+  ScrollController _scrollController=ScrollController();
 
+  final ScrollController _horizontal = ScrollController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,9 +86,74 @@ class _TestINg_PagesState extends State<TestINg_Pages> {
         title: const Text("Pie Chart example"),
       ),
       body: SingleChildScrollView(
+        physics: NeverScrollableScrollPhysics(),
 
         child: Column(
           children: [
+
+            Scrollbar(
+              controller: _horizontal,
+              thumbVisibility: true,
+              trackVisibility: true,
+              notificationPredicate: (notif) => notif.depth == 1,
+              child: SingleChildScrollView(
+                controller: _horizontal,
+                physics: ScrollPhysics(),
+                child: SizedBox(
+                  height: 50,
+                  width: 1200,
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    scrollDirection: Axis.horizontal,
+                    physics: ScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: dateList.length,
+                    itemBuilder:
+                  (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+
+                        onTap: (){
+
+                          if(currentBatchDYear>dateList[index]){
+                            _scrollController.animateTo(
+                                _scrollController.position.pixels-index*10,
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.easeOut);
+                          }
+                          else{
+                            _scrollController.animateTo(
+                                _scrollController.position.pixels+index*10,
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.easeOut);
+                          }
+
+                          print("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+                          setState(() {
+                            currentBatchDYear=dateList[index];
+                          });
+                          print(currentBatchDYear);
+                          print('Current Year ++++++++++++++++++++++++++++');
+                          workingStatusAlumniFunc();
+                        },
+                        child: Container(
+                            height: 20,
+                            width: 60,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color:
+                              currentBatchDYear==dateList[index]?
+                              Constants().primaryAppColor:Colors.red
+                            ),
+
+                            child: Center(child: Text(dateList[index].toString()))),
+                      ),
+                    );
+                  },),
+                ),
+              ),
+            ),
         
             Row(
               children: [
@@ -88,7 +180,7 @@ class _TestINg_PagesState extends State<TestINg_Pages> {
                         borderRadius: BorderRadius.circular(50),
                         color: Colors.green
                       ),
-                      child: Center(child: Text("Working Alumni")),
+                      child: Center(child: Text("Working")),
                     )
                   ],
                 ),
@@ -114,39 +206,51 @@ class _TestINg_PagesState extends State<TestINg_Pages> {
                           borderRadius: BorderRadius.circular(50),
                           color: Colors.green
                       ),
-                      child: Center(child: const Text("Not Working Alumni")),
+                      child: Center(child: const Text("Not Working")),
                     )
                   ],
                 ),
 
-                SimpleCircularProgressBar(
-                 // valueNotifier: valueNotifier,
-                  mergeMode: true,
-                  onGetText: (double value) {
-                    TextStyle centerTextStyle = TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.greenAccent.withOpacity(value * 0.01),
-                    );
-
-                    return Text(
-                      '${value.toInt()}',
-                      style: centerTextStyle,
-                    );
-                  },
+                Column(
+                  children: [
+                    CircularPercentIndicator(
+                      radius: 50.0,
+                      lineWidth: 15.0,
+                      curve: Curves.easeIn,
+                      animation: true,
+                      animationDuration: 1500,
+                      animateFromLastPercent: true,
+                      percent: ownBusinessAlumniPercentage,
+                      center: Text("${(ownBusinessAlumniPercentage*100).toStringAsFixed(0)} %"),
+                      progressColor: Colors.yellow,
+                      backgroundColor: Colors.grey,
+                    ),
+                    Container(
+                      height: 50,
+                      width: 120,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: Colors.yellow
+                      ),
+                      child: const Center(child: Text("Own Business")),
+                    )
+                  ],
                 ),
 
               ],
             ),
         
-        
-            SizedBox(
+        Text(TotalAlumniUserCount.toString()),
+        Text(dataMap.toString()),
+
+           /* SizedBox(
               height: 500,
               width: 500,
               child: Center(
-                child: PieChart(
+                child:
+                PieChart(
                   // Pass in the data for
-                  // the pie chart
+                  // the pie chartR
                   dataMap: dataMap,
                   // Set the colors for the
                   // pie chart segments
@@ -154,7 +258,7 @@ class _TestINg_PagesState extends State<TestINg_Pages> {
                   // Set the radius of the pie chart
                   chartRadius: MediaQuery.of(context).size.width / 2,
                   // Set the center text of the pie chart
-                  centerText: "Budget",
+                //  centerText: "Budget",
                   // Set the width of the
                   // ring around the pie chart
                   ringStrokeWidth: 24,
@@ -178,7 +282,16 @@ class _TestINg_PagesState extends State<TestINg_Pages> {
                   gradientList: gradientList,
                 ),
               ),
-            ),
+            ),*/
+            SizedBox(
+                height: 500,
+                width: 500,
+                child:  Alldepartment(derpartMentList:departmentDataList))
+
+
+
+
+
           ],
         ),
       ),
@@ -190,12 +303,15 @@ class _TestINg_PagesState extends State<TestINg_Pages> {
   @override
   void initState() {
     getacademicAndDepartmentDataFunc();
+    getYears(1950);
+    workingStatusAlumniFunc();
     // TODO: implement initState
     super.initState();
   }
 
   List academicDataList=[];
   List departmentDataList=[];
+  List dateList=[];
 
   List<workingPerson> workingPersonListData=[];
 
@@ -205,12 +321,15 @@ class _TestINg_PagesState extends State<TestINg_Pages> {
 
   double workingAlumniPercentage=0;
   double notworkingAlumniPercentage=0;
+  double ownBusinessAlumniPercentage=0;
+
+
+
 
   getacademicAndDepartmentDataFunc()async{
     setState(() {
       academicDataList.clear();
       departmentDataList.clear();
-      TotalAlumniUserCount=0;
     });
     var academictData=await FirebaseFirestore.instance.collection("AcademicYear").orderBy("name").get();
     for(int i=0;i<academictData.docs.length;i++){
@@ -224,11 +343,9 @@ class _TestINg_PagesState extends State<TestINg_Pages> {
         departmentDataList.add(departmentData.docs[j]['name']);
       });
     }
-    print("Department List And academic Year List++++++++++++++++++++++++++++++++++++++++++");
-    print(academicDataList);
-    print(departmentDataList);
-    workingStatusAlumniFunc();
+
   }
+
 
   workingStatusAlumniFunc()async{
     setState(() {
@@ -240,7 +357,6 @@ class _TestINg_PagesState extends State<TestINg_Pages> {
       TotalAlumniUserCount=UserData.docs.length;
     });
     for(int x=0;x<UserData.docs.length;x++){
-
       if(int.parse(UserData.docs[x]['yearofpassed'].toString())==currentBatchDYear){
         setState(() {
           alumniWorkingCount=alumniWorkingCount+1;
@@ -252,24 +368,30 @@ class _TestINg_PagesState extends State<TestINg_Pages> {
                 workingStatus:UserData.docs[x]['workingStatus'].toString() ,
               )
           );
+
         });
       }
     }
+
     print("User over all working Status List++++++++++++++++++++++++++++++++++++++++++++");
     print("total Alumni $TotalAlumniUserCount");
     print(currentBatchDYear);
     workingPersonListData.forEach((element) {
 
       if(element.workingStatus=="Yes"){
+        print(element.workingStatus);
         setState(() {
           workingAlumniPercentage= workingPersonListData.length/TotalAlumniUserCount;
         });
+        dataMap[element.department.toString()] = double.parse(((workingPersonListData.length/TotalAlumniUserCount*100).toString()));
+
       }
-      else{
+      if(element.workingStatus=="Own Business"){
+        ownBusinessAlumniPercentage= workingPersonListData.length/TotalAlumniUserCount;
+      }
         setState(() {
-          notworkingAlumniPercentage= workingPersonListData.length/TotalAlumniUserCount;
+          notworkingAlumniPercentage= (TotalAlumniUserCount-workingPersonListData.length)/TotalAlumniUserCount;
         });
-      }
 
       print(element.workingStatus);
       print(element.workingAlumniCount);
@@ -281,12 +403,31 @@ class _TestINg_PagesState extends State<TestINg_Pages> {
     print("$TotalAlumniUserCount %");
     print("$notworkingAlumniPercentage %");
     print("$workingAlumniPercentage %");
+    print(dataMap);
+    print("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
+
+
+
 
 
 
 
   }
 
+  getYears(int year) {
+    int currentYear = DateTime.now().year;
+
+    List<int> yearsTilPresent = [];
+
+    while (year <= currentYear) {
+      yearsTilPresent.add(year);
+      year++;
+    }
+    setState(() {
+      dateList=yearsTilPresent;
+    });
+
+  }
 
 }
 
@@ -310,3 +451,21 @@ class ChartData {
   workingPerson({this.batch,this.department,this.workingStatus,this.workingAlumniCount});
 
   }
+
+
+class DataModel {
+  String category;
+  double value;
+
+  DataModel({required this.category, required this.value});
+
+  factory DataModel.fromJson(Map<String, dynamic> json) {
+    return DataModel(
+      category: json['category'],
+      value: json['value'].toDouble(),
+    );
+  }
+}
+
+
+

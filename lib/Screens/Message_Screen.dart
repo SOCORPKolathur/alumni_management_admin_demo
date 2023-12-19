@@ -44,6 +44,8 @@ class _Message_ScreenState extends State<Message_Screen>
 
   String SerachValue = "";
 
+  var colorValue;
+
   @override
   void initState() {
     tabController = TabController(length: 2, vsync: this);
@@ -413,9 +415,7 @@ class _Message_ScreenState extends State<Message_Screen>
                           ),
 
                            StreamBuilder<QuerySnapshot>(
-                            stream: FirebaseFirestore.instance
-                                .collection("Groups")
-                                .snapshots(),
+                            stream: FirebaseFirestore.instance.collection("Groups").snapshots(),
                             builder: (context, snapshot) {
                               if(snapshot.hasData==null){
                                 return Center(
@@ -459,6 +459,7 @@ class _Message_ScreenState extends State<Message_Screen>
                                         onTap: () {
                                           setState(() {
                                             expand2 = snapshot.data!.docs[index].id;
+                                            colorValue=int.parse(snapshot.data!.docs[index]['color'].toString());
                                             departmentName="${snapshot.data!.docs[index]['Department']}";
                                                acadamicYear= "${snapshot.data!.docs[index]['AccademicYear']}";
                                           });
@@ -468,7 +469,7 @@ class _Message_ScreenState extends State<Message_Screen>
                                           height: height / 20.9,
                                           width: width / 44.5333,
                                           decoration: BoxDecoration(
-                                              color: randomOpaqueColor(),
+                                              color: Color(int.parse(snapshot.data!.docs[index]["color"].toString())),
                                               borderRadius:
                                               BorderRadius.circular(100),
                                               image: DecorationImage(
@@ -945,12 +946,25 @@ class _Message_ScreenState extends State<Message_Screen>
                                     height: height / 20.9,
                                     width: width / 44.5333,
                                     decoration: BoxDecoration(
-                                        color: Color(0xffDFDEFF),
+                                        color: Color(colorValue),
                                         borderRadius:
                                         BorderRadius.circular(100),
                                         image: DecorationImage(
                                             fit: BoxFit.cover,
-                                            image: NetworkImage(UserImg))),
+                                            image: NetworkImage(UserImg)),
+                                    ),
+                                    child:Center(
+                                      child: Text(
+                                        UserImg==""?
+                                        groupNameTextfunc(departmentName.toString()).toString():"",
+                                        style: SafeGoogleFont(
+                                          'Nunito',
+                                          fontSize: width / 113.833,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.symmetric(
@@ -975,12 +989,7 @@ class _Message_ScreenState extends State<Message_Screen>
                               ),
                             ),
                             StreamBuilder<QuerySnapshot>(
-                              stream: FirebaseFirestore.instance
-                                  .collection("Groups")
-                                  .doc(expand2)
-                                  .collection("Messages")
-                                  .orderBy('timestamp',
-                              )
+                              stream: FirebaseFirestore.instance.collection("Groups").doc(expand2).collection("Messages").orderBy('timestamp',)
                                   .snapshots(),
                               builder: (context, snapshot) {
                                 if (!snapshot.hasData) {
@@ -1085,14 +1094,20 @@ class _Message_ScreenState extends State<Message_Screen>
                                                       width: width /
                                                           44.5333,
                                                       decoration: BoxDecoration(
-                                                          color: Color(
-                                                              0xffDFDEFF),
+                                                          color: Color(colorValue),
                                                           borderRadius:
                                                           BorderRadius.circular(100),
                                                           image: DecorationImage(
                                                               fit: BoxFit.cover,
                                                               image: NetworkImage(UserImg)
                                                       )
+                                                      ),
+                                                      child:Center(
+                                                        child: Text(UserImg==""?
+                                                        groupNameTextfunc(departmentName.toString()).toString():"",style: GoogleFonts.nunito(
+                                                          fontWeight: FontWeight.w700,
+                                                          color: Colors.white
+                                                        ),),
                                                       ),
 
                                                     ),
@@ -1615,8 +1630,7 @@ class _Message_ScreenState extends State<Message_Screen>
       String result=words.length>1? "${words[0].substring(0,1)}${words[1].substring(0,1)}":"${words.toString().substring(1,3)}";
       return  result;
   }
-  static Color randomOpaqueColor() {
-    return Color(Random().nextInt(0xffffffff)).withAlpha(0xff);
-  }
+
+
 
 }
