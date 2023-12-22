@@ -13,6 +13,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   var delegate = await LocalizationDelegate.create(
       basePath: 'assets/i18n/',
       fallbackLocale: 'en_US',
