@@ -36,16 +36,16 @@ class _AlldepartmentState extends State<Alldepartment> {
             PieChartData(
               pieTouchData: PieTouchData(
                 touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                  setState(() {
-                    if (!event.isInterestedForInteractions ||
-                        pieTouchResponse == null ||
-                        pieTouchResponse.touchedSection == null) {
-                      touchedIndex = -1;
-                      return;
-                    }
-                    touchedIndex = pieTouchResponse
-                        .touchedSection!.touchedSectionIndex;
-                  });
+                  // setState(() {
+                  //   if (!event.isInterestedForInteractions ||
+                  //       pieTouchResponse == null ||
+                  //       pieTouchResponse.touchedSection == null) {
+                  //     touchedIndex = -1;
+                  //     return;
+                  //   }
+                  //   touchedIndex = pieTouchResponse
+                  //       .touchedSection!.touchedSectionIndex;
+                  // });
                 },
               ),
               borderData: FlBorderData(
@@ -60,24 +60,28 @@ class _AlldepartmentState extends State<Alldepartment> {
 
         SizedBox(
           width: width/5.939130434782609,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
+          child: SingleChildScrollView(
+            physics: const ScrollPhysics(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
 
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount:widget.derpartMentList!.length,
-                itemBuilder: (context, index) {
-                  return  Indicator(
-                    color: color(index),
-                    text: widget.derpartMentList![index].toString(),
-                    isSquare: true,
-                  );
-                },),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount:widget.derpartMentList!.length,
+                  itemBuilder: (context, index) {
+                    return  Indicator(
+                      color: color(index),
+                      text: widget.derpartMentList![index].toString(),
+                      isSquare: true,
+                    );
+                  },),
 
 
-            ],
+              ],
+            ),
           ),
         ),
 

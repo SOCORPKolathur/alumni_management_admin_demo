@@ -73,6 +73,10 @@ class LineChartMap extends StatelessWidget {
     lineChartBarData1_4,
   ];
 
+
+
+
+
   LineTouchData get lineTouchData2 => const LineTouchData(
     enabled: false,
   );
@@ -312,6 +316,7 @@ class LineChartMap extends StatelessWidget {
     ],
   );
 }
+
 
 class LineChartSample1 extends StatefulWidget {
   const LineChartSample1({super.key});

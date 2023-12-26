@@ -947,7 +947,7 @@ class _DashBoardState extends State<DashBoard> {
                                 ),
                               ),
                             ),
-                            child: const LineChartSample1(),
+                            child: const LineChartMap(isShowingMainData: true,),
                            // LineChartMap(isShowingMainData: true,)
                             // Stack(
                             //   children: [

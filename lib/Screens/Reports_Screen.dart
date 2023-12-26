@@ -22,11 +22,14 @@ class _Reports_ScreenState extends State<Reports_Screen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Reports',
-              style:GoogleFonts.poppins(
-                  fontWeight: FontWeight.w600,
-                fontSize: width / 82.538,
+            Padding(
+              padding:  EdgeInsets.only(left:width/190.2),
+              child: Text(
+                'Reports',
+                style:GoogleFonts.poppins(
+                    fontWeight: FontWeight.w600,
+                  fontSize: width / 82.538,
+                ),
               ),
             ),
           SizedBox(

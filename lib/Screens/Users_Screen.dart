@@ -337,6 +337,20 @@ class _Users_ScreenState extends State<Users_Screen> {
 
   int billcount=0;
 
+  ///dropdown validator values
+  bool dropdownValidator=false;
+  bool dropdownValidator2=false;
+  bool dropdownValidator3=false;
+  ///Text Controller validator boolean Value
+  bool firstNameValidator=false;
+  bool lastNameValidator=false;
+  bool dobValidator=false;
+  bool yearPassedValidator=false;
+  bool classValidator=false;
+  bool myStatusValidator=false;
+  bool pincodeValidator=false;
+
+
   userCounta()async{
     var user =await FirebaseFirestore.instance.collection("Users").get();
     setState(() {
@@ -1434,6 +1448,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                         padding: const EdgeInsets.only(left: 5),
                                         child: Row(
                                           children: [
+                                            
                                             ///State Dropdown
                                             SizedBox(
                                                height: height/9.369,
@@ -1472,8 +1487,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             hint: Padding(
                                                               padding: const EdgeInsets.only(left:8.0),
                                                               child: Text(
-                                                                                                                        'Select State',
-                                                                                                                        style: SafeGoogleFont(
+                                                                'Select State',
+                                                                style: SafeGoogleFont(
                                                               'Nunito',
                                                               fontSize: 20 * ffem,
                                                                                                                         ),
@@ -1484,37 +1499,26 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 DropdownMenuItem<
                                                                     String>(
                                                                   value: item,
-                                                                  child: Padding(
-                                                                    padding: const EdgeInsets.all(8.0),
-                                                                    child: Text(
-                                                                      item,
-                                                                      style:
-                                                                          SafeGoogleFont(
-                                                                        'Nunito',
-                                                                        fontSize:
-                                                                            20 *
-                                                                                ffem,
-                                                                      ),
+                                                                  child: Text(
+                                                                    item,
+                                                                    style:
+                                                                    SafeGoogleFont(
+                                                                      'Nunito',
+                                                                      fontSize:
+                                                                      20 *
+                                                                          ffem,
                                                                     ),
                                                                   ),
                                                                 )).toList(),
                                                         value: statecon.text,
-                                                        validator: (value) {
-                                                          if (value ==
-                                                              "Select State") {
-                                                            return 'Please Select the State';
-                                                          }
-                                                          return null;
-                                                        },
-                                                        onChanged:
-                                                            (String? value) {
+                                                       
+                                                        onChanged: (String? value) {
                                                           getCity(value.toString());
                                                           setState(() {statecon.text = value!;
                                                           });
                                                         },
                                                         buttonStyleData:
-                                                            const ButtonStyleData(
-
+                                                        const ButtonStyleData(
                                                         ),
                                                         menuItemStyleData:
                                                             const MenuItemStyleData(
@@ -1524,12 +1528,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             const InputDecoration(
                                                                 border:
                                                                     InputBorder
-                                                                        .none),
+                                                                        .none,
+                                                              ),
 
                                                                         
                                                       ),
                                                     ),
-                                                  )
+                                                  ),
+                                                 
                                                 ],
                                               ),
                                             ),
@@ -1548,7 +1554,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       'Nunito',
                                                       fontSize: 20 * ffem,
                                                       fontWeight:
-                                                          FontWeight.w700,
+                                                      FontWeight.w700,
                                                       height:
                                                           1.3625 * ffem / fem,
                                                       color: const Color(0xff000000),
@@ -1596,13 +1602,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 ))
                                                             .toList(),
                                                         value: citycon.text,
-                                                        validator: (value) {
-                                                          if (value ==
-                                                              "Select City") {
-                                                            return 'Please Select the City';
-                                                          }
-                                                          return null;
-                                                        },
+                                                       
                                                         onChanged:
                                                             (String? value) {
                                                           setState(() {
@@ -1629,6 +1629,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 ],
                                               ),
                                             ),
+                                            
                                             SizedBox(width: width/43.8857),
 
                                             ///Pin Code
@@ -1679,18 +1680,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   left: 10),
                                                           counterText: "",
                                                         ),
-                                                        validator: (value) {
-                                                          if (value!.isEmpty) {
-                                                            return 'Field is required';
-                                                          } else if (value!
-                                                              .isNotEmpty) {
-                                                            if (value!.length <
-                                                                6) {
-                                                              return 'Pin code Minimum 6 Characters';
-                                                            }
-                                                          }
-                                                          return null;
-                                                        },
+                                                       
                                                       ))
                                                 ],
                                               ),
@@ -1757,13 +1747,6 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 ))
                                                             .toList(),
                                                         value: countrycon.text,
-                                                        validator: (value) {
-                                                          if (value ==
-                                                              "Select Country") {
-                                                            return 'Please Select the Country';
-                                                          }
-                                                          return null;
-                                                        },
                                                         onChanged:
                                                             (String? value) {
                                                           setState(() {
@@ -3488,11 +3471,20 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                       ),
                                                                       validator: (value) {
                                                                         if (value!.isEmpty) {
-                                                                          return 'Field is required';
+                                                                        /* setState((){
+                                                                           firstNameValidator=true;
+                                                                         }
+                                                                         );*/
                                                                         }
                                                                         return null;
                                                                       },
-                                                                    )),
+                                                                        onChanged:(value){
+                                                                          setState((){
+                                                                            firstNameValidator=false;
+                                                                          });
+                                                                        }
+                                                                    ),
+                                                                          ),
                                                               ],
                                                             ),
                                                           ),
@@ -4310,7 +4302,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 children: [
                                                   ///State Dropdown
                                                   SizedBox(
-                                                     height: height/9.369,
+                                                     height: height/7.5,
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -4377,20 +4369,22 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                                                                                                       ),
                                                                                                                                                     ),
                                                                       )).toList(),
-                                                              value: statecon.text,
-                                                              validator: (value) {
-                                                                if (value ==
-                                                                    "Select State") {
-                                                                  return 'Please Select the State';
-                                                                }
-                                                                return null;
-                                                              },
+                                                              value: statecon.text, 
+                                                                  validator: (value) {
+                                                                    if (value == "Select State") {
+                                                                      setState((){
+                                                                        dropdownValidator=true;
+                                                                      });
+                                                                    }
+                                                                    return null;
+                                                                  },
                                                               onChanged: (String?
                                                                   value) {
                                                                 getCity(value.toString());
                                                                 setState(() {
                                                                   statecon.text =
                                                                       value!;
+                                                                  dropdownValidator=false;
                                                                 });
                                                               },
                                                               buttonStyleData:
@@ -4400,13 +4394,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               ),
                                                               menuItemStyleData: const MenuItemStyleData(),
                                                               decoration:
-                                                                  const InputDecoration(
+                                                              const InputDecoration(
                                                                       border:
                                                                           InputBorder
                                                                               .none),
-                                                                                                                          ),
-                                                                                                                        ),
-                                                        )
+                                                                     ),
+                                                                    ),
+                                                        ),
+                                                        dropdownValidator==true&&statecon.text=="Select State"?Text("Field is required",style:TextStyle(color:Colors.red,fontSize:13)):const SizedBox()
                                                       ],
                                                     ),
                                                   ),
@@ -4414,7 +4409,7 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                                   ///city
                                                   SizedBox(
-                                                     height: height/9.369,
+                                                     height: height/7.5,
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -4484,7 +4479,9 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               validator: (value) {
                                                                 if (value ==
                                                                     "Select City") {
-                                                                  return 'Please Select the City';
+                                                                  setState((){
+                                                                    dropdownValidator2=true;
+                                                                  });
                                                                 }
                                                                 return null;
                                                               },
@@ -4493,6 +4490,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 setState(() {
                                                                   citycon.text =
                                                                       value!;
+                                                                  dropdownValidator2=false;
                                                                 });
                                                               },
                                                               buttonStyleData:
@@ -4511,7 +4509,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                               .none),
                                                             ),
                                                           ),
-                                                        )
+                                                        ),
+                                                        dropdownValidator2==true&&citycon.text=="Select City"?Text("Field is required",style:TextStyle(color:Colors.red,fontSize:13)):const SizedBox()
                                                       ],
                                                     ),
                                                   ),
@@ -4519,7 +4518,7 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                                   ///Pin Code
                                                   SizedBox(
-                                                     height: height/9.369,
+                                                     height: height/7.5,
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -4595,7 +4594,7 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                                   ///Country Dropdown
                                                   SizedBox(
-                                                     height: height/9.369,
+                                                     height: height/7.5,
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -4667,7 +4666,9 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               validator: (value) {
                                                                 if (value ==
                                                                     "Select Country") {
-                                                                  return 'Please Select the Country';
+                                                                  setState((){
+                                                                    dropdownValidator3=true;
+                                                                  });
                                                                 }
                                                                 return null;
                                                               },
@@ -4677,6 +4678,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   countrycon
                                                                           .text =
                                                                       value!;
+                                                                  dropdownValidator3=false;
                                                                 });
 
                                                               },
@@ -4695,7 +4697,11 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                               .none),
                                                             ),
                                                           ),
-                                                        )
+                                                        ),
+                                                        dropdownValidator3==true&&countrycon.text=="Select Country"
+
+                                                        ?Text("Field is required",style:TextStyle(color:Colors.red,fontSize:13)):const SizedBox()
+
                                                       ],
                                                     ),
                                                   ),
@@ -6200,14 +6206,17 @@ class _Users_ScreenState extends State<Users_Screen> {
                             children: [
                               ///Alumni text
                               // SizedBox(height: height / 26.04),
-                              KText(
-                                text: 'Alumni List',
-                                style: SafeGoogleFont(
-                                  'Nunito',
-                                  fontSize: 24 * ffem,
-                                  fontWeight: FontWeight.w700,
-                                  height: 1.3625 * ffem / fem,
-                                  color: const Color(0xff030229),
+                              Padding(
+                                padding:  EdgeInsets.only(left:width/190.2),
+                                child: KText(
+                                  text: 'Alumni List',
+                                  style: SafeGoogleFont(
+                                    'Nunito',
+                                    fontSize: 24 * ffem,
+                                    fontWeight: FontWeight.w700,
+                                    height: 1.3625 * ffem / fem,
+                                    color: const Color(0xff030229),
+                                  ),
                                 ),
                               ),
                               Row(
@@ -7011,6 +7020,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                           CrossAxisAlignment.center,
                                           children: [
                                             SizedBox(
+
                                               width: width / 6.5,
                                               child: Row(
                                                 children: [
@@ -7072,6 +7082,9 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         1.3625 * ffem / fem,
                                                         color:
                                                         const Color(0xff030229),
+                                                        textStyle:TextStyle(
+                                                          overflow: TextOverflow.ellipsis
+                                                        )
                                                       ),
                                                     ),
                                                   ),

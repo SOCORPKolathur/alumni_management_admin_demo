@@ -1,19 +1,9 @@
-import 'package:alumni_management_admin/utils.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
 
-import 'PieChart_all_department.dart';
+import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class Testing_screen extends StatefulWidget {
-  int ?CurrentYearValue;
-  List ?departmentDataList;
-   Testing_screen({this.CurrentYearValue,this.departmentDataList});
+  const Testing_screen({super.key});
 
   @override
   State<Testing_screen> createState() => _Testing_screenState();
@@ -22,460 +12,61 @@ class Testing_screen extends StatefulWidget {
 class _Testing_screenState extends State<Testing_screen> {
 
 
-  List<lineData>LineDataList=[
-    // lineData(DateTime(2023, 1, 1), 30),
-    // lineData(DateTime(2023, 2, 1), 45),
-    // lineData(DateTime(2023, 3, 1), 20),
-    // lineData(DateTime(2023, 4, 1), 60),
-    // lineData(DateTime(2023, 5, 1), 35),
-    // lineData(DateTime(2023, 6, 1), 50),
-  ];
-  List<lineData>LineDataList2=[
-    // lineData(DateTime(2023, 1, 1), 30),
-    // lineData(DateTime(2023, 2, 1), 45),
-    // lineData(DateTime(2023, 3, 1), 20),
-    // lineData(DateTime(2023, 4, 1), 60),
-    // lineData(DateTime(2023, 5, 1), 35),
-    // lineData(DateTime(2023, 6, 1), 50),
-  ];
-  List<lineData>LineDataList3=[
-    // lineData(DateTime(2023, 1, 1), 30),
-    // lineData(DateTime(2023, 2, 1), 45),
-    // lineData(DateTime(2023, 3, 1), 20),
-    // lineData(DateTime(2023, 4, 1), 60),
-    // lineData(DateTime(2023, 5, 1), 35),
-    // lineData(DateTime(2023, 6, 1), 50),
+
+  final List<LineData> lineDataList = [
+    LineData(2010, 20),
+    LineData(2011, 40),
+    LineData(2012, 60),
+    LineData(2013, 80),
+    LineData(2014, 100),
   ];
 
-
-  @override
-  void initState() {
-    userFetchData();
-    // TODO: implement initState
-    super.initState();
-  }
-  @override
-  Widget build(BuildContext context) {
-    return  Row(
-      children: [
-        Text(widget.CurrentYearValue.toString()),
-
-        SfCartesianChart(
-          primaryXAxis: DateTimeAxis(
-            dateFormat: DateFormat.y(),
-            majorGridLines: MajorGridLines(width: 0),
-          ),
-          primaryYAxis: NumericAxis(
-            majorGridLines: MajorGridLines(width: 0),
-          ),
-          legend: Legend(
-              isVisible: true,
-              // Legend will placed at the specified offset
-              offset: Offset(20, 40)),
-          series: <CartesianSeries>[
-            ColumnSeries<lineData, int>(
-              dataSource: LineDataList,
-              xValueMapper: (lineData data, _) => data.x,
-              yValueMapper: (lineData data, _) => data.y,
-            ),
-          ],
+  LineChartData createLineChartData(List<LineData> lineDataList) {
+    return LineChartData(
+      lineBarsData: [
+        LineChartBarData(
+          spots: lineDataList.map((data) => FlSpot(data.year.toDouble(), data.percentage)).toList(),
+          isCurved: true,
+          color: Colors.blue,
+          belowBarData: BarAreaData(show: false),
         ),
-
-       /* SfCartesianChart(
-            primaryXAxis: DateTimeAxis(
-              dateFormat: DateFormat.y(),
-              majorGridLines: MajorGridLines(width: 0),
-            ),
-            primaryYAxis: NumericAxis(
-              majorGridLines: MajorGridLines(width: 0),
-            ),
-            legend: Legend(
-                isVisible: true,
-                // Legend will placed at the specified offset
-                offset: Offset(20, 40)),
-
-            series: <CartesianSeries>[
-              LineSeries<lineData, DateTime>(
-                dataSource: LineDataList2,
-                xValueMapper: (lineData data, _) => data.x,
-                yValueMapper: (lineData data, _) => data.y,
-                color: Colors.red.withOpacity(0.5),
-              ),
-
-            ]
-        ),
-
-        SfCartesianChart(
-            primaryXAxis: DateTimeAxis(
-              dateFormat: DateFormat.y(),
-              majorGridLines: MajorGridLines(width: 0),
-            ),
-            primaryYAxis: NumericAxis(
-              majorGridLines: MajorGridLines(width: 0),
-            ),
-            legend: Legend(
-                isVisible: true,
-                // Legend will placed at the specified offset
-                offset: Offset(20, 40)),
-
-            series: <CartesianSeries>[
-              LineSeries<lineData, DateTime>(
-                dataSource: LineDataList3,
-                xValueMapper: (lineData data, _) => data.x,
-                yValueMapper: (lineData data, _) => data.y,
-                color: Color(0xffEABE3B),
-              ),
-
-            ]
-        ),
-*/
       ],
+      titlesData: FlTitlesData(
+        leftTitles: AxisTitles(sideTitles:SideTitles(showTitles: true) ),
+        bottomTitles: AxisTitles(sideTitles:SideTitles(showTitles: true) ),
+      ),
+      borderData: FlBorderData(show: true),
+      gridData: FlGridData(show: true),
     );
-
   }
-
-
-
-  userFetchData() async {
-
-    int value=0;
-    int value2=0;
-    int value3=0;
-    int TotalNumberOfUsers=0;
-    var UserData= await  FirebaseFirestore.instance.collection('Users').where("yearofpassed",isEqualTo: widget.CurrentYearValue.toString()).get();
-    TotalNumberOfUsers=UserData.docs.length;
-    for(int x=0;x<UserData.docs.length;x++){
-
-      if(widget.departmentDataList!.contains(UserData.docs[x]['subjectStream'])){
-
-        print("Subject Stream++++++++++++++++++++++++++++++++");
-        if(UserData.docs[x]['workingStatus']=="Yes"){
-          print("1111111111111--------------YEs");
-          value=value+1;
-          LineDataList.add(
-              lineData(int.parse(UserData.docs[x]['yearofpassed'].toString()), double.parse((value/TotalNumberOfUsers).toString()))
-          );
-        }
-        if(UserData.docs[x]['workingStatus']=="No"){
-          print("2222222222222--------------No");
-          value2=value2+1;
-          LineDataList2.add(
-              lineData(int.parse(UserData.docs[x]['yearofpassed'].toString()), double.parse((value2/TotalNumberOfUsers).toString()))
-          );
-        }
-        if(UserData.docs[x]['workingStatus']=="Own Business"){
-          print("3333333333333--------------Own Business");
-          value3=value3+1;
-          LineDataList3.add(
-              lineData(int.parse(UserData.docs[x]['yearofpassed'].toString()), double.parse((value3/TotalNumberOfUsers).toString())*10)
-          );
-        }
-
-
-      }
-
-
-
-
-    }
-  }
-
-}
-class lineData {
-  lineData(this.x, this.y);
-  final int x;
-  final double? y;
-}
-
-
-
-
-
-class LineChartSample2 extends StatefulWidget {
-  const LineChartSample2({super.key});
-
-  @override
-  State<LineChartSample2> createState() => _LineChartSample2State();
-}
-
-class _LineChartSample2State extends State<LineChartSample2> {
-  List<Color> gradientColors = [
-    AppColors.contentColorCyan,
-    AppColors.contentColorBlue,
-  ];
-
-  bool showAvg = false;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        AspectRatio(
-          aspectRatio: 1.70,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              right: 18,
-              left: 12,
-              top: 24,
-              bottom: 12,
-            ),
-            child: LineChart(
-              showAvg ? avgData() : mainData(),
-            ),
-          ),
+    return  Scaffold(
+      appBar: AppBar(
+        title: Text('Smooth Line and Area Graph'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child:
+        LineChart(
+          createLineChartData(lineDataList),
+          duration: Duration(milliseconds: 250),
         ),
-        SizedBox(
-          width: 60,
-          height: 34,
-          child: TextButton(
-            onPressed: () {
-              setState(() {
-                showAvg = !showAvg;
-              });
-            },
-            child: Text(
-              'avg',
-              style: SafeGoogleFont('Nunito',
-                fontSize: 12,
-                color: showAvg ? Colors.white.withOpacity(0.5) : Colors.white,
-              ),
-            ),
-          ),
-        ),
-      ],
+      ),
     );
+
   }
 
-  Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 16,
-    );
-    Widget text;
-    switch (value.toInt()) {
-      case 2:
-        text = const Text('MAR', style: style);
-        break;
-      case 5:
-        text = const Text('JUN', style: style);
-        break;
-      case 8:
-        text = const Text('SEP', style: style);
-        break;
-      default:
-        text = const Text('', style: style);
-        break;
-    }
 
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      child: text,
-    );
+
+
+
+
   }
+class LineData {
+  final int year;
+  final double percentage;
 
-  Widget leftTitleWidgets(double value, TitleMeta meta) {
-    var style = SafeGoogleFont('Nunito',
-      fontWeight: FontWeight.bold,
-      fontSize: 15,
-    );
-    String text;
-    switch (value.toInt()) {
-      case 1:
-        text = '10K';
-        break;
-      case 3:
-        text = '30k';
-        break;
-      case 5:
-        text = '50k';
-        break;
-      default:
-        return Container();
-    }
-
-    return Text(text, style: style, textAlign: TextAlign.left);
-  }
-
-  LineChartData mainData() {
-    return LineChartData(
-      gridData: FlGridData(
-        show: true,
-        drawVerticalLine: true,
-        horizontalInterval: 1,
-        verticalInterval: 1,
-        getDrawingHorizontalLine: (value) {
-          return const FlLine(
-            color: AppColors.mainGridLineColor,
-            strokeWidth: 1,
-          );
-        },
-        getDrawingVerticalLine: (value) {
-          return const FlLine(
-            color: AppColors.mainGridLineColor,
-            strokeWidth: 1,
-          );
-        },
-      ),
-      titlesData: FlTitlesData(
-        show: true,
-        rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 30,
-            interval: 1,
-            getTitlesWidget: bottomTitleWidgets,
-          ),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            interval: 1,
-            getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
-          ),
-        ),
-      ),
-      borderData: FlBorderData(
-        show: true,
-        border: Border.all(color: const Color(0xff37434d)),
-      ),
-      minX: 0,
-      maxX: 11,
-      minY: 0,
-      maxY: 6,
-      lineBarsData: [
-        LineChartBarData(
-          spots: const [
-            FlSpot(0, 3),
-            FlSpot(2.6, 2),
-            FlSpot(4.9, 5),
-            FlSpot(6.8, 3.1),
-            FlSpot(8, 4),
-            FlSpot(9.5, 3),
-            FlSpot(11, 4),
-          ],
-          isCurved: true,
-          gradient: LinearGradient(
-            colors: gradientColors,
-          ),
-          barWidth: 5,
-          isStrokeCapRound: true,
-          dotData: const FlDotData(
-            show: false,
-          ),
-          belowBarData: BarAreaData(
-            show: true,
-            gradient: LinearGradient(
-              colors: gradientColors
-                  .map((color) => color.withOpacity(0.3))
-                  .toList(),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  LineChartData avgData() {
-    return LineChartData(
-      lineTouchData: const LineTouchData(enabled: false),
-      gridData: FlGridData(
-        show: true,
-        drawHorizontalLine: true,
-        verticalInterval: 1,
-        horizontalInterval: 1,
-        getDrawingVerticalLine: (value) {
-          return const FlLine(
-            color: Color(0xff37434d),
-            strokeWidth: 1,
-          );
-        },
-        getDrawingHorizontalLine: (value) {
-          return const FlLine(
-            color: Color(0xff37434d),
-            strokeWidth: 1,
-          );
-        },
-      ),
-      titlesData: FlTitlesData(
-        show: true,
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 30,
-            getTitlesWidget: bottomTitleWidgets,
-            interval: 1,
-          ),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
-            interval: 1,
-          ),
-        ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-      ),
-      borderData: FlBorderData(
-        show: true,
-        border: Border.all(color: const Color(0xff37434d)),
-      ),
-      minX: 0,
-      maxX: 11,
-      minY: 0,
-      maxY: 6,
-      lineBarsData: [
-        LineChartBarData(
-          spots: const [
-            FlSpot(0, 3.44),
-            FlSpot(2.6, 3.44),
-            FlSpot(4.9, 3.44),
-            FlSpot(6.8, 3.44),
-            FlSpot(8, 3.44),
-            FlSpot(9.5, 3.44),
-            FlSpot(11, 3.44),
-          ],
-          isCurved: true,
-          gradient: LinearGradient(
-            colors: [
-              ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                  .lerp(0.2)!,
-              ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                  .lerp(0.2)!,
-            ],
-          ),
-          barWidth: 5,
-          isStrokeCapRound: true,
-          dotData: const FlDotData(
-            show: false,
-          ),
-          belowBarData: BarAreaData(
-            show: true,
-            gradient: LinearGradient(
-              colors: [
-                ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                    .lerp(0.2)!
-                    .withOpacity(0.1),
-                ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                    .lerp(0.2)!
-                    .withOpacity(0.1),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  LineData(this.year, this.percentage);
 }

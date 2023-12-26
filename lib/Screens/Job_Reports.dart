@@ -1,14 +1,11 @@
-
 import 'package:alumni_management_admin/Constant_.dart';
 import 'package:alumni_management_admin/PieChart_all_department.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import '../Models/Language_Model.dart';
-import '../Testinf_screen.dart';
 import '../utils.dart';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -86,13 +83,13 @@ class _Job_ReportsState extends State<Job_Reports> {
     // TODO: implement initState
     super.initState();
   }
-  List<lineData>LineDataList=[
+  List<lineData>LineDataList=[];
+  List<lineData>LineDataList2=[];
+  List<lineData>LineDataList3=[];
 
-  ];
-  List<lineData>LineDataList2=[
-  ];
-  List<lineData>LineDataList3=[
-  ];
+  List<AreLineData> areaLineYesList=[];
+  List<AreLineData> areaLineNoList=[];
+  List<AreLineData> areaLineOwnList=[];
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +108,7 @@ class _Job_ReportsState extends State<Job_Reports> {
               padding: EdgeInsets.only(
                   right: width/170.75,
                   left: width/170.75,
-                  top: height/54.25
+                bottom: height/65.1
               ),
               child: Row(
                 children: [
@@ -126,36 +123,78 @@ class _Job_ReportsState extends State<Job_Reports> {
                 ],
               ),
             ),
+
             SizedBox(
-              height: size.height * 0.85,
-              width: width/1.28,
+              height: size.height * 0.8,
+              width: width/1.2,
               child: SingleChildScrollView(
                 physics: const ScrollPhysics(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
 
-                    SizedBox(
-                      width:600,
-                      child: SfCartesianChart(
-                        primaryXAxis: CategoryAxis(
-                          isVisible: true
-                        ),
-                        primaryYAxis: NumericAxis(
-                          maximum: 100,
-                          minimum: 10
-                        ),
-                        series: <CartesianSeries>[
-                          SplineAreaSeries <lineData, int>(
-                            color: Colors.blue.withOpacity(0.5),
-                            splineType:SplineType.clamped ,
-                            dataSource: LineDataList,
-                            xValueMapper: (lineData data, _) => data.x,
-                            yValueMapper: (lineData data, _) => data.y,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+
+                        /// line graph  container
+                        Material(
+                          elevation:3,
+                          borderRadius: BorderRadius.circular(5),
+                          child: SizedBox(
+                            width:600,
+                            height:450,
+                            child:
+                            Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: LineChart(
+                                curve: Curves.linear,
+                                createLineChartData(areaLineYesList,areaLineNoList,areaLineOwnList),
+                                duration: Duration(milliseconds: 250),
+                              ),
+                            ),
                           ),
-                        ],
-                      ),
+                        ),
+
+                        ///Working Person depart fish
+                        Material(
+                          elevation:3,
+
+                          borderRadius: BorderRadius.circular(5),
+                          child: SizedBox(
+                              height:450,
+                              width: 600,
+                              child:
+                              SfCartesianChart(
+                                primaryXAxis: CategoryAxis(
+                                  title: AxisTitle(textStyle: GoogleFonts.nunito(fontWeight: FontWeight.w600),text: "Over all Department Working Status"),
+                                  majorGridLines: MajorGridLines(width: 0),
+                                ),
+                                primaryYAxis: NumericAxis(
+                                  title: AxisTitle(textStyle: GoogleFonts.nunito(fontWeight: FontWeight.w600),text: "Percentage"),
+                                  minimum: 0,
+                                  maximum: 10,
+                                  majorGridLines: MajorGridLines(width: 0), // Remove major grid lines
+                                  minorGridLines: MinorGridLines(width: 0),
+                                ),
+                                series: <CartesianSeries>[
+                                  ColumnSeries<OwnBusinessBarChartData, String>(
+                                    dataSource: OwnBusinesschartData,
+                                    xValueMapper: (OwnBusinessBarChartData data, _) => data.x,
+                                    yValueMapper: (OwnBusinessBarChartData data, _) => data.y,
+                                    sortingOrder: SortingOrder.ascending,
+                                    pointColorMapper: (OwnBusinessBarChartData data, _) => data.color,
+                                    sortFieldValueMapper: (OwnBusinessBarChartData data, _) => data.x,
+                                    width:0.15,
+                                  ),
+                                ],
+                              )
+
+                          ),
+                        ),
+                      ],
                     ),
+
                    // Testing_screen(CurrentYearValue: currentBatchDYear,departmentDataList: departmentDataList),
                    // LineChartSample2(),
                     Padding(
@@ -166,7 +205,7 @@ class _Job_ReportsState extends State<Job_Reports> {
                         elevation: 2,
                         child: Container(
                           height:120,
-                          width:1160,
+                          width:1240,
                           decoration: BoxDecoration(
                               color: const Color(0xffffffff),
                               borderRadius: BorderRadius.circular(8)
@@ -186,11 +225,11 @@ class _Job_ReportsState extends State<Job_Reports> {
                                     controller: _horizontal,
                                     child: SizedBox(
                                       height: 50,
-                                      width: 1000,
+                                      width: 1150,
                                       child: Row(
                                         children: [
                                           Padding(
-                                            padding:  EdgeInsets.only(right: 20),
+                                            padding:  EdgeInsets.only(right: 30),
                                             child: GestureDetector(
                                               onTap: () {
                                                 scrollToPreviousYear();
@@ -201,7 +240,7 @@ class _Job_ReportsState extends State<Job_Reports> {
                                             ),
                                           ),
                                           SizedBox(
-                                            width: 880,
+                                            width: 1010,
                                             child: Scrollbar(
                                               child: ListView.builder(
                                                 controller: _horizontal,
@@ -253,7 +292,7 @@ class _Job_ReportsState extends State<Job_Reports> {
                                             ),
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.only(left: 20),
+                                            padding: const EdgeInsets.only(left: 30),
                                             child: GestureDetector(
                                               onTap: () {
                                                 scrollToNextYear();
@@ -293,23 +332,24 @@ class _Job_ReportsState extends State<Job_Reports> {
                                   color: const Color(0xffffffff),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
-                                height: 250,
-                                width: 550,
+                                height: 300,
+                                width: 650,
                                 child:  Alldepartment(
                                   derpartMentList:departmentDataList,
                                   departviseWorkingList: workingPersonListData,
                                   TotalAlumniUsers: TotalAlumniUserCount,
                                 )),
                           ),
-                          SizedBox(width: 10,),
+
+                          const SizedBox(width: 10,),
 
                           Material(
                             borderRadius: BorderRadius.circular(5),
                             color: const Color(0xffffffff),
                             elevation: 5,
                             child: Container(
-                              height: 250,
-                              width: 450,
+                              height: 300,
+                              width: 510,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5),
                                 color: const Color(0xffffffff),
@@ -332,8 +372,8 @@ class _Job_ReportsState extends State<Job_Reports> {
                                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                                         children: [
                                           CircularPercentIndicator(
-                                            radius: 55.0,
-                                            lineWidth: 18.0,
+                                            radius: 60.0,
+                                            lineWidth: 20,
                                             curve: Curves.easeIn,
                                             animation: true,
                                             animationDuration: 1500,
@@ -344,7 +384,7 @@ class _Job_ReportsState extends State<Job_Reports> {
                                             backgroundColor: Colors.grey,
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.only(top:8.0),
+                                            padding: const EdgeInsets.only(top:20),
                                             child: Material(
                                               elevation: 5,
                                               borderRadius: BorderRadius.circular(50),
@@ -369,8 +409,8 @@ class _Job_ReportsState extends State<Job_Reports> {
                                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                                         children: [
                                           CircularPercentIndicator(
-                                            radius: 55.0,
-                                            lineWidth: 18.0,
+                                            radius: 60.0,
+                                            lineWidth: 20,
                                             curve: Curves.easeIn,
                                             animation: true,
                                             animationDuration: 1500,
@@ -381,7 +421,7 @@ class _Job_ReportsState extends State<Job_Reports> {
                                             backgroundColor: Colors.grey,
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.only(top:8.0),
+                                            padding: const EdgeInsets.only(top:20),
                                             child: Material(
                                               elevation: 5,
                                               borderRadius: BorderRadius.circular(50),
@@ -406,8 +446,8 @@ class _Job_ReportsState extends State<Job_Reports> {
                                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                                         children: [
                                           CircularPercentIndicator(
-                                            radius: 55.0,
-                                            lineWidth: 18.0,
+                                            radius: 60.0,
+                                            lineWidth: 20,
                                             curve: Curves.easeIn,
                                             animation: true,
                                             animationDuration: 1500,
@@ -418,7 +458,7 @@ class _Job_ReportsState extends State<Job_Reports> {
                                             backgroundColor: Colors.grey,
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.only(top:8.0),
+                                            padding: const EdgeInsets.only(top:20),
                                             child: Material(
                                               elevation: 5,
                                               borderRadius: BorderRadius.circular(50),
@@ -453,70 +493,42 @@ class _Job_ReportsState extends State<Job_Reports> {
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-
-                          /// all Department Working Person
-                          SizedBox(
-                              height: 400,
-                              width: 1200,
-                              child:  SfCartesianChart(
-                                  primaryXAxis: CategoryAxis(
-                                    majorGridLines: MajorGridLines(width: 0),
-                                  ),
-                                  primaryYAxis: NumericAxis(
-                                    minimum: 0,
-                                    maximum: 10,
-                                    majorGridLines: MajorGridLines(width: 0),
-                                    minorGridLines: MinorGridLines(width: 0),
-                                  ),
-                                  series: <CartesianSeries>[
-                                    ColumnSeries<BarChartData, String>(
-                                      dataSource: chartData,
-                                      xValueMapper: (BarChartData data, _) => data.x,
-                                      yValueMapper: (BarChartData data, _) => data.y,
-                                      sortingOrder: SortingOrder.ascending,
-                                      pointColorMapper: (BarChartData data, _) => data.color,
-                                      // Sorting based on the specified field
-                                      sortFieldValueMapper: (BarChartData data, _) => data.x,
-                                      width:0.15,
-                                    )
-                                  ]
-                              )
-                          ),
-
-
-                          ///Working Person depart fish
-                          SizedBox(
-                              height: 400,
-                              width: 1200,
-                              child:
-                              SfCartesianChart(
+                      child: Material(
+                        borderRadius: BorderRadius.circular(5),
+                        elevation: 5,
+                        child: SizedBox(
+                            height: 400,
+                            width: 1230,
+                            child:  SfCartesianChart(
                                 primaryXAxis: CategoryAxis(
-                                  majorGridLines: MajorGridLines(width: 0),
+                                  title:AxisTitle(text: "Department",textStyle: GoogleFonts.nunito(fontWeight: FontWeight.w600)) ,
+                                  majorGridLines: const MajorGridLines(width: 0),
                                 ),
                                 primaryYAxis: NumericAxis(
+                                  title:AxisTitle(text: "Percentage",textStyle: GoogleFonts.nunito(fontWeight: FontWeight.w600)) ,
                                   minimum: 0,
                                   maximum: 10,
-                                  majorGridLines: MajorGridLines(width: 0), // Remove major grid lines
-                                  minorGridLines: MinorGridLines(width: 0),
+                                  borderWidth: 0,
+                                  borderColor: Constants().primaryAppColor,
+                                  majorGridLines: const MajorGridLines(width: 0),
+                                  minorGridLines: const MinorGridLines(width: 0),
                                 ),
                                 series: <CartesianSeries>[
-                                  ColumnSeries<OwnBusinessBarChartData, String>(
-                                    dataSource: OwnBusinesschartData,
-                                    xValueMapper: (OwnBusinessBarChartData data, _) => data.x,
-                                    yValueMapper: (OwnBusinessBarChartData data, _) => data.y,
-                                    sortingOrder: SortingOrder.ascending,
-                                    pointColorMapper: (OwnBusinessBarChartData data, _) => data.color,
-                                    sortFieldValueMapper: (OwnBusinessBarChartData data, _) => data.x,
-                                    width:0.15,
-                                  ),
-                                ],
-                              )
+                                  ColumnSeries<BarChartData, String>(
+                                    borderColor: Constants().primaryAppColor,
+                                    dataSource: chartData,
 
-                          ),
-                        ],
+                                    xValueMapper: (BarChartData data, _) => data.x,
+                                    yValueMapper: (BarChartData data, _) => data.y,
+                                    sortingOrder: SortingOrder.ascending,
+                                    pointColorMapper: (BarChartData data, _) => data.color,
+                                    // Sorting based on the specified field
+                                    sortFieldValueMapper: (BarChartData data, _) => data.x,
+                                    width:0.15,
+                                  )
+                                ]
+                            )
+                        ),
                       ),
                     )
 
@@ -573,8 +585,6 @@ class _Job_ReportsState extends State<Job_Reports> {
     );
   }
 
-
-
   getacademicAndDepartmentDataFunc()async{
     setState(() {
       academicDataList.clear();
@@ -611,6 +621,10 @@ class _Job_ReportsState extends State<Job_Reports> {
     int value2=0;
     int value3=0;
 
+    int yesValue=0;
+    int noValue=0;
+    int ownsValue=0;
+
     print(departmentDataList);
     var UserData= await  FirebaseFirestore.instance.collection('Users').orderBy("timestamp").get();
 
@@ -618,6 +632,7 @@ class _Job_ReportsState extends State<Job_Reports> {
       TotalAlumniUserCount=UserData.docs.length;
     });
     for(int x=0;x<UserData.docs.length;x++){
+
       if(int.parse(UserData.docs[x]['yearofpassed'].toString())==currentBatchDYear){
         setState(() {
           alumniWorkingCount=alumniWorkingCount+1;
@@ -630,15 +645,33 @@ class _Job_ReportsState extends State<Job_Reports> {
               )
           );
 
+
         });
+      }
+      if(UserData.docs[x]['workingStatus']=="Yes"){
+        yesValue=yesValue+1;
+        print("Non Condition Function Yes()");
+        areaLineYesList.add(AreLineData(int.parse(UserData.docs[x]['yearofpassed'].toString()), double.parse(((yesValue/TotalAlumniUserCount)).toString())));
+
+      }
+      if(UserData.docs[x]['workingStatus']=="No"){
+        noValue=noValue+1;
+        print("Non Condition Function No()");
+        areaLineYesList.add(AreLineData(int.parse(UserData.docs[x]['yearofpassed'].toString()), double.parse(((noValue/TotalAlumniUserCount)).toString())));
+
+      }
+      if(UserData.docs[x]['workingStatus']=="Own Business"){
+        ownsValue=ownsValue+1;
+        print("Non Condition Function Own Business()");
+        areaLineYesList.add(AreLineData(int.parse(UserData.docs[x]['yearofpassed'].toString()), double.parse(((ownsValue/TotalAlumniUserCount)).toString())));
+
       }
       else{
         if(UserData.docs[x]['workingStatus']=="Yes"){
           print("1111111111111--------------YEs");
           if(departmentDataList.contains(UserData.docs[x]['subjectStream'])){
             value=value+1;
-            LineDataList.add(lineData(int.parse(UserData.docs[x]['yearofpassed']), double.parse(((value/TotalAlumniUserCount)).toString()))
-            );
+            LineDataList.add(lineData(int.parse(UserData.docs[x]['yearofpassed']), double.parse(((value/TotalAlumniUserCount)).toString())));
           }
 
         }
@@ -707,7 +740,6 @@ class _Job_ReportsState extends State<Job_Reports> {
         ownBusinessAlumniPercentage= (workingStatusOwnBus/TotalAlumniUserCount);
       }
 
-
       if(departmentDataList.contains(element.department)){
         CountValue2=CountValue2+1;
         print('Department++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
@@ -719,15 +751,11 @@ class _Job_ReportsState extends State<Job_Reports> {
 
       }
 
-
-
-
-
-
       print(element.workingStatus);
       print(element.workingAlumniCount);
       print(element.department);
       print(element.batch);
+
     });
 
     print("percnetage in workign Status +++++++++++++++++++++++++++++++++++++++");
@@ -736,8 +764,11 @@ class _Job_ReportsState extends State<Job_Reports> {
     print("$workingAlumniPercentage %");
     print(dataMap);
     print("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
-
-
+    print(areaLineYesList);
+    print(LineDataList);
+    print(LineDataList2);
+    print(LineDataList3);
+    print("Smooth Line graphh---------------------------------------------------");
 
 
 
@@ -761,12 +792,185 @@ class _Job_ReportsState extends State<Job_Reports> {
   }
 
 
+  LineChartData createLineChartData(
+      List<AreLineData> lineDataList, List<AreLineData> lineDataList2,
+      List<AreLineData> lineDataList3,) {
+    return LineChartData(
+      lineTouchData: lineTouchData1,
+      lineBarsData: [
+        LineChartBarData(
+          isCurved: true,
+          color: Colors.orange,
+          barWidth: 4,
+          isStrokeCapRound: true,
+          dotData: const FlDotData(show: false),
+          belowBarData: BarAreaData(show: false),
+          spots: lineDataList.map((data) => FlSpot(data.year.toDouble(), data.percentage)).toList(),
+
+        ),
+        LineChartBarData(
+          isCurved: true,
+          color: Colors.pink,
+          barWidth: 4,
+          isStrokeCapRound: true,
+          dotData: const FlDotData(show: false),
+          belowBarData: BarAreaData(show: false),
+          spots: lineDataList2.map((data) => FlSpot(data.year.toDouble(), data.percentage)).toList(),
+
+        ),
+        LineChartBarData(
+          isCurved: true,
+          color: Colors.green,
+          barWidth: 4,
+          isStrokeCapRound: true,
+          dotData: const FlDotData(show: false),
+          belowBarData: BarAreaData(show: false),
+          spots: lineDataList3.map((data) => FlSpot(data.year.toDouble(), data.percentage)).toList(),
+
+        ),
+      ],
+      titlesData:  titlesData1,
+      borderData: borderData,
+      gridData: gridData,
+      minX: 0,
+      maxX: 14,
+      maxY: 10,
+      minY: 0,
+    );
+  }
+
+
+
+  FlBorderData get borderData => FlBorderData(
+    show: true,
+    border: Border(
+      bottom:
+      BorderSide(color: Constants().primaryAppColor, width: 1),
+      left:  BorderSide(color: Constants().primaryAppColor, width: 1),
+      right: const BorderSide(color: Colors.transparent),
+      top: const BorderSide(color: Colors.transparent),
+    ),
+  );
+
+  FlTitlesData get titlesData1 => FlTitlesData(
+    bottomTitles: AxisTitles(
+      axisNameWidget: Text("Years",style: GoogleFonts.nunito(fontWeight: FontWeight.w600),),
+      sideTitles: bottomTitles,
+    ),
+    rightTitles: const AxisTitles(
+      sideTitles: SideTitles(showTitles: false),
+    ),
+    topTitles: const AxisTitles(
+      sideTitles: SideTitles(showTitles: false),
+    ),
+    leftTitles: AxisTitles(
+      axisNameWidget: Text("Percentage",style: GoogleFonts.nunito(fontWeight: FontWeight.w600),),
+      sideTitles: leftTitles(),
+    ),
+  );
+  FlGridData get gridData => const FlGridData(show: false);
+  LineTouchData get lineTouchData1 => LineTouchData(
+    handleBuiltInTouches: true,
+    touchTooltipData: LineTouchTooltipData(
+      tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
+    ),
+  );
+  SideTitles leftTitles() => SideTitles(
+    getTitlesWidget: leftTitleWidgets,
+    showTitles: true,
+    interval: 1,
+    reservedSize: 40,
+  );
+  SideTitles get bottomTitles => SideTitles(
+    showTitles: true,
+    reservedSize: 30,
+    interval: 1,
+    getTitlesWidget: bottomTitleWidgets,
+  );
+  Widget leftTitleWidgets(double value, TitleMeta meta) {
+    var style = GoogleFonts.nunito(
+      fontWeight: FontWeight.bold,
+    );
+
+    String text;
+    switch (value.toInt()) {
+      case 1:
+        text = '10';
+        break;
+      case 2:
+        text = '20';
+        break;
+      case 3:
+        text = '30';
+        break;
+      case 4:
+        text = '40';
+        break;
+      case 5:
+        text = '50';
+        break;
+      case 6:
+        text = '60';
+        break;
+      case 7:
+        text = '70';
+        break;
+      case 8:
+        text = '80';
+        break;
+      case 9:
+        text = '90';
+        break;
+      case 10:
+        text = '100';
+        break;
+      default:
+        return Container();
+    }
+
+    return Text(text, style: style, textAlign: TextAlign.center);
+  }
+  Widget bottomTitleWidgets(double value, TitleMeta meta,) {
+     var style = GoogleFonts.nunito(
+      fontWeight: FontWeight.bold,
+    );
+
+     Widget text = const Text('');
+
+
+     int localvalue=0;
+
+     while(academicDataList.length>localvalue){
+       text = Text(
+         academicDataList[localvalue].toString(),
+         style: style,
+       );
+       localvalue=localvalue+1;
+
+     }
+     /*for (int i = 0; i < academicDataList.length; i++) {
+       text = Text(
+         academicDataList[i].toString(),
+         style: style,
+       );
+       print("valueeeeeeeeeeee+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+       print("printing the value of $i");
+       print(academicDataList.length);
+       print("length of list Completed11111111111111111111_______________________________________________");
+       if (i== academicDataList.length-1) {
+
+         print("length of list Completed22222222222222222222222222222222222222_______________________________________________");
+         break;
+       }
+     }*/
+     return SideTitleWidget(
+       axisSide: meta.axisSide,
+       space: 10,
+       child: text,
+     );
+  }
 
 }
-
-
-
-
 
 class ChartData {
   ChartData(this.x, this.y, this.color22);
@@ -774,7 +978,6 @@ class ChartData {
   final double y;
   final Color color22;
 }
-
 
 class workingPerson{
 
@@ -785,7 +988,6 @@ class workingPerson{
   workingPerson({this.batch,this.department,this.workingStatus,this.workingAlumniCount});
 
 }
-
 
 class DataModel {
   String category;
@@ -800,7 +1002,6 @@ class DataModel {
     );
   }
 }
-
 
 class BarChartData {
   BarChartData(this.x, this.y,this.color);
@@ -826,5 +1027,17 @@ class OwnBusinessBarChartData {
   }
 }
 
+class lineData {
+  lineData(this.x, this.y);
+  final int x;
+  final double? y;
+}
+
+class AreLineData {
+  final int year;
+  final double percentage;
+
+  AreLineData(this.year, this.percentage);
+}
 
 

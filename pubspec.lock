@@ -669,6 +669,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  graphic:
+    dependency: "direct main"
+    description:
+      name: graphic
+      sha256: "1443f5b89e802c5ae6e6ffdbc0091f3808d74557b4794595b1aa8ffcf944cced"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.1"
   graphs:
     dependency: transitive
     description:
@@ -1013,14 +1021,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.4.0"
-  pigment:
-    dependency: transitive
-    description:
-      name: pigment
-      sha256: b8c56059e21ecb9379a304c78a4f20e399d41e54384a7f64de21103b4b5c38dd
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.4"
   platform:
     dependency: transitive
     description:
@@ -1346,14 +1346,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.2"
-  tinycolor2:
-    dependency: "direct main"
-    description:
-      name: tinycolor2
-      sha256: "81850c32ac8d4dcff37299bf3e52bcad4f4db6bc73d4b06727c9922de3766390"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.1"
   translator:
     dependency: "direct main"
     description:
