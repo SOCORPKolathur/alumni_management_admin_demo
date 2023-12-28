@@ -121,7 +121,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: height/81.375,left: width/136.6),
+                  padding: EdgeInsets.only(top: height/81.375,),
                   child: Row(
                     children: [
                       InkWell(
@@ -172,7 +172,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                           )),
                       addPhoto==true?const SizedBox():
                       Padding(
-                        padding:  EdgeInsets.only(left: width/1.59,),
+                        padding:  EdgeInsets.only(left: width/1.58,),
                         child: InkWell(
                           key: filterDataKey,
                           onTap: () async {
@@ -217,6 +217,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                 ),
               ],
             ),
+            SizedBox(height:height/65.1),
             addPhoto==true?const SizedBox():
             Container(
                 color: Colors.white,

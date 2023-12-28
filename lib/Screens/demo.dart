@@ -45,7 +45,7 @@ List<bool> isSelected = [
   false,
   false,
   false,
-  false
+ // false
 ];
 List<NavElement> navElements = [
   NavElement(),
@@ -65,13 +65,14 @@ List<NavElement> navElements = [
   NavElement(),
   NavElement(),
   NavElement(),
-  NavElement(),
+  //NavElement(),
 ];
 
 
 List<String> texts = [
   'Dashboard',
-  'Reports',
+  'Alumni Tracking',
+  //'Reports',
   'Users',
   'Gallery',
   'Events',
@@ -86,13 +87,13 @@ List<String> texts = [
   'SMS',
   'Email',
   'Notification',
-  'Alumni Tracking',
   'Sign out',
 ];
 
-List<IconData> icons = [
+ List<IconData> icons = [
   Icons.data_saver_off,
-  Icons.groups,
+  Icons.auto_graph_rounded,
+ // Icons.groups,
   Icons.person_outlined,
   Icons.image_outlined,
   Icons.event,
@@ -107,11 +108,10 @@ List<IconData> icons = [
   Icons.mail,
   Icons.mail,
   Icons.notifications,
-  Icons.auto_graph_rounded,
   Icons.logout_sharp,
 ];
 
-class MyWidget extends StatefulWidget {
+ class MyWidget extends StatefulWidget {
   String? email;
 
   MyWidget({this.email});
@@ -124,7 +124,7 @@ class MyWidget extends StatefulWidget {
 class _MyWidgetState extends State<MyWidget> {
 
   void select(int n) {
-    for (int i = 0; i < 18; i++) {
+    for (int i = 0; i < 17; i++) {
       if (i == n)
         isSelected[i] = true;
       else
@@ -1928,11 +1928,11 @@ class _MyWidgetState extends State<MyWidget> {
                                       pages=DashBoard( usermail: widget.email.toString(),);
                                     });
                                   }
-                                  if(navElements.indexOf(e)==1){
+                                /*  if(navElements.indexOf(e)==1){
                                     setState(() {
                                       pages=Reports_Screen();
                                     });
-                                  }
+                                  }*/
                                   if(navElements.indexOf(e)==2){
                                     setState(() {
                                       pages=Users_Screen();
@@ -2006,7 +2006,7 @@ class _MyWidgetState extends State<MyWidget> {
                                     });
                                   }
 
-                                  if(navElements.indexOf(e)==16){
+                                  if(navElements.indexOf(e)==1){
                                     setState(() {
                                       pages=Job_Reports();
                                     });

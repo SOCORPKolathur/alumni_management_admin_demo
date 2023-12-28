@@ -14,11 +14,8 @@ final FirebaseStorage fs = FirebaseStorage.instance;
 
 class JobPostFireCrud {
   static Stream<List<JobPostModel>> fetchJobPost() =>
-      EventCollection
-          .orderBy("timestamp", descending: false)
-          .snapshots().map((snapshot) => snapshot.docs
-          .map((doc) => JobPostModel.fromJson(doc.data() as Map<String,dynamic>))
-          .toList());
+      EventCollection.orderBy("timestamp", descending: false).snapshots().
+  map((snapshot) => snapshot.docs.map((doc) => JobPostModel.fromJson(doc.data() as Map<String,dynamic>)).toList());
 
   static Stream<List<JobPostModel>> fetchJobPostWithFilter(DateTime start, DateTime end) =>
       EventCollection
@@ -35,7 +32,13 @@ class JobPostFireCrud {
     required String location,
     required File? image,
     required String description,
+    required String quvalification,
+    required String positions,
+    required bool verify,
     required String date,
+    required String userName,
+    required String UserOccupation,
+    required String Batch,
   }) async {
     String downloadUrl = '';
     if(image != null){
@@ -49,10 +52,16 @@ class JobPostFireCrud {
       title: title,
       timestamp: tempDate.millisecondsSinceEpoch,
       location: location,
+      userName: userName,
+      UserOccupation: UserOccupation,
       imgUrl: image != null ? downloadUrl : '',
       id: "",
       description: description,
+      quvalification: quvalification,
+      positions: positions,
+      verify: verify,
       date: date,
+      Batch: Batch,
       views: [],
       registeredUsers: [],
     );

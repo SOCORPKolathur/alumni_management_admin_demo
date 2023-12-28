@@ -57,11 +57,7 @@ class GalleryFireCrud {
   }
 
   static Future<String> uploadImageToStorage(file) async {
-    var snapshot = await fs
-        .ref()
-        .child('dailyupdates')
-        .child("${file.name}")
-        .putBlob(file);
+    var snapshot = await fs.ref().child('dailyupdates').child("${file.name}").putBlob(file);
     String downloadUrl = await snapshot.ref.getDownloadURL();
     return downloadUrl;
   }

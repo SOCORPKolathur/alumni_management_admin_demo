@@ -4,7 +4,6 @@ import 'package:alumni_management_admin/Screens/demo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'Testinf_screen.dart';
 import 'firebase_options.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

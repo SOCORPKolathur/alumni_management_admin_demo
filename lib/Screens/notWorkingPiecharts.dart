@@ -3,22 +3,54 @@ import 'package:alumni_management_admin/Screens/Job_Reports.dart';
 import 'package:alumni_management_admin/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../PieChart_all_department.dart';
 
-
-class Alldepartment extends StatefulWidget {
+class notWorkingPiecharts extends StatefulWidget {
   List? derpartMentList;
   List<workingPerson> ?departviseWorkingList;
   int ?TotalAlumniUsers;
-  Alldepartment({this.derpartMentList,this.departviseWorkingList,this.TotalAlumniUsers});
+  notWorkingPiecharts({this.derpartMentList,this.departviseWorkingList,this.TotalAlumniUsers});
 
   @override
-  State<Alldepartment> createState() => _AlldepartmentState();
+  State<notWorkingPiecharts> createState() => _notWorkingPiechartsState();
 }
 
-class _AlldepartmentState extends State<Alldepartment> {
+class _notWorkingPiechartsState extends State<notWorkingPiecharts> {
 
-  int touchedIndex= 1;
+  int touchedIndex= 0;
+
+  List colors=[
+    Colors.red,
+    Colors.blue,
+    Colors.green,
+    Colors.yellow,
+    Colors.orange,
+    Colors.purple,
+    Colors.pink,
+    Colors.brown,
+    Colors.grey,
+    Colors.cyan,
+    Colors.teal,
+    Colors.indigo,
+    Colors.amber,
+    Colors.lime,
+    Colors.lightBlue,
+    Colors.lightGreen,
+    Colors.deepOrange,
+    Colors.deepPurple,
+    Colors.blueGrey,
+    Colors.redAccent,
+    Colors.blueAccent,
+    Colors.greenAccent,
+    Colors.yellowAccent,
+  ];
+
+  @override
+  void initState() {
+    textingFunction();
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +84,7 @@ class _AlldepartmentState extends State<Alldepartment> {
             ),
           ),
 
+
           SizedBox(
             width: width/5.939130434782609,
             child: SingleChildScrollView(
@@ -84,38 +117,11 @@ class _AlldepartmentState extends State<Alldepartment> {
     );
   }
 
-var departmentColor;
-var indicatorColor;
-   List<String> hexColorCodes = [
+  var departmentColor;
+  var indicatorColor;
+  List<String> hexColorCodes = [
     '#FF5733', '#33FF57', '#5733FF', '#FFFF33', '#FFFF36',
   ];
-
-
-   List colors=[
-     Colors.red,
-     Colors.blue,
-     Colors.green,
-     Colors.yellow,
-     Colors.orange,
-     Colors.purple,
-     Colors.pink,
-     Colors.brown,
-     Colors.grey,
-     Colors.cyan,
-     Colors.teal,
-     Colors.indigo,
-     Colors.amber,
-     Colors.lime,
-     Colors.lightBlue,
-     Colors.lightGreen,
-     Colors.deepOrange,
-     Colors.deepPurple,
-     Colors.blueGrey,
-     Colors.redAccent,
-     Colors.blueAccent,
-     Colors.greenAccent,
-     Colors.yellowAccent,
-   ];
 
 
   Color color(int index) {
@@ -144,9 +150,9 @@ var indicatorColor;
       Map<String, int> departmentCountMap = {};
       for (int j = 0; j < widget.departviseWorkingList!.length; j++) {
         if (widget.departviseWorkingList![j].department!.contains(widget.derpartMentList![i])) {
-          if (widget.departviseWorkingList![j].workingStatus == "Yes") {
-              final currentDepartment = widget.derpartMentList![i];
-              departmentCountMap[currentDepartment] = (departmentCountMap[currentDepartment] ?? 0) + 1;
+          if (widget.departviseWorkingList![j].workingStatus == "No") {
+            final currentDepartment = widget.derpartMentList![i];
+            departmentCountMap[currentDepartment] = (departmentCountMap[currentDepartment] ?? 0) + 1;
           }
         }
       }
@@ -158,7 +164,7 @@ var indicatorColor;
 
 
       // Get the color for the current department
-       departmentColor = hexColorCodes[i % hexColorCodes.length];
+      departmentColor = hexColorCodes[i % hexColorCodes.length];
 
       print(countForDepartment);
 
@@ -179,9 +185,21 @@ var indicatorColor;
     });
   }
 
+  textingFunction(){
+    print("Not Working++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+    for(int i=0;i<widget.departviseWorkingList!.length;i++){
+      print("Working Status List value++++++++++++++++++++++++++++++++++++${widget.departviseWorkingList![i]}");
+
+    }
+    for(int j=0;j<widget.derpartMentList!.length;j++){
+      print("Working Status List value++++++++++++++++++++++++++++++++++++${widget.derpartMentList![j]}");
+
+    }
+
+  }
+
 
 }
-
 class AppColors {
   static const Color primary = contentColorCyan;
   static const Color menuBackground = Color(0xFF090912);
@@ -204,50 +222,4 @@ class AppColors {
   static const Color contentColorPink = Color(0xFFFF3AF2);
   static const Color contentColorRed = Color(0xFFE80054);
   static const Color contentColorCyan = Color(0xFF50E4FF);
-}
-
-
-
-class Indicator extends StatelessWidget {
-  const Indicator({
-    super.key,
-    required this.color,
-    required this.text,
-    required this.isSquare,
-    this.size = 16,
-    this.textColor,
-  });
-  final Color color;
-  final String text;
-  final bool isSquare;
-  final double size;
-  final Color? textColor;
-
-  @override
-  Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    return Row(
-      children: <Widget>[
-        Container(
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            shape: isSquare ? BoxShape.rectangle : BoxShape.circle,
-            color: color,
-          ),
-        ),
-        SizedBox(
-          width: width/341.5,
-        ),
-        Text(
-          text,
-          style: SafeGoogleFont('Nunito',
-            fontSize: width/85.375,
-            fontWeight: FontWeight.bold,
-            color: textColor,
-          ),
-        )
-      ],
-    );
-  }
 }

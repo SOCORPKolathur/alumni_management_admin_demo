@@ -646,6 +646,11 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                                       vertical: height / 81.375,
                                                       horizontal: width / 170.75),
                                                   child: TextFormField(
+                                                    inputFormatters: [
+                                                      FilteringTextInputFormatter
+                                                          .allow(RegExp(
+                                                          "[a-zA-Z ]")),
+                                                    ],
                                                     style: SafeGoogleFont(
                                                       'Nunito',
                                                       fontSize: width / 105.571,
@@ -1230,117 +1235,120 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                 return SizedBox(
                                     width: width/1.2288,
                                     height: height/13.43636,
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: width/19.2,
-                                          height: height/14.78,
-                                          child: Padding(
-                                            padding:
-                                            const EdgeInsets.only(
-                                                left: 8),
-                                            child: KText(
-                                              text: "${i + 1}",
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                color:
-                                                Color(0xff030229),
+                                    child: Padding(
+                                      padding:  EdgeInsets.only(left:width/170.75),
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                            width: width/19.2,
+                                            height: height/14.78,
+                                            child: Padding(
+                                              padding:
+                                              const EdgeInsets.only(
+                                                  left: 8),
+                                              child: KText(
+                                                text: "${i + 1}",
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  color:
+                                                  Color(0xff030229),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: width/4.3885,
-                                          height: height/14.78,
-                                          child: Padding(
-                                            padding:
-                                            const EdgeInsets.only(
-                                                left: 8),
-                                            child: KText(
-                                              text: clgActivityData[i]
-                                                  .title
-                                                  .toString(),
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                color:
-                                                Color(0xff030229),
+                                          SizedBox(
+                                            width: width/4.3885,
+                                            height: height/14.78,
+                                            child: Padding(
+                                              padding:
+                                              const EdgeInsets.only(
+                                                  left: 8),
+                                              child: KText(
+                                                text: clgActivityData[i]
+                                                    .title
+                                                    .toString(),
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  color:
+                                                  Color(0xff030229),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: width/4.3885,
-                                          height: height/14.78,
-                                          child: Padding(
-                                            padding:
-                                            const EdgeInsets.only(
-                                                left: 8),
-                                            child: KText(
-                                              text: clgActivityData[i]
-                                                  .description
-                                                  .toString(),
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                color:
-                                                Color(0xff030229),
+                                          SizedBox(
+                                            width: width/4.3885,
+                                            height: height/14.78,
+                                            child: Padding(
+                                              padding:
+                                              const EdgeInsets.only(
+                                                  left: 8),
+                                              child: KText(
+                                                text: clgActivityData[i]
+                                                    .description
+                                                    .toString(),
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  color:
+                                                  Color(0xff030229),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: width/9.6,
-                                          height: height/14.78,
-                                          child: Padding(
-                                            padding:
-                                            const EdgeInsets.only(
-                                                left: 8),
-                                            child: KText(
-                                              text: clgActivityData[i]
-                                                  .date
-                                                  .toString(),
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                color:
-                                                Color(0xff030229),
+                                          SizedBox(
+                                            width: width/9.6,
+                                            height: height/14.78,
+                                            child: Padding(
+                                              padding:
+                                              const EdgeInsets.only(
+                                                  left: 8),
+                                              child: KText(
+                                                text: clgActivityData[i]
+                                                    .date
+                                                    .toString(),
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  color:
+                                                  Color(0xff030229),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: width/9.6,
-                                          height: height/14.78,
-                                          child: Padding(
-                                            padding:
-                                            const EdgeInsets.only(
-                                                left: 8),
-                                            child: KText(
-                                              text: clgActivityData[i]
-                                                  .time
-                                                  .toString(),
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                color:
-                                                Color(0xff030229),
+                                          SizedBox(
+                                            width: width/9.6,
+                                            height: height/14.78,
+                                            child: Padding(
+                                              padding:
+                                              const EdgeInsets.only(
+                                                  left: 8),
+                                              child: KText(
+                                                text: clgActivityData[i]
+                                                    .time
+                                                    .toString(),
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  color:
+                                                  Color(0xff030229),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            Popupmenu(
-                                                context,
-                                                clgActivityData[i],
-                                                popMenuKeys[i],
-                                                size);
-                                          },
-                                          child: SizedBox(
-                                              key: popMenuKeys[i],
-                                              width: width/15.36,
-                                              height: height/14.78,
-                                              child: Icon(
-                                                  Icons.more_horiz)),
-                                        ),
-                                      ],
+                                          GestureDetector(
+                                            onTap: () {
+                                              Popupmenu(
+                                                  context,
+                                                  clgActivityData[i],
+                                                  popMenuKeys[i],
+                                                  size);
+                                            },
+                                            child: SizedBox(
+                                                key: popMenuKeys[i],
+                                                width: width/15.36,
+                                                height: height/14.78,
+                                                child: Icon(
+                                                    Icons.more_horiz)),
+                                          ),
+                                        ],
+                                      ),
                                     ));
                               },
                             );
@@ -1666,117 +1674,120 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                 return SizedBox(
                                     width: width/1.2288,
                                     height: height/13.43636,
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: width/19.2,
-                                          height: height/14.78,
-                                          child: Padding(
-                                            padding:
-                                            const EdgeInsets.only(
-                                                left: 8),
-                                            child: KText(
-                                              text: "${i + 1}",
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                color:
-                                                Color(0xff030229),
+                                    child: Padding(
+                                      padding:  EdgeInsets.only(left:width/170.75),
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                            width: width/19.2,
+                                            height: height/14.78,
+                                            child: Padding(
+                                              padding:
+                                              const EdgeInsets.only(
+                                                  left: 8),
+                                              child: KText(
+                                                text: "${i + 1}",
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  color:
+                                                  Color(0xff030229),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: width/4.3885,
-                                          height: height/14.78,
-                                          child: Padding(
-                                            padding:
-                                            const EdgeInsets.only(
-                                                left: 8),
-                                            child: KText(
-                                              text: clgActivityData[i]
-                                                  .title
-                                                  .toString(),
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                color:
-                                                Color(0xff030229),
+                                          SizedBox(
+                                            width: width/4.3885,
+                                            height: height/14.78,
+                                            child: Padding(
+                                              padding:
+                                              const EdgeInsets.only(
+                                                  left: 8),
+                                              child: KText(
+                                                text: clgActivityData[i]
+                                                    .title
+                                                    .toString(),
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  color:
+                                                  Color(0xff030229),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: width/4.3885,
-                                          height: height/14.78,
-                                          child: Padding(
-                                            padding:
-                                            const EdgeInsets.only(
-                                                left: 8),
-                                            child: KText(
-                                              text: clgActivityData[i]
-                                                  .description
-                                                  .toString(),
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                color:
-                                                Color(0xff030229),
+                                          SizedBox(
+                                            width: width/4.3885,
+                                            height: height/14.78,
+                                            child: Padding(
+                                              padding:
+                                              const EdgeInsets.only(
+                                                  left: 8),
+                                              child: KText(
+                                                text: clgActivityData[i]
+                                                    .description
+                                                    .toString(),
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  color:
+                                                  Color(0xff030229),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: width/9.6,
-                                          height: height/14.78,
-                                          child: Padding(
-                                            padding:
-                                            const EdgeInsets.only(
-                                                left: 8),
-                                            child: KText(
-                                              text: clgActivityData[i]
-                                                  .date
-                                                  .toString(),
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                color:
-                                                Color(0xff030229),
+                                          SizedBox(
+                                            width: width/9.6,
+                                            height: height/14.78,
+                                            child: Padding(
+                                              padding:
+                                              const EdgeInsets.only(
+                                                  left: 8),
+                                              child: KText(
+                                                text: clgActivityData[i]
+                                                    .date
+                                                    .toString(),
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  color:
+                                                  Color(0xff030229),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: width/9.6,
-                                          height: height/14.78,
-                                          child: Padding(
-                                            padding:
-                                            const EdgeInsets.only(
-                                                left: 8),
-                                            child: KText(
-                                              text: clgActivityData[i]
-                                                  .time
-                                                  .toString(),
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                color:
-                                                Color(0xff030229),
+                                          SizedBox(
+                                            width: width/9.6,
+                                            height: height/14.78,
+                                            child: Padding(
+                                              padding:
+                                              const EdgeInsets.only(
+                                                  left: 8),
+                                              child: KText(
+                                                text: clgActivityData[i]
+                                                    .time
+                                                    .toString(),
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  color:
+                                                  Color(0xff030229),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            Popupmenu(
-                                                context,
-                                                clgActivityData[i],
-                                                popMenuKeys[i],
-                                                size);
-                                          },
-                                          child: SizedBox(
-                                              key: popMenuKeys[i],
-                                              width: width/15.36,
-                                              height: height/14.78,
-                                              child: Icon(
-                                                  Icons.more_horiz)),
-                                        ),
-                                      ],
+                                          GestureDetector(
+                                            onTap: () {
+                                              Popupmenu(
+                                                  context,
+                                                  clgActivityData[i],
+                                                  popMenuKeys[i],
+                                                  size);
+                                            },
+                                            child: SizedBox(
+                                                key: popMenuKeys[i],
+                                                width: width/15.36,
+                                                height: height/14.78,
+                                                child: Icon(
+                                                    Icons.more_horiz)),
+                                          ),
+                                        ],
+                                      ),
                                     ));
                               },
                             );
@@ -2508,6 +2519,11 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                                     vertical: height / 81.375,
                                                     horizontal: width / 170.75),
                                                 child: TextFormField(
+                                                  inputFormatters: [
+                                                    FilteringTextInputFormatter
+                                                        .allow(RegExp(
+                                                        "[a-zA-Z ]")),
+                                                  ],
                                                   keyboardType:
                                                   TextInputType.multiline,
                                                   minLines: 1,
@@ -2613,7 +2629,7 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                             ],
                           ),
                           Padding(
-                            padding:  EdgeInsets.only(top:height/7.39),
+                            padding:  EdgeInsets.only(top:height/10.39),
                             child: Row(
                               mainAxisAlignment:
                               MainAxisAlignment.end,

@@ -1,4 +1,6 @@
 
+import 'dart:math';
+
 import 'package:alumni_management_admin/Models/Language_Model.dart';
 import 'package:alumni_management_admin/utils.dart';
 import 'package:animate_do/animate_do.dart';
@@ -6,6 +8,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../Constant_.dart';
@@ -596,6 +600,11 @@ class _Acadamic_YearState extends State<Acadamic_Year> {
                           ),
                           child:
                           TextFormField(
+                            inputFormatters: [
+                              FilteringTextInputFormatter
+                                  .allow(RegExp(
+                                  "[0-9]")),
+                            ],
                             controller:academicnameContoller,
                             decoration: InputDecoration(
                               border:
@@ -625,9 +634,8 @@ class _Acadamic_YearState extends State<Acadamic_Year> {
                             /// Update Button
                             GestureDetector(
                               onTap:(){
-                                FirebaseFirestore.instance.collection("AcademicYear").doc(Docid).update({
-                                  "name":academicnameContoller.text
-                                });
+
+                                groupfunction(Docid);
                                 Navigator.pop(context);
 
                               },
@@ -854,8 +862,15 @@ class _Acadamic_YearState extends State<Acadamic_Year> {
                                   3)),
                           child:
                           TextFormField(
+
+                            inputFormatters: [
+                              FilteringTextInputFormatter
+                                  .allow(RegExp(
+                                  "[0-9]")),
+                            ],
                             controller:academicnameContoller,
                             decoration: InputDecoration(
+
                               border:
                               InputBorder
                                   .none,
@@ -964,6 +979,50 @@ class _Acadamic_YearState extends State<Acadamic_Year> {
         );
       },
     );
+  }
+
+
+  static Color randomOpaqueColor() {
+    return Color(Random().nextInt(0xffffffff)).withAlpha(0xff);
+  }
+
+
+  groupfunction(Docid)async{
+    print("Group Function++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+   FirebaseFirestore.instance.collection("AcademicYear").doc(Docid).update({
+     "name":academicnameContoller.text
+    });
+    Color randomColor() {
+      Random random = Random();
+      return Color.fromRGBO(
+        random.nextInt(256),
+        random.nextInt(256),
+        random.nextInt(256),
+        1.0, // Full opacity
+      );
+    }
+  var groupdocument=await FirebaseFirestore.instance.collection("Groups").where("Department",isEqualTo:academicnameContoller.text).get();
+
+
+  if(groupdocument.docs.length==0){
+    var Color=randomOpaqueColor();
+    var Department= await FirebaseFirestore.instance.collection("Department").get();
+    for(int i=0;i<Department.docs.length;i++){
+      FirebaseFirestore.instance.collection("Groups").doc().set({
+        "AccademicYear":academicnameContoller.text,
+        "Department":Department.docs[i]['name'],
+        "Img":"",
+        "color":"0x${randomColor().value.toRadixString(16)}"
+      });
+    }
+
+  }
+
+  setState((){
+    academicnameContoller.clear();
+  });
+
+
   }
 
   Popupmenu(BuildContext context, key, size,DataName,DocumentID) async {

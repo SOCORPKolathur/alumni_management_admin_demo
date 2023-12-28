@@ -8,15 +8,27 @@ class JobPostModel {
   String? description;
   String? imgUrl;
   String? location;
+  String? quvalification;
+  String? positions;
+  bool? verify;
   String? time;
+  String? userName;
+  String? UserOccupation;
+  String? Batch;
 
   JobPostModel(
-      {this.id, this.title,this.date, this.views,this.registeredUsers, this.description, this.imgUrl, this.timestamp, this.location, this.time});
+      {this.id, this.title,this.date, this.views,this.registeredUsers, this.description, this.imgUrl, this.timestamp, this.location,
+        this.time,this.positions,this.quvalification,this.verify,this.userName,this.UserOccupation,this.Batch});
 
   JobPostModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     date = json['date'];
+    time = json['uploadTime'];
+    userName = json['userName'];
+    UserOccupation = json['UserOccupation'];
+    Batch = json['Batch'];
+    time = json['uploadTime'];
     if (json['views'] != null) {
       views = <String>[];
       json['views'].forEach((v) {
@@ -33,7 +45,9 @@ class JobPostModel {
     description = json['subtitle'];
     imgUrl = json['img'];
     location = json['location'];
-    time = json['uploadTime'];
+    positions = json['positions'];
+    quvalification = json['quvalification'];
+    verify = json['verify'];
   }
 
   Map<String, dynamic> toJson() {
@@ -41,6 +55,7 @@ class JobPostModel {
     data['id'] = this.id;
     data['title'] = this.title;
     data['date'] = this.date;
+    data['Batch'] = this.Batch;
     if (this.views != null) {
       data['views'] = this.views!.map((v) => v).toList();
     }
@@ -52,6 +67,11 @@ class JobPostModel {
     data['img'] = this.imgUrl;
     data['location'] = this.location;
     data['uploadTime'] = this.time;
+    data['quvalification'] = this.quvalification;
+    data['positions'] = this.positions;
+    data['verify'] = this.verify;
+    data['userName'] = this.userName;
+    data['UserOccupation'] = this.UserOccupation;
     return data;
   }
 

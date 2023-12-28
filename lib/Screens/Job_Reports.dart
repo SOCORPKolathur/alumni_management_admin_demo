@@ -1,10 +1,12 @@
 import 'package:alumni_management_admin/Constant_.dart';
 import 'package:alumni_management_admin/PieChart_all_department.dart';
+import 'package:alumni_management_admin/Screens/notWorkingPiecharts.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import '../Models/Language_Model.dart';
 import '../utils.dart';
 import 'dart:math';
@@ -30,6 +32,9 @@ class _Job_ReportsState extends State<Job_Reports> {
   List<workingPerson> workingPersonListData=[];
 
   int TotalAlumniUserCount=0;
+  int notAlumniUserCount=0;
+  int workingAlumniUserCount=0;
+  int ownBusinessAlumniUserCount=0;
   int alumniWorkingCount=0;
   var currentBatchDYear=DateTime.now().year-1;
 
@@ -83,6 +88,7 @@ class _Job_ReportsState extends State<Job_Reports> {
     // TODO: implement initState
     super.initState();
   }
+
   List<lineData>LineDataList=[];
   List<lineData>LineDataList2=[];
   List<lineData>LineDataList3=[];
@@ -90,6 +96,100 @@ class _Job_ReportsState extends State<Job_Reports> {
   List<AreLineData> areaLineYesList=[];
   List<AreLineData> areaLineNoList=[];
   List<AreLineData> areaLineOwnList=[];
+
+  List <AlumniData> lineGraphListWorkingAlumni=[];
+  var departmentColor;
+  var indicatorColor;
+  List<String> hexColorCodes = [
+    '#FF5733', '#33FF57', '#5733FF', '#FFFF33', '#FFFF36',
+  ];
+
+  List colors=[
+    Colors.red,
+    Colors.blue,
+    Colors.green,
+    Colors.yellow,
+    Colors.orange,
+    Colors.purple,
+    Colors.pink,
+    Colors.brown,
+    Colors.grey,
+    Colors.cyan,
+    Colors.teal,
+    Colors.indigo,
+    Colors.amber,
+    Colors.lime,
+    Colors.lightBlue,
+    Colors.lightGreen,
+    Colors.deepOrange,
+    Colors.deepPurple,
+    Colors.blueGrey,
+    Colors.redAccent,
+    Colors.blueAccent,
+    Colors.greenAccent,
+    Colors.yellowAccent,
+  ];
+  Color color(int index) {
+    Set<Color> usedColors = Set<Color>();
+    indicatorColor = hexColorCodes[index % hexColorCodes.length];
+    Color color = Color(int.parse(indicatorColor.replaceAll("#", "0xFF")));
+
+    while (usedColors.contains(color)) {
+      indicatorColor = hexColorCodes[(index + 1) % hexColorCodes.length];
+      color = Color(int.parse(indicatorColor.replaceAll("#", "0xFF")));
+    }
+
+    usedColors.add(color);
+    if (color.computeLuminance() < 0.5) {
+      color = color.withOpacity(0.7);
+    }
+    return color;
+  }
+  int touchedIndex=0;
+  List<PieChartSectionData> showingSections() {
+    return List.generate(departmentDataList.length, (i) {
+      final isTouched = i == touchedIndex;
+      final fontSize = isTouched ? 16.0 : 10.0;
+      final radius = isTouched ? 60.0 : 50.0;
+
+      Map<String, int> departmentCountMap = {};
+      for (int j = 0; j < departmentDataList.length; j++) {
+        if (workingPersonListData![j].department!.contains(departmentDataList![i])) {
+          if (workingPersonListData![j].workingStatus == "No") {
+            final currentDepartment =departmentDataList![i];
+            departmentCountMap[currentDepartment] = (departmentCountMap[currentDepartment] ?? 0) + 1;
+          }
+        }
+      }
+
+      final department = departmentDataList![i];
+      final countForDepartment = departmentCountMap[department] ?? 0;
+
+      // Generate a list of hexadecimal color codes
+
+
+      // Get the color for the current department
+      departmentColor = hexColorCodes[i % hexColorCodes.length];
+
+      print(countForDepartment);
+
+
+      print(countForDepartment);
+      print(department);
+      return PieChartSectionData(
+        color: colors[i],
+        value: (countForDepartment) / int.parse(TotalAlumniUserCount.toString()),
+        title: '${((countForDepartment) / int.parse(TotalAlumniUserCount.toString()) * 100).toStringAsFixed(2)} %',
+        radius: radius,
+        titleStyle: SafeGoogleFont('Nunito',
+          fontSize: fontSize,
+          fontWeight: FontWeight.w700,
+          color: AppColors.mainTextColor1,
+        ),
+      );
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -133,37 +233,72 @@ class _Job_ReportsState extends State<Job_Reports> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
 
+
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
 
+
                         /// line graph  container
                         Material(
                           elevation:3,
+                          color: const Color(0xffffffff),
                           borderRadius: BorderRadius.circular(5),
                           child: SizedBox(
-                            width:600,
-                            height:450,
+                            width:width/1.2196,
+                            height:height/1.6275,
                             child:
                             Padding(
-                              padding: const EdgeInsets.all(20),
-                              child: LineChart(
+                              padding:  EdgeInsets.symmetric(
+                                vertical: height/32.55,
+                                horizontal: width/68.3,
+                              ),
+                              child:
+                              SfCartesianChart(
+                                primaryXAxis: CategoryAxis(),
+                                title: ChartTitle(
+                                    text: "Yearly Alumna's Reports",
+                                    textStyle: GoogleFonts.nunito(
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                    ),
+                                    alignment: ChartAlignment.near
+                                ),
+                                legend: Legend(isVisible: true),
+                                tooltipBehavior: TooltipBehavior(enable: true),
+                                  series: <LineSeries<AlumniData, String>>[
+                                    LineSeries<AlumniData, String>(
+                                      name: "",
+                                      dataSource:lineGraphListWorkingAlumni,
+                                      xValueMapper: (AlumniData alumni, _) => alumni.year,
+                                      yValueMapper: (AlumniData alumni, _) => alumni.sales,
+                                      // Enable data label
+                                      dataLabelSettings: DataLabelSettings(isVisible: true),
+                                      color: Constants().primaryAppColor,
+                                      width: 3,
+                                      animationDuration: 2000,
+                                    )
+                                  ]
+
+                              ),
+                            /*  LineChart(
                                 curve: Curves.linear,
                                 createLineChartData(areaLineYesList,areaLineNoList,areaLineOwnList),
                                 duration: Duration(milliseconds: 250),
-                              ),
+                              ),*/
                             ),
                           ),
                         ),
 
-                        ///Working Person depart fish
+                        /*///Working Person depart fish
                         Material(
                           elevation:3,
 
                           borderRadius: BorderRadius.circular(5),
                           child: SizedBox(
                               height:450,
-                              width: 600,
+                              width: 550,
                               child:
                               SfCartesianChart(
                                 primaryXAxis: CategoryAxis(
@@ -191,21 +326,24 @@ class _Job_ReportsState extends State<Job_Reports> {
                               )
 
                           ),
-                        ),
+                        ),*/
+
                       ],
                     ),
 
-                   // Testing_screen(CurrentYearValue: currentBatchDYear,departmentDataList: departmentDataList),
-                   // LineChartSample2(),
+                    ///Year Selected Container
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding:  EdgeInsets.symmetric(
+                          horizontal: width/170.75,
+                          vertical: height/81.375
+                      ),
                       child: Material(
                         color: const Color(0xffffffff),
                         borderRadius: BorderRadius.circular(8),
                         elevation: 2,
                         child: Container(
-                          height:120,
-                          width:1240,
+                          height:height/5.425,
+                          width:width/1.10161,
                           decoration: BoxDecoration(
                               color: const Color(0xffffffff),
                               borderRadius: BorderRadius.circular(8)
@@ -213,25 +351,32 @@ class _Job_ReportsState extends State<Job_Reports> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Text("Select the Year",style:
-                              SafeGoogleFont('Nunito',
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.black
-                              ),),
+                              GestureDetector(
+                                onTap: (){
+                                  print(height);
+                                  print(width);
+                                },
+                                child: Text("Select the Year",style:
+                                SafeGoogleFont('Nunito',
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black
+                                ),),
+                              ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   SingleChildScrollView(
                                     controller: _horizontal,
                                     child: SizedBox(
-                                      height: 50,
-                                      width: 1150,
+                                      height: height/13.02,
+                                      width: width/1.3009,
                                       child: Row(
                                         children: [
                                           Padding(
-                                            padding:  EdgeInsets.only(right: 30),
+                                            padding:  EdgeInsets.only(right: width/45.533),
                                             child: GestureDetector(
                                               onTap: () {
+
                                                 scrollToPreviousYear();
                                               },
                                               child: CircleAvatar(
@@ -240,59 +385,60 @@ class _Job_ReportsState extends State<Job_Reports> {
                                             ),
                                           ),
                                           SizedBox(
-                                            width: 1010,
-                                            child: Scrollbar(
-                                              child: ListView.builder(
-                                                controller: _horizontal,
-                                                reverse: false,
-                                                scrollDirection: Axis.horizontal,
-                                                itemCount: dateList.length,
-                                                itemBuilder: (context, index) {
-                                                  return Padding(
-                                                    padding: const EdgeInsets.all(8.0),
-                                                    child: GestureDetector(
-                                                      onTap: () {
-                                                        scrollToYearWithAnimation(index);
-                                                        setState(() {
-                                                          currentBatchDYear = dateList[index];
-                                                        });
-                                                        print(currentBatchDYear);
-                                                        print('Current Year ++++++++++++++++++++++++++++');
-                                                        workingStatusAlumniFunc();
-                                                      },
-                                                      child: Container(
-                                                        height: 30,
-                                                        width: 80,
-                                                        decoration: BoxDecoration(
-                                                            borderRadius: BorderRadius.circular(5),
+                                            width: width/1.5177,
+                                            child: ListView.builder(
+                                              controller: _horizontal,
+                                              reverse: false,
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: dateList.length,
+                                              itemBuilder: (context, index) {
+                                                return Padding(
+                                                  padding:  EdgeInsets.symmetric(
+                                                      horizontal: width/170.75,
+                                                      vertical: height/81.375
+                                                  ),
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      scrollToYearWithAnimation(index);
+                                                      setState(() {
+                                                        currentBatchDYear = dateList[index];
+                                                      });
+                                                      print(currentBatchDYear);
+                                                      print('Current Year ++++++++++++++++++++++++++++');
+                                                      workingStatusAlumniFunc();
+                                                    },
+                                                    child: Container(
+                                                      height: 30,
+                                                      width: 80,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius: BorderRadius.circular(5),
+                                                          color: currentBatchDYear == dateList[index]
+                                                              ? Constants().primaryAppColor
+                                                              : Colors.white,
+                                                          border: Border.all(
+                                                            color:  currentBatchDYear == dateList[index]
+                                                                ?Colors.white:Constants().primaryAppColor,
+                                                          )
+                                                      ),
+                                                      child: Center(
+                                                        child: Text(
+                                                          dateList[index].toString(),
+                                                          style: SafeGoogleFont('Nunito',
                                                             color: currentBatchDYear == dateList[index]
-                                                                ? Constants().primaryAppColor
-                                                                : Colors.white,
-                                                            border: Border.all(
-                                                              color:  currentBatchDYear == dateList[index]
-                                                                  ?Colors.white:Constants().primaryAppColor,
-                                                            )
-                                                        ),
-                                                        child: Center(
-                                                          child: Text(
-                                                            dateList[index].toString(),
-                                                            style: SafeGoogleFont('Nunito',
-                                                              color: currentBatchDYear == dateList[index]
-                                                                  ? Colors.white
-                                                                  : Colors.black,
-                                                              fontWeight: FontWeight.w700,
-                                                            ),
+                                                                ? Colors.white
+                                                                : Colors.black,
+                                                            fontWeight: FontWeight.w700,
                                                           ),
                                                         ),
                                                       ),
                                                     ),
-                                                  );
-                                                },
-                                              ),
+                                                  ),
+                                                );
+                                              },
                                             ),
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.only(left: 30),
+                                            padding:  EdgeInsets.only(left: width/45.533),
                                             child: GestureDetector(
                                               onTap: () {
                                                 scrollToNextYear();
@@ -310,15 +456,23 @@ class _Job_ReportsState extends State<Job_Reports> {
 
                                 ],
                               ),
-                              SizedBox(height:5),
+                              SizedBox(height:height/130.2),
                             ],
                           ),
                         ),
                       ),
                     ),
+                   // Testing_screen(CurrentYearValue: currentBatchDYear,departmentDataList: departmentDataList),
+                   // LineChartSample2(),
 
+
+
+                    ///pie charts
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding:  EdgeInsets.symmetric(
+                        horizontal: width/170.75,
+                        vertical: height/81.375
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -332,173 +486,304 @@ class _Job_ReportsState extends State<Job_Reports> {
                                   color: const Color(0xffffffff),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
-                                height: 300,
-                                width: 650,
-                                child:  Alldepartment(
-                                  derpartMentList:departmentDataList,
-                                  departviseWorkingList: workingPersonListData,
-                                  TotalAlumniUsers: TotalAlumniUserCount,
+                                height: height/1.91470,
+                                width: width/2.4836,
+                                child:  Column(
+                                  children: [
+
+                                     Padding(
+                                       padding:  EdgeInsets.symmetric(
+                                           horizontal: width/170.75,
+                                           vertical: height/81.375
+                                       ),
+                                       child: Text("Working And Own Business Alumna's",style: GoogleFonts.nunito(fontWeight: FontWeight.w700,fontSize: 15),),
+                                     ),
+                                    Alldepartment(
+                                      derpartMentList:departmentDataList,
+                                      departviseWorkingList: workingPersonListData,
+                                      TotalAlumniUsers: TotalAlumniUserCount,
+                                    ),
+
+                                  ],
                                 )),
                           ),
 
-                          const SizedBox(width: 10,),
+                           SizedBox(width: width/136.6,),
 
                           Material(
-                            borderRadius: BorderRadius.circular(5),
-                            color: const Color(0xffffffff),
                             elevation: 5,
+                            color: const Color(0xffffffff),
+                            borderRadius: BorderRadius.circular(5),
                             child: Container(
-                              height: 300,
-                              width: 510,
-                              decoration: BoxDecoration(
+                                decoration: BoxDecoration(
+                                  color: const Color(0xffffffff),
                                   borderRadius: BorderRadius.circular(5),
-                                color: const Color(0xffffffff),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  Container(
-                                      height:40,
-                                      width: 150,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(5),
-                                          color: Constants().primaryAppColor
+                                ),
+                                height: height/1.91470,
+                                width: width/2.4836,
+                                child:  Column(
+                                  children: [
+                                    Padding(
+                                      padding:  EdgeInsets.symmetric(
+                                          horizontal: width/170.75,
+                                          vertical: height/81.375
                                       ),
-                                      child: Center(child: Text("Total Alumna's : $TotalAlumniUserCount",style: SafeGoogleFont('Nunito',fontWeight: FontWeight.w700,color: Colors.white),))),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                        children: [
-                                          CircularPercentIndicator(
-                                            radius: 60.0,
-                                            lineWidth: 20,
-                                            curve: Curves.easeIn,
-                                            animation: true,
-                                            animationDuration: 1500,
-                                            animateFromLastPercent: true,
-                                            percent: workingAlumniPercentage,
-                                            center: Text("${(workingAlumniPercentage*100).toStringAsFixed(0)} %"),
-                                            progressColor: Colors.green,
-                                            backgroundColor: Colors.grey,
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(top:20),
-                                            child: Material(
-                                              elevation: 5,
-                                              borderRadius: BorderRadius.circular(50),
-                                              color: Colors.green,
-                                              child: Container(
-                                                height: 40,
-                                                width: 120,
-                                                decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(50),
-                                                    color: Colors.green
+                                      child: Text("Not Working  Alumna's",style: GoogleFonts.nunito(fontWeight: FontWeight.w700,fontSize: 15),),
+                                    ),
+                                   /* SizedBox(
+                                      height: height/2.17,
+                                      width: width/2.483,
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: <Widget>[
+
+                                          SizedBox(
+                                            width: width/5.253846153846154,
+                                            child: PieChart(
+                                              PieChartData(
+                                                pieTouchData: PieTouchData(
+                                                  touchCallback: (FlTouchEvent event, pieTouchResponse) {
+
+                                                  },
                                                 ),
-                                                child:  Center(child: Text("Working",style: SafeGoogleFont('Nunito',
-                                                    fontWeight: FontWeight.w700,
-                                                    color: Colors.white))),
+                                                borderData: FlBorderData(
+                                                  show: false,
+                                                ),
+                                                sectionsSpace: 0,
+                                                centerSpaceRadius: 40,
+                                                sections: showingSections(),
                                               ),
                                             ),
-                                          )
-                                        ],
-                                      ),
-
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                        children: [
-                                          CircularPercentIndicator(
-                                            radius: 60.0,
-                                            lineWidth: 20,
-                                            curve: Curves.easeIn,
-                                            animation: true,
-                                            animationDuration: 1500,
-                                            animateFromLastPercent: true,
-                                            percent: notworkingAlumniPercentage,
-                                            center: Text("${(notworkingAlumniPercentage*100).toStringAsFixed(0)} %"),
-                                            progressColor: Colors.red,
-                                            backgroundColor: Colors.grey,
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(top:20),
-                                            child: Material(
-                                              elevation: 5,
-                                              borderRadius: BorderRadius.circular(50),
-                                              color: Colors.green,
-                                              child: Container(
-                                                height: 40,
-                                                width: 120,
-                                                decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(50),
-                                                    color: Colors.red
-                                                ),
-                                                child:  Center(child: Text("Not Working",style: SafeGoogleFont('Nunito',
-                                                    fontWeight: FontWeight.w700,
-                                                    color: Colors.white))),
+
+
+                                          SizedBox(
+                                            width: width/5.939130434782609,
+                                            child: SingleChildScrollView(
+                                              physics: const ScrollPhysics(),
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: <Widget>[
+
+                                                  ListView.builder(
+                                                    shrinkWrap: true,
+                                                    physics: const NeverScrollableScrollPhysics(),
+                                                    itemCount:departmentDataList!.length,
+                                                    itemBuilder: (context, index) {
+                                                      return  Indicator(
+                                                        color: colors[index],
+                                                        text: departmentDataList![index].toString(),
+                                                        isSquare: true,
+                                                      );
+                                                    },),
+
+
+                                                ],
                                               ),
                                             ),
-                                          )
-                                        ],
-                                      ),
-
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                        children: [
-                                          CircularPercentIndicator(
-                                            radius: 60.0,
-                                            lineWidth: 20,
-                                            curve: Curves.easeIn,
-                                            animation: true,
-                                            animationDuration: 1500,
-                                            animateFromLastPercent: true,
-                                            percent: ownBusinessAlumniPercentage,
-                                            center: Text("${(ownBusinessAlumniPercentage*100).toStringAsFixed(0)} %"),
-                                            progressColor: Color(0xffEABE3B),
-                                            backgroundColor: Colors.grey,
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(top:20),
-                                            child: Material(
-                                              elevation: 5,
-                                              borderRadius: BorderRadius.circular(50),
-                                              color: Color(0xffEABE3B),
-                                              child: Container(
-                                                height: 40,
-                                                width: 120,
-                                                decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(50),
-                                                    color: Color(0xffEABE3B),
-                                                ),
-                                                child:  Center(child: Text("Own Business",style: SafeGoogleFont('Nunito',
-                                                    fontWeight: FontWeight.w700,
-                                                    color: Colors.white
-                                                ),)),
-                                              ),
-                                            ),
-                                          )
+
                                         ],
                                       ),
+                                    )*/
 
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
+                                    notWorkingPiecharts(
+                                      derpartMentList:departmentDataList,
+                                      departviseWorkingList: workingPersonListData,
+                                      TotalAlumniUsers: TotalAlumniUserCount,
+                                    ),
+                                  ],
+                                )),
                           ),
+
+
 
                         ],
                       ),
                     ),
 
+                    ///circular Progress indicator
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Material(
+                          borderRadius: BorderRadius.circular(5),
+                          color: const Color(0xffffffff),
+                          elevation: 5,
+                          child: Container(
+                            height: height/2.17,
+                            width: width/2.4836,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: const Color(0xffffffff),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Container(
+                                    height:height/16.275,
+                                    width: width/9.1066,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: Constants().primaryAppColor
+                                    ),
+                                    child: Center(child: Text("Total Alumna's : $TotalAlumniUserCount",style: SafeGoogleFont('Nunito',fontWeight: FontWeight.w700,color: Colors.white),))),
+
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      children: [
+                                        CircularPercentIndicator(
+                                          radius: 60.0,
+                                          lineWidth: 20,
+                                          curve: Curves.easeIn,
+                                          animation: true,
+                                          animationDuration: 1500,
+                                          animateFromLastPercent: true,
+                                          percent: workingAlumniPercentage,
+                                          center: Text("${(workingAlumniPercentage*100).toStringAsFixed(0)} %"),
+                                          progressColor: Colors.green,
+                                          backgroundColor: Colors.grey.shade300,
+                                        ),
+                                        Padding(
+                                          padding:  EdgeInsets.only(top:height/32.55),
+                                          child: Material(
+                                            elevation: 5,
+                                            borderRadius: BorderRadius.circular(50),
+                                            color: Colors.green,
+                                            child: Container(
+                                              height: height/16.275,
+                                              width: width/11.3833,
+                                              decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(50),
+                                                  color: Colors.green
+                                              ),
+                                              child:  Center(child: Text("Working $workingAlumniUserCount",style: SafeGoogleFont('Nunito',
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Colors.white))),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      children: [
+                                        CircularPercentIndicator(
+                                          radius: 60.0,
+                                          lineWidth: 20,
+                                          curve: Curves.easeIn,
+                                          animation: true,
+                                          animationDuration: 1500,
+                                          animateFromLastPercent: true,
+                                          percent: notworkingAlumniPercentage,
+                                          center: Text("${(notworkingAlumniPercentage*100).toStringAsFixed(0)} %"),
+                                          progressColor: Colors.red,
+                                          backgroundColor: Colors.grey.shade300,
+                                        ),
+                                        Padding(
+                                          padding:  EdgeInsets.only(top:height/32.55),
+                                          child: Material(
+                                            elevation: 5,
+                                            borderRadius: BorderRadius.circular(50),
+                                            color: Colors.green,
+                                            child: Container(
+                                              height: height/16.275,
+                                              width: width/11.3833,
+                                              decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(50),
+                                                  color: Colors.red
+                                              ),
+                                              child:  Center(child: Text("Not Working $notAlumniUserCount",style: SafeGoogleFont('Nunito',
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Colors.white))),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      children: [
+                                        CircularPercentIndicator(
+                                          radius: 60.0,
+                                          lineWidth: 20,
+                                          curve: Curves.easeIn,
+                                          animation: true,
+                                          animationDuration: 1500,
+                                          animateFromLastPercent: true,
+                                          percent: ownBusinessAlumniPercentage,
+                                          center: Text("${(ownBusinessAlumniPercentage*100).toStringAsFixed(0)} %"),
+                                          progressColor: Color(0xffEABE3B),
+                                          backgroundColor: Colors.grey.shade300,
+                                        ),
+                                        Padding(
+                                          padding:  EdgeInsets.only(top:height/32.55),
+                                          child: Material(
+                                            elevation: 5,
+                                            borderRadius: BorderRadius.circular(50),
+                                            color: Color(0xffEABE3B),
+                                            child: Container(
+                                              height: height/16.275,
+                                              width: width/11.3833,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(50),
+                                                color: Color(0xffEABE3B),
+                                              ),
+                                              child:  Center(child: Text("Own Business $ownBusinessAlumniUserCount",style: SafeGoogleFont('Nunito',
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Colors.white
+                                              ),)),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        Material(
+                          borderRadius: BorderRadius.circular(5),
+                          color: const Color(0xffffffff),
+                          elevation: 5,
+                          child: Container(
+                            height: height/2.17,
+                            width: width/2.4836,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: const Color(0xffffffff),
+                            ),
+                            child:Lottie.asset(Constants().EmptyDocument)
+                          ),
+                        ),
+                      ],
+                    ),
+
+
+                    /// Department Graph
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding:  EdgeInsets.symmetric(
+                          horizontal: width/170.75,
+                          vertical: height/81.375
+                      ),
                       child: Material(
+                        color: const Color(0xffffffff),
                         borderRadius: BorderRadius.circular(5),
                         elevation: 5,
                         child: SizedBox(
-                            height: 400,
-                            width: 1230,
+                            height: height/1.6275,
+                            width: width/1.11056,
                             child:  SfCartesianChart(
                                 primaryXAxis: CategoryAxis(
                                   title:AxisTitle(text: "Department",textStyle: GoogleFonts.nunito(fontWeight: FontWeight.w600)) ,
@@ -607,16 +892,15 @@ class _Job_ReportsState extends State<Job_Reports> {
   }
 
   workingStatusAlumniFunc()async{
-    setState(() {
-      TotalAlumniUserCount=0;
-      workingAlumniPercentage=0;
-      notworkingAlumniPercentage=0;
-      ownBusinessAlumniPercentage=0;
-      workingPersonListData.clear();
-      alumniWorkingCount=0;
-      chartData.clear();
-      OwnBusinesschartData.clear();
-    });
+
+    print(currentBatchDYear);
+    print("Current Year Selected++++++++++++++++++++++++++++++++++++${currentBatchDYear}");
+
+    int CountValue=0;
+    int CountValue2=0;
+    int workingStatusYes=0;
+    int workingStatusNO=0;
+    int workingStatusOwnBus=0;
     int value=0;
     int value2=0;
     int value3=0;
@@ -624,13 +908,35 @@ class _Job_ReportsState extends State<Job_Reports> {
     int yesValue=0;
     int noValue=0;
     int ownsValue=0;
+    setState(() {
+      TotalAlumniUserCount=0;
+      workingAlumniPercentage=0;
+      notworkingAlumniPercentage=0;
+      ownBusinessAlumniPercentage=0;
+      workingPersonListData.clear();
+      alumniWorkingCount=0;
+      workingAlumniPercentage=0;
+      workingAlumniUserCount=0;
+      ownBusinessAlumniUserCount=0;
+      notAlumniUserCount=0;
+      chartData.clear();
+      OwnBusinesschartData.clear();
+      lineGraphListWorkingAlumni.clear();
+       CountValue=0;
+       CountValue2=0;
+       workingStatusYes=0;
+       workingStatusNO=0;
+       workingStatusOwnBus=0;
+    });
 
-    print(departmentDataList);
-    var UserData= await  FirebaseFirestore.instance.collection('Users').orderBy("timestamp").get();
+
+
+    var UserData= await  FirebaseFirestore.instance.collection('Users').orderBy("yearofpassed").get();
 
     setState(() {
       TotalAlumniUserCount=UserData.docs.length;
     });
+
     for(int x=0;x<UserData.docs.length;x++){
 
       if(int.parse(UserData.docs[x]['yearofpassed'].toString())==currentBatchDYear){
@@ -644,86 +950,59 @@ class _Job_ReportsState extends State<Job_Reports> {
                 workingStatus:UserData.docs[x]['workingStatus'].toString() ,
               )
           );
-
-
         });
       }
-      if(UserData.docs[x]['workingStatus']=="Yes"){
-        yesValue=yesValue+1;
-        print("Non Condition Function Yes()");
-        areaLineYesList.add(AreLineData(int.parse(UserData.docs[x]['yearofpassed'].toString()), double.parse(((yesValue/TotalAlumniUserCount)).toString())));
 
-      }
-      if(UserData.docs[x]['workingStatus']=="No"){
-        noValue=noValue+1;
-        print("Non Condition Function No()");
-        areaLineYesList.add(AreLineData(int.parse(UserData.docs[x]['yearofpassed'].toString()), double.parse(((noValue/TotalAlumniUserCount)).toString())));
-
-      }
-      if(UserData.docs[x]['workingStatus']=="Own Business"){
-        ownsValue=ownsValue+1;
-        print("Non Condition Function Own Business()");
-        areaLineYesList.add(AreLineData(int.parse(UserData.docs[x]['yearofpassed'].toString()), double.parse(((ownsValue/TotalAlumniUserCount)).toString())));
-
-      }
-      else{
+     /* else{
         if(UserData.docs[x]['workingStatus']=="Yes"){
-          print("1111111111111--------------YEs");
+          yesValue=yesValue+1;
+          lineGraphListWorkingAlumni.add(AlumniData(sales:double.parse(((yesValue/TotalAlumniUserCount)).toString()),year:UserData.docs[x]['yearofpassed'].toString()  ));
+
           if(departmentDataList.contains(UserData.docs[x]['subjectStream'])){
             value=value+1;
             LineDataList.add(lineData(int.parse(UserData.docs[x]['yearofpassed']), double.parse(((value/TotalAlumniUserCount)).toString())));
           }
-
         }
         if(UserData.docs[x]['workingStatus']=="No"){
-          print("2222222222222--------------No");
+          noValue=noValue+1;
+
           if(departmentDataList.contains(UserData.docs[x]['subjectStream'])){
             value2=value2+1;
-            LineDataList2.add(
-                lineData(int.parse(UserData.docs[x]['yearofpassed']), double.parse(((value2/TotalAlumniUserCount)*100).toString()))
-            );
+            LineDataList2.add(lineData(int.parse(UserData.docs[x]['yearofpassed']), double.parse(((value2/TotalAlumniUserCount)*100).toString())));
           }
         }
         if(UserData.docs[x]['workingStatus']=="Own Business"){
-          print("3333333333333--------------Own Business");
+          ownsValue=ownsValue+1;
+          areaLineOwnList.add(AreLineData(int.parse(UserData.docs[x]['yearofpassed'].toString()), double.parse(((ownsValue/TotalAlumniUserCount)).toString())));
           if(departmentDataList.contains(UserData.docs[x]['subjectStream'])){
             value3=value3+1;
-            LineDataList3.add(
-                lineData(int.parse(UserData.docs[x]['yearofpassed']), double.parse(((value3/TotalAlumniUserCount)*100).toString()))
+            LineDataList3.add(lineData(int.parse(UserData.docs[x]['yearofpassed']), double.parse(((value3/TotalAlumniUserCount)*100).toString()))
             );
           }
         }
-      }
+      }*/
+
+
     }
 
-    print("User over all working Status List++++++++++++++++++++++++++++++++++++++++++++");
-    print("total Alumni $TotalAlumniUserCount");
-    print(currentBatchDYear);
 
-    int CountValue=0;
-    int CountValue2=0;
-
-    int workingStatusYes=0;
-    int workingStatusNO=0;
-    int workingStatusOwnBus=0;
 
 
     workingPersonListData.forEach((element) {
 
       if(element.workingStatus=="Yes"){
         workingStatusYes=workingStatusYes+1;
-        print(element.workingStatus);
         setState(() {
           workingAlumniPercentage= workingStatusYes/TotalAlumniUserCount;
+          workingAlumniUserCount=workingAlumniUserCount+1;
         });
-        print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
-        print(departmentDataList);
-        print(element.department);
-        print("----------------------------------------------------------------------");
+
+        lineGraphListWorkingAlumni.add(AlumniData(sales:double.parse(((workingStatusYes/TotalAlumniUserCount)).toString()),year:element.batch.toString()  ));
+
         if(departmentDataList.contains(element.department)){
           CountValue=CountValue+1;
-          print('Department++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
           chartData.add(BarChartData.randomColor(element.department.toString(), CountValue / TotalAlumniUserCount));
+          LineDataList.add(lineData(int.parse(element.batch.toString()), double.parse(((CountValue/TotalAlumniUserCount)*100).toString())));
 
         }
       }
@@ -731,48 +1010,37 @@ class _Job_ReportsState extends State<Job_Reports> {
       if(element.workingStatus=="No"){
         workingStatusNO=workingStatusNO+1;
         setState(() {
-          notworkingAlumniPercentage= (TotalAlumniUserCount-workingStatusNO)/TotalAlumniUserCount;
+          notworkingAlumniPercentage= (TotalAlumniUserCount-workingAlumniPercentage)/TotalAlumniUserCount;
+          notAlumniUserCount=notAlumniUserCount+1;
         });
+        if(departmentDataList.contains(element.department)){
+          CountValue=CountValue+1;
+          LineDataList2.add(lineData(int.parse(element.batch.toString()), double.parse(((CountValue/TotalAlumniUserCount)*100).toString())));
+
+        }
       }
 
       if(element.workingStatus=="Own Business"){
         workingStatusOwnBus=workingStatusOwnBus+1;
         ownBusinessAlumniPercentage= (workingStatusOwnBus/TotalAlumniUserCount);
+        ownBusinessAlumniUserCount=ownBusinessAlumniUserCount+1;
+
+        if(departmentDataList.contains(element.department)){
+          CountValue=CountValue+1;
+          LineDataList3.add(lineData(int.parse(element.batch.toString()), double.parse(((CountValue/TotalAlumniUserCount)*100).toString())));
+
+        }
       }
 
       if(departmentDataList.contains(element.department)){
         CountValue2=CountValue2+1;
-        print('Department++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
         OwnBusinesschartData.add(OwnBusinessBarChartData.randomColor(element.workingStatus.toString(), CountValue2 / TotalAlumniUserCount));
-
-        print(element.batch.toString());
-        print("Batch+++++++++++++++++++++++++++++++++++++++++");
-        print("Working   Status++++++++++++++++++++++++++++++++++++++");
-
       }
 
-      print(element.workingStatus);
-      print(element.workingAlumniCount);
-      print(element.department);
-      print(element.batch);
 
     });
 
-    print("percnetage in workign Status +++++++++++++++++++++++++++++++++++++++");
-    print("$TotalAlumniUserCount %");
-    print("$notworkingAlumniPercentage %");
-    print("$workingAlumniPercentage %");
-    print(dataMap);
-    print("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
-    print(areaLineYesList);
-    print(LineDataList);
-    print(LineDataList2);
-    print(LineDataList3);
-    print("Smooth Line graphh---------------------------------------------------");
-
-
-
-
+    print("Current year Working Status User List ${workingPersonListData.length})))))))))))))))))))))))");
 
   }
 
@@ -801,7 +1069,7 @@ class _Job_ReportsState extends State<Job_Reports> {
         LineChartBarData(
           isCurved: true,
           color: Colors.orange,
-          barWidth: 4,
+          barWidth: 2,
           isStrokeCapRound: true,
           dotData: const FlDotData(show: false),
           belowBarData: BarAreaData(show: false),
@@ -811,7 +1079,7 @@ class _Job_ReportsState extends State<Job_Reports> {
         LineChartBarData(
           isCurved: true,
           color: Colors.pink,
-          barWidth: 4,
+          barWidth: 2,
           isStrokeCapRound: true,
           dotData: const FlDotData(show: false),
           belowBarData: BarAreaData(show: false),
@@ -821,7 +1089,7 @@ class _Job_ReportsState extends State<Job_Reports> {
         LineChartBarData(
           isCurved: true,
           color: Colors.green,
-          barWidth: 4,
+          barWidth: 2,
           isStrokeCapRound: true,
           dotData: const FlDotData(show: false),
           belowBarData: BarAreaData(show: false),
@@ -853,43 +1121,52 @@ class _Job_ReportsState extends State<Job_Reports> {
   );
 
   FlTitlesData get titlesData1 => FlTitlesData(
+
     bottomTitles: AxisTitles(
       axisNameWidget: Text("Years",style: GoogleFonts.nunito(fontWeight: FontWeight.w600),),
       sideTitles: bottomTitles,
     ),
+
     rightTitles: const AxisTitles(
       sideTitles: SideTitles(showTitles: false),
     ),
+
     topTitles: const AxisTitles(
       sideTitles: SideTitles(showTitles: false),
     ),
+
     leftTitles: AxisTitles(
       axisNameWidget: Text("Percentage",style: GoogleFonts.nunito(fontWeight: FontWeight.w600),),
       sideTitles: leftTitles(),
     ),
+
   );
   FlGridData get gridData => const FlGridData(show: false);
+
   LineTouchData get lineTouchData1 => LineTouchData(
     handleBuiltInTouches: true,
     touchTooltipData: LineTouchTooltipData(
       tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
     ),
   );
+
   SideTitles leftTitles() => SideTitles(
     getTitlesWidget: leftTitleWidgets,
     showTitles: true,
     interval: 1,
     reservedSize: 40,
   );
+
   SideTitles get bottomTitles => SideTitles(
     showTitles: true,
     reservedSize: 30,
     interval: 1,
     getTitlesWidget: bottomTitleWidgets,
   );
+
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     var style = GoogleFonts.nunito(
-      fontWeight: FontWeight.bold,
+      fontWeight: FontWeight.w600,
     );
 
     String text;
@@ -930,9 +1207,10 @@ class _Job_ReportsState extends State<Job_Reports> {
 
     return Text(text, style: style, textAlign: TextAlign.center);
   }
+
   Widget bottomTitleWidgets(double value, TitleMeta meta,) {
      var style = GoogleFonts.nunito(
-      fontWeight: FontWeight.bold,
+      fontWeight: FontWeight.w600,
     );
 
      Widget text = const Text('');
@@ -1040,4 +1318,33 @@ class AreLineData {
   AreLineData(this.year, this.percentage);
 }
 
+class AlumniData {
 
+  AlumniData({this.year, this.sales,});
+  final String ?year;
+  late double ?sales;
+}
+
+class AppColors {
+  static const Color primary = contentColorCyan;
+  static const Color menuBackground = Color(0xFF090912);
+  static const Color itemsBackground = Color(0xFF1B2339);
+  static const Color pageBackground = Color(0xFF282E45);
+  static const Color mainTextColor1 = Colors.white;
+  static const Color mainTextColor2 = Colors.white70;
+  static const Color mainTextColor3 = Colors.white38;
+  static const Color mainGridLineColor = Colors.white10;
+  static const Color borderColor = Colors.white54;
+  static const Color gridLinesColor = Color(0x11FFFFFF);
+
+  static const Color contentColorBlack = Colors.black;
+  static const Color contentColorWhite = Colors.white;
+  static const Color contentColorBlue = Color(0xFF2196F3);
+  static const Color contentColorYellow = Color(0xFFFFC300);
+  static const Color contentColorOrange = Color(0xFFFF683B);
+  static const Color contentColorGreen = Color(0xFF3BFF49);
+  static const Color contentColorPurple = Color(0xFF6E1BFF);
+  static const Color contentColorPink = Color(0xFFFF3AF2);
+  static const Color contentColorRed = Color(0xFFE80054);
+  static const Color contentColorCyan = Color(0xFF50E4FF);
+}

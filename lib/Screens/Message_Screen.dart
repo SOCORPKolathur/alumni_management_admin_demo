@@ -1219,6 +1219,10 @@ class _Message_ScreenState extends State<Message_Screen>
                                                     )
 
                                                     ),
+
+                                                    child: Center(
+                                                      child: UserImg==""?Icon(Icons.person):Text(""),
+                                                    ),
                                                   ),
                                                 ],
                                                                                           ),

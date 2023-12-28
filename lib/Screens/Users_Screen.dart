@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cool_alert/cool_alert.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,13 +9,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import '../Constant_.dart';
 import '../Models/Language_Model.dart';
-import '../Models/Response_Model.dart';
 import '../StateModel.dart' as StatusModel;
 import '../utils.dart';
 import 'dart:html';
-import 'dart:html' as html;
+import 'package:number_paginator/number_paginator.dart';
+import 'package:email_validator/email_validator.dart';
 
 class Users_Screen extends StatefulWidget {
   const Users_Screen({super.key});
@@ -55,6 +55,11 @@ const List<String> StateList = <String>[
   "Uttarakhand",
   " Uttar Pradesh",
   "West Bengal",
+];
+const List<String> GenderList=<String>[
+  'Select',
+  "Male",
+  "Female"
 ];
 
 const List<String> coutryList = <String>[
@@ -269,6 +274,10 @@ class _Users_ScreenState extends State<Users_Screen> {
   bool UserEdit = false;
   bool Useradd = false;
 
+   String filterChageValue= "";
+
+
+
   GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
   final RegExp _inputPattern = RegExp(r'^\d{4}\s\d{4}\s\d{4}$');
@@ -276,7 +285,12 @@ class _Users_ScreenState extends State<Users_Screen> {
   var Uploaddocument;
   String imgUrl = "";
   String userUpdateDocumentID = "";
+  List filterDataList = [
+    'Filter by Date',
+  ];
 
+
+  GlobalKey filterDataKey=GlobalKey();
 
   //static GlobalKey popMenukey = GlobalKey<PopupMenuButtonState>();
   //List<GlobalKey> popMenukey = List<GlobalKey>.generate(12, (index) => GlobalKey(debugLabel: 'key_$index'),growable: false);
@@ -284,7 +298,7 @@ class _Users_ScreenState extends State<Users_Screen> {
   TextEditingController middleNamecon = TextEditingController();
   TextEditingController lastNamecon = TextEditingController();
   TextEditingController dateofBirthcon = TextEditingController();
-  TextEditingController gendercon = TextEditingController();
+  TextEditingController gendercon = TextEditingController(text: "Select");
   TextEditingController alterEmailIdcon = TextEditingController();
   TextEditingController aadhaarNumbercon = TextEditingController();
   TextEditingController phoneNumbercon = TextEditingController();
@@ -296,7 +310,7 @@ class _Users_ScreenState extends State<Users_Screen> {
   TextEditingController statecon = TextEditingController(text: "Select State");
   TextEditingController countrycon = TextEditingController(text: "Select Country");
   TextEditingController yearPassedcon = TextEditingController();
-  TextEditingController subjectStremdcon = TextEditingController();
+  TextEditingController subjectStremdcon = TextEditingController(text:"Select Department");
   TextEditingController classcon = TextEditingController();
   TextEditingController rollnocon = TextEditingController();
   TextEditingController lastvisitcon = TextEditingController();
@@ -314,6 +328,9 @@ class _Users_ScreenState extends State<Users_Screen> {
   TextEditingController ownBussinesscon = TextEditingController();
   TextEditingController alumniEmployedController = TextEditingController(text: "No");
 
+  TextEditingController SerachController = TextEditingController();
+
+  String SerachValue="";
   List usereditlist = [
     "Edit",
     "Delete",
@@ -328,9 +345,18 @@ class _Users_ScreenState extends State<Users_Screen> {
     // ),
   ];
 
+  int pagecount=0;
+  int temp=0;
+  List <DocumentSnapshot>documentList=[];
+
+  List<String> departmentDataList=[];
+
+ bool isEmail(String input)=>EmailValidator.validate(input);
+
   @override
   void initState() {
     userCounta();
+    departmentdataFetchFunc();
     // TODO: implement initState
     super.initState();
   }
@@ -358,6 +384,7 @@ class _Users_ScreenState extends State<Users_Screen> {
     });
 
   }
+  bool Loading=false;
   
   @override
   Widget build(BuildContext context) {
@@ -368,6 +395,8 @@ class _Users_ScreenState extends State<Users_Screen> {
     double baseWidth = 1920;
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
+
+
     return SingleChildScrollView(
         physics: const ScrollPhysics(),
       child: Column(
@@ -380,29 +409,34 @@ class _Users_ScreenState extends State<Users_Screen> {
                     children: [
                       SizedBox(
                         width: 1574 * fem,
+
                         child: Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: width / 170.75,
                               vertical: height / 81.375),
-                          child:  SizedBox(
+                          child: Form(
+                            key: _formkey,
+                            child: SizedBox(
                               width: 1550 * fem,
                               child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
                                 children: [
                                   Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.start,
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       ///Alumni text
                                       SizedBox(height: height / 26.04),
                                       Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                        MainAxisAlignment.start,
                                         children: [
                                           SizedBox(width: width/307.2),
                                           KText(
-                                            text: 'Edit Users Details',
+                                            text: 'Add Users Details',
                                             style: SafeGoogleFont(
                                               'Nunito',
                                               fontSize: 24 * ffem,
@@ -417,65 +451,70 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                       Row(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: [
                                           SizedBox(
                                             width: width/3.7463,
                                             child: Row(
                                               children: [
                                                 Container(
-                                                  height: height/7.39,
+                                                  height:  height/7.39,
                                                   width: width/15.36,
                                                   decoration: BoxDecoration(
                                                       borderRadius:
-                                                          BorderRadius.circular(
-                                                              100),
-                                                      color: const Color(0xffDDDEEE),
+                                                      BorderRadius
+                                                          .circular(
+                                                          100),
+                                                      color:
+                                                      const Color(0xffDDDEEE),
                                                       image: Uploaddocument !=
-                                                              null
+                                                          null
                                                           ? DecorationImage(
-                                                              fit: BoxFit.cover,
-                                                              image:
-                                                                  MemoryImage(
-                                                                Uint8List
-                                                                    .fromList(
-                                                                  base64Decode(
-                                                                      Uploaddocument!
-                                                                          .split(
-                                                                              ',')
-                                                                          .last),
-                                                                ),
-                                                              ),
-                                                            )
+                                                        fit: BoxFit
+                                                            .cover,
+                                                        image:
+                                                        MemoryImage(
+                                                          Uint8List
+                                                              .fromList(
+                                                            base64Decode(Uploaddocument!
+                                                                .split(
+                                                                ',')
+                                                                .last),
+                                                          ),
+                                                        ),
+                                                      )
                                                           : imgUrl != null
-                                                              ? DecorationImage(
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                  image: NetworkImage(
-                                                                      imgUrl))
-                                                              : DecorationImage(
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                  image: AssetImage(
-                                                                      Constants().avator))),
+                                                          ? DecorationImage(
+                                                          fit: BoxFit
+                                                              .cover,
+                                                          image: NetworkImage(
+                                                              imgUrl))
+                                                          : DecorationImage(
+                                                          fit: BoxFit
+                                                              .cover,
+                                                          image: AssetImage(
+                                                              Constants()
+                                                                  .avator))),
                                                 ),
                                                 SizedBox(width: width/102.4),
                                                 Column(
                                                   crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                  CrossAxisAlignment
+                                                      .start,
                                                   children: [
                                                     KText(
                                                       text:
-                                                          "Upload Student Photo (150px X 150px)",
+                                                      "Upload Student Photo (150px X 150px)",
                                                       style: SafeGoogleFont(
                                                         'Nunito',
                                                         fontSize: 17 * ffem,
                                                         fontWeight:
-                                                            FontWeight.w600,
-                                                        height:
-                                                            1.3625 * ffem / fem,
-                                                        color:
-                                                            const Color(0xff000000),
+                                                        FontWeight.w600,
+                                                        height: 1.3625 *
+                                                            ffem /
+                                                            fem,
+                                                        color: const Color(
+                                                            0xff000000),
                                                       ),
                                                     ),
                                                     SizedBox(height: height/147.8),
@@ -486,7 +525,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             addImage(size);
                                                           },
                                                           child: Container(
-                                                            height: height/24.63333,
+                                                            height: height/24.633,
                                                             width: width/19.2,
                                                             decoration: BoxDecoration(
                                                                 color: const Color(
@@ -497,19 +536,19 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             child: Center(
                                                               child: KText(
                                                                 text:
-                                                                    "Choose File",
+                                                                "Choose File",
                                                                 style:
-                                                                    SafeGoogleFont(
+                                                                SafeGoogleFont(
                                                                   'Nunito',
                                                                   fontSize:
-                                                                      17 * ffem,
+                                                                  17 *
+                                                                      ffem,
                                                                   fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  height:
-                                                                      1.3625 *
-                                                                          ffem /
-                                                                          fem,
+                                                                  FontWeight
+                                                                      .w600,
+                                                                  height: 1.3625 *
+                                                                      ffem /
+                                                                      fem,
                                                                   color: const Color(
                                                                       0xff000000),
                                                                 ),
@@ -520,14 +559,17 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         SizedBox(width: width/307.2),
                                                         KText(
                                                           text: Uploaddocument ==
-                                                                  null
+                                                              null
                                                               ? "No file chosen"
                                                               : "File is Selected",
-                                                          style: SafeGoogleFont(
+                                                          style:
+                                                          SafeGoogleFont(
                                                             'Nunito',
-                                                            fontSize: 17 * ffem,
+                                                            fontSize:
+                                                            17 * ffem,
                                                             fontWeight:
-                                                                FontWeight.w600,
+                                                            FontWeight
+                                                                .w600,
                                                             height: 1.3625 *
                                                                 ffem /
                                                                 fem,
@@ -544,114 +586,117 @@ class _Users_ScreenState extends State<Users_Screen> {
                                           ),
                                           SizedBox(
                                             width: width/2.2588,
-                                            height:height/ 2.8,
+                                            height: height/2.8,
                                             child: Column(
                                               children: [
                                                 ///first name and last name
                                                 Row(
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceAround,
+                                                  MainAxisAlignment
+                                                      .spaceAround,
                                                   children: [
                                                     SizedBox(
                                                       height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                         children: [
                                                           KText(
                                                             text:
-                                                                'First Name *',
+                                                            'First Name *',
                                                             style:
-                                                                SafeGoogleFont(
+                                                            SafeGoogleFont(
                                                               'Nunito',
                                                               fontSize:
-                                                                  20 * ffem,
+                                                              20 * ffem,
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
-                                                              height: 1.3625 *
+                                                              FontWeight
+                                                                  .w700,
+                                                              height:
+                                                              1.3625 *
                                                                   ffem /
                                                                   fem,
                                                               color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: height/123.1666),
+                                                          SizedBox(
+                                                              height: height/123.1666),
                                                           Container(
-                                                              height: height/15.1142,
-                                                              width: width/8.0842,
-                                                              decoration: BoxDecoration(
-                                                                  color: const Color(
-                                                                      0xffDDDEEE),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              3)),
-                                                              child:
-                                                                  TextFormField(
-                                                                controller: firstNamecon,
+                                                            height: height/15.114,
+                                                            width: width/8.0842,
+                                                            decoration: BoxDecoration(
+                                                                color: const Color(
+                                                                    0xffDDDEEE),
+                                                                borderRadius:
+                                                                BorderRadius.circular(
+                                                                    3)),
+                                                            child:
+                                                            TextFormField(
+                                                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                                                controller:firstNamecon,
                                                                 inputFormatters: [
-                                                                  FilteringTextInputFormatter
-                                                                      .allow(RegExp(
-                                                                          "[a-zA-Z ]")),
+                                                                  FilteringTextInputFormatter.allow(
+                                                                      RegExp("[a-zA-Z ]")),
                                                                 ],
-                                                                maxLength: 45,
-                                                                decoration:
-                                                                    const InputDecoration(
-                                                                  border:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  contentPadding:
-                                                                      EdgeInsets.only(
-                                                                          bottom:
-                                                                              10,
-                                                                          top:
-                                                                              2,
-                                                                          left:
-                                                                              10),
+                                                                maxLength: 25,
+                                                                decoration: const InputDecoration(
+                                                                  border: InputBorder
+                                                                      .none,
+                                                                  contentPadding: EdgeInsets.only(
+                                                                      bottom:
+                                                                      10,
+                                                                      top:
+                                                                      2,
+                                                                      left:
+                                                                      10),
                                                                   counterText:
-                                                                      "",
+                                                                  "",
                                                                 ),
-                                                                validator:
-                                                                    (value) {
-                                                                  if (value!
-                                                                      .isEmpty) {
-                                                                    return 'Field is required';
-                                                                  }
-                                                                  return null;
-                                                                },
-                                                              ))
+                                                                validator: (value) => value!
+                                                                    .isEmpty
+                                                                    ? 'Field is required'
+                                                                    : null,
+
+                                                                onChanged:(value){
+                                                                  setState((){
+                                                                    firstNameValidator=false;
+                                                                  });
+                                                                }
+                                                            ),
+                                                          ),
                                                         ],
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                       height: height/9.369,
+                                                      height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                         children: [
                                                           KText(
                                                             text:
-                                                                'Middle Name ',
+                                                            'Middle Name ',
                                                             style:
-                                                                SafeGoogleFont(
+                                                            SafeGoogleFont(
                                                               'Nunito',
                                                               fontSize:
-                                                                  20 * ffem,
+                                                              20 * ffem,
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
-                                                              height: 1.3625 *
+                                                              FontWeight
+                                                                  .w700,
+                                                              height:
+                                                              1.3625 *
                                                                   ffem /
                                                                   fem,
                                                               color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: height/123.1666),
+                                                          SizedBox(
+                                                              height: height/123.1666),
                                                           Container(
                                                               height: height/15.114,
                                                               width: width/8.0842,
@@ -659,61 +704,63 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   color: const Color(
                                                                       0xffDDDEEE),
                                                                   borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              3)),
+                                                                  BorderRadius.circular(
+                                                                      3)),
                                                               child:
-                                                                  TextFormField(
+                                                              TextFormField(
+                                                                maxLength:25,
                                                                 controller:
-                                                                    middleNamecon,
+                                                                middleNamecon,
                                                                 inputFormatters: [
                                                                   FilteringTextInputFormatter
-                                                                      .allow(RegExp(
-                                                                          "[a-zA-Z ]")),
+                                                                      .allow(
+                                                                      RegExp("[a-zA-Z ]")),
                                                                 ],
                                                                 decoration:
-                                                                    const InputDecoration(
-                                                                  border:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  contentPadding:
-                                                                      EdgeInsets.only(
-                                                                          bottom:
-                                                                              10,
-                                                                          top:
-                                                                              2,
-                                                                          left:
-                                                                              10),
+                                                                const InputDecoration(
+                                                                  counterText:"",
+                                                                  border: InputBorder
+                                                                      .none,
+                                                                  contentPadding: EdgeInsets.only(
+                                                                      bottom:
+                                                                      10,
+                                                                      top:
+                                                                      2,
+                                                                      left:
+                                                                      10),
                                                                 ),
                                                               ))
                                                         ],
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                       height: height/9.369,
+                                                      height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                         children: [
                                                           KText(
-                                                            text: 'Last Name *',
+                                                            text:
+                                                            'Last Name *',
                                                             style:
-                                                                SafeGoogleFont(
+                                                            SafeGoogleFont(
                                                               'Nunito',
                                                               fontSize:
-                                                                  20 * ffem,
+                                                              20 * ffem,
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
-                                                              height: 1.3625 *
+                                                              FontWeight
+                                                                  .w700,
+                                                              height:
+                                                              1.3625 *
                                                                   ffem /
                                                                   fem,
                                                               color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: height/123.1666),
+                                                          SizedBox(
+                                                              height: height/123.1666),
                                                           Container(
                                                               height: height/15.114,
                                                               width: width/8.0842,
@@ -721,39 +768,39 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   color: const Color(
                                                                       0xffDDDEEE),
                                                                   borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              3)),
+                                                                  BorderRadius.circular(
+                                                                      3)),
                                                               child:
-                                                                  TextFormField(
+                                                              TextFormField(
+                                                                autovalidateMode: AutovalidateMode.onUserInteraction,
                                                                 controller:
-                                                                    lastNamecon,
+                                                                lastNamecon,
+
                                                                 inputFormatters: [
                                                                   FilteringTextInputFormatter
-                                                                      .allow(RegExp(
-                                                                          "[a-zA-Z ]")),
+                                                                      .allow(
+                                                                      RegExp("[a-zA-Z ]")),
                                                                 ],
-                                                                maxLength: 45,
+                                                                maxLength:
+                                                                25,
                                                                 decoration:
-                                                                    const InputDecoration(
-                                                                  border:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  contentPadding:
-                                                                      EdgeInsets.only(
-                                                                          bottom:
-                                                                              10,
-                                                                          top:
-                                                                              2,
-                                                                          left:
-                                                                              10),
+                                                                const InputDecoration(
+                                                                  border: InputBorder
+                                                                      .none,
                                                                   counterText:
-                                                                      "",
+                                                                  "",
+                                                                  contentPadding: EdgeInsets.only(
+                                                                      bottom:
+                                                                      10,
+                                                                      top:
+                                                                      2,
+                                                                      left:
+                                                                      10),
                                                                 ),
-                                                                validator: (value) =>
-                                                                    value!.isEmpty
-                                                                        ? 'Field is required'
-                                                                        : null,
+                                                                validator: (value) => value!
+                                                                    .isEmpty
+                                                                    ? 'Field is required'
+                                                                    : null,
                                                               ))
                                                         ],
                                                       ),
@@ -767,36 +814,38 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                                 Row(
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceAround,
+                                                  MainAxisAlignment
+                                                      .spaceAround,
                                                   children: [
-                                                    ///d date of birth
+                                                    /// date of birth
                                                     SizedBox(
-                                                       height: height/9.369,
+                                                      height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                         children: [
                                                           KText(
                                                             text:
-                                                                'Date Of Birth *',
+                                                            'Date Of Birth *',
                                                             style:
-                                                                SafeGoogleFont(
+                                                            SafeGoogleFont(
                                                               'Nunito',
                                                               fontSize:
-                                                                  20 * ffem,
+                                                              20 * ffem,
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
-                                                              height: 1.3625 *
+                                                              FontWeight
+                                                                  .w700,
+                                                              height:
+                                                              1.3625 *
                                                                   ffem /
                                                                   fem,
                                                               color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: height/123.1666),
+                                                          SizedBox(
+                                                              height: height/123.1666),
                                                           Container(
                                                             height: height/15.114,
                                                             width: width/5.12,
@@ -804,62 +853,66 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 color: const Color(
                                                                     0xffDDDEEE),
                                                                 borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            3)),
+                                                                BorderRadius.circular(
+                                                                    3)),
                                                             child:
-                                                                TextFormField(
+                                                            TextFormField(
+                                                              autovalidateMode: AutovalidateMode.onUserInteraction,
                                                               controller:
-                                                                  dateofBirthcon,
+                                                              dateofBirthcon,
                                                               decoration:
-                                                                  const InputDecoration(
+                                                              const InputDecoration(
                                                                 border:
-                                                                    InputBorder
-                                                                        .none,
-                                                                contentPadding:
-                                                                    EdgeInsets.only(
-                                                                        bottom:
-                                                                            10,
-                                                                        top: 2,
-                                                                        left:
-                                                                            10),
+                                                                InputBorder
+                                                                    .none,
+                                                                contentPadding: EdgeInsets.only(
+                                                                    bottom:
+                                                                    10,
+                                                                    top: 2,
+                                                                    left:
+                                                                    10),
                                                               ),
                                                               validator: (value) =>
-                                                                  value!.isEmpty
-                                                                      ? 'Field is required'
-                                                                      : null,
-                                                              readOnly: true,
-                                                              onTap: () async {
-                                                                DateTime?
-                                                                    pickedDate =
-                                                                    await showDatePicker(
-                                                                        context:
-                                                                            context,
-                                                                        initialDate:
-                                                                            DateTime
-                                                                                .now(),
-                                                                        firstDate:
-                                                                            DateTime(
-                                                                                1950),
-                                                                        //DateTime.now() - not to allow to choose before today.
-                                                                        lastDate:
-                                                                            DateTime(2100));
+                                                              value!.isEmpty
+                                                                  ? 'Field is required'
+                                                                  : null,
+                                                              readOnly:
+                                                              true,
+                                                              onTap:
+                                                                  () async {
+                                                                DateTime? pickedDate = await showDatePicker(
+                                                                    context: context,
+                                                                    initialDate: DateTime.now(),
+                                                                    firstDate: DateTime(1950),
+                                                                    //DateTime.now() - not to allow to choose before today.
+                                                                    lastDate: DateTime(2100));
 
                                                                 if (pickedDate !=
                                                                     null) {
                                                                   //pickedDate output format => 2021-03-10 00:00:00.000
                                                                   String
-                                                                      formattedDate =
-                                                                      DateFormat(
-                                                                              'dd/MM/yyyy')
-                                                                          .format(
-                                                                              pickedDate);
+                                                                  formattedDate =
+                                                                  DateFormat('dd/MM/yyyy')
+                                                                      .format(pickedDate);
                                                                   //formatted date output using intl package =>  2021-03-16
-                                                                  setState(() {
-                                                                    dateofBirthcon
-                                                                            .text =
-                                                                        formattedDate; //set output date to TextField value.
-                                                                  });
+
+                                                                  // Calculate age difference
+                                                                  DateTime currentDate = DateTime.now();
+                                                                  Duration difference = currentDate.difference(pickedDate);
+                                                                  int age = (difference.inDays / 365).floor();
+                                                                  print('Age: $age years');
+
+                                                                  if(age>=1){
+                                                                    setState(
+                                                                            () {
+                                                                          dateofBirthcon.text = formattedDate; //set output date to TextField value.
+                                                                        });
+                                                                  }
+                                                                  else{
+                                                                    userNotValidAgePopup();
+                                                                    print("Age Is Lowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
+                                                                  }
+
                                                                 } else {}
                                                               },
                                                             ),
@@ -869,67 +922,125 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     ),
 
                                                     SizedBox(
-                                                       height: height/9.369,
+                                                      height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                         children: [
                                                           KText(
                                                             text: 'Gender ',
                                                             style:
-                                                                SafeGoogleFont(
+                                                            SafeGoogleFont(
                                                               'Nunito',
                                                               fontSize:
-                                                                  20 * ffem,
+                                                              20 * ffem,
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
-                                                              height: 1.3625 *
+                                                              FontWeight
+                                                                  .w700,
+                                                              height:
+                                                              1.3625 *
                                                                   ffem /
                                                                   fem,
                                                               color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: height/123.1666),
+                                                          SizedBox(
+                                                              height: height/123.1666),
                                                           Container(
-                                                              height: height/15.114,
-                                                              width: width/5.12,
-                                                              decoration: BoxDecoration(
-                                                                  color: const Color(
-                                                                      0xffDDDEEE),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              3)),
-                                                              child:
-                                                                  TextFormField(
-                                                                controller:
-                                                                    gendercon,
-                                                                inputFormatters: [
-                                                                  FilteringTextInputFormatter
-                                                                      .allow(RegExp(
-                                                                          "[a-zA-Z]")),
-                                                                ],
-                                                                decoration:
-                                                                    const InputDecoration(
-                                                                  border:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  contentPadding:
-                                                                      EdgeInsets.only(
-                                                                          bottom:
-                                                                              10,
-                                                                          top:
-                                                                              2,
-                                                                          left:
-                                                                              10),
+                                                            height: height/15.114,
+                                                            width: width/5.12,
+                                                            decoration: BoxDecoration(
+                                                                color: const Color(
+                                                                    0xffDDDEEE),
+                                                                borderRadius:
+                                                                BorderRadius.circular(
+                                                                    3)),
+                                                            child:
+                                                            DropdownButtonHideUnderline(
+                                                              child: DropdownButtonFormField2<String>(
+                                                                isExpanded:true,
+                                                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                                                hint: Padding(
+                                                                  padding: const EdgeInsets.only(left:8.0),
+                                                                  child: Text(
+                                                                    'Select',
+                                                                    style:
+                                                                    SafeGoogleFont('Nunito',
+                                                                      fontSize:
+                                                                      20 * ffem,
+                                                                    ),
+                                                                  ),
                                                                 ),
-                                                              ))
+                                                                items: GenderList
+                                                                    .map((String
+                                                                item) =>
+                                                                    DropdownMenuItem<
+                                                                        String>(
+
+                                                                      value:
+                                                                      item,
+                                                                      child:
+                                                                      Text(
+                                                                        item,
+                                                                        style:
+                                                                        SafeGoogleFont(
+                                                                          'Nunito',
+                                                                          fontSize:
+                                                                          20 * ffem,
+                                                                        ),
+                                                                      ),
+                                                                    )).toList(),
+                                                                value: gendercon.text,
+
+                                                                onChanged: (String?
+                                                                value) {
+                                                                  setState(() {
+                                                                    gendercon.text =
+                                                                    value!;
+
+                                                                  });
+                                                                },
+                                                                buttonStyleData:
+                                                                ButtonStyleData(height:20,
+                                                                  width:
+                                                                  width / 2.571,
+                                                                ),
+                                                                menuItemStyleData: const MenuItemStyleData(),
+                                                                decoration:
+                                                                const InputDecoration(
+                                                                    border:
+                                                                    InputBorder
+                                                                        .none),
+                                                              ),
+                                                            ),
+                                                            /* TextFormField(
+                                                                      controller:
+                                                                       gendercon,
+                                                                      inputFormatters: [
+                                                                        FilteringTextInputFormatter
+                                                                            .allow(
+                                                                                RegExp("[a-zA-Z]")),
+                                                                      ],
+                                                                      decoration:
+                                                                          const InputDecoration(
+                                                                        border: InputBorder
+                                                                            .none,
+                                                                        contentPadding: EdgeInsets.only(
+                                                                            bottom:
+                                                                                10,
+                                                                            top:
+                                                                                2,
+                                                                            left:
+                                                                                10),
+                                                                      ),
+                                                                    )*/
+                                                          )
                                                         ],
                                                       ),
                                                     ),
+
                                                   ],
                                                 ),
                                                 SizedBox(height: height/73.9),
@@ -937,35 +1048,37 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 ///adhaaar card and emailid
                                                 Row(
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceAround,
+                                                  MainAxisAlignment
+                                                      .spaceAround,
                                                   children: [
                                                     SizedBox(
-                                                       height: height/9.369,
+                                                      height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                         children: [
                                                           KText(
                                                             text:
-                                                                'Alternate Email Id ',
+                                                            'Alternate Email Id',
                                                             style:
-                                                                SafeGoogleFont(
+                                                            SafeGoogleFont(
                                                               'Nunito',
                                                               fontSize:
-                                                                  20 * ffem,
+                                                              20 * ffem,
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
-                                                              height: 1.3625 *
+                                                              FontWeight
+                                                                  .w700,
+                                                              height:
+                                                              1.3625 *
                                                                   ffem /
                                                                   fem,
                                                               color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: height/123.1666),
+                                                          SizedBox(
+                                                              height: height/123.1666),
                                                           Container(
                                                               height: height/15.114,
                                                               width: width/5.12,
@@ -973,62 +1086,70 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   color: const Color(
                                                                       0xffDDDEEE),
                                                                   borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              3)),
+                                                                  BorderRadius.circular(
+                                                                      3)),
                                                               child:
-                                                                  TextFormField(
+                                                              TextFormField(
                                                                 controller:
-                                                                    alterEmailIdcon,
+                                                                alterEmailIdcon,
                                                                 inputFormatters: [
                                                                   FilteringTextInputFormatter
-                                                                      .allow(RegExp(
-                                                                          "[a-zA-Z@0-9.]")),
+                                                                      .allow(
+                                                                      RegExp("[a-z@0-9.]")),
                                                                 ],
                                                                 decoration:
-                                                                    const InputDecoration(
-                                                                  border:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  contentPadding:
-                                                                      EdgeInsets.only(
-                                                                          bottom:
-                                                                              10,
-                                                                          top:
-                                                                              2,
-                                                                          left:
-                                                                              10),
+                                                                const InputDecoration(
+                                                                  border: InputBorder
+                                                                      .none,
+                                                                  contentPadding: EdgeInsets.only(
+                                                                      bottom:
+                                                                      10,
+                                                                      top:
+                                                                      2,
+                                                                      left:
+                                                                      10),
                                                                 ),
-                                                              ))
+                                                                validator:
+                                                                    (value) {
+                                                                  if (isEmail(value!)) {
+                                                                      return 'Enter the Correct the Email';
+                                                                    }
+
+                                                                  return null;
+                                                                },
+                                                              )
+                                                          )
                                                         ],
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                       height: height/9.369,
+                                                      height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                         children: [
                                                           KText(
                                                             text:
-                                                                'Aadhaar Number ',
+                                                            'Aadhaar Number ',
                                                             style:
-                                                                SafeGoogleFont(
+                                                            SafeGoogleFont(
                                                               'Nunito',
                                                               fontSize:
-                                                                  20 * ffem,
+                                                              20 * ffem,
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
-                                                              height: 1.3625 *
+                                                              FontWeight
+                                                                  .w700,
+                                                              height:
+                                                              1.3625 *
                                                                   ffem /
                                                                   fem,
                                                               color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: height/123.1666),
+                                                          SizedBox(
+                                                              height: height/123.1666),
                                                           Container(
                                                               height: height/15.114,
                                                               width: width/5.12,
@@ -1036,72 +1157,63 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   color: const Color(
                                                                       0xffDDDEEE),
                                                                   borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              3)),
+                                                                  BorderRadius.circular(
+                                                                      3)),
                                                               child:
-                                                                  TextFormField(
+                                                              TextFormField(
                                                                 controller:
-                                                                    aadhaarNumbercon,
-                                                                maxLength: 14,
+                                                                aadhaarNumbercon,
+                                                                maxLength:
+                                                                14,
                                                                 inputFormatters: [
                                                                   FilteringTextInputFormatter
                                                                       .digitsOnly,
-                                                                  TextInputFormatter
-                                                                      .withFunction(
+                                                                  TextInputFormatter.withFunction(
                                                                           (oldValue,
-                                                                              newValue) {
-                                                                    final newString =
-                                                                        newValue
-                                                                            .text;
+                                                                          newValue) {
+                                                                        final newString =
+                                                                            newValue.text;
 
-                                                                    if (_inputPattern
-                                                                        .hasMatch(
-                                                                            newString)) {
-                                                                      return oldValue;
-                                                                    }
+                                                                        if (_inputPattern
+                                                                            .hasMatch(newString)) {
+                                                                          return oldValue;
+                                                                        }
 
-                                                                    var formattedValue = newString.replaceAllMapped(
-                                                                        RegExp(
-                                                                            r'\d{4}'),
-                                                                        (match) {
-                                                                      return '${match.group(0)} ';
-                                                                    });
+                                                                        var formattedValue = newString.replaceAllMapped(
+                                                                            RegExp(r'\d{4}'),
+                                                                                (match) {
+                                                                              return '${match.group(0)} ';
+                                                                            });
 
-                                                                    // Remove any trailing space
-                                                                    if (formattedValue
-                                                                        .endsWith(
-                                                                            ' ')) {
-                                                                      formattedValue =
-                                                                          formattedValue.substring(
+                                                                        // Remove any trailing space
+                                                                        if (formattedValue
+                                                                            .endsWith(' ')) {
+                                                                          formattedValue = formattedValue.substring(
                                                                               0,
                                                                               formattedValue.length - 1);
-                                                                    }
+                                                                        }
 
-                                                                    return TextEditingValue(
-                                                                      text:
+                                                                        return TextEditingValue(
+                                                                          text:
                                                                           formattedValue,
-                                                                      selection:
-                                                                          TextSelection.collapsed(
-                                                                              offset: formattedValue.length),
-                                                                    );
-                                                                  }),
+                                                                          selection:
+                                                                          TextSelection.collapsed(offset: formattedValue.length),
+                                                                        );
+                                                                      }),
                                                                 ],
                                                                 decoration:
-                                                                    const InputDecoration(
-                                                                  border:
-                                                                      InputBorder
-                                                                          .none,
+                                                                const InputDecoration(
+                                                                  border: InputBorder
+                                                                      .none,
                                                                   counterText:
-                                                                      "",
-                                                                  contentPadding:
-                                                                      EdgeInsets.only(
-                                                                          bottom:
-                                                                              10,
-                                                                          top:
-                                                                              2,
-                                                                          left:
-                                                                              10),
+                                                                  "",
+                                                                  contentPadding: EdgeInsets.only(
+                                                                      bottom:
+                                                                      10,
+                                                                      top:
+                                                                      2,
+                                                                      left:
+                                                                      10),
                                                                 ),
                                                               ))
                                                         ],
@@ -1138,7 +1250,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             top: 4,
                                             bottom: 4),
                                         child: Container(
-                                          height: height/739,
+                                          height: 1,
                                           width: width/1.4422,
                                           color: Colors.grey.shade300,
                                         ),
@@ -1150,41 +1262,45 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               width: width/2.4,
                                               height: height/2.8,
                                               child: Padding(
-                                                padding: const EdgeInsets.all(6.0),
+                                                padding:
+                                                const EdgeInsets.all(6.0),
                                                 child: Column(
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceAround,
+                                                  MainAxisAlignment
+                                                      .spaceAround,
                                                   crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                  CrossAxisAlignment
+                                                      .start,
                                                   children: [
                                                     ///phone number
                                                     SizedBox(
-                                                       height: height/9.369,
+                                                      height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                         children: [
                                                           KText(
                                                             text:
-                                                                'Phone Number',
+                                                            'Phone Number',
                                                             style:
-                                                                SafeGoogleFont(
+                                                            SafeGoogleFont(
                                                               'Nunito',
                                                               fontSize:
-                                                                  20 * ffem,
+                                                              20 * ffem,
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
-                                                              height: 1.3625 *
+                                                              FontWeight
+                                                                  .w700,
+                                                              height:
+                                                              1.3625 *
                                                                   ffem /
                                                                   fem,
                                                               color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: height/123.1666),
+                                                          SizedBox(
+                                                              height: height/123.1666),
                                                           Container(
                                                               height: height/15.114,
                                                               width: width/3.84,
@@ -1192,41 +1308,37 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   color: const Color(
                                                                       0xffDDDEEE),
                                                                   borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              3)),
+                                                                  BorderRadius.circular(
+                                                                      3)),
                                                               child:
-                                                                  TextFormField(
+                                                              TextFormField(
+                                                                autovalidateMode: AutovalidateMode.onUserInteraction,
                                                                 controller:
-                                                                    phoneNumbercon,
-                                                                maxLength: 10,
+                                                                phoneNumbercon,
+                                                                maxLength:
+                                                                10,
                                                                 inputFormatters: [
                                                                   FilteringTextInputFormatter
-                                                                      .allow(RegExp(
-                                                                          "[0-9]")),
+                                                                      .allow(
+                                                                      RegExp("[0-9]")),
                                                                 ],
-                                                                decoration:
-                                                                    const InputDecoration(
-                                                                  border:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  counterText:
-                                                                      "",
-                                                                  contentPadding:
-                                                                      EdgeInsets.only(
-                                                                          bottom:
-                                                                              10,
-                                                                          top:
-                                                                              2,
-                                                                          left:
-                                                                              10),
-                                                                ),
+                                                                decoration: const InputDecoration(
+                                                                    border: InputBorder
+                                                                        .none,
+                                                                    contentPadding: EdgeInsets.only(
+                                                                        bottom:
+                                                                        10,
+                                                                        top:
+                                                                        2,
+                                                                        left:
+                                                                        10),
+                                                                    counterText:
+                                                                    ""),
                                                                 validator:
                                                                     (value) {
                                                                   if (value!
                                                                       .isNotEmpty) {
-                                                                    if (value
-                                                                            .length !=
+                                                                    if (value.length !=
                                                                         10) {
                                                                       return 'Enter the Phone no correctly';
                                                                     }
@@ -1240,31 +1352,33 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                                     /// mobile number
                                                     SizedBox(
-                                                       height: height/9.369,
+                                                      height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                         children: [
                                                           KText(
                                                             text:
-                                                                'Mobile Number',
+                                                            'Mobile Number',
                                                             style:
-                                                                SafeGoogleFont(
+                                                            SafeGoogleFont(
                                                               'Nunito',
                                                               fontSize:
-                                                                  20 * ffem,
+                                                              20 * ffem,
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
-                                                              height: 1.3625 *
+                                                              FontWeight
+                                                                  .w700,
+                                                              height:
+                                                              1.3625 *
                                                                   ffem /
                                                                   fem,
                                                               color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: height/123.1666),
+                                                          SizedBox(
+                                                              height: height/123.1666),
                                                           Container(
                                                               height: height/15.114,
                                                               width: width/3.84,
@@ -1272,42 +1386,37 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   color: const Color(
                                                                       0xffDDDEEE),
                                                                   borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              3)),
+                                                                  BorderRadius.circular(
+                                                                      3)),
                                                               child:
-                                                                  TextFormField(
+                                                              TextFormField(
+                                                                autovalidateMode: AutovalidateMode.onUserInteraction,
                                                                 controller:
-                                                                    mobileNumbercon,
-                                                                    maxLength:
-                                                                    10,
+                                                                mobileNumbercon,
+                                                                maxLength:
+                                                                10,
                                                                 inputFormatters: [
                                                                   FilteringTextInputFormatter
-                                                                      .allow(RegExp(
-                                                                          "[0-9]")),
+                                                                      .allow(
+                                                                      RegExp("[0-9]")),
                                                                 ],
                                                                 decoration:
-                                                                    const InputDecoration(
-                                                                  border:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  contentPadding:
-                                                                      EdgeInsets.only(
-                                                                          bottom:
-                                                                              10,
-                                                                          top:
-                                                                              2,
-                                                                          left:
-                                                                              10),
-                                                                        counterText:
-                                                                        ""
+                                                                const InputDecoration(
+                                                                  border: InputBorder
+                                                                      .none,
+                                                                  counterText: "",
+                                                                  contentPadding: EdgeInsets.only(
+                                                                      bottom:
+                                                                      10,
+                                                                      top:
+                                                                      2,
+                                                                      left:
+                                                                      10),
                                                                 ),
-                                                                validator:
-                                                                    (value) {
+                                                                validator: (value) {
                                                                   if (value!
                                                                       .isNotEmpty) {
-                                                                    if (value
-                                                                            .length !=
+                                                                    if (value.length !=
                                                                         10) {
                                                                       return 'Enter the Mobile no correctly';
                                                                     }
@@ -1321,30 +1430,33 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                                     /// Email iD
                                                     SizedBox(
-                                                       height: height/9.369,
+                                                      height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                         children: [
                                                           KText(
-                                                            text: 'Email ID',
+                                                            text:
+                                                            'Email ID',
                                                             style:
-                                                                SafeGoogleFont(
+                                                            SafeGoogleFont(
                                                               'Nunito',
                                                               fontSize:
-                                                                  20 * ffem,
+                                                              20 * ffem,
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
-                                                              height: 1.3625 *
+                                                              FontWeight
+                                                                  .w700,
+                                                              height:
+                                                              1.3625 *
                                                                   ffem /
                                                                   fem,
                                                               color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: height/123.1666),
+                                                          SizedBox(
+                                                              height: height/123.1666),
                                                           Container(
                                                               height: height/15.114,
                                                               width: width/3.84,
@@ -1352,31 +1464,28 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   color: const Color(
                                                                       0xffDDDEEE),
                                                                   borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              3)),
+                                                                  BorderRadius.circular(
+                                                                      3)),
                                                               child:
-                                                                  TextFormField(
+                                                              TextFormField(
                                                                 controller:
-                                                                    emailIDcon,
+                                                                emailIDcon,
                                                                 inputFormatters: [
                                                                   FilteringTextInputFormatter
-                                                                      .allow(RegExp(
-                                                                          "[a-zA-Z@0-9.]")),
+                                                                      .allow(
+                                                                      RegExp("[a-z@0-9.]")),
                                                                 ],
                                                                 decoration:
-                                                                    const InputDecoration(
-                                                                  border:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  contentPadding:
-                                                                      EdgeInsets.only(
-                                                                          bottom:
-                                                                              10,
-                                                                          top:
-                                                                              2,
-                                                                          left:
-                                                                              10),
+                                                                const InputDecoration(
+                                                                  border: InputBorder
+                                                                      .none,
+                                                                  contentPadding: EdgeInsets.only(
+                                                                      bottom:
+                                                                      10,
+                                                                      top:
+                                                                      2,
+                                                                      left:
+                                                                      10),
                                                                 ),
                                                               ))
                                                         ],
@@ -1390,10 +1499,11 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             height: height/2.8,
                                             child: Padding(
                                               padding:
-                                                  const EdgeInsets.all(2.0),
+                                              const EdgeInsets.all(2.0),
                                               child: Column(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                CrossAxisAlignment
+                                                    .start,
                                                 children: [
                                                   KText(
                                                     text: 'Address',
@@ -1401,10 +1511,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       'Nunito',
                                                       fontSize: 20 * ffem,
                                                       fontWeight:
-                                                          FontWeight.w700,
-                                                      height:
-                                                          1.3625 * ffem / fem,
-                                                      color: const Color(0xff000000),
+                                                      FontWeight.w700,
+                                                      height: 1.3625 *
+                                                          ffem /
+                                                          fem,
+                                                      color:
+                                                      const Color(0xff000000),
                                                     ),
                                                   ),
                                                   SizedBox(height: height/123.1666),
@@ -1415,26 +1527,30 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           color: const Color(
                                                               0xffDDDEEE),
                                                           borderRadius:
-                                                              BorderRadius
-                                                                  .circular(3)),
+                                                          BorderRadius
+                                                              .circular(
+                                                              3)),
                                                       child: TextFormField(
-                                                        controller: adreesscon,
+                                                        controller:
+                                                        adreesscon,
                                                         maxLines: null,
                                                         expands: true,
                                                         inputFormatters: [
                                                           FilteringTextInputFormatter
                                                               .allow(RegExp(
-                                                                  "[a-zA-Z0-9]")),
+                                                              "[a-zA-Z0-9 ,]")),
                                                         ],
                                                         decoration:
-                                                            const InputDecoration(
+                                                        const InputDecoration(
                                                           border:
-                                                              InputBorder.none,
+                                                          InputBorder
+                                                              .none,
                                                           contentPadding:
-                                                              EdgeInsets.only(
-                                                                  bottom: 10,
-                                                                  top: 10,
-                                                                  left: 10),
+                                                          EdgeInsets.only(
+                                                              bottom:
+                                                              10,
+                                                              top: 10,
+                                                              left: 10),
                                                         ),
                                                       ))
                                                 ],
@@ -1448,13 +1564,13 @@ class _Users_ScreenState extends State<Users_Screen> {
                                         padding: const EdgeInsets.only(left: 5),
                                         child: Row(
                                           children: [
-                                            
                                             ///State Dropdown
                                             SizedBox(
-                                               height: height/9.369,
+                                              height: height/7.5,
                                               child: Column(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                CrossAxisAlignment
+                                                    .start,
                                                 children: [
                                                   KText(
                                                     text: 'State *',
@@ -1462,10 +1578,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       'Nunito',
                                                       fontSize: 20 * ffem,
                                                       fontWeight:
-                                                          FontWeight.w700,
-                                                      height:
-                                                          1.3625 * ffem / fem,
-                                                      color: const Color(0xff000000),
+                                                      FontWeight.w700,
+                                                      height: 1.3625 *
+                                                          ffem /
+                                                          fem,
+                                                      color:
+                                                      const Color(0xff000000),
                                                     ),
                                                   ),
                                                   SizedBox(height: height/123.1666),
@@ -1476,66 +1594,84 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         color: const Color(
                                                             0xffDDDEEE),
                                                         borderRadius:
-                                                            BorderRadius
-                                                                .circular(3)),
+                                                        BorderRadius
+                                                            .circular(
+                                                            3)),
                                                     padding:const EdgeInsets.only(left:5),
                                                     child:
-                                                        DropdownButtonHideUnderline(
-                                                      child:
-                                                          DropdownButtonFormField2<String>(
-                                                            isExpanded:true,
-                                                            hint: Padding(
-                                                              padding: const EdgeInsets.only(left:8.0),
-                                                              child: Text(
-                                                                'Select State',
-                                                                style: SafeGoogleFont(
-                                                              'Nunito',
-                                                              fontSize: 20 * ffem,
-                                                                                                                        ),
-                                                                                                                      ),
+                                                    DropdownButtonHideUnderline(
+                                                      child: DropdownButtonFormField2<String>(
+                                                        isExpanded:true,
+                                                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                                                        hint: Padding(
+                                                          padding: const EdgeInsets.only(left:8.0),
+                                                          child: Text(
+                                                            'Select State',
+                                                            style:
+                                                            SafeGoogleFont('Nunito',
+                                                              fontSize:
+                                                              20 * ffem,
                                                             ),
-                                                        items: StateList.map(
-                                                            (String item) =>
-                                                                DropdownMenuItem<
-                                                                    String>(
-                                                                  value: item,
-                                                                  child: Text(
-                                                                    item,
-                                                                    style:
-                                                                    SafeGoogleFont(
-                                                                      'Nunito',
-                                                                      fontSize:
-                                                                      20 *
-                                                                          ffem,
-                                                                    ),
-                                                                  ),
-                                                                )).toList(),
-                                                        value: statecon.text,
-                                                       
-                                                        onChanged: (String? value) {
+                                                          ),
+                                                        ),
+                                                        items: StateList
+                                                            .map((String
+                                                        item) =>
+                                                            DropdownMenuItem<
+                                                                String>(
+
+                                                              value:
+                                                              item,
+                                                              child:
+                                                              Text(
+                                                                item,
+                                                                style:
+                                                                SafeGoogleFont(
+                                                                  'Nunito',
+                                                                  fontSize:
+                                                                  20 * ffem,
+                                                                ),
+                                                              ),
+                                                            )).toList(),
+                                                        validator: (value) {
+                                                          if (value=='Select State') {
+                                                            setState((){
+                                                              dropdownValidator=true;
+                                                            });
+                                                          }
+                                                          return null;
+                                                        },
+                                                        onChanged: (String?
+                                                        value) {
                                                           getCity(value.toString());
-                                                          setState(() {statecon.text = value!;
-                                                          });
+                                                          if (value=='Select State') {
+                                                            setState((){
+                                                              dropdownValidator=true;
+                                                            });
+                                                          }else{
+
+                                                            setState(() {
+                                                              statecon.text =
+                                                              value!;
+                                                              dropdownValidator=false;
+                                                            });
+                                                          }
                                                         },
                                                         buttonStyleData:
-                                                        const ButtonStyleData(
+                                                        ButtonStyleData(height:20,
+                                                          width:
+                                                          width / 2.571,
                                                         ),
-                                                        menuItemStyleData:
-                                                            const MenuItemStyleData(
-
-                                                        ),
+                                                        menuItemStyleData: const MenuItemStyleData(),
                                                         decoration:
-                                                            const InputDecoration(
-                                                                border:
-                                                                    InputBorder
-                                                                        .none,
-                                                              ),
-
-                                                                        
+                                                        const InputDecoration(
+                                                            border:
+                                                            InputBorder
+                                                                .none),
                                                       ),
                                                     ),
                                                   ),
-                                                 
+                                                  dropdownValidator==true&&statecon.text=="Select State"?Text("Field is required",style:TextStyle(color:Colors.red,fontSize:13)):const SizedBox()
                                                 ],
                                               ),
                                             ),
@@ -1543,10 +1679,11 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                             ///city
                                             SizedBox(
-                                               height: height/9.369,
+                                              height: height/7.5,
                                               child: Column(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                CrossAxisAlignment
+                                                    .start,
                                                 children: [
                                                   KText(
                                                     text: 'City *',
@@ -1555,9 +1692,11 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       fontSize: 20 * ffem,
                                                       fontWeight:
                                                       FontWeight.w700,
-                                                      height:
-                                                          1.3625 * ffem / fem,
-                                                      color: const Color(0xff000000),
+                                                      height: 1.3625 *
+                                                          ffem /
+                                                          fem,
+                                                      color:
+                                                      const Color(0xff000000),
                                                     ),
                                                   ),
                                                   SizedBox(height: height/123.1666),
@@ -1568,76 +1707,99 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         color: const Color(
                                                             0xffDDDEEE),
                                                         borderRadius:
-                                                            BorderRadius
-                                                                .circular(3)),
+                                                        BorderRadius
+                                                            .circular(
+                                                            3)),
                                                     child:
-                                                        DropdownButtonHideUnderline(
+                                                    DropdownButtonHideUnderline(
                                                       child:
-                                                          DropdownButtonFormField2<
-                                                              String>(
-                                                            isExpanded:true,
+                                                      DropdownButtonFormField2<
+                                                          String>(
+                                                        isExpanded:true,
+                                                        autovalidateMode: AutovalidateMode.onUserInteraction,
                                                         hint: Text(
                                                           'Select City',
-                                                          style: SafeGoogleFont(
+                                                          style:
+                                                          SafeGoogleFont(
                                                             'Nunito',
-                                                            fontSize: 20 * ffem,
+                                                            fontSize:
+                                                            20 * ffem,
                                                           ),
                                                         ),
                                                         items: _cities
                                                             .map((String
-                                                                    item) =>
-                                                                DropdownMenuItem<
-                                                                    String>(
-                                                                  value: item,
-                                                                  child: Text(
-                                                                    item,
-                                                                    style:
-                                                                        SafeGoogleFont(
-                                                                      'Nunito',
-                                                                      fontSize:
-                                                                          20 *
-                                                                              ffem,
-                                                                    ),
-                                                                  ),
-                                                                ))
+                                                        item) =>
+                                                            DropdownMenuItem<
+                                                                String>(
+                                                              value:
+                                                              item,
+                                                              child:
+                                                              Text(
+                                                                item,
+                                                                style:
+                                                                SafeGoogleFont(
+                                                                  'Nunito',
+                                                                  fontSize:
+                                                                  20 * ffem,
+                                                                ),
+                                                              ),
+                                                            ))
                                                             .toList(),
                                                         value: citycon.text,
-                                                       
-                                                        onChanged:
-                                                            (String? value) {
-                                                          setState(() {
-                                                            citycon.text =
-                                                                value!;
-                                                          });
+                                                        validator: (value) {
+                                                          if (value=='Select City') {
+                                                            setState((){
+                                                              dropdownValidator2=true;
+                                                            });
+                                                          }
+                                                          return null;
+                                                        },
+                                                        onChanged: (String?
+                                                        value) {
+
+                                                          if (value =='Select City') {
+                                                            setState((){
+                                                              dropdownValidator2=true;
+                                                            });
+                                                          }
+                                                          else{
+                                                            setState(() {
+                                                              citycon.text =
+                                                              value!;
+                                                              dropdownValidator2=false;
+                                                            });
+                                                          }
                                                         },
                                                         buttonStyleData:
-                                                            const ButtonStyleData(
+                                                        const ButtonStyleData(
+
 
                                                         ),
                                                         menuItemStyleData:
-                                                            const MenuItemStyleData(
+                                                        const MenuItemStyleData(
 
                                                         ),
                                                         decoration:
-                                                            const InputDecoration(
-                                                                border:
-                                                                    InputBorder
-                                                                        .none),
+                                                        const InputDecoration(
+                                                            border:
+                                                            InputBorder
+                                                                .none),
                                                       ),
                                                     ),
-                                                  )
+                                                  ),
+                                                  dropdownValidator2==true&&citycon.text=="Select City"?Text("Field is required",style:TextStyle(color:Colors.red,fontSize:13)):const SizedBox()
                                                 ],
                                               ),
                                             ),
-                                            
                                             SizedBox(width: width/43.8857),
 
                                             ///Pin Code
                                             SizedBox(
-                                               height: height/9.369,
+                                              height: height/7.5,
                                               child: Column(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                CrossAxisAlignment
+                                                    .start,
                                                 children: [
                                                   KText(
                                                     text: 'Pin Code *',
@@ -1645,10 +1807,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       'Nunito',
                                                       fontSize: 20 * ffem,
                                                       fontWeight:
-                                                          FontWeight.w700,
-                                                      height:
-                                                          1.3625 * ffem / fem,
-                                                      color: const Color(0xff000000),
+                                                      FontWeight.w700,
+                                                      height: 1.3625 *
+                                                          ffem /
+                                                          fem,
+                                                      color:
+                                                      const Color(0xff000000),
                                                     ),
                                                   ),
                                                   SizedBox(height: height/123.1666),
@@ -1659,28 +1823,46 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           color: const Color(
                                                               0xffDDDEEE),
                                                           borderRadius:
-                                                              BorderRadius
-                                                                  .circular(3)),
+                                                          BorderRadius
+                                                              .circular(
+                                                              3)),
                                                       child: TextFormField(
-                                                        controller: pinCodecon,
-                                                        maxLength: 9,
+                                                        controller:
+                                                        pinCodecon,
+                                                        maxLength: 6,
+                                                        autovalidateMode: AutovalidateMode.onUserInteraction,
                                                         inputFormatters: [
                                                           FilteringTextInputFormatter
                                                               .allow(RegExp(
-                                                                  "[0-9]")),
+                                                              "[0-9]")),
                                                         ],
                                                         decoration:
-                                                            const InputDecoration(
+                                                        const InputDecoration(
                                                           border:
-                                                              InputBorder.none,
+                                                          InputBorder
+                                                              .none,
                                                           contentPadding:
-                                                              EdgeInsets.only(
-                                                                  bottom: 10,
-                                                                  top: 2,
-                                                                  left: 10),
+                                                          EdgeInsets.only(
+                                                              bottom:
+                                                              10,
+                                                              top: 2,
+                                                              left: 10),
                                                           counterText: "",
                                                         ),
-                                                       
+                                                        validator: (value) {
+                                                          if (value!
+                                                              .isEmpty) {
+                                                            return 'Field is required';
+                                                          } else if (value!
+                                                              .isNotEmpty) {
+                                                            if (value!
+                                                                .length <
+                                                                6) {
+                                                              return 'Please Enter Pin code Correctly';
+                                                            }
+                                                          }
+                                                          return null;
+                                                        },
                                                       ))
                                                 ],
                                               ),
@@ -1689,10 +1871,11 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                             ///Country Dropdown
                                             SizedBox(
-                                               height: height/9.369,
+                                              height: height/7.5,
                                               child: Column(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                CrossAxisAlignment
+                                                    .start,
                                                 children: [
                                                   KText(
                                                     text: 'Country *',
@@ -1700,10 +1883,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       'Nunito',
                                                       fontSize: 20 * ffem,
                                                       fontWeight:
-                                                          FontWeight.w700,
-                                                      height:
-                                                          1.3625 * ffem / fem,
-                                                      color: const Color(0xff000000),
+                                                      FontWeight.w700,
+                                                      height: 1.3625 *
+                                                          ffem /
+                                                          fem,
+                                                      color:
+                                                      const Color(0xff000000),
                                                     ),
                                                   ),
                                                   SizedBox(height: height/123.1666),
@@ -1714,61 +1899,91 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         color: const Color(
                                                             0xffDDDEEE),
                                                         borderRadius:
-                                                            BorderRadius
-                                                                .circular(3)),
+                                                        BorderRadius
+                                                            .circular(
+                                                            3)),
                                                     child:
-                                                        DropdownButtonHideUnderline(
+                                                    DropdownButtonHideUnderline(
+
                                                       child:
-                                                          DropdownButtonFormField2<String>(
-                                                            isExpanded:true,
+                                                      DropdownButtonFormField2<
+                                                          String>(
+                                                        isExpanded:true,
+                                                        autovalidateMode: AutovalidateMode.onUserInteraction,
                                                         hint: Text(
                                                           'Select Country',
-                                                          style: SafeGoogleFont(
+                                                          style:
+                                                          SafeGoogleFont(
                                                             'Nunito',
-                                                            fontSize: 20 * ffem,
+                                                            fontSize:
+                                                            20 * ffem,
                                                           ),
                                                         ),
                                                         items: coutryList
                                                             .map((String
-                                                                    item) =>
-                                                                DropdownMenuItem<
-                                                                    String>(
-                                                                  value: item,
-                                                                  child: Text(
-                                                                    item,
-                                                                    style:
-                                                                        SafeGoogleFont(
-                                                                      'Nunito',
-                                                                      fontSize:
-                                                                          20 *
-                                                                              ffem,
-                                                                    ),
-                                                                  ),
-                                                                ))
+                                                        item) =>
+                                                            DropdownMenuItem<
+                                                                String>(
+                                                              value:
+                                                              item,
+                                                              child:
+                                                              Text(
+                                                                item,
+                                                                style:
+                                                                SafeGoogleFont(
+                                                                  'Nunito',
+                                                                  fontSize:
+                                                                  20 * ffem,
+                                                                ),
+                                                              ),
+                                                            ))
                                                             .toList(),
-                                                        value: countrycon.text,
-                                                        onChanged:
-                                                            (String? value) {
-                                                          setState(() {
-                                                            countrycon.text =
-                                                                value!;
-                                                          });
+                                                        value:
+                                                        countrycon.text,
+                                                        validator: (value) {
+                                                          if (value =="Select Country") {
+                                                            setState((){
+                                                              dropdownValidator3=true;
+                                                            });
+                                                          }
+                                                          return null;
+                                                        },
+                                                        onChanged: (String?
+                                                        value) {
+
+                                                          if (value =='Select Country') {
+                                                            setState((){
+                                                              dropdownValidator3=true;
+                                                            });
+                                                          }
+                                                          else{
+                                                            setState(() {
+                                                              countrycon
+                                                                  .text =
+                                                              value!;
+                                                              dropdownValidator3=false;
+                                                            });
+                                                          }
+
                                                         },
                                                         buttonStyleData:
-                                                            const ButtonStyleData(
+                                                        const ButtonStyleData(
+
                                                         ),
                                                         menuItemStyleData:
-                                                            const MenuItemStyleData(
+                                                        const MenuItemStyleData(
 
                                                         ),
                                                         decoration:
-                                                            const InputDecoration(
-                                                                border:
-                                                                    InputBorder
-                                                                        .none),
+                                                        const InputDecoration(
+                                                            border:
+                                                            InputBorder
+                                                                .none),
                                                       ),
                                                     ),
-                                                  )
+                                                  ),
+                                                  dropdownValidator3==true&&countrycon.text=="Select Country" ?Text("Field is required",style:TextStyle(color:Colors.red,fontSize:13)):const SizedBox()
+
                                                 ],
                                               ),
                                             ),
@@ -1814,40 +2029,43 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             width: width/2.19428,
                                             child: Column(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
+                                              MainAxisAlignment
+                                                  .spaceAround,
                                               children: [
                                                 ///subject stream and containers
                                                 Row(
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                                   children: [
                                                     SizedBox(
-                                                       height: height/9.369,
+                                                      height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                         children: [
                                                           KText(
                                                             text:
-                                                                'Year Passed *',
+                                                            'Year Passed *',
                                                             style:
-                                                                SafeGoogleFont(
+                                                            SafeGoogleFont(
                                                               'Nunito',
                                                               fontSize:
-                                                                  20 * ffem,
+                                                              20 * ffem,
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
-                                                              height: 1.3625 *
+                                                              FontWeight
+                                                                  .w700,
+                                                              height:
+                                                              1.3625 *
                                                                   ffem /
                                                                   fem,
                                                               color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: height/123.1666),
+                                                          SizedBox(
+                                                              height: height/123.1666),
                                                           Container(
                                                               height: height/15.114,
                                                               width: width/4.6545,
@@ -1855,66 +2073,82 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   color: const Color(
                                                                       0xffDDDEEE),
                                                                   borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              3)),
+                                                                  BorderRadius.circular(
+                                                                      3)),
                                                               child:
-                                                                  TextFormField(
-                                                                controller:
-                                                                    yearPassedcon,
+                                                              TextFormField(
+                                                                readOnly:true,
+                                                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                                                controller: yearPassedcon,
                                                                 inputFormatters: [
                                                                   FilteringTextInputFormatter
-                                                                      .allow(RegExp(
-                                                                          "[0-9]")),
+                                                                      .allow(
+                                                                      RegExp("[0-9]")),
                                                                 ],
+                                                                onTap:() async {
+                                                                  final DateTime? picked = await showDatePicker(
+                                                                    context: context,
+                                                                    initialDate: DateTime.now(),
+                                                                    firstDate: DateTime(1900),
+                                                                    lastDate: DateTime.now(),
+                                                                    initialDatePickerMode: DatePickerMode.year,
+                                                                  );
+
+                                                                  if (picked != null && picked != DateTime.now()) {
+                                                                    print('Selected year: ${picked.year}');
+                                                                    setState((){
+                                                                      yearPassedcon.text=picked.year.toString();
+                                                                    });
+                                                                  }
+                                                                },
                                                                 decoration:
-                                                                    const InputDecoration(
-                                                                  border:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  contentPadding:
-                                                                      EdgeInsets.only(
-                                                                          bottom:
-                                                                              10,
-                                                                          top:
-                                                                              2,
-                                                                          left:
-                                                                              10),
+                                                                const InputDecoration(
+                                                                  border: InputBorder
+                                                                      .none,
+                                                                  contentPadding: EdgeInsets.only(
+                                                                      bottom:
+                                                                      10,
+                                                                      top:
+                                                                      2,
+                                                                      left:
+                                                                      10),
                                                                 ),
-                                                                validator: (value) =>
-                                                                    value!.isEmpty
-                                                                        ? 'Field is required'
-                                                                        : null,
+                                                                validator: (value) => value!
+                                                                    .isEmpty
+                                                                    ? 'Field is required'
+                                                                    : null,
                                                               ))
                                                         ],
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                       height: height/9.369,
+                                                      height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                         children: [
                                                           KText(
                                                             text:
-                                                                'Subject/Stream',
+                                                            'Department',
                                                             style:
-                                                                SafeGoogleFont(
+                                                            SafeGoogleFont(
                                                               'Nunito',
                                                               fontSize:
-                                                                  20 * ffem,
+                                                              20 * ffem,
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
-                                                              height: 1.3625 *
+                                                              FontWeight
+                                                                  .w700,
+                                                              height:
+                                                              1.3625 *
                                                                   ffem /
                                                                   fem,
                                                               color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: height/123.1666),
+                                                          SizedBox(
+                                                              height: height/123.1666),
                                                           Container(
                                                               height: height/15.114,
                                                               width: width/4.6545,
@@ -1922,34 +2156,90 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   color: const Color(
                                                                       0xffDDDEEE),
                                                                   borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              3)),
+                                                                  BorderRadius.circular(
+                                                                      3)),
                                                               child:
-                                                                  TextFormField(
+                                                              DropdownButtonHideUnderline(
+                                                                child:
+                                                                DropdownButtonFormField2<
+                                                                    String>(
+                                                                  isExpanded:true,
+                                                                  hint: Text(
+                                                                    'Select Department',
+                                                                    style:
+                                                                    SafeGoogleFont(
+                                                                      'Nunito',
+                                                                      fontSize:
+                                                                      20 * ffem,
+                                                                    ),
+                                                                  ),
+                                                                  items: departmentDataList
+                                                                      .map((String
+                                                                  item) =>
+                                                                      DropdownMenuItem<
+                                                                          String>(
+                                                                        value: item,
+                                                                        child: Text(
+                                                                          item,
+                                                                          style:
+                                                                          SafeGoogleFont(
+                                                                            'Nunito',
+                                                                            fontSize:
+                                                                            20 *
+                                                                                ffem,
+                                                                          ),
+                                                                        ),
+                                                                      )).toList(),
+                                                                  value:
+                                                                  subjectStremdcon.text,
+                                                                  onChanged:
+                                                                      (String? value) {
+                                                                    setState(() {
+                                                                      subjectStremdcon.text =
+                                                                      value!;
+                                                                    });
+
+                                                                  },
+                                                                  buttonStyleData:
+                                                                  const ButtonStyleData(
+
+
+                                                                  ),
+                                                                  menuItemStyleData:
+                                                                  const MenuItemStyleData(
+
+                                                                  ),
+                                                                  decoration:
+                                                                  const InputDecoration(
+                                                                      border:
+                                                                      InputBorder
+                                                                          .none),
+                                                                ),
+                                                              ),
+                                                              /*TextFormField(
                                                                 controller:
-                                                                    subjectStremdcon,
+                                                                subjectStremdcon,
                                                                 inputFormatters: [
                                                                   FilteringTextInputFormatter
-                                                                      .allow(RegExp(
-                                                                          "[a-zA-Z ]")),
+                                                                      .allow(
+                                                                      RegExp("[a-zA-Z ]")),
                                                                 ],
                                                                 decoration:
-                                                                    const InputDecoration(
-                                                                  border:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  contentPadding:
-                                                                      EdgeInsets.only(
-                                                                          bottom:
-                                                                              10,
-                                                                          top:
-                                                                              2,
-                                                                          left:
-                                                                              10),
+                                                                const InputDecoration(
+                                                                  border: InputBorder
+                                                                      .none,
+                                                                  contentPadding: EdgeInsets.only(
+                                                                      bottom:
+                                                                      10,
+                                                                      top:
+                                                                      2,
+                                                                      left:
+                                                                      10),
                                                                 ),
                                                                 // validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                              ))
+                                                              )*/
+
+                                                              )
                                                         ],
                                                       ),
                                                     ),
@@ -1960,34 +2250,36 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                                 Row(
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                                   children: [
                                                     SizedBox(
-                                                       height: height/9.369,
+                                                      height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                         children: [
                                                           KText(
                                                             text: 'Class *',
                                                             style:
-                                                                SafeGoogleFont(
+                                                            SafeGoogleFont(
                                                               'Nunito',
                                                               fontSize:
-                                                                  20 * ffem,
+                                                              20 * ffem,
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
-                                                              height: 1.3625 *
+                                                              FontWeight
+                                                                  .w700,
+                                                              height:
+                                                              1.3625 *
                                                                   ffem /
                                                                   fem,
                                                               color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: height/123.1666),
+                                                          SizedBox(
+                                                              height: height/123.1666),
                                                           Container(
                                                               height: height/15.114,
                                                               width: width/4.6545,
@@ -1995,65 +2287,65 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   color: const Color(
                                                                       0xffDDDEEE),
                                                                   borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              3)),
+                                                                  BorderRadius.circular(
+                                                                      3)),
                                                               child:
-                                                                  TextFormField(
+                                                              TextFormField(
+                                                                autovalidateMode: AutovalidateMode.onUserInteraction,
                                                                 controller:
-                                                                    classcon,
+                                                                classcon,
                                                                 inputFormatters: [
                                                                   FilteringTextInputFormatter
-                                                                      .allow(RegExp(
-                                                                          "[a-zA-Z]")),
+                                                                      .allow(
+                                                                      RegExp("[a-zA-Z ]")),
                                                                 ],
                                                                 decoration:
-                                                                    const InputDecoration(
-                                                                  border:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  contentPadding:
-                                                                      EdgeInsets.only(
-                                                                          bottom:
-                                                                              10,
-                                                                          top:
-                                                                              2,
-                                                                          left:
-                                                                              10),
+                                                                const InputDecoration(
+                                                                  border: InputBorder
+                                                                      .none,
+                                                                  contentPadding: EdgeInsets.only(
+                                                                      bottom:
+                                                                      10,
+                                                                      top:
+                                                                      2,
+                                                                      left:
+                                                                      10),
                                                                 ),
-                                                                validator: (value) =>
-                                                                    value!.isEmpty
-                                                                        ? 'Field is required'
-                                                                        : null,
+                                                                validator: (value) => value!
+                                                                    .isEmpty
+                                                                    ? 'Field is required'
+                                                                    : null,
                                                               ))
                                                         ],
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                       height: height/9.369,
+                                                      height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                         children: [
                                                           KText(
                                                             text: 'Roll No',
                                                             style:
-                                                                SafeGoogleFont(
+                                                            SafeGoogleFont(
                                                               'Nunito',
                                                               fontSize:
-                                                                  20 * ffem,
+                                                              20 * ffem,
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
-                                                              height: 1.3625 *
+                                                              FontWeight
+                                                                  .w700,
+                                                              height:
+                                                              1.3625 *
                                                                   ffem /
                                                                   fem,
                                                               color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: height/123.1666),
+                                                          SizedBox(
+                                                              height: height/123.1666),
                                                           Container(
                                                               height: height/15.114,
                                                               width: width/4.6545,
@@ -2061,31 +2353,28 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   color: const Color(
                                                                       0xffDDDEEE),
                                                                   borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              3)),
+                                                                  BorderRadius.circular(
+                                                                      3)),
                                                               child:
-                                                                  TextFormField(
+                                                              TextFormField(
                                                                 controller:
-                                                                    rollnocon,
+                                                                rollnocon,
                                                                 inputFormatters: [
                                                                   FilteringTextInputFormatter
-                                                                      .allow(RegExp(
-                                                                          "[a-zA-Z0-9]")),
+                                                                      .allow(
+                                                                      RegExp("[a-zA-Z0-9 ]")),
                                                                 ],
                                                                 decoration:
-                                                                    const InputDecoration(
-                                                                  border:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  contentPadding:
-                                                                      EdgeInsets.only(
-                                                                          bottom:
-                                                                              10,
-                                                                          top:
-                                                                              2,
-                                                                          left:
-                                                                              10),
+                                                                const InputDecoration(
+                                                                  border: InputBorder
+                                                                      .none,
+                                                                  contentPadding: EdgeInsets.only(
+                                                                      bottom:
+                                                                      10,
+                                                                      top:
+                                                                      2,
+                                                                      left:
+                                                                      10),
                                                                 ),
                                                                 //validator: (value) => value!.isEmpty ? 'Field is required' : null,
                                                               ))
@@ -2098,34 +2387,36 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 ///house and last visit container
                                                 Row(
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                                   children: [
                                                     SizedBox(
-                                                       height: height/9.369,
+                                                      height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                         children: [
                                                           KText(
                                                             text: 'House',
                                                             style:
-                                                                SafeGoogleFont(
+                                                            SafeGoogleFont(
                                                               'Nunito',
                                                               fontSize:
-                                                                  20 * ffem,
+                                                              20 * ffem,
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
-                                                              height: 1.3625 *
+                                                              FontWeight
+                                                                  .w700,
+                                                              height:
+                                                              1.3625 *
                                                                   ffem /
                                                                   fem,
                                                               color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: height/123.1666),
+                                                          SizedBox(
+                                                              height: height/123.1666),
                                                           Container(
                                                               height: height/15.114,
                                                               width: width/4.6545,
@@ -2133,31 +2424,28 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   color: const Color(
                                                                       0xffDDDEEE),
                                                                   borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              3)),
+                                                                  BorderRadius.circular(
+                                                                      3)),
                                                               child:
-                                                                  TextFormField(
+                                                              TextFormField(
                                                                 controller:
-                                                                    housecon,
+                                                                housecon,
                                                                 inputFormatters: [
                                                                   FilteringTextInputFormatter
-                                                                      .allow(RegExp(
-                                                                          "[a-zA-Z0-9]")),
+                                                                      .allow(
+                                                                      RegExp("[a-zA-Z0-9 ]")),
                                                                 ],
                                                                 decoration:
-                                                                    const InputDecoration(
-                                                                  border:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  contentPadding:
-                                                                      EdgeInsets.only(
-                                                                          bottom:
-                                                                              10,
-                                                                          top:
-                                                                              2,
-                                                                          left:
-                                                                              10),
+                                                                const InputDecoration(
+                                                                  border: InputBorder
+                                                                      .none,
+                                                                  contentPadding: EdgeInsets.only(
+                                                                      bottom:
+                                                                      10,
+                                                                      top:
+                                                                      2,
+                                                                      left:
+                                                                      10),
                                                                 ),
                                                                 //  validator: (value) => value!.isEmpty ? 'Field is required' : null,
                                                               ))
@@ -2165,31 +2453,33 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                       height: height/9.369,
+                                                      height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                         children: [
                                                           KText(
                                                             text:
-                                                                'Your Last Visit',
+                                                            'Your Last Visit',
                                                             style:
-                                                                SafeGoogleFont(
+                                                            SafeGoogleFont(
                                                               'Nunito',
                                                               fontSize:
-                                                                  20 * ffem,
+                                                              20 * ffem,
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
-                                                              height: 1.3625 *
+                                                              FontWeight
+                                                                  .w700,
+                                                              height:
+                                                              1.3625 *
                                                                   ffem /
                                                                   fem,
                                                               color: const Color(
                                                                   0xff000000),
                                                             ),
                                                           ),
-                                                          SizedBox(height: height/123.1666),
+                                                          SizedBox(
+                                                              height: height/123.1666),
                                                           Container(
                                                               height: height/15.114,
                                                               width: width/4.6545,
@@ -2197,31 +2487,28 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   color: const Color(
                                                                       0xffDDDEEE),
                                                                   borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              3)),
+                                                                  BorderRadius.circular(
+                                                                      3)),
                                                               child:
-                                                                  TextFormField(
+                                                              TextFormField(
                                                                 controller:
-                                                                    lastvisitcon,
+                                                                lastvisitcon,
                                                                 inputFormatters: [
                                                                   FilteringTextInputFormatter
-                                                                      .allow(RegExp(
-                                                                          "[a-zA-Z0-9]")),
+                                                                      .allow(
+                                                                      RegExp("[a-zA-Z0-9 ]")),
                                                                 ],
                                                                 decoration:
-                                                                    const InputDecoration(
-                                                                  border:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  contentPadding:
-                                                                      EdgeInsets.only(
-                                                                          bottom:
-                                                                              10,
-                                                                          top:
-                                                                              2,
-                                                                          left:
-                                                                              10),
+                                                                const InputDecoration(
+                                                                  border: InputBorder
+                                                                      .none,
+                                                                  contentPadding: EdgeInsets.only(
+                                                                      bottom:
+                                                                      10,
+                                                                      top:
+                                                                      2,
+                                                                      left:
+                                                                      10),
                                                                 ),
                                                                 // validator: (value) => value!.isEmpty ? 'Field is required' : null,
                                                               ))
@@ -2234,24 +2521,29 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             ),
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.only(left: 25),
+                                            padding:
+                                            const EdgeInsets.only(left: 25),
                                             child: SizedBox(
                                               height: height/2.8,
                                               width: width/4.1513,
                                               child: Column(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                CrossAxisAlignment
+                                                    .start,
                                                 children: [
                                                   KText(
-                                                    text: 'My Status Message *',
+                                                    text:
+                                                    'My Status Message *',
                                                     style: SafeGoogleFont(
                                                       'Nunito',
                                                       fontSize: 20 * ffem,
                                                       fontWeight:
-                                                          FontWeight.w700,
-                                                      height:
-                                                          1.3625 * ffem / fem,
-                                                      color: const Color(0xff000000),
+                                                      FontWeight.w700,
+                                                      height: 1.3625 *
+                                                          ffem /
+                                                          fem,
+                                                      color:
+                                                      const Color(0xff000000),
                                                     ),
                                                   ),
                                                   SizedBox(height: height/123.1666),
@@ -2262,32 +2554,36 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           color: const Color(
                                                               0xffDDDEEE),
                                                           borderRadius:
-                                                              BorderRadius
-                                                                  .circular(3)),
+                                                          BorderRadius
+                                                              .circular(
+                                                              3)),
                                                       child: TextFormField(
                                                         controller:
-                                                            statusmessagecon,
+                                                        statusmessagecon,
+                                                        autovalidateMode: AutovalidateMode.onUserInteraction,
                                                         maxLines: null,
                                                         expands: true,
                                                         inputFormatters: [
                                                           FilteringTextInputFormatter
                                                               .allow(RegExp(
-                                                                  "[a-zA-Z]")),
+                                                              "[a-zA-Z ,]")),
                                                         ],
                                                         decoration:
-                                                            const InputDecoration(
+                                                        const InputDecoration(
                                                           border:
-                                                              InputBorder.none,
+                                                          InputBorder
+                                                              .none,
                                                           contentPadding:
-                                                              EdgeInsets.only(
-                                                                  bottom: 10,
-                                                                  top: 10,
-                                                                  left: 10),
+                                                          EdgeInsets.only(
+                                                              bottom:
+                                                              10,
+                                                              top: 10,
+                                                              left: 10),
                                                         ),
                                                         validator: (value) =>
-                                                            value!.isEmpty
-                                                                ? 'Field is required'
-                                                                : null,
+                                                        value!.isEmpty
+                                                            ? 'Field is required'
+                                                            : null,
                                                       ))
                                                 ],
                                               ),
@@ -2296,7 +2592,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                         ],
                                       ),
 
-                                      ///alumi edscation aualifications
+                                      ///alumni education Qualifications
                                       SizedBox(height: height/36.95),
                                       Row(
                                         children: [
@@ -2329,20 +2625,22 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                       Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                         children: [
                                           Column(
                                             crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                             children: [
                                               KText(
                                                 text:
-                                                    'Educational Qualification',
+                                                'Educational Qualification',
                                                 style: SafeGoogleFont(
                                                   'Nunito',
                                                   fontSize: 20 * ffem,
-                                                  fontWeight: FontWeight.w700,
-                                                  height: 1.3625 * ffem / fem,
+                                                  fontWeight:
+                                                  FontWeight.w700,
+                                                  height:
+                                                  1.3625 * ffem / fem,
                                                   color: const Color(0xff000000),
                                                 ),
                                               ),
@@ -2354,23 +2652,25 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       color: const Color(
                                                           0xffDDDEEE),
                                                       borderRadius:
-                                                          BorderRadius.circular(
-                                                              3)),
+                                                      BorderRadius
+                                                          .circular(3)),
                                                   child: TextFormField(
                                                     controller:
-                                                        educationquvalificationcon,
+                                                    educationquvalificationcon,
                                                     inputFormatters: [
                                                       FilteringTextInputFormatter
                                                           .allow(RegExp(
-                                                              "[a-zA-Z]")),
+                                                          "[a-zA-Z ]")),
                                                     ],
-                                                    decoration: const InputDecoration(
-                                                      border: InputBorder.none,
+                                                    decoration:
+                                                    const InputDecoration(
+                                                      border:
+                                                      InputBorder.none,
                                                       contentPadding:
-                                                          EdgeInsets.only(
-                                                              bottom: 10,
-                                                              top: 2,
-                                                              left: 10),
+                                                      EdgeInsets.only(
+                                                          bottom: 10,
+                                                          top: 2,
+                                                          left: 10),
                                                     ),
                                                   ))
                                             ],
@@ -2378,16 +2678,18 @@ class _Users_ScreenState extends State<Users_Screen> {
                                           SizedBox(width: width/30.72),
                                           Column(
                                             crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                             children: [
                                               KText(
                                                 text:
-                                                    'Additional Qualification',
+                                                'Additional Qualification',
                                                 style: SafeGoogleFont(
                                                   'Nunito',
                                                   fontSize: 20 * ffem,
-                                                  fontWeight: FontWeight.w700,
-                                                  height: 1.3625 * ffem / fem,
+                                                  fontWeight:
+                                                  FontWeight.w700,
+                                                  height:
+                                                  1.3625 * ffem / fem,
                                                   color: const Color(0xff000000),
                                                 ),
                                               ),
@@ -2399,23 +2701,25 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       color: const Color(
                                                           0xffDDDEEE),
                                                       borderRadius:
-                                                          BorderRadius.circular(
-                                                              3)),
+                                                      BorderRadius
+                                                          .circular(3)),
                                                   child: TextFormField(
                                                     controller:
-                                                        additionalquvalificationcon,
+                                                    additionalquvalificationcon,
                                                     inputFormatters: [
                                                       FilteringTextInputFormatter
                                                           .allow(RegExp(
-                                                              "[a-zA-Z]")),
+                                                          "[a-zA-Z ]")),
                                                     ],
-                                                    decoration: const InputDecoration(
-                                                      border: InputBorder.none,
+                                                    decoration:
+                                                    const InputDecoration(
+                                                      border:
+                                                      InputBorder.none,
                                                       contentPadding:
-                                                          EdgeInsets.only(
-                                                              bottom: 10,
-                                                              top: 2,
-                                                              left: 10),
+                                                      EdgeInsets.only(
+                                                          bottom: 10,
+                                                          top: 2,
+                                                          left: 10),
                                                     ),
                                                   ))
                                             ],
@@ -2522,18 +2826,19 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       onChanged:
                                                           (String? value) {
                                                         setState(() {
-                                                          alumniEmployedController
-                                                              .text =
+                                                          alumniEmployedController.text =
                                                           value!;
                                                         });
+
                                                       },
                                                       buttonStyleData:
                                                       const ButtonStyleData(
-                                                     
+
+
                                                       ),
                                                       menuItemStyleData:
                                                       const MenuItemStyleData(
-                                                      
+
                                                       ),
                                                       decoration:
                                                       const InputDecoration(
@@ -2546,80 +2851,83 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               ],
                                             ),
                                           ),
-                                        /*  ///ownBussinesscon
-                                          Padding(
-                                              padding:EdgeInsets.only(left:width/68.0666),
-                                              child:
-                                              SizedBox(
-                                                height: height/9.369,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                                  children: [
-                                                    KText(
-                                                      text: 'Own Business',
-                                                      style: SafeGoogleFont(
-                                                        'Nunito',
-                                                        fontSize: 20 * ffem,
-                                                        fontWeight: FontWeight.w700,
-                                                        height: 1.3625 * ffem / fem,
-                                                        color: const Color(0xff000000),
+                                          /*    ///ownBussinesscon
+
+                                                    Padding(
+                                                    padding:EdgeInsets.only(left:width/68.0666),
+                                                child:
+                                                SizedBox(
+                                                  height: height/9.369,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                    children: [
+                                                      KText(
+                                                        text: 'Own Business',
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: 20 * ffem,
+                                                          fontWeight: FontWeight.w700,
+                                                          height: 1.3625 * ffem / fem,
+                                                          color: const Color(0xff000000),
+                                                        ),
                                                       ),
-                                                    ),
-                                                    SizedBox(height: height/123.1666),
-                                                    Container(
-                                                        height: height/15.114,
-                                                        width: width/4.6545,
-                                                        decoration: BoxDecoration(
-                                                            color: const Color(
-                                                                0xffDDDEEE),
-                                                            borderRadius:
-                                                            BorderRadius
-                                                                .circular(3)),
-                                                        child: TextFormField(
-                                                          controller: ownBussinesscon,
-                                                          inputFormatters: [
-                                                            FilteringTextInputFormatter
-                                                                .allow(RegExp(
-                                                                "[a-zA-Z]")),
-                                                          ],
-                                                          decoration:
-                                                          const InputDecoration(
-                                                            border:
-                                                            InputBorder.none,
-                                                            contentPadding:
-                                                            EdgeInsets.only(
-                                                                bottom: 10,
-                                                                top: 2,
-                                                                left: 10),
-                                                          ),
-                                                          // validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                        ))
-                                                  ],
-                                                ),
-                                              )),*/
-                                          
-                                        
+                                                      SizedBox(height: height/123.1666),
+                                                      Container(
+                                                          height: height/15.114,
+                                                          width: width/4.6545,
+                                                          decoration: BoxDecoration(
+                                                              color: const Color(
+                                                                  0xffDDDEEE),
+                                                              borderRadius:
+                                                              BorderRadius
+                                                                  .circular(3)),
+                                                          child: TextFormField(
+                                                            controller: ownBussinesscon,
+                                                            inputFormatters: [
+                                                              FilteringTextInputFormatter
+                                                                  .allow(RegExp(
+                                                                  "[a-zA-Z]")),
+                                                            ],
+                                                            decoration:
+                                                            const InputDecoration(
+                                                              border:
+                                                              InputBorder.none,
+                                                              contentPadding:
+                                                              EdgeInsets.only(
+                                                                  bottom: 10,
+                                                                  top: 2,
+                                                                  left: 10),
+                                                            ),
+                                                            // validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                                          ))
+                                                    ],
+                                                  ),
+                                                )),*/
 
                                         ],
                                       ),
                                       SizedBox(height: height/36.95),
+                                      alumniEmployedController.text=="Yes"?
                                       Row(
                                         children: [
                                           SizedBox(
-                                             height: height/9.369,
+                                            height: height/9.369,
                                             child: Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                               children: [
                                                 KText(
                                                   text: 'Occupations',
                                                   style: SafeGoogleFont(
                                                     'Nunito',
                                                     fontSize: 20 * ffem,
-                                                    fontWeight: FontWeight.w700,
-                                                    height: 1.3625 * ffem / fem,
-                                                    color: const Color(0xff000000),
+                                                    fontWeight:
+                                                    FontWeight.w700,
+                                                    height:
+                                                    1.3625 * ffem / fem,
+                                                    color:
+                                                    const Color(0xff000000),
                                                   ),
                                                 ),
                                                 SizedBox(height: height/123.1666),
@@ -2630,24 +2938,26 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         color: const Color(
                                                             0xffDDDEEE),
                                                         borderRadius:
-                                                            BorderRadius
-                                                                .circular(3)),
+                                                        BorderRadius
+                                                            .circular(
+                                                            3)),
                                                     child: TextFormField(
-                                                      controller: occupationcon,
+                                                      controller:
+                                                      occupationcon,
                                                       inputFormatters: [
                                                         FilteringTextInputFormatter
                                                             .allow(RegExp(
-                                                                "[a-zA-Z]")),
+                                                            "[a-zA-Z ]")),
                                                       ],
                                                       decoration:
-                                                          const InputDecoration(
-                                                        border:
-                                                            InputBorder.none,
+                                                      const InputDecoration(
+                                                        border: InputBorder
+                                                            .none,
                                                         contentPadding:
-                                                            EdgeInsets.only(
-                                                                bottom: 10,
-                                                                top: 2,
-                                                                left: 10),
+                                                        EdgeInsets.only(
+                                                            bottom: 10,
+                                                            top: 2,
+                                                            left: 10),
                                                       ),
                                                       // validator: (value) => value!.isEmpty ? 'Field is required' : null,
                                                     ))
@@ -2656,19 +2966,22 @@ class _Users_ScreenState extends State<Users_Screen> {
                                           ),
                                           SizedBox(width: width/38.4),
                                           SizedBox(
-                                             height: height/9.369,
+                                            height: height/9.369,
                                             child: Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                               children: [
                                                 KText(
                                                   text: 'Designation',
                                                   style: SafeGoogleFont(
                                                     'Nunito',
                                                     fontSize: 20 * ffem,
-                                                    fontWeight: FontWeight.w700,
-                                                    height: 1.3625 * ffem / fem,
-                                                    color: const Color(0xff000000),
+                                                    fontWeight:
+                                                    FontWeight.w700,
+                                                    height:
+                                                    1.3625 * ffem / fem,
+                                                    color:
+                                                    const Color(0xff000000),
                                                   ),
                                                 ),
                                                 SizedBox(height: height/123.1666),
@@ -2679,25 +2992,26 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         color: const Color(
                                                             0xffDDDEEE),
                                                         borderRadius:
-                                                            BorderRadius
-                                                                .circular(3)),
+                                                        BorderRadius
+                                                            .circular(
+                                                            3)),
                                                     child: TextFormField(
                                                       controller:
-                                                          designationcon,
+                                                      designationcon,
                                                       inputFormatters: [
                                                         FilteringTextInputFormatter
                                                             .allow(RegExp(
-                                                                "[a-zA-Z]")),
+                                                            "[a-zA-Z ]")),
                                                       ],
                                                       decoration:
-                                                          const InputDecoration(
-                                                        border:
-                                                            InputBorder.none,
+                                                      const InputDecoration(
+                                                        border: InputBorder
+                                                            .none,
                                                         contentPadding:
-                                                            EdgeInsets.only(
-                                                                bottom: 10,
-                                                                top: 2,
-                                                                left: 10),
+                                                        EdgeInsets.only(
+                                                            bottom: 10,
+                                                            top: 2,
+                                                            left: 10),
                                                       ),
                                                       //validator: (value) => value!.isEmpty ? 'Field is required' : null,
                                                     ))
@@ -2706,20 +3020,23 @@ class _Users_ScreenState extends State<Users_Screen> {
                                           ),
                                           SizedBox(width: width/38.4),
                                           SizedBox(
-                                             height: height/9.369,
+                                            height: height/9.369,
                                             child: Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                               children: [
                                                 KText(
                                                   text:
-                                                      "Company/Concern's Name",
+                                                  "Company/Concern's Name",
                                                   style: SafeGoogleFont(
                                                     'Nunito',
                                                     fontSize: 20 * ffem,
-                                                    fontWeight: FontWeight.w700,
-                                                    height: 1.3625 * ffem / fem,
-                                                    color: const Color(0xff000000),
+                                                    fontWeight:
+                                                    FontWeight.w700,
+                                                    height:
+                                                    1.3625 * ffem / fem,
+                                                    color:
+                                                    const Color(0xff000000),
                                                   ),
                                                 ),
                                                 SizedBox(height: height/123.1666),
@@ -2730,25 +3047,26 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         color: const Color(
                                                             0xffDDDEEE),
                                                         borderRadius:
-                                                            BorderRadius
-                                                                .circular(3)),
+                                                        BorderRadius
+                                                            .circular(
+                                                            3)),
                                                     child: TextFormField(
                                                       controller:
-                                                          company_concerncon,
+                                                      company_concerncon,
                                                       inputFormatters: [
                                                         FilteringTextInputFormatter
                                                             .allow(RegExp(
-                                                                "[a-zA-Z]")),
+                                                            "[a-zA-Z ]")),
                                                       ],
                                                       decoration:
-                                                          const InputDecoration(
-                                                        border:
-                                                            InputBorder.none,
+                                                      const InputDecoration(
+                                                        border: InputBorder
+                                                            .none,
                                                         contentPadding:
-                                                            EdgeInsets.only(
-                                                                bottom: 10,
-                                                                top: 2,
-                                                                left: 10),
+                                                        EdgeInsets.only(
+                                                            bottom: 10,
+                                                            top: 2,
+                                                            left: 10),
                                                       ),
                                                       // validator: (value) => value!.isEmpty ? 'Field is required' : null,
                                                     ))
@@ -2756,7 +3074,177 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             ),
                                           ),
                                         ],
-                                      ),
+                                      ):
+                                      alumniEmployedController.text=="Own Business"?
+                                      Row(
+                                        children: [
+
+                                          /* SizedBox(width: width/38.4),
+                                                SizedBox(
+                                                  height: height/9.369,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                    children: [
+                                                      KText(
+                                                        text: 'Designation',
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: 20 * ffem,
+                                                          fontWeight:
+                                                          FontWeight.w700,
+                                                          height:
+                                                          1.3625 * ffem / fem,
+                                                          color:
+                                                          const Color(0xff000000),
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: height/123.1666),
+                                                      Container(
+                                                          height: height/15.114,
+                                                          width: width/4.6545,
+                                                          decoration: BoxDecoration(
+                                                              color: const Color(
+                                                                  0xffDDDEEE),
+                                                              borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                  3)),
+                                                          child: TextFormField(
+                                                            controller:
+                                                            designationcon,
+                                                            inputFormatters: [
+                                                              FilteringTextInputFormatter
+                                                                  .allow(RegExp(
+                                                                  "[a-zA-Z]")),
+                                                            ],
+                                                            decoration:
+                                                            const InputDecoration(
+                                                              border: InputBorder
+                                                                  .none,
+                                                              contentPadding:
+                                                              EdgeInsets.only(
+                                                                  bottom: 10,
+                                                                  top: 2,
+                                                                  left: 10),
+                                                            ),
+                                                            //validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                                          ))
+                                                    ],
+                                                  ),
+                                                ),*/
+
+                                          SizedBox(
+                                            height: height/9.369,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                KText(
+                                                  text:
+                                                  "Company Name",
+                                                  style: SafeGoogleFont(
+                                                    'Nunito',
+                                                    fontSize: 20 * ffem,
+                                                    fontWeight:
+                                                    FontWeight.w700,
+                                                    height:
+                                                    1.3625 * ffem / fem,
+                                                    color:
+                                                    const Color(0xff000000),
+                                                  ),
+                                                ),
+                                                SizedBox(height: height/123.1666),
+                                                Container(
+                                                    height: height/15.114,
+                                                    width: width/4.6545,
+                                                    decoration: BoxDecoration(
+                                                        color: const Color(
+                                                            0xffDDDEEE),
+                                                        borderRadius:
+                                                        BorderRadius
+                                                            .circular(
+                                                            3)),
+                                                    child: TextFormField(
+                                                      controller:
+                                                      company_concerncon,
+                                                      inputFormatters: [
+                                                        FilteringTextInputFormatter
+                                                            .allow(RegExp(
+                                                            "[a-zA-Z ]")),
+                                                      ],
+                                                      decoration:
+                                                      const InputDecoration(
+                                                        border: InputBorder
+                                                            .none,
+                                                        contentPadding:
+                                                        EdgeInsets.only(
+                                                            bottom: 10,
+                                                            top: 2,
+                                                            left: 10),
+                                                      ),
+                                                      // validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                                    ))
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(width: width/38.4),
+                                          SizedBox(
+                                            height: height/9.369,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                KText(
+                                                  text: 'Type',
+                                                  style: SafeGoogleFont(
+                                                    'Nunito',
+                                                    fontSize: 20 * ffem,
+                                                    fontWeight:
+                                                    FontWeight.w700,
+                                                    height:
+                                                    1.3625 * ffem / fem,
+                                                    color:
+                                                    const Color(0xff000000),
+                                                  ),
+                                                ),
+                                                SizedBox(height: height/123.1666),
+                                                Container(
+                                                    height: height/15.114,
+                                                    width: width/4.6545,
+                                                    decoration: BoxDecoration(
+                                                        color: const Color(
+                                                            0xffDDDEEE),
+                                                        borderRadius:
+                                                        BorderRadius
+                                                            .circular(
+                                                            3)),
+                                                    child: TextFormField(
+                                                      controller:
+                                                      occupationcon,
+                                                      inputFormatters: [
+                                                        FilteringTextInputFormatter
+                                                            .allow(RegExp(
+                                                            "[a-zA-Z ]")),
+                                                      ],
+                                                      decoration:
+                                                      const InputDecoration(
+                                                        border: InputBorder
+                                                            .none,
+                                                        contentPadding:
+                                                        EdgeInsets.only(
+                                                            bottom: 10,
+                                                            top: 2,
+                                                            left: 10),
+                                                      ),
+                                                      // validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                                    ))
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ):
+                                      const SizedBox(),
 
                                       ///Material Status
                                       SizedBox(height: height/36.95),
@@ -2791,19 +3279,22 @@ class _Users_ScreenState extends State<Users_Screen> {
                                       Row(
                                         children: [
                                           SizedBox(
-                                             height: height/9.369,
+                                            height: height/9.369,
                                             child: Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                               children: [
                                                 KText(
                                                   text: 'Are You Married',
                                                   style: SafeGoogleFont(
                                                     'Nunito',
                                                     fontSize: 20 * ffem,
-                                                    fontWeight: FontWeight.w700,
-                                                    height: 1.3625 * ffem / fem,
-                                                    color: const Color(0xff000000),
+                                                    fontWeight:
+                                                    FontWeight.w700,
+                                                    height:
+                                                    1.3625 * ffem / fem,
+                                                    color:
+                                                    const Color(0xff000000),
                                                   ),
                                                 ),
                                                 SizedBox(height: height/123.1666),
@@ -2814,58 +3305,66 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       color: const Color(
                                                           0xffDDDEEE),
                                                       borderRadius:
-                                                          BorderRadius.circular(
-                                                              3)),
+                                                      BorderRadius
+                                                          .circular(3)),
                                                   child:
-                                                      DropdownButtonHideUnderline(
+                                                  DropdownButtonHideUnderline(
+
                                                     child:
-                                                        DropdownButtonFormField2<String>(
-                                                          isExpanded:true,
+                                                    DropdownButtonFormField2<
+                                                        String>(
+                                                      isExpanded:true,
                                                       hint: Text(
                                                         'Marital Status',
-                                                        style: SafeGoogleFont(
+                                                        style:
+                                                        SafeGoogleFont(
                                                           'Nunito',
-                                                          fontSize: 20 * ffem,
+                                                          fontSize:
+                                                          20 * ffem,
                                                         ),
                                                       ),
                                                       items: MaritalStatusList
-                                                          .map((String item) =>
-                                                              DropdownMenuItem<
-                                                                  String>(
-                                                                value: item,
-                                                                child: Text(
-                                                                  item,
-                                                                  style:
-                                                                      SafeGoogleFont(
-                                                                    'Nunito',
-                                                                    fontSize:
-                                                                        20 *
-                                                                            ffem,
-                                                                  ),
-                                                                ),
-                                                              )).toList(),
+                                                          .map((String
+                                                      item) =>
+                                                          DropdownMenuItem<
+                                                              String>(
+                                                            value: item,
+                                                            child: Text(
+                                                              item,
+                                                              style:
+                                                              SafeGoogleFont(
+                                                                'Nunito',
+                                                                fontSize:
+                                                                20 *
+                                                                    ffem,
+                                                              ),
+                                                            ),
+                                                          )).toList(),
                                                       value:
-                                                          maritalStatuscon.text,
+                                                      maritalStatuscon
+                                                          .text,
                                                       onChanged:
                                                           (String? value) {
                                                         setState(() {
                                                           maritalStatuscon
-                                                              .text = value!;
+                                                              .text =
+                                                          value!;
                                                         });
                                                       },
                                                       buttonStyleData:
-                                                          const ButtonStyleData(
-                                                       
-                                                      
+                                                      const ButtonStyleData(
+
+
                                                       ),
                                                       menuItemStyleData:
-                                                          const MenuItemStyleData(
+                                                      const MenuItemStyleData(
+
                                                       ),
                                                       decoration:
-                                                          const InputDecoration(
-                                                              border:
-                                                                  InputBorder
-                                                                      .none),
+                                                      const InputDecoration(
+                                                          border:
+                                                          InputBorder
+                                                              .none),
                                                     ),
                                                   ),
                                                 )
@@ -2875,239 +3374,288 @@ class _Users_ScreenState extends State<Users_Screen> {
                                           SizedBox(width: width/38.4),
                                           maritalStatuscon.text == "Yes"
                                               ? SizedBox(
-                                                  child: Row(children: [
-                                                  SizedBox(
-                                                     height: height/9.369,
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        KText(
-                                                          text: 'Spouse Name',
-                                                          style: SafeGoogleFont(
-                                                            'Nunito',
-                                                            fontSize: 20 * ffem,
-                                                            fontWeight:
-                                                                FontWeight.w700,
-                                                            height: 1.3625 *
-                                                                ffem /
-                                                                fem,
-                                                            color: const Color(
-                                                                0xff000000),
-                                                          ),
+                                              child: Row(children: [
+                                                SizedBox(
+                                                  height: height/9.369,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment
+                                                        .start,
+                                                    children: [
+                                                      KText(
+                                                        text:
+                                                        'Spouse Name',
+                                                        style:
+                                                        SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize:
+                                                          20 * ffem,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w700,
+                                                          height: 1.3625 *
+                                                              ffem /
+                                                              fem,
+                                                          color: const Color(
+                                                              0xff000000),
                                                         ),
-                                                        SizedBox(height: height/123.1666),
-                                                        Container(
-                                                            height: height/15.114,
-                                                            width: width/6.4,
-                                                            decoration: BoxDecoration(
-                                                                color: const Color(
-                                                                    0xffDDDEEE),
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            3)),
-                                                            child:
-                                                                TextFormField(
-                                                              controller:
-                                                                  spouseNamecon,
-                                                              inputFormatters: [
-                                                                FilteringTextInputFormatter
-                                                                    .allow(RegExp(
-                                                                        "[a-zA-Z]")),
-                                                              ],
-                                                              decoration:
-                                                                  const InputDecoration(
-                                                                border:
-                                                                    InputBorder
-                                                                        .none,
-                                                                contentPadding:
-                                                                    EdgeInsets.only(
-                                                                        bottom:
-                                                                            10,
-                                                                        top: 2,
-                                                                        left:
-                                                                            10),
-                                                              ),
-                                                              //validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                            ))
-                                                      ],
-                                                    ),
+                                                      ),
+                                                      SizedBox(height: height/123.1666),
+                                                      Container(
+                                                          height: height/15.114,
+                                                          width: width/6.4,
+                                                          decoration: BoxDecoration(
+                                                              color: const Color(
+                                                                  0xffDDDEEE),
+                                                              borderRadius:
+                                                              BorderRadius.circular(
+                                                                  3)),
+                                                          child:
+                                                          TextFormField(
+                                                            controller:
+                                                            spouseNamecon,
+                                                            inputFormatters: [
+                                                              FilteringTextInputFormatter
+                                                                  .allow(RegExp(
+                                                                  "[a-zA-Z ]")),
+                                                            ],
+                                                            decoration:
+                                                            const InputDecoration(
+                                                              border:
+                                                              InputBorder
+                                                                  .none,
+                                                              contentPadding: EdgeInsets.only(
+                                                                  bottom:
+                                                                  10,
+                                                                  top: 2,
+                                                                  left:
+                                                                  10),
+                                                            ),
+                                                            //validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                                          ))
+                                                    ],
                                                   ),
-                                                  SizedBox(width: width/38.4),
-                                                  SizedBox(
-                                                     height: height/9.369,
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        KText(
-                                                          text:
-                                                              "Anniversary Date ",
-                                                          style: SafeGoogleFont(
-                                                            'Nunito',
-                                                            fontSize: 20 * ffem,
-                                                            fontWeight:
-                                                                FontWeight.w700,
-                                                            height: 1.3625 *
-                                                                ffem /
-                                                                fem,
-                                                            color: const Color(
-                                                                0xff000000),
-                                                          ),
+                                                ),
+                                                SizedBox(width: width/38.4),
+                                                SizedBox(
+                                                  height: height/9.369,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment
+                                                        .start,
+                                                    children: [
+                                                      KText(
+                                                        text:
+                                                        "Anniversary Date ",
+                                                        style:
+                                                        SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize:
+                                                          20 * ffem,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w700,
+                                                          height: 1.3625 *
+                                                              ffem /
+                                                              fem,
+                                                          color: const Color(
+                                                              0xff000000),
                                                         ),
-                                                        SizedBox(height: height/123.1666),
-                                                        Container(
-                                                            height: height/15.114,
-                                                            width: width/6.4,
-                                                            decoration: BoxDecoration(
-                                                                color: const Color(
-                                                                    0xffDDDEEE),
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            3)),
-                                                            child:
-                                                                TextFormField(
-                                                              readOnly: true,
-                                                              controller:
-                                                                  anniversaryDatecon,
-                                                              decoration:
-                                                                  const InputDecoration(
-                                                                border:
-                                                                    InputBorder
-                                                                        .none,
-                                                                contentPadding:
-                                                                    EdgeInsets.only(
-                                                                        bottom:
-                                                                            10,
-                                                                        top: 2,
-                                                                        left:
-                                                                            10),
-                                                              ),
-                                                              onTap: () async {
-                                                                DateTime?
-                                                                    pickedDate =
-                                                                    await showDatePicker(
-                                                                        context:
-                                                                            context,
-                                                                        initialDate:
-                                                                            DateTime
-                                                                                .now(),
-                                                                        firstDate:
-                                                                            DateTime(
-                                                                                1950),
-                                                                        //DateTime.now() - not to allow to choose before today.
-                                                                        lastDate:
-                                                                            DateTime(2100));
+                                                      ),
+                                                      SizedBox(height: height/123.1666),
+                                                      Container(
+                                                          height: height/15.114,
+                                                          width: width/6.4,
+                                                          decoration: BoxDecoration(
+                                                              color: const Color(
+                                                                  0xffDDDEEE),
+                                                              borderRadius:
+                                                              BorderRadius.circular(
+                                                                  3)),
+                                                          child:
+                                                          TextFormField(
+                                                            readOnly:
+                                                            true,
+                                                            controller:
+                                                            anniversaryDatecon,
+                                                            decoration:
+                                                            const InputDecoration(
+                                                              border:
+                                                              InputBorder
+                                                                  .none,
+                                                              contentPadding: EdgeInsets.only(
+                                                                  bottom:
+                                                                  10,
+                                                                  top: 2,
+                                                                  left:
+                                                                  10),
+                                                            ),
+                                                            onTap:
+                                                                () async {
+                                                              DateTime? pickedDate = await showDatePicker(
+                                                                  context: context,
+                                                                  initialDate: DateTime.now(),
+                                                                  firstDate: DateTime(1950),
+                                                                  //DateTime.now() - not to allow to choose before today.
+                                                                  lastDate: DateTime(2100));
 
-                                                                if (pickedDate !=
-                                                                    null) {
-                                                                  //pickedDate output format => 2021-03-10 00:00:00.000
-                                                                  String
-                                                                      formattedDate =
-                                                                      DateFormat(
-                                                                              'dd/MM/yyyy')
-                                                                          .format(
-                                                                              pickedDate);
-                                                                  //formatted date output using intl package =>  2021-03-16
-                                                                  setState(() {
-                                                                    anniversaryDatecon
-                                                                            .text =
-                                                                        formattedDate; //set output date to TextField value.
-                                                                  });
-                                                                } else {}
-                                                              },
-                                                              // validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                            ))
-                                                      ],
-                                                    ),
+                                                              if (pickedDate !=
+                                                                  null) {
+                                                                //pickedDate output format => 2021-03-10 00:00:00.000
+                                                                String
+                                                                formattedDate =
+                                                                DateFormat('dd/MM/yyyy')
+                                                                    .format(pickedDate);
+                                                                //formatted date output using intl package =>  2021-03-16
+                                                                setState(
+                                                                        () {
+                                                                      anniversaryDatecon.text =
+                                                                          formattedDate; //set output date to TextField value.
+                                                                    });
+                                                              } else {}
+                                                            },
+                                                            // validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                                          ))
+                                                    ],
                                                   ),
-                                                  SizedBox(width: width/38.4),
-                                                  SizedBox(
-                                                     height: height/9.369,
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        KText(
-                                                          text:
-                                                              "No. Of Chindren",
-                                                          style: SafeGoogleFont(
-                                                            'Nunito',
-                                                            fontSize: 20 * ffem,
-                                                            fontWeight:
-                                                                FontWeight.w700,
-                                                            height: 1.3625 *
-                                                                ffem /
-                                                                fem,
-                                                            color: const Color(
-                                                                0xff000000),
-                                                          ),
+                                                ),
+                                                SizedBox(width: width/38.4),
+                                                SizedBox(
+                                                  height: height/9.369,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment
+                                                        .start,
+                                                    children: [
+                                                      KText(
+                                                        text:
+                                                        "No. Of Chindren",
+                                                        style:
+                                                        SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize:
+                                                          20 * ffem,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w700,
+                                                          height: 1.3625 *
+                                                              ffem /
+                                                              fem,
+                                                          color: const Color(
+                                                              0xff000000),
                                                         ),
-                                                        SizedBox(height: height/123.1666),
-                                                        Container(
-                                                            height: height/15.114,
-                                                            width: width/6.4,
-                                                            decoration: BoxDecoration(
-                                                                color: const Color(
-                                                                    0xffDDDEEE),
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            3)),
-                                                            child:
-                                                                TextFormField(
-                                                              controller:
-                                                                  no_of_childreancon,
-                                                              maxLength: 2,
-                                                              inputFormatters: [
-                                                                FilteringTextInputFormatter
-                                                                    .allow(RegExp(
-                                                                        "[0-9]")),
-                                                              ],
-                                                              decoration:
-                                                                  const InputDecoration(
-                                                                border:
-                                                                    InputBorder
-                                                                        .none,
-                                                                contentPadding:
-                                                                    EdgeInsets.only(
-                                                                        bottom:
-                                                                            10,
-                                                                        top: 2,
-                                                                        left:
-                                                                            10),
-                                                                counterText: "",
-                                                              ),
-                                                            ))
-                                                      ],
-                                                    ),
+                                                      ),
+                                                      SizedBox(height: height/123.1666),
+                                                      Container(
+                                                          height: height/15.114,
+                                                          width: width/6.4,
+                                                          decoration: BoxDecoration(
+                                                              color: const Color(
+                                                                  0xffDDDEEE),
+                                                              borderRadius:
+                                                              BorderRadius.circular(
+                                                                  3)),
+                                                          child:
+                                                          TextFormField(
+                                                            controller:
+                                                            no_of_childreancon,
+                                                            maxLength: 2,
+                                                            inputFormatters: [
+                                                              FilteringTextInputFormatter
+                                                                  .allow(RegExp(
+                                                                  "[0-9]")),
+                                                            ],
+                                                            decoration:
+                                                            const InputDecoration(
+                                                              border:
+                                                              InputBorder
+                                                                  .none,
+                                                              contentPadding: EdgeInsets.only(
+                                                                  bottom:
+                                                                  10,
+                                                                  top: 2,
+                                                                  left:
+                                                                  10),
+                                                              counterText:
+                                                              "",
+                                                            ),
+                                                          ))
+                                                    ],
                                                   ),
-                                                ]))
+                                                ),
+                                              ]))
                                               : const SizedBox(),
                                         ],
                                       ),
                                       SizedBox(height: height/24.633),
 
-                                      ///buttons update reset and back
+                                      ///buttons Save reset and back
 
                                       Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.end,
+                                        MainAxisAlignment.end,
                                         children: [
                                           SizedBox(
                                             width: width/2.2925,
                                           ),
 
-                                          ///Update button
+                                          ///save button
                                           GestureDetector(
                                             onTap: () {
 
-                                                userDataUpdatefuntio();
+                                                if(citycon.text=="Select City"){
+                                                  setState(() {
+                                                    dropdownValidator2=true;
+                                                  });
+                                                }
+
+                                                if(statecon.text=="Select State"){
+                                                  setState(() {
+                                                    dropdownValidator=true;
+                                                  });
+                                                }
+
+                                                if(countrycon.text=="Select Country"){
+                                                  setState(() {
+                                                    dropdownValidator3=true;
+                                                  });
+                                                }
+
+                                                if (_formkey.currentState!.validate()) {
+
+                                                  if(citycon.text=="Select City"){
+                                                    setState(() {
+                                                      dropdownValidator2=true;
+                                                    });
+                                                  }
+
+                                                  if(statecon.text=="Select State"){
+                                                    setState(() {
+                                                      dropdownValidator=true;
+                                                    });
+                                                  }
+
+                                                  if(countrycon.text=="Select Country"){
+                                                    setState(() {
+                                                      dropdownValidator3=true;
+                                                    });
+                                                  }
+                                                  if(dropdownValidator==false&&dropdownValidator2==false&&dropdownValidator3==false){
+
+                                                    print("Finalaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+                                                    userDataUpdatefuntio();
+                                                  }
+                                                  else{
+
+                                                    print("errorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
+                                                  }
+
+
+
+
+                                                }
+
+
 
                                             },
                                             child: Container(
@@ -3116,7 +3664,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 decoration: BoxDecoration(
                                                   color: const Color(0xffD60A0B),
                                                   borderRadius:
-                                                      BorderRadius.circular(4),
+                                                  BorderRadius.circular(
+                                                      4),
                                                 ),
                                                 child: Center(
                                                   child: KText(
@@ -3125,10 +3674,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       'Nunito',
                                                       fontSize: 19 * ffem,
                                                       fontWeight:
-                                                          FontWeight.w400,
-                                                      height:
-                                                          1.3625 * ffem / fem,
-                                                      color: const Color(0xffFFFFFF),
+                                                      FontWeight.w400,
+                                                      height: 1.3625 *
+                                                          ffem /
+                                                          fem,
+                                                      color:
+                                                      const Color(0xffFFFFFF),
                                                     ),
                                                   ),
                                                 )),
@@ -3148,7 +3699,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 decoration: BoxDecoration(
                                                   color: const Color(0xff00A0E3),
                                                   borderRadius:
-                                                      BorderRadius.circular(4),
+                                                  BorderRadius.circular(
+                                                      4),
                                                 ),
                                                 child: Center(
                                                   child: KText(
@@ -3157,10 +3709,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       'Nunito',
                                                       fontSize: 19 * ffem,
                                                       fontWeight:
-                                                          FontWeight.w400,
-                                                      height:
-                                                          1.3625 * ffem / fem,
-                                                      color: const Color(0xffFFFFFF),
+                                                      FontWeight.w400,
+                                                      height: 1.3625 *
+                                                          ffem /
+                                                          fem,
+                                                      color:
+                                                      const Color(0xffFFFFFF),
                                                     ),
                                                   ),
                                                 )),
@@ -3174,9 +3728,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             onTap: () {
                                               setState(() {
                                                 UserEdit = false;
-                                                userUpdateDocumentID="";
                                               });
-                                              controllersclearfunc();
                                             },
                                             child: Container(
                                                 height: height/18.475,
@@ -3184,7 +3736,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 decoration: BoxDecoration(
                                                   color: Colors.green,
                                                   borderRadius:
-                                                      BorderRadius.circular(4),
+                                                  BorderRadius.circular(
+                                                      4),
                                                 ),
                                                 child: Center(
                                                   child: KText(
@@ -3193,10 +3746,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       'Nunito',
                                                       fontSize: 19 * ffem,
                                                       fontWeight:
-                                                          FontWeight.w400,
-                                                      height:
-                                                          1.3625 * ffem / fem,
-                                                      color: const Color(0xffFFFFFF),
+                                                      FontWeight.w400,
+                                                      height: 1.3625 *
+                                                          ffem /
+                                                          fem,
+                                                      color:
+                                                      const Color(0xffFFFFFF),
                                                     ),
                                                   ),
                                                 )),
@@ -3209,7 +3764,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                 ],
                               ),
                             ),
-                      
+                          ),
                         ),
                       ),
                     ],
@@ -3455,7 +4010,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         FilteringTextInputFormatter.allow(
                                                                                 RegExp("[a-zA-Z ]")),
                                                                       ],
-                                                                      maxLength: 45,
+                                                                      maxLength: 25,
                                                                       decoration: const InputDecoration(
                                                                         border: InputBorder
                                                                             .none,
@@ -3469,15 +4024,11 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         counterText:
                                                                             "",
                                                                       ),
-                                                                      validator: (value) {
-                                                                        if (value!.isEmpty) {
-                                                                        /* setState((){
-                                                                           firstNameValidator=true;
-                                                                         }
-                                                                         );*/
-                                                                        }
-                                                                        return null;
-                                                                      },
+                                                                            validator: (value) => value!
+                                                                                .isEmpty
+                                                                                ? 'Field is required'
+                                                                                : null,
+
                                                                         onChanged:(value){
                                                                           setState((){
                                                                             firstNameValidator=false;
@@ -3527,7 +4078,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                                 3)),
                                                                     child:
                                                                         TextFormField(
-
+                                                                          maxLength:25,
                                                                       controller:
                                                                           middleNamecon,
                                                                       inputFormatters: [
@@ -3537,6 +4088,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                       ],
                                                                       decoration:
                                                                           const InputDecoration(
+                                                                            counterText:"",
                                                                         border: InputBorder
                                                                             .none,
                                                                         contentPadding: EdgeInsets.only(
@@ -3593,13 +4145,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                             autovalidateMode: AutovalidateMode.onUserInteraction,
                                                                       controller:
                                                                           lastNamecon,
+                                                                  
                                                                       inputFormatters: [
                                                                         FilteringTextInputFormatter
                                                                             .allow(
                                                                                 RegExp("[a-zA-Z ]")),
                                                                       ],
                                                                       maxLength:
-                                                                          45,
+                                                                      25,
                                                                       decoration:
                                                                           const InputDecoration(
                                                                         border: InputBorder
@@ -3634,7 +4187,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             MainAxisAlignment
                                                                 .spaceAround,
                                                         children: [
-                                                          ///d date of birth
+                                                          /// date of birth
                                                           SizedBox(
                                                              height: height/9.369,
                                                             child: Column(
@@ -3708,15 +4261,28 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                           null) {
                                                                         //pickedDate output format => 2021-03-10 00:00:00.000
                                                                         String
-                                                                            formattedDate =
+                                                                        formattedDate =
                                                                             DateFormat('dd/MM/yyyy')
                                                                                 .format(pickedDate);
                                                                         //formatted date output using intl package =>  2021-03-16
-                                                                        setState(
-                                                                            () {
-                                                                          dateofBirthcon.text =
-                                                                              formattedDate; //set output date to TextField value.
-                                                                        });
+
+                                                                        // Calculate age difference
+                                                                        DateTime currentDate = DateTime.now();
+                                                                        Duration difference = currentDate.difference(pickedDate);
+                                                                        int age = (difference.inDays / 365).floor();
+                                                                        print('Age: $age years');
+
+                                                                        if(age>=1){
+                                                                          setState(
+                                                                                  () {
+                                                                                dateofBirthcon.text = formattedDate; //set output date to TextField value.
+                                                                              });
+                                                                        }
+                                                                        else{
+                                                                          userNotValidAgePopup();
+                                                                          print("Age Is Lowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
+                                                                        }
+
                                                                       } else {}
                                                                     },
                                                                   ),
@@ -3761,10 +4327,67 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                         borderRadius:
                                                                             BorderRadius.circular(
                                                                                 3)),
-                                                                    child:
-                                                                        TextFormField(
+                                                                    child: 
+                                                                    DropdownButtonHideUnderline(
+                                                                      child: DropdownButtonFormField2<String>(
+                                                                        isExpanded:true,
+                                                                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                                                                        hint: Padding(
+                                                                          padding: const EdgeInsets.only(left:8.0),
+                                                                          child: Text(
+                                                                            'Select',
+                                                                            style:
+                                                                            SafeGoogleFont('Nunito',
+                                                                              fontSize:
+                                                                              20 * ffem,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        items: GenderList
+                                                                            .map((String
+                                                                        item) =>
+                                                                            DropdownMenuItem<
+                                                                                String>(
+
+                                                                              value:
+                                                                              item,
+                                                                              child:
+                                                                              Text(
+                                                                                item,
+                                                                                style:
+                                                                                SafeGoogleFont(
+                                                                                  'Nunito',
+                                                                                  fontSize:
+                                                                                  20 * ffem,
+                                                                                ),
+                                                                              ),
+                                                                            )).toList(),
+                                                                        value: gendercon.text,
+
+                                                                        onChanged: (String?
+                                                                        value) {
+                                                                          setState(() {
+                                                                            gendercon.text =
+                                                                            value!;
+
+                                                                          });
+                                                                        },
+                                                                        buttonStyleData:
+                                                                        ButtonStyleData(height:20,
+                                                                          width:
+                                                                          width / 2.571,
+                                                                        ),
+                                                                        menuItemStyleData: const MenuItemStyleData(),
+                                                                        decoration:
+                                                                        const InputDecoration(
+                                                                            border:
+                                                                            InputBorder
+                                                                                .none),
+                                                                      ),
+                                                                    ),
+                                                                       /* TextFormField(
                                                                       controller:
-                                                                          gendercon,
+                                                                       gendercon,
                                                                       inputFormatters: [
                                                                         FilteringTextInputFormatter
                                                                             .allow(
@@ -3782,10 +4405,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                             left:
                                                                                 10),
                                                                       ),
-                                                                    ))
+                                                                    )*/
+                                                                    )
                                                               ],
                                                             ),
                                                           ),
+
                                                         ],
                                                       ),
                                                       SizedBox(height: height/73.9),
@@ -3840,7 +4465,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                       inputFormatters: [
                                                                         FilteringTextInputFormatter
                                                                             .allow(
-                                                                                RegExp("[a-zA-Z@0-9.]")),
+                                                                                RegExp("[a-z@0-9.]")),
                                                                       ],
                                                                       decoration:
                                                                           const InputDecoration(
@@ -3854,7 +4479,16 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                             left:
                                                                                 10),
                                                                       ),
-                                                                    ))
+                                                                          validator:
+                                                                              (value) {
+                                                                            if (isEmail(value!)) {
+                                                                                return 'Enter the Correct the Email';
+                                                                              }
+
+                                                                            return null;
+                                                                          },
+                                                                    )
+                                                                            )
                                                               ],
                                                             ),
                                                           ),
@@ -4209,7 +4843,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                       inputFormatters: [
                                                                         FilteringTextInputFormatter
                                                                             .allow(
-                                                                                RegExp("[a-zA-Z@0-9.]")),
+                                                                                RegExp("[a-z@0-9.]")),
                                                                       ],
                                                                       decoration:
                                                                           const InputDecoration(
@@ -4274,7 +4908,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               inputFormatters: [
                                                                 FilteringTextInputFormatter
                                                                     .allow(RegExp(
-                                                                        "[a-zA-Z0-9]")),
+                                                                        "[a-zA-Z0-9 ,]")),
                                                               ],
                                                               decoration:
                                                                   const InputDecoration(
@@ -4369,23 +5003,29 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                                                                                                       ),
                                                                                                                                                     ),
                                                                       )).toList(),
-                                                              value: statecon.text, 
                                                                   validator: (value) {
-                                                                    if (value == "Select State") {
-                                                                      setState((){
-                                                                        dropdownValidator=true;
-                                                                      });
+                                                                    if (value=='Select State') {
+                                                                     setState((){
+                                                                       dropdownValidator=true;
+                                                                     });
                                                                     }
                                                                     return null;
                                                                   },
                                                               onChanged: (String?
                                                                   value) {
                                                                 getCity(value.toString());
-                                                                setState(() {
-                                                                  statecon.text =
-                                                                      value!;
-                                                                  dropdownValidator=false;
-                                                                });
+                                                                if (value=='Select State') {
+                                                                  setState((){
+                                                                    dropdownValidator=true;
+                                                                  });
+                                                                }else{
+
+                                                                  setState(() {
+                                                                    statecon.text =
+                                                                    value!;
+                                                                    dropdownValidator=false;
+                                                                  });
+                                                                }
                                                               },
                                                               buttonStyleData:
                                                               ButtonStyleData(height:20,
@@ -4476,22 +5116,29 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                       ))
                                                                   .toList(),
                                                               value: citycon.text,
-                                                              validator: (value) {
-                                                                if (value ==
-                                                                    "Select City") {
+                                                                  validator: (value) {
+                                                                    if (value=='Select City') {
+                                                                      setState((){
+                                                                        dropdownValidator2=true;
+                                                                      });
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                              onChanged: (String?
+                                                                  value) {
+
+                                                                if (value =='Select City') {
                                                                   setState((){
                                                                     dropdownValidator2=true;
                                                                   });
                                                                 }
-                                                                return null;
-                                                              },
-                                                              onChanged: (String?
-                                                                  value) {
-                                                                setState(() {
-                                                                  citycon.text =
-                                                                      value!;
-                                                                  dropdownValidator2=false;
-                                                                });
+                                                                else{
+                                                                  setState(() {
+                                                                    citycon.text =
+                                                                    value!;
+                                                                    dropdownValidator2=false;
+                                                                  });
+                                                                }
                                                               },
                                                               buttonStyleData:
                                                                   const ButtonStyleData(
@@ -4552,7 +5199,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             child: TextFormField(
                                                               controller:
                                                                   pinCodecon,
-                                                              maxLength: 9,
+                                                              maxLength: 6,
                                                               autovalidateMode: AutovalidateMode.onUserInteraction,
                                                               inputFormatters: [
                                                                 FilteringTextInputFormatter
@@ -4581,7 +5228,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   if (value!
                                                                           .length <
                                                                       6) {
-                                                                    return 'Pin code Minimum 6 Characters';
+                                                                    return 'Please Enter Pin code Correctly';
                                                                   }
                                                                 }
                                                                 return null;
@@ -4663,23 +5310,30 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   .toList(),
                                                               value:
                                                                   countrycon.text,
-                                                              validator: (value) {
-                                                                if (value ==
-                                                                    "Select Country") {
+                                                                  validator: (value) {
+                                                                    if (value =="Select Country") {
+                                                                      setState((){
+                                                                        dropdownValidator3=true;
+                                                                      });
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                              onChanged: (String?
+                                                                  value) {
+
+                                                                if (value =='Select Country') {
                                                                   setState((){
                                                                     dropdownValidator3=true;
                                                                   });
                                                                 }
-                                                                return null;
-                                                              },
-                                                              onChanged: (String?
-                                                                  value) {
-                                                                setState(() {
-                                                                  countrycon
-                                                                          .text =
-                                                                      value!;
-                                                                  dropdownValidator3=false;
-                                                                });
+                                                                else{
+                                                                  setState(() {
+                                                                    countrycon
+                                                                        .text =
+                                                                    value!;
+                                                                    dropdownValidator3=false;
+                                                                  });
+                                                                }
 
                                                               },
                                                               buttonStyleData:
@@ -4698,9 +5352,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             ),
                                                           ),
                                                         ),
-                                                        dropdownValidator3==true&&countrycon.text=="Select Country"
-
-                                                        ?Text("Field is required",style:TextStyle(color:Colors.red,fontSize:13)):const SizedBox()
+                                                        dropdownValidator3==true&&countrycon.text=="Select Country" ?Text("Field is required",style:TextStyle(color:Colors.red,fontSize:13)):const SizedBox()
 
                                                       ],
                                                     ),
@@ -4795,14 +5447,30 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                                 3)),
                                                                     child:
                                                                         TextFormField(
+                                                                          readOnly:true,
                                                                             autovalidateMode: AutovalidateMode.onUserInteraction,
-                                                                      controller:
-                                                                          yearPassedcon,
+                                                                      controller: yearPassedcon,
                                                                       inputFormatters: [
                                                                         FilteringTextInputFormatter
                                                                             .allow(
                                                                                 RegExp("[0-9]")),
                                                                       ],
+                                                                      onTap:() async {
+                                                                        final DateTime? picked = await showDatePicker(
+                                                                          context: context,
+                                                                          initialDate: DateTime.now(),
+                                                                          firstDate: DateTime(1900),
+                                                                          lastDate: DateTime.now(),
+                                                                          initialDatePickerMode: DatePickerMode.year,
+                                                                        );
+
+                                                                        if (picked != null && picked != DateTime.now()) {
+                                                                          print('Selected year: ${picked.year}');
+                                                                          setState((){
+                                                                            yearPassedcon.text=picked.year.toString();
+                                                                          });
+                                                                        }
+                                                                      },
                                                                       decoration:
                                                                           const InputDecoration(
                                                                         border: InputBorder
@@ -4832,7 +5500,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               children: [
                                                                 KText(
                                                                   text:
-                                                                      'Subject/Stream',
+                                                                      'Department',
                                                                   style:
                                                                       SafeGoogleFont(
                                                                     'Nunito',
@@ -4861,13 +5529,70 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                             BorderRadius.circular(
                                                                                 3)),
                                                                     child:
-                                                                        TextFormField(
+                                                                    DropdownButtonHideUnderline(
+                                                                      child:
+                                                                      DropdownButtonFormField2<
+                                                                          String>(
+                                                                        isExpanded:true,
+                                                                        hint: Text(
+                                                                          'Select Department',
+                                                                          style:
+                                                                          SafeGoogleFont(
+                                                                            'Nunito',
+                                                                            fontSize:
+                                                                            20 * ffem,
+                                                                          ),
+                                                                        ),
+                                                                        items: departmentDataList
+                                                                            .map((String
+                                                                        item) =>
+                                                                            DropdownMenuItem<
+                                                                                String>(
+                                                                              value: item,
+                                                                              child: Text(
+                                                                                item,
+                                                                                style:
+                                                                                SafeGoogleFont(
+                                                                                  'Nunito',
+                                                                                  fontSize:
+                                                                                  20 *
+                                                                                      ffem,
+                                                                                ),
+                                                                              ),
+                                                                            )).toList(),
+                                                                        value:
+                                                                        subjectStremdcon.text,
+                                                                        onChanged:
+                                                                            (String? value) {
+                                                                          setState(() {
+                                                                            subjectStremdcon.text =
+                                                                            value!;
+                                                                          });
+
+                                                                        },
+                                                                        buttonStyleData:
+                                                                        const ButtonStyleData(
+
+
+                                                                        ),
+                                                                        menuItemStyleData:
+                                                                        const MenuItemStyleData(
+
+                                                                        ),
+                                                                        decoration:
+                                                                        const InputDecoration(
+                                                                            border:
+                                                                            InputBorder
+                                                                                .none),
+                                                                      ),
+                                                                    ),
+                                                                      /*  TextFormField(
                                                                       controller:
                                                                           subjectStremdcon,
                                                                       inputFormatters: [
                                                                         FilteringTextInputFormatter
                                                                             .allow(
-                                                                                RegExp("[a-zA-Z]")),
+                                                                                RegExp("[a-zA-Z ]")),
                                                                       ],
                                                                       decoration:
                                                                           const InputDecoration(
@@ -4882,7 +5607,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                                 10),
                                                                       ),
                                                                       // validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                                    ))
+                                                                    )*/
+                                                                                )
                                                               ],
                                                             ),
                                                           ),
@@ -4940,7 +5666,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                       inputFormatters: [
                                                                         FilteringTextInputFormatter
                                                                             .allow(
-                                                                                RegExp("[a-zA-Z]")),
+                                                                                RegExp("[a-zA-Z ]")),
                                                                       ],
                                                                       decoration:
                                                                           const InputDecoration(
@@ -5005,7 +5731,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                       inputFormatters: [
                                                                         FilteringTextInputFormatter
                                                                             .allow(
-                                                                                RegExp("[a-zA-Z0-9]")),
+                                                                                RegExp("[a-zA-Z0-9 ]")),
                                                                       ],
                                                                       decoration:
                                                                           const InputDecoration(
@@ -5076,7 +5802,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                       inputFormatters: [
                                                                         FilteringTextInputFormatter
                                                                             .allow(
-                                                                                RegExp("[a-zA-Z0-9]")),
+                                                                                RegExp("[a-zA-Z0-9 ]")),
                                                                       ],
                                                                       decoration:
                                                                           const InputDecoration(
@@ -5139,7 +5865,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                       inputFormatters: [
                                                                         FilteringTextInputFormatter
                                                                             .allow(
-                                                                                RegExp("[a-zA-Z0-9]")),
+                                                                                RegExp("[a-zA-Z0-9 ]")),
                                                                       ],
                                                                       decoration:
                                                                           const InputDecoration(
@@ -5209,7 +5935,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               inputFormatters: [
                                                                 FilteringTextInputFormatter
                                                                     .allow(RegExp(
-                                                                        "[a-zA-Z]")),
+                                                                        "[a-zA-Z ,]")),
                                                               ],
                                                               decoration:
                                                                   const InputDecoration(
@@ -5303,7 +6029,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           inputFormatters: [
                                                             FilteringTextInputFormatter
                                                                 .allow(RegExp(
-                                                                    "[a-zA-Z]")),
+                                                                    "[a-zA-Z ]")),
                                                           ],
                                                           decoration:
                                                               const InputDecoration(
@@ -5352,7 +6078,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           inputFormatters: [
                                                             FilteringTextInputFormatter
                                                                 .allow(RegExp(
-                                                                    "[a-zA-Z]")),
+                                                                    "[a-zA-Z ]")),
                                                           ],
                                                           decoration:
                                                               const InputDecoration(
@@ -5469,8 +6195,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             onChanged:
                                                                 (String? value) {
                                                               setState(() {
-                                                                alumniEmployedController
-                                                                    .text =
+                                                                alumniEmployedController.text =
                                                                 value!;
                                                               });
 
@@ -5552,6 +6277,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               ],
                                             ),
                                             SizedBox(height: height/36.95),
+                                            alumniEmployedController.text=="Yes"?
                                             Row(
                                               children: [
                                                 SizedBox(
@@ -5590,7 +6316,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             inputFormatters: [
                                                               FilteringTextInputFormatter
                                                                   .allow(RegExp(
-                                                                  "[a-zA-Z]")),
+                                                                  "[a-zA-Z ]")),
                                                             ],
                                                             decoration:
                                                             const InputDecoration(
@@ -5644,7 +6370,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             inputFormatters: [
                                                               FilteringTextInputFormatter
                                                                   .allow(RegExp(
-                                                                  "[a-zA-Z]")),
+                                                                  "[a-zA-Z ]")),
                                                             ],
                                                             decoration:
                                                             const InputDecoration(
@@ -5699,7 +6425,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             inputFormatters: [
                                                               FilteringTextInputFormatter
                                                                   .allow(RegExp(
-                                                                  "[a-zA-Z]")),
+                                                                  "[a-zA-Z ]")),
                                                             ],
                                                             decoration:
                                                             const InputDecoration(
@@ -5717,7 +6443,177 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   ),
                                                 ),
                                               ],
-                                            ),
+                                            ):
+                                            alumniEmployedController.text=="Own Business"?
+                                            Row(
+                                              children: [
+
+                                               /* SizedBox(width: width/38.4),
+                                                SizedBox(
+                                                  height: height/9.369,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                    children: [
+                                                      KText(
+                                                        text: 'Designation',
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: 20 * ffem,
+                                                          fontWeight:
+                                                          FontWeight.w700,
+                                                          height:
+                                                          1.3625 * ffem / fem,
+                                                          color:
+                                                          const Color(0xff000000),
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: height/123.1666),
+                                                      Container(
+                                                          height: height/15.114,
+                                                          width: width/4.6545,
+                                                          decoration: BoxDecoration(
+                                                              color: const Color(
+                                                                  0xffDDDEEE),
+                                                              borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                  3)),
+                                                          child: TextFormField(
+                                                            controller:
+                                                            designationcon,
+                                                            inputFormatters: [
+                                                              FilteringTextInputFormatter
+                                                                  .allow(RegExp(
+                                                                  "[a-zA-Z]")),
+                                                            ],
+                                                            decoration:
+                                                            const InputDecoration(
+                                                              border: InputBorder
+                                                                  .none,
+                                                              contentPadding:
+                                                              EdgeInsets.only(
+                                                                  bottom: 10,
+                                                                  top: 2,
+                                                                  left: 10),
+                                                            ),
+                                                            //validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                                          ))
+                                                    ],
+                                                  ),
+                                                ),*/
+
+                                                SizedBox(
+                                                  height: height/9.369,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                    children: [
+                                                      KText(
+                                                        text:
+                                                        "Company Name",
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: 20 * ffem,
+                                                          fontWeight:
+                                                          FontWeight.w700,
+                                                          height:
+                                                          1.3625 * ffem / fem,
+                                                          color:
+                                                          const Color(0xff000000),
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: height/123.1666),
+                                                      Container(
+                                                          height: height/15.114,
+                                                          width: width/4.6545,
+                                                          decoration: BoxDecoration(
+                                                              color: const Color(
+                                                                  0xffDDDEEE),
+                                                              borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                  3)),
+                                                          child: TextFormField(
+                                                            controller:
+                                                            company_concerncon,
+                                                            inputFormatters: [
+                                                              FilteringTextInputFormatter
+                                                                  .allow(RegExp(
+                                                                  "[a-zA-Z ]")),
+                                                            ],
+                                                            decoration:
+                                                            const InputDecoration(
+                                                              border: InputBorder
+                                                                  .none,
+                                                              contentPadding:
+                                                              EdgeInsets.only(
+                                                                  bottom: 10,
+                                                                  top: 2,
+                                                                  left: 10),
+                                                            ),
+                                                            // validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                                          ))
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(width: width/38.4),
+                                                SizedBox(
+                                                  height: height/9.369,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                    children: [
+                                                      KText(
+                                                        text: 'Type',
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: 20 * ffem,
+                                                          fontWeight:
+                                                          FontWeight.w700,
+                                                          height:
+                                                          1.3625 * ffem / fem,
+                                                          color:
+                                                          const Color(0xff000000),
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: height/123.1666),
+                                                      Container(
+                                                          height: height/15.114,
+                                                          width: width/4.6545,
+                                                          decoration: BoxDecoration(
+                                                              color: const Color(
+                                                                  0xffDDDEEE),
+                                                              borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                  3)),
+                                                          child: TextFormField(
+                                                            controller:
+                                                            occupationcon,
+                                                            inputFormatters: [
+                                                              FilteringTextInputFormatter
+                                                                  .allow(RegExp(
+                                                                  "[a-zA-Z ]")),
+                                                            ],
+                                                            decoration:
+                                                            const InputDecoration(
+                                                              border: InputBorder
+                                                                  .none,
+                                                              contentPadding:
+                                                              EdgeInsets.only(
+                                                                  bottom: 10,
+                                                                  top: 2,
+                                                                  left: 10),
+                                                            ),
+                                                            // validator: (value) => value!.isEmpty ? 'Field is required' : null,
+                                                          ))
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ):
+                                            const SizedBox(),
 
                                             ///Material Status
                                             SizedBox(height: height/36.95),
@@ -5890,7 +6786,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                     inputFormatters: [
                                                                       FilteringTextInputFormatter
                                                                           .allow(RegExp(
-                                                                              "[a-zA-Z]")),
+                                                                              "[a-zA-Z ]")),
                                                                     ],
                                                                     decoration:
                                                                         const InputDecoration(
@@ -6074,13 +6970,59 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                                 ///save button
                                                 GestureDetector(
-                                                  onTap: () {
-                                                    if (_formkey.currentState!
-                                                        .validate()) {
-                                                      userdatecreatefunc();
+                                                  onTap:Loading==false? () {
+                                                    if(citycon.text=="Select City"){
+                                                      setState(() {
+                                                        dropdownValidator2=true;
+                                                      });
+                                                    }
+
+                                                    if(statecon.text=="Select State"){
+                                                      setState(() {
+                                                        dropdownValidator=true;
+                                                      });
+                                                    }
+
+                                                    if(countrycon.text=="Select Country"){
+                                                      setState(() {
+                                                        dropdownValidator3=true;
+                                                      });
+                                                    }
+
+                                                    if (_formkey.currentState!.validate()) {
+
+                                                      if(citycon.text=="Select City"){
+                                                        setState(() {
+                                                          dropdownValidator2=true;
+                                                        });
+                                                      }
+
+                                                      if(statecon.text=="Select State"){
+                                                        setState(() {
+                                                          dropdownValidator=true;
+                                                        });
+                                                      }
+
+                                                      if(countrycon.text=="Select Country"){
+                                                        setState(() {
+                                                          dropdownValidator3=true;
+                                                        });
+                                                      }
+                                                       if(dropdownValidator==false&&dropdownValidator2==false&&dropdownValidator3==false){
+
+                                                         print("Finalaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+                                                         userdatecreatefunc();
+                                                       }
+                                                      else{
+
+                                                        print("errorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
+                                                      }
+
+
+
 
                                                     }
-                                                  },
+                                                  }:(){},
                                                   child: Container(
                                                       height: height/18.475,
                                                       width: width/12.8,
@@ -6195,1108 +7137,1579 @@ class _Users_ScreenState extends State<Users_Screen> {
                         ),
                       ),
                     )
+          
                   : FadeInRight(
                       child: SizedBox(
-                        width: 1574 * fem,
+                        width: 1610 * fem,
                         height: height/1.08,
-                        child: SingleChildScrollView(
-                          physics: const ScrollPhysics(),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ///Alumni text
-                              // SizedBox(height: height / 26.04),
-                              Padding(
-                                padding:  EdgeInsets.only(left:width/190.2),
-                                child: KText(
-                                  text: 'Alumni List',
-                                  style: SafeGoogleFont(
-                                    'Nunito',
-                                    fontSize: 24 * ffem,
-                                    fontWeight: FontWeight.w700,
-                                    height: 1.3625 * ffem / fem,
-                                    color: const Color(0xff030229),
-                                  ),
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  Container(
-                                    width: width / 1.220,
-                                    height: 54.96 * fem,
-                                    margin:EdgeInsets.only(top:height/65.1),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.end,
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              Useradd = !Useradd;
-                                            });
-                                          },
-                                          child: Container(
-                                            // bgmXF (8:2325)
-                                            padding: EdgeInsets.fromLTRB(
-                                                26.07 * fem,
-                                                17.04 * fem,
-                                                56.96 * fem,
-                                                12.72 * fem),
-                                            height: double.infinity,
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xff605bff),
-                                              borderRadius:
-                                              BorderRadius.circular(
-                                                  10 * fem),
-                                            ),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  // plusUAm (8:2329)
-                                                  margin: EdgeInsets.fromLTRB(
-                                                      0 * fem,
-                                                      0 * fem,
-                                                      21.04 * fem,
-                                                      4.32 * fem),
-                                                  width: 13.04 * fem,
-                                                  height: 13.04 * fem,
-                                                  child: Image.asset(
-                                                    'assets/images/plus.png',
-                                                    width: 13.04 * fem,
-                                                    height: 13.04 * fem,
-                                                  ),
-                                                ),
-                                                KText(
-                                                  // addalumniytD (8:2328)
-                                                  text: Useradd == false
-                                                      ? 'Add Alumni'
-                                                      : 'Close Alumni',
-                                                  style: SafeGoogleFont(
-                                                    'Nunito',
-                                                    fontSize: 18 * ffem,
-                                                    fontWeight: FontWeight.w400,
-                                                    height: 1.3625 * ffem / fem,
-                                                    color: const Color(0xffffffff),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
+                        child: Stack(
+                            alignment:Alignment.topCenter,
+                            children:[
+                          SingleChildScrollView(
+                            physics: const ScrollPhysics(),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ///Alumni text
 
 
-                                      ],
+                                Padding(
+                                  padding:  EdgeInsets.only(left:width/190.2),
+                                  child: KText(
+                                    text: 'Alumni List',
+                                    style: SafeGoogleFont(
+                                      'Nunito',
+                                      fontSize: 24 * ffem,
+                                      fontWeight: FontWeight.w700,
+                                      height: 1.3625 * ffem / fem,
+                                      color: const Color(0xff030229),
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
 
-                              SizedBox(height: height / 26.04),
+                                Row(
+                                  children: [
 
-                              ///stream titles text
-                              Row(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.center,
-                                children: [
-                                  /* SizedBox(
-                                            width: width / 6.5,
-                                            height: double.infinity,
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  // namekWM (8:2306)
-                                                  margin: EdgeInsets.fromLTRB(
-                                                      0 * fem,
-                                                      0 * fem,
-                                                      14.75 * fem,
-                                                      0 * fem),
-                                                  child: KText(
-                                                    text: 'Name',
-                                                    style: SafeGoogleFont(
-                                                      'Nunito',
-                                                      fontSize: 15 * ffem,
-                                                      fontWeight: FontWeight.w400,
-                                                      height: 1.3625 * ffem / fem,
-                                                      color: const Color(0xff030229),
-                                                    ),
-                                                  ),
-                                                ),
-                                                InkWell(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      filtervalue = !filtervalue;
-                                                    });
-                                                  },
-                                                  child: Transform.rotate(
-                                                    angle: filtervalue ? 200 : 0,
-                                                    child: Opacity(
-                                                      // arrowdown2TvZ (8:2307)
-                                                      opacity: 0.7,
-                                                      child: Container(
-                                                        margin:
-                                                            EdgeInsets.fromLTRB(
-                                                                0 * fem,
-                                                                1.6 * fem,
-                                                                0 * fem,
-                                                                0 * fem),
-                                                        width: 7.82 * fem,
-                                                        height: 6.52 * fem,
-                                                        child: Image.asset(
-                                                          'assets/images/arrow-down-2.png',
-                                                          width: 7.82 * fem,
-                                                          height: 6.52 * fem,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: width / 6.5,
-                                            height: double.infinity,
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  // emailfv9 (8:2312)
-                                                  margin: EdgeInsets.fromLTRB(
-                                                      0 * fem,
-                                                      0 * fem,
-                                                      14.15 * fem,
-                                                      0 * fem),
-                                                  child: KText(
-                                                    text: 'Email',
-                                                    style: SafeGoogleFont(
-                                                      'Nunito',
-                                                      fontSize: 15 * ffem,
-                                                      fontWeight: FontWeight.w400,
-                                                      height: 1.3625 * ffem / fem,
-                                                      color: const Color(0xff030229),
-                                                    ),
-                                                  ),
-                                                ),
-                                                InkWell(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      filtervalue = !filtervalue;
-                                                    });
-                                                  },
-                                                  child: Transform.rotate(
-                                                    angle: filtervalue ? 200 : 0,
-                                                    child: Opacity(
-                                                      // arrowdown2TvZ (8:2307)
-                                                      opacity: 0.7,
-                                                      child: Container(
-                                                        margin:
-                                                            EdgeInsets.fromLTRB(
-                                                                0 * fem,
-                                                                1.6 * fem,
-                                                                0 * fem,
-                                                                0 * fem),
-                                                        width: 7.82 * fem,
-                                                        height: 6.52 * fem,
-                                                        child: Image.asset(
-                                                          'assets/images/arrow-down-2.png',
-                                                          width: 7.82 * fem,
-                                                          height: 6.52 * fem,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: width / 10.1066,
-                                            height: double.infinity,
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  // phonenumberntH (8:2316)
-                                                  margin: EdgeInsets.fromLTRB(
-                                                      0 * fem,
-                                                      0 * fem,
-                                                      18.33 * fem,
-                                                      0 * fem),
-                                                  child: KText(
-                                                    text: 'Phone number',
-                                                    style: SafeGoogleFont(
-                                                      'Nunito',
-                                                      fontSize: 15 * ffem,
-                                                      fontWeight: FontWeight.w400,
-                                                      height: 1.3625 * ffem / fem,
-                                                      color: const Color(0xff030229),
-                                                    ),
-                                                  ),
-                                                ),
-                                                InkWell(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      filtervalue = !filtervalue;
-                                                    });
-                                                  },
-                                                  child: Transform.rotate(
-                                                    angle: filtervalue ? 200 : 0,
-                                                    child: Opacity(
-                                                      // arrowdown2TvZ (8:2307)
-                                                      opacity: 0.7,
-                                                      child: Container(
-                                                        margin:
-                                                            EdgeInsets.fromLTRB(
-                                                                0 * fem,
-                                                                1.6 * fem,
-                                                                0 * fem,
-                                                                0 * fem),
-                                                        width: 7.82 * fem,
-                                                        height: 6.52 * fem,
-                                                        child: Image.asset(
-                                                          'assets/images/arrow-down-2.png',
-                                                          width: 7.82 * fem,
-                                                          height: 6.52 * fem,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: width / 10.2,
-                                            height: double.infinity,
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                SizedBox(width: width / 54.64),
-                                                Container(
-                                                  // gender8qf (8:2320)
-                                                  margin: EdgeInsets.fromLTRB(
-                                                      0 * fem,
-                                                      0 * fem,
-                                                      15.18 * fem,
-                                                      0 * fem),
-                                                  child: KText(
-                                                    text: 'Gender',
-                                                    style: SafeGoogleFont(
-                                                      'Nunito',
-                                                      fontSize: 15 * ffem,
-                                                      fontWeight: FontWeight.w400,
-                                                      height: 1.3625 * ffem / fem,
-                                                      color: const Color(0xff030229),
-                                                    ),
-                                                  ),
-                                                ),
-                                                InkWell(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      filtervalue = !filtervalue;
-                                                    });
-                                                  },
-                                                  child: Transform.rotate(
-                                                    angle: filtervalue ? 200 : 0,
-                                                    child: Opacity(
-                                                      // arrowdown2TvZ (8:2307)
-                                                      opacity: 0.7,
-                                                      child: Container(
-                                                        margin:
-                                                            EdgeInsets.fromLTRB(
-                                                                0 * fem,
-                                                                1.6 * fem,
-                                                                0 * fem,
-                                                                0 * fem),
-                                                        width: 7.82 * fem,
-                                                        height: 6.52 * fem,
-                                                        child: Image.asset(
-                                                          'assets/images/arrow-down-2.png',
-                                                          width: 7.82 * fem,
-                                                          height: 6.52 * fem,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: width / 10.8,
-                                            height: double.infinity,
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                SizedBox(width: width / 54.64),
-                                                Container(
-                                                  // gender8qf (8:2320)
-                                                  margin: EdgeInsets.fromLTRB(
-                                                      0 * fem,
-                                                      0 * fem,
-                                                      15.18 * fem,
-                                                      0 * fem),
-                                                  child: KText(
-                                                    text: 'Status',
-                                                    style: SafeGoogleFont(
-                                                      'Nunito',
-                                                      fontSize: 15 * ffem,
-                                                      fontWeight: FontWeight.w400,
-                                                      height: 1.3625 * ffem / fem,
-                                                      color: const Color(0xff030229),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Opacity(
-                                                  // arrowdown5rFs (8:2318)
-                                                  opacity: 0.0,
-                                                  child: Container(
+                                    Container(
+                                      width: 1590 * fem,
+                                      height: 54.96 * fem,
+                                      margin:EdgeInsets.only(top:height/65.1,left:10),
+                                      child: Row(
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                Useradd = !Useradd;
+                                              });
+                                            },
+                                            child: Container(
+                                              // bgmXF (8:2325)
+                                              padding: EdgeInsets.fromLTRB(
+                                                  26.07 * fem,
+                                                  17.04 * fem,
+                                                  56.96 * fem,
+                                                  12.72 * fem),
+                                              height: double.infinity,
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xff605bff),
+                                                borderRadius:
+                                                BorderRadius.circular(
+                                                    10 * fem),
+                                              ),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    // plusUAm (8:2329)
                                                     margin: EdgeInsets.fromLTRB(
                                                         0 * fem,
-                                                        1.6 * fem,
                                                         0 * fem,
-                                                        0 * fem),
-                                                    width: 7.82 * fem,
-                                                    height: 6.52 * fem,
+                                                        21.04 * fem,
+                                                        4.32 * fem),
+                                                    width: 13.04 * fem,
+                                                    height: 13.04 * fem,
                                                     child: Image.asset(
-                                                      'assets/images/arrow-down-5.png',
-                                                      width: 7.82 * fem,
-                                                      height: 6.52 * fem,
+                                                      'assets/images/plus.png',
+                                                      width: 13.04 * fem,
+                                                      height: 13.04 * fem,
                                                     ),
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: width / 10.8,
-                                            height: double.infinity,
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                KText(
-                                                  text: 'Create On',
-                                                  style: SafeGoogleFont(
-                                                    'Nunito',
-
-                                                    color: const Color(0xff030229),
-                                                  ),
-                                                ),
-
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: width / 14.8,
-                                            height: double.infinity,
-                                            child: Row(
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                KText(
-                                                  text: 'Actions',
-                                                  style: SafeGoogleFont(
-                                                    'Nunito',
-                                                    color: const Color(0xff030229),
-                                                  ),
-                                                ),
-                                                Opacity(
-                                                  // arrowdown5rFs (8:2318)
-                                                  opacity: 0.0,
-                                                  child: Container(
-                                                    margin: EdgeInsets.fromLTRB(
-                                                        0 * fem,
-                                                        1.6 * fem,
-                                                        0 * fem,
-                                                        0 * fem),
-                                                    width: 7.82 * fem,
-                                                    height: 6.52 * fem,
-                                                    child: Image.asset(
-                                                      'assets/images/arrow-down-5.png',
-                                                      width: 7.82 * fem,
-                                                      height: 6.52 * fem,
+                                                  KText(
+                                                    // addalumniytD (8:2328)
+                                                    text: Useradd == false
+                                                        ? 'Add Alumni'
+                                                        : 'Close Alumni',
+                                                    style: SafeGoogleFont(
+                                                      'Nunito',
+                                                      fontSize: 18 * ffem,
+                                                      fontWeight: FontWeight.w400,
+                                                      height: 1.3625 * ffem / fem,
+                                                      color: const Color(0xffffffff),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
-                                          ),*/
-                                  ///NAme
-                                  Container(
-                                    color: Colors.white,
-                                    width: width/7.2,
-                                    height: height/14.78,
-                                    alignment: Alignment.center,
-                                    padding:EdgeInsets.only(left:width/68.3)
-                                    ,                                      child: Center(
+                                          ),
+
+                                          ///Search Container
+                                          Padding(
+                                              padding:  EdgeInsets.only(left: width/2.48,),
+                                              child:
+                                              Material(
+                                                elevation:3,
+
+                                                color:const Color(0xffFFFFFF),
+                                                borderRadius:BorderRadius.circular(5),
+                                                child:Container(
+                                                    height:height/5.464,
+                                                    width:width/5.464,
+                                                    decoration:BoxDecoration(
+                                                        color:const Color(0xffFFFFFF),
+                                                        borderRadius:BorderRadius.circular(5)
+                                                    ),
+                                                    child:Padding(
+                                                      padding:  EdgeInsets.only(left:width/81.375,right:width/341.5,bottom:height/61.375,top:height/61.375),
+                                                      child: TextField(
+                                                          style:SafeGoogleFont(
+                                                            'Nunito',),
+                                                          controller:SerachController,
+                                                          decoration: InputDecoration(
+                                                              hintText: "Search",
+                                                              border:InputBorder.none
+                                                          ),
+                                                          onChanged:(value){
+                                                            if(value.isNotEmpty){
+                                                              setState((){
+                                                                SerachValue=value.toString();
+                                                              });
+
+                                                            }
+                                                            else{
+                                                              setState((){
+                                                                SerachValue="";
+                                                              });
+                                                            }
+                                                          }
+                                                      ),
+                                                    )
+                                                ),
+                                              )
+                                          ),
+
+
+                                          Useradd==true?const SizedBox():
+                                          Padding(
+                                            padding:  EdgeInsets.only(left: width/40.6,),
+                                            child: InkWell(
+                                              key: filterDataKey,
+                                              onTap: () async {
+                                                filterDataMenuItem( context, filterDataKey, size);
+                                              },
+                                              child: Container(
+                                                height: height / 16.275,
+                                                decoration: BoxDecoration(
+                                                  color: Constants().primaryAppColor,
+                                                  borderRadius: BorderRadius.circular(8),
+                                                  boxShadow: const [
+                                                    BoxShadow(
+                                                      color: Colors.black26,
+                                                      offset: Offset(1, 2),
+                                                      blurRadius: 3,
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: width / 227.66),
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(Icons.filter_list_alt,color:Colors.white),
+                                                      KText(
+                                                        text: " Filter by Date",
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: width / 120.571,
+                                                          color:Colors.white,
+                                                          fontWeight: FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+
+                                        ],
+                                      ),
+                                    ),
+
+
+                                  ],
+                                ),
+
+                                SizedBox(height: height / 26.04),
+
+                                ///stream titles text
+                                Padding(
+                                  padding:  EdgeInsets.only(left:width/170.75),
+                                  child: Container(
+                                    width: width / 1.21,
+                                    height: 78.22 * fem,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xffffffff),
+                                      borderRadius:
+                                      BorderRadius.circular(10 * fem),),
                                     child: Row(
                                       crossAxisAlignment:
                                       CrossAxisAlignment.center,
                                       children: [
-                                        KText(
-                                          text: "Name",
-                                          style: SafeGoogleFont(
-                                            'Nunito',
-                                            color: const Color(0xff030229),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 8),
-                                          child: InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                filtervalue = !filtervalue;
-                                              });
-                                            },
-                                            child: Transform.rotate(
-                                              angle: filtervalue ? 200 : 0,
-                                              child: Opacity(
-                                                // arrowdown2TvZ (8:2307)
-                                                opacity: 0.7,
-                                                child: Container(
-                                                  width: width/153.6,
-                                                  height: height/73.9,
-                                                  child: Image.asset(
-                                                    'assets/images/arrow-down-2.png',
-                                                    width: width/153.6,
-                                                    height: height/73.9,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  ),
-
-                                  Container(
-                                    color: Colors.white,
-                                    width: width/6.2,
-                                    height: height/14.78,
-                                    alignment: Alignment.center,
-                                    padding:EdgeInsets.only(left:width/34.15),
-                                    child: Center(
-                                      child: Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        children: [
-                                          KText(
-                                            text: "Email",
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              color: const Color(0xff030229),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 8),
-                                            child: InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  filtervalue = !filtervalue;
-                                                });
-                                              },
-                                              child: Transform.rotate(
-                                                angle: filtervalue ? 200 : 0,
-                                                child: Opacity(
-                                                  // arrowdown2TvZ (8:2307)
-                                                  opacity: 0.7,
-                                                  child: Container(
-                                                    width: width/153.6,
-                                                    height: height/73.9,
-                                                    child: Image.asset(
-                                                      'assets/images/arrow-down-2.png',
-                                                      width: width/153.6,
-                                                      height: height/73.9,
+                                        /* SizedBox(
+                                                width: width / 6.5,
+                                                height: double.infinity,
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Container(
+                                                      // namekWM (8:2306)
+                                                      margin: EdgeInsets.fromLTRB(
+                                                          0 * fem,
+                                                          0 * fem,
+                                                          14.75 * fem,
+                                                          0 * fem),
+                                                      child: KText(
+                                                        text: 'Name',
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: 15 * ffem,
+                                                          fontWeight: FontWeight.w400,
+                                                          height: 1.3625 * ffem / fem,
+                                                          color: const Color(0xff030229),
+                                                        ),
+                                                      ),
                                                     ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-
-                                  Container(
-                                    color: Colors.white,
-                                    width: width/7.2,
-                                    height: height/14.78,
-                                    alignment: Alignment.center,
-                                    padding:EdgeInsets.only(left:width/45.533),
-                                    child: Center(
-                                      child: Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        children: [
-                                          KText(
-                                            text: "Phone Number",
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              color: const Color(0xff030229),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 8),
-                                            child: InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  filtervalue = !filtervalue;
-                                                });
-                                              },
-                                              child: Transform.rotate(
-                                                angle: filtervalue ? 200 : 0,
-                                                child: Opacity(
-                                                  // arrowdown2TvZ (8:2307)
-                                                  opacity: 0.7,
-                                                  child: Container(
-                                                    width: width/153.6,
-                                                    height: height/73.9,
-                                                    child: Image.asset(
-                                                      'assets/images/arrow-down-2.png',
-                                                      width: width/153.6,
-                                                      height: height/73.9,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-
-                                  Container(
-                                    color: Colors.white,
-                                    width: width/10,
-                                    height: height/14.78,
-                                    alignment: Alignment.center,
-                                    child: Center(
-                                      child: Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        children: [
-                                          KText(
-                                            text: "Gender",
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              color: const Color(0xff030229),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 8),
-                                            child: InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  filtervalue = !filtervalue;
-                                                });
-                                              },
-                                              child: Transform.rotate(
-                                                angle: filtervalue ? 200 : 0,
-                                                child: Opacity(
-                                                  // arrowdown2TvZ (8:2307)
-                                                  opacity: 0.7,
-                                                  child: Container(
-                                                    width: width/153.6,
-                                                    height: height/73.9,
-                                                    child: Image.asset(
-                                                      'assets/images/arrow-down-2.png',
-                                                      width: width/153.6,
-                                                      height: height/73.9,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-
-                                  Container(
-                                    color: Colors.white,
-                                    width: width/11.5,
-                                    height: height/14.78,
-                                    alignment: Alignment.center,
-
-                                    child: Center(
-                                      child: Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        children: [
-                                          KText(
-                                            text: "Status",
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              color: const Color(0xff030229),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 8),
-                                            child: InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  filtervalue = !filtervalue;
-                                                });
-                                              },
-                                              child: Transform.rotate(
-                                                angle: filtervalue ? 200 : 0,
-                                                child: Opacity(
-                                                  // arrowdown2TvZ (8:2307)
-                                                  opacity: 0.7,
-                                                  child: Container(
-                                                    width: width/153.6,
-                                                    height: height/73.9,
-                                                    child: Image.asset(
-                                                      'assets/images/arrow-down-2.png',
-                                                      width: width/153.6,
-                                                      height: height/73.9,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-
-                                  Container(
-                                    color: Colors.white,
-                                    width: width/11,
-                                    height: height/14.78,
-                                    alignment: Alignment.center,
-                                    child: Center(
-                                      child: Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        children: [
-                                          KText(
-                                            text: "Created on",
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              color: const Color(0xff030229),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 8),
-                                            child: InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  filtervalue = !filtervalue;
-                                                });
-                                              },
-                                              child: Transform.rotate(
-                                                angle: filtervalue ? 200 : 0,
-                                                child: Opacity(
-                                                  // arrowdown2TvZ (8:2307)
-                                                  opacity: 0.7,
-                                                  child: Container(
-                                                    width: width/153.6,
-                                                    height: height/73.9,
-                                                    child: Image.asset(
-                                                      'assets/images/arrow-down-2.png',
-                                                      width: width/153.6,
-                                                      height: height/73.9,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-
-                                  Container(
-                                    color: Colors.white,
-                                    width: width/9.98,
-                                    height: height/14.78,
-                                    alignment: Alignment.center,
-                                    child: Center(
-                                      child: Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        children: [
-                                          KText(
-                                            text: "Actions",
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              color: const Color(0xff030229),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 8),
-                                            child: InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  filtervalue = !filtervalue;
-                                                });
-                                              },
-                                              child: Transform.rotate(
-                                                angle: filtervalue ? 200 : 0,
-                                                child: Opacity(
-                                                  // arrowdown2TvZ (8:2307)
-                                                  opacity: 0.7,
-                                                  child: Container(
-                                                    width: width/153.6,
-                                                    height: height/73.9,
-                                                    child: Image.asset(
-                                                      'assets/images/arrow-down-2.png',
-                                                      width: width/153.6,
-                                                      height: height/73.9,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: height / 65.1),
-                              StreamBuilder(
-                                stream: FirebaseFirestore.instance.collection("Users")
-                                    .orderBy("Name", descending: filtervalue)
-                                    .snapshots(),
-                                builder: (context, snapshot) {
-                                  if (!snapshot.hasData) {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }
-                                  if (snapshot.hasData == null) {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }
-
-                                  return ListView.builder(
-                                    shrinkWrap: true,
-                                    physics:
-                                    const NeverScrollableScrollPhysics(),
-                                    itemCount: snapshot.data!.docs.length,
-                                    itemBuilder: (context, index) {
-                                      var _userdata = snapshot.data!.docs[index];
-                                      List<GlobalKey<State<StatefulWidget>>> popMenuKeys = List.generate(snapshot.data!.docs.length, (index) => GlobalKey(),);
-
-                                      return Container(
-                                        padding: EdgeInsets.fromLTRB(26.07 * fem, 19.56 * fem, 35.11 * fem, 19.56 * fem),
-                                        width: width / 1.2418,
-                                        height: 78.22 * fem,
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xffffffff),
-                                          borderRadius:
-                                          BorderRadius.circular(10 * fem),
-                                        ),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                          children: [
-                                            SizedBox(
-
-                                              width: width / 6.5,
-                                              child: Row(
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.fromLTRB(
-                                                        0 * fem,
-                                                        0 * fem,
-                                                        14.34 * fem,
-                                                        0 * fem),
-                                                    width: 39.11 * fem,
-                                                    height: double.infinity,
-                                                    decoration: BoxDecoration(
-                                                      color: const Color(0xfff6d0d0),
-                                                      borderRadius:
-                                                      BorderRadius.circular(
-                                                          19.5553703308 *
-                                                              fem),
-                                                    ),
-                                                    child: Center(
-                                                      // imgFVB (8:2248)
-                                                      child: SizedBox(
-                                                        width: double.infinity,
-                                                        height: 39.11 * fem,
-                                                        child: Container(
-                                                          decoration:
-                                                          BoxDecoration(
-                                                            borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                19.5553703308 *
-                                                                    fem),
-                                                            image:
-                                                            DecorationImage(
-                                                              fit: BoxFit.cover,
-                                                              image: NetworkImage(
-                                                                  _userdata[
-                                                                  'UserImg']
-                                                                      .toString()),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          filtervalue = !filtervalue;
+                                                        });
+                                                      },
+                                                      child: Transform.rotate(
+                                                        angle: filtervalue ? 200 : 0,
+                                                        child: Opacity(
+                                                          // arrowdown2TvZ (8:2307)
+                                                          opacity: 0.7,
+                                                          child: Container(
+                                                            margin:
+                                                                EdgeInsets.fromLTRB(
+                                                                    0 * fem,
+                                                                    1.6 * fem,
+                                                                    0 * fem,
+                                                                    0 * fem),
+                                                            width: 7.82 * fem,
+                                                            height: 6.52 * fem,
+                                                            child: Image.asset(
+                                                              'assets/images/arrow-down-2.png',
+                                                              width: 7.82 * fem,
+                                                              height: 6.52 * fem,
                                                             ),
                                                           ),
                                                         ),
                                                       ),
                                                     ),
-                                                  ),
-                                                  Container(
-                                                    margin: EdgeInsets.fromLTRB(
-                                                        0 * fem,
-                                                        4.14 * fem,
-                                                        129.49 * fem,
-                                                        0 * fem),
-                                                    child: KText(
-                                                      text: _userdata['Name'],
-                                                      style: SafeGoogleFont(
-                                                        'Nunito',
-                                                        fontSize: 18 * ffem,
-                                                        fontWeight:
-                                                        FontWeight.w400,
-                                                        height:
-                                                        1.3625 * ffem / fem,
-                                                        color:
-                                                        const Color(0xff030229),
-                                                        textStyle:TextStyle(
-                                                          overflow: TextOverflow.ellipsis
-                                                        )
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: width / 6.5,
+                                                height: double.infinity,
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Container(
+                                                      // emailfv9 (8:2312)
+                                                      margin: EdgeInsets.fromLTRB(
+                                                          0 * fem,
+                                                          0 * fem,
+                                                          14.15 * fem,
+                                                          0 * fem),
+                                                      child: KText(
+                                                        text: 'Email',
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: 15 * ffem,
+                                                          fontWeight: FontWeight.w400,
+                                                          height: 1.3625 * ffem / fem,
+                                                          color: const Color(0xff030229),
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: width / 6.5,
-                                              child: KText(
-                                                text: _userdata['email'],
-                                                style: SafeGoogleFont(
-                                                  'Nunito',
-                                                  fontSize: 18 * ffem,
-                                                  fontWeight: FontWeight.w400,
-                                                  height: 1.3625 * ffem / fem,
-                                                  color: const Color(0xff030229),
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: width / 10.1066,
-                                              child: KText(
-                                                text: _userdata['Phone']
-                                                    .toString(),
-                                                style: SafeGoogleFont(
-                                                  'Nunito',
-                                                  fontSize: 18 * ffem,
-                                                  fontWeight: FontWeight.w400,
-                                                  height: 1.3625 * ffem / fem,
-                                                  color: const Color(0xff030229),
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: width / 10.2,
-                                              child: Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: width / 54.64,
-                                                    right: width / 54.64),
-                                                child: Container(
-                                                  width: width / 34.15,
-                                                  height: double.infinity,
-                                                  decoration: BoxDecoration(
-                                                    color:
-                                                    _userdata['Gender'] ==
-                                                        "Male"
-                                                        ? const Color(0x195b92ff)
-                                                        : const Color(0xffFEF3F0),
-                                                    borderRadius:
-                                                    BorderRadius.circular(
-                                                        33 * fem),
-                                                  ),
-                                                  child: Center(
-                                                    child: KText(
-                                                      text: _userdata['Gender'],
-                                                      style: SafeGoogleFont(
-                                                        'Nunito',
-                                                        fontSize: 16 * ffem,
-                                                        fontWeight:
-                                                        FontWeight.w400,
-                                                        height:
-                                                        1.3625 * ffem / fem,
-                                                        color: _userdata[
-                                                        'Gender'] ==
-                                                            "Male"
-                                                            ? const Color(0xff5b92ff)
-                                                            : const Color(0xffFE8F6B),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          filtervalue = !filtervalue;
+                                                        });
+                                                      },
+                                                      child: Transform.rotate(
+                                                        angle: filtervalue ? 200 : 0,
+                                                        child: Opacity(
+                                                          // arrowdown2TvZ (8:2307)
+                                                          opacity: 0.7,
+                                                          child: Container(
+                                                            margin:
+                                                                EdgeInsets.fromLTRB(
+                                                                    0 * fem,
+                                                                    1.6 * fem,
+                                                                    0 * fem,
+                                                                    0 * fem),
+                                                            width: 7.82 * fem,
+                                                            height: 6.52 * fem,
+                                                            child: Image.asset(
+                                                              'assets/images/arrow-down-2.png',
+                                                              width: 7.82 * fem,
+                                                              height: 6.52 * fem,
+                                                            ),
+                                                          ),
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
+                                                  ],
                                                 ),
                                               ),
-                                            ),
-                                            SizedBox(
-                                              width: width / 10.8,
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                                children: [
-                                                  SizedBox(
-                                                      width: width / 54.64),
-                                                  Container(
-                                                    // gender8qf (8:2320)
-                                                      margin:
-                                                      EdgeInsets.fromLTRB(
+                                              SizedBox(
+                                                width: width / 10.1066,
+                                                height: double.infinity,
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Container(
+                                                      // phonenumberntH (8:2316)
+                                                      margin: EdgeInsets.fromLTRB(
+                                                          0 * fem,
+                                                          0 * fem,
+                                                          18.33 * fem,
+                                                          0 * fem),
+                                                      child: KText(
+                                                        text: 'Phone number',
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: 15 * ffem,
+                                                          fontWeight: FontWeight.w400,
+                                                          height: 1.3625 * ffem / fem,
+                                                          color: const Color(0xff030229),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          filtervalue = !filtervalue;
+                                                        });
+                                                      },
+                                                      child: Transform.rotate(
+                                                        angle: filtervalue ? 200 : 0,
+                                                        child: Opacity(
+                                                          // arrowdown2TvZ (8:2307)
+                                                          opacity: 0.7,
+                                                          child: Container(
+                                                            margin:
+                                                                EdgeInsets.fromLTRB(
+                                                                    0 * fem,
+                                                                    1.6 * fem,
+                                                                    0 * fem,
+                                                                    0 * fem),
+                                                            width: 7.82 * fem,
+                                                            height: 6.52 * fem,
+                                                            child: Image.asset(
+                                                              'assets/images/arrow-down-2.png',
+                                                              width: 7.82 * fem,
+                                                              height: 6.52 * fem,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: width / 10.2,
+                                                height: double.infinity,
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    SizedBox(width: width / 54.64),
+                                                    Container(
+                                                      // gender8qf (8:2320)
+                                                      margin: EdgeInsets.fromLTRB(
                                                           0 * fem,
                                                           0 * fem,
                                                           15.18 * fem,
                                                           0 * fem),
-                                                      padding: const EdgeInsets.only(
-                                                          left: 5),
-                                                      child: _userdata['verifyed'] ==
-                                                          true
-                                                          ? const Icon(
-                                                        Icons.verified,
-                                                        color:
-                                                        Colors.green,
-                                                      )
-                                                          : const Icon(
-                                                        Icons
-                                                            .verified_outlined,
-                                                      )),
-                                                  Opacity(
-                                                    // arrowdown5rFs (8:2318)
-                                                    opacity: 0.0,
-                                                    child: Container(
-                                                      margin:
-                                                      EdgeInsets.fromLTRB(
-                                                          0 * fem,
-                                                          1.6 * fem,
-                                                          0 * fem,
-                                                          0 * fem),
-                                                      width: 7.82 * fem,
-                                                      height: 6.52 * fem,
-                                                      child: Image.asset(
-                                                        'assets/images/arrow-down-5.png',
-                                                        width: 7.82 * fem,
-                                                        height: 6.52 * fem,
+                                                      child: KText(
+                                                        text: 'Gender',
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: 15 * ffem,
+                                                          fontWeight: FontWeight.w400,
+                                                          height: 1.3625 * ffem / fem,
+                                                          color: const Color(0xff030229),
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                ],
+                                                    InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          filtervalue = !filtervalue;
+                                                        });
+                                                      },
+                                                      child: Transform.rotate(
+                                                        angle: filtervalue ? 200 : 0,
+                                                        child: Opacity(
+                                                          // arrowdown2TvZ (8:2307)
+                                                          opacity: 0.7,
+                                                          child: Container(
+                                                            margin:
+                                                                EdgeInsets.fromLTRB(
+                                                                    0 * fem,
+                                                                    1.6 * fem,
+                                                                    0 * fem,
+                                                                    0 * fem),
+                                                            width: 7.82 * fem,
+                                                            height: 6.52 * fem,
+                                                            child: Image.asset(
+                                                              'assets/images/arrow-down-2.png',
+                                                              width: 7.82 * fem,
+                                                              height: 6.52 * fem,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                            SizedBox(
-
-                                              width: width / 10.8,
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                                children: [
-                                                  SizedBox(
-                                                      width: width / 54.64),
-                                                  Container(
-                                                    // gender8qf (8:2320)
-                                                    margin: EdgeInsets.fromLTRB(
-                                                        0 * fem,
-                                                        0 * fem,
-                                                        15.18 * fem,
-                                                        0 * fem),
-                                                    child: KText(
-                                                      text: _userdata['date'],
+                                              SizedBox(
+                                                width: width / 10.8,
+                                                height: double.infinity,
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    SizedBox(width: width / 54.64),
+                                                    Container(
+                                                      // gender8qf (8:2320)
+                                                      margin: EdgeInsets.fromLTRB(
+                                                          0 * fem,
+                                                          0 * fem,
+                                                          15.18 * fem,
+                                                          0 * fem),
+                                                      child: KText(
+                                                        text: 'Status',
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: 15 * ffem,
+                                                          fontWeight: FontWeight.w400,
+                                                          height: 1.3625 * ffem / fem,
+                                                          color: const Color(0xff030229),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Opacity(
+                                                      // arrowdown5rFs (8:2318)
+                                                      opacity: 0.0,
+                                                      child: Container(
+                                                        margin: EdgeInsets.fromLTRB(
+                                                            0 * fem,
+                                                            1.6 * fem,
+                                                            0 * fem,
+                                                            0 * fem),
+                                                        width: 7.82 * fem,
+                                                        height: 6.52 * fem,
+                                                        child: Image.asset(
+                                                          'assets/images/arrow-down-5.png',
+                                                          width: 7.82 * fem,
+                                                          height: 6.52 * fem,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: width / 10.8,
+                                                height: double.infinity,
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    KText(
+                                                      text: 'Create On',
                                                       style: SafeGoogleFont(
                                                         'Nunito',
-                                                        fontSize: 16 * ffem,
-                                                        fontWeight:
-                                                        FontWeight.w400,
-                                                        height:
-                                                        1.3625 * ffem / fem,
+
+                                                        color: const Color(0xff030229),
                                                       ),
                                                     ),
-                                                  ),
-                                                  Opacity(
-                                                    // arrowdown5rFs (8:2318)
-                                                    opacity: 0.0,
-                                                    child: Container(
-                                                      margin:
-                                                      EdgeInsets.fromLTRB(
-                                                          0 * fem,
-                                                          1.6 * fem,
-                                                          0 * fem,
-                                                          0 * fem),
-                                                      width: 7.82 * fem,
-                                                      height: 6.52 * fem,
-                                                      child: Image.asset(
-                                                        'assets/images/arrow-down-5.png',
+
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: width / 14.8,
+                                                height: double.infinity,
+                                                child: Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                    KText(
+                                                      text: 'Actions',
+                                                      style: SafeGoogleFont(
+                                                        'Nunito',
+                                                        color: const Color(0xff030229),
+                                                      ),
+                                                    ),
+                                                    Opacity(
+                                                      // arrowdown5rFs (8:2318)
+                                                      opacity: 0.0,
+                                                      child: Container(
+                                                        margin: EdgeInsets.fromLTRB(
+                                                            0 * fem,
+                                                            1.6 * fem,
+                                                            0 * fem,
+                                                            0 * fem),
                                                         width: 7.82 * fem,
                                                         height: 6.52 * fem,
+                                                        child: Image.asset(
+                                                          'assets/images/arrow-down-5.png',
+                                                          width: 7.82 * fem,
+                                                          height: 6.52 * fem,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),*/
+                                        ///NAme
+                                        Container(
+                                          color: Colors.white,
+                                          width: width/7.2,
+                                          height: height/14.78,
+                                          alignment: Alignment.center,
+                                          padding:EdgeInsets.only(left:width/78.3)  ,
+                                          child:  Row(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            children: [
+                                              KText(
+                                                text: "Name",
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  color: const Color(0xff030229),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:  EdgeInsets.only(
+                                                    left: width/170.75),
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      filtervalue = !filtervalue;
+                                                      filterChageValue="Name";
+                                                    });
+                                                  },
+                                                  child: Transform.rotate(
+                                                    angle: filtervalue &&filterChageValue=="Name"? 200 : 0,
+                                                    child: Opacity(
+                                                      // arrowdown2TvZ (8:2307)
+                                                      opacity: 0.7,
+                                                      child: Container(
+                                                        width: width/153.6,
+                                                        height: height/73.9,
+                                                        child: Image.asset(
+                                                          'assets/images/arrow-down-2.png',
+                                                          width: width/153.6,
+                                                          height: height/73.9,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                ],
+                                                ),
                                               ),
-                                            ),
-                                            GestureDetector(
-                                              onTap:(){
-                                                Popupmenu(context, _userdata.id,popMenuKeys[index]);
-                                                print(viewUser_details);
-
-                                              },
-                                              child: SizedBox(
-                                                  key:popMenuKeys[index] ,
-                                                  width: width / 14.0,
-                                                  height: height / 26.04,
-                                                  child: const Icon(Icons.more_horiz)),
-                                            ),
-                                            /*GestureDetector(
-                                                onTap: () {
-                                                  // setState(() {
-                                                  //   viewDocid=_userdata.id;
-                                                  //   viewUser_details=!viewUser_details;
-                                                  // });
-                                                  Popupmenu(context, _userdata.id);
-                                                  print(viewUser_details);
-                                                },
-                                                child: Container(
-                                                    key: popmenukey,
-                                                    color:Colors.red,
-                                                    width: width / 14.0,
-                                                    height: height / 26.04,
-                                                    child: Icon(Icons.more_horiz)),
-                                              ),*/
-                                          ],
+                                            ],
+                                          ),
                                         ),
+
+                                        Container(
+                                          color: Colors.white,
+                                          width: width/6.2,
+                                          height: height/14.78,
+                                          alignment: Alignment.center,
+                                          padding:EdgeInsets.only(left:width/100.15),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            children: [
+                                              KText(
+                                                text: "Email",
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  color: const Color(0xff030229),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:  EdgeInsets.only(
+                                                    left: width/170.75),
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      filtervalue = !filtervalue;
+                                                      filterChageValue="email";
+                                                    });
+                                                  },
+                                                  child: Transform.rotate(
+                                                    angle: filterChageValue=="email"&&filtervalue ? 200 : 0,
+                                                    child: Opacity(
+                                                      // arrowdown2TvZ (8:2307)
+                                                      opacity: 0.7,
+                                                      child: Container(
+                                                        width: width/153.6,
+                                                        height: height/73.9,
+                                                        child: Image.asset(
+                                                          'assets/images/arrow-down-2.png',
+                                                          width: width/153.6,
+                                                          height: height/73.9,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+
+                                        Container(
+                                          color: Colors.white,
+                                          width: width/7.2,
+                                          height: height/14.78,
+                                          alignment: Alignment.center,
+                                          padding:EdgeInsets.only(left:width/100.533),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            children: [
+                                              KText(
+                                                text: "Phone Number",
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  color: const Color(0xff030229),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:  EdgeInsets.only(
+                                                    left: width/170.75),
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      filtervalue = !filtervalue;
+                                                      filterChageValue="Phone";
+                                                    });
+                                                  },
+                                                  child: Transform.rotate(
+                                                    angle: filtervalue&&filterChageValue=="Phone" ? 200 : 0,
+                                                    child: Opacity(
+                                                      // arrowdown2TvZ (8:2307)
+                                                      opacity: 0.7,
+                                                      child: Container(
+                                                        width: width/153.6,
+                                                        height: height/73.9,
+                                                        child: Image.asset(
+                                                          'assets/images/arrow-down-2.png',
+                                                          width: width/153.6,
+                                                          height: height/73.9,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+
+                                        Container(
+                                          color: Colors.white,
+                                          width: width/10,
+                                          height: height/14.78,
+                                          alignment: Alignment.center,
+                                          child: Row(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            mainAxisAlignment:MainAxisAlignment.end,
+                                            children: [
+                                              KText(
+                                                text: "Gender",
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  color: const Color(0xff030229),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:  EdgeInsets.only(left: width/170.75,right: width/54.64),
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      filtervalue = !filtervalue;
+                                                      filterChageValue="Gender";
+                                                    });
+                                                  },
+                                                  child: Transform.rotate(
+                                                    angle: filtervalue&&filterChageValue=="Gender" ? 200 : 0,
+                                                    child: Opacity(
+                                                      // arrowdown2TvZ (8:2307)
+                                                      opacity: 0.7,
+                                                      child: Container(
+                                                        width: width/153.6,
+                                                        height: height/73.9,
+                                                        child: Image.asset(
+                                                          'assets/images/arrow-down-2.png',
+                                                          width: width/153.6,
+                                                          height: height/73.9,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+
+                                        Container(
+                                          color: Colors.white,
+                                          width: width/11.5,
+                                          height: height/14.78,
+                                          alignment: Alignment.center,
+
+                                          child: Row(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            mainAxisAlignment:MainAxisAlignment.end,
+                                            children: [
+                                              KText(
+                                                text: "Status",
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  color: const Color(0xff030229),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:  EdgeInsets.only(
+                                                    left: width/170.75,right:30),
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      filtervalue = !filtervalue;
+                                                      filterChageValue="Status";
+                                                    });
+                                                  },
+                                                  child: Transform.rotate(
+                                                    angle: filtervalue &&filterChageValue=="Status"? 200 : 0,
+                                                    child: Opacity(
+                                                      // arrowdown2TvZ (8:2307)
+                                                      opacity: 0.7,
+                                                      child: Container(
+                                                        width: width/153.6,
+                                                        height: height/73.9,
+                                                        child: Image.asset(
+                                                          'assets/images/arrow-down-2.png',
+                                                          width: width/153.6,
+                                                          height: height/73.9,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+
+                                        Container(
+                                          color: Colors.white,
+                                          width: width/11,
+                                          height: height/14.78,
+                                          alignment: Alignment.center,
+                                          child:    Row(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            mainAxisAlignment:MainAxisAlignment.end,
+                                            children: [
+                                              KText(
+                                                text: "Created on",
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  color: const Color(0xff030229),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:  EdgeInsets.only(
+                                                    left: width/170.75,right: width/91.0666),
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      filtervalue = !filtervalue;
+                                                      filterChageValue="date";
+                                                    });
+                                                  },
+                                                  child: Transform.rotate(
+                                                    angle: filtervalue &&filterChageValue=="date"? 200 : 0,
+                                                    child: Opacity(
+                                                      // arrowdown2TvZ (8:2307)
+                                                      opacity: 0.7,
+                                                      child: Container(
+                                                        width: width/153.6,
+                                                        height: height/73.9,
+                                                        child: Image.asset(
+                                                          'assets/images/arrow-down-2.png',
+                                                          width: width/153.6,
+                                                          height: height/73.9,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+
+                                        Container(
+                                          color: Colors.white,
+                                          width: width/9.98,
+                                          height: height/14.78,
+                                          alignment: Alignment.center,
+                                          child:  Row(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            mainAxisAlignment:MainAxisAlignment.end,
+                                            children: [
+                                              KText(
+                                                text: "Actions",
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  color: const Color(0xff030229),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:  EdgeInsets.only(
+                                                    left: width/170.75,right: width/91.0666),
+                                                child: InkWell(
+                                                  onTap: () {
+
+                                                  },
+                                                  child: Transform.rotate(
+                                                    angle:  0,
+                                                    child: Opacity(
+                                                      // arrowdown2TvZ (8:2307)
+                                                      opacity: 0.7,
+                                                      child: Container(
+                                                        width: width/153.6,
+                                                        height: height/73.9,
+                                                        child: Image.asset(
+                                                          'assets/images/arrow-down-2.png',
+                                                          width: width/153.6,
+                                                          height: height/73.9,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: height / 65.1),
+
+                                StreamBuilder(
+                                  stream: documentList.isNotEmpty&&filterChageValue!=""?
+                                  FirebaseFirestore.instance.collection("Users").orderBy(filterChageValue, descending: filtervalue).startAfterDocument(documentList[documentList.length-1]).limit(10).snapshots():
+                                  documentList.isNotEmpty&&filterChageValue==""?
+                                  FirebaseFirestore.instance.collection("Users").orderBy("Name", descending: filtervalue).startAfterDocument(documentList[documentList.length-1]).limit(10).snapshots():
+                                  filterChageValue=="Name"? FirebaseFirestore.instance.collection("Users").orderBy("Name", descending: filtervalue).limit(10).snapshots():
+                                  filterChageValue=="email"? FirebaseFirestore.instance.collection("Users").orderBy("email", descending: filtervalue).limit(10).snapshots():
+                                  filterChageValue=="Phone"? FirebaseFirestore.instance.collection("Users").orderBy("Phone", descending: filtervalue).limit(10).snapshots():
+                                  filterChageValue=="Gender"? FirebaseFirestore.instance.collection("Users").orderBy("Gender", descending: filtervalue).limit(10).snapshots():
+                                  filterChageValue=="date"? FirebaseFirestore.instance.collection("Users").orderBy("date", descending: filtervalue).limit(10).snapshots():
+                                  FirebaseFirestore.instance.collection("Users").orderBy("Name", descending: filtervalue).limit(10).snapshots(),
+                                  builder: (context, snapshot) {
+                                    if (!snapshot.hasData) {
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
                                       );
-                                    },
-                                  );
-                                },
-                              ),
-                            ],
+                                    }
+                                    if (snapshot.hasData == null) {
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    }
+
+                                    pagecount=snapshot.data!.docs.length;
+
+                                    return ListView.builder(
+                                      shrinkWrap: true,
+                                      physics:
+                                      const NeverScrollableScrollPhysics(),
+                                      itemCount: snapshot.data!.docs.length,
+                                      itemBuilder: (context, index) {
+                                        var _userdata = snapshot.data!.docs[index];
+                                        List<GlobalKey<State<StatefulWidget>>> popMenuKeys = List.generate(snapshot.data!.docs.length, (index) => GlobalKey(),);
+
+                                        if(SerachValue!=""){
+                                          if(_userdata['Name'].toString().toLowerCase().contains(SerachValue.toLowerCase())){
+                                            return Column(
+                                              children: [
+                                                Container(
+                                                  padding: EdgeInsets.only(left:width/136.6),
+                                                  width: width / 1.21,
+                                                  height: 78.22 * fem,
+                                                  decoration: BoxDecoration(
+                                                    color: const Color(0xffffffff),
+                                                    borderRadius:
+                                                    BorderRadius.circular(10 * fem),
+                                                  ),
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                    children: [
+                                                      SizedBox(
+                                                        width: width/7.2,
+                                                        height: height/14.78,
+                                                        child: Row(
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                          children: [
+                                                            Container(
+                                                                height:height/21.7,
+                                                                width:width/45.533,
+                                                                margin: EdgeInsets.fromLTRB(
+                                                                    0 * fem,
+                                                                    0 * fem,
+                                                                    14.34 * fem,
+                                                                    0 * fem),
+                                                                decoration:
+                                                                BoxDecoration(
+                                                                  color:Colors.grey.shade300,
+                                                                  borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                      19.5553703308 *
+                                                                          fem),
+                                                                  image:
+                                                                  DecorationImage(
+                                                                    fit: BoxFit.cover,
+                                                                    image: NetworkImage(
+                                                                        _userdata[
+                                                                        'UserImg']
+                                                                            .toString()),
+                                                                  ),
+                                                                ),
+                                                                child:Center(
+                                                                    child:_userdata['UserImg'].toString()==""?Icon(Icons.person):Text("")
+                                                                )
+                                                            ),
+                                                            Container(
+                                                              margin: EdgeInsets.fromLTRB(
+                                                                  0 * fem,
+                                                                  4.14 * fem,
+                                                                  129.49 * fem,
+                                                                  0 * fem),
+                                                              child: KText(
+                                                                text: _userdata['Name'],
+                                                                style: SafeGoogleFont(
+                                                                    'Nunito',
+                                                                    fontSize: 18 * ffem,
+                                                                    fontWeight:
+                                                                    FontWeight.w400,
+                                                                    height:
+                                                                    1.3625 * ffem / fem,
+                                                                    color:
+                                                                    const Color(0xff030229),
+                                                                    textStyle:TextStyle(
+                                                                        overflow: TextOverflow.ellipsis
+                                                                    )
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: height/14.78,
+                                                        width: width/6.2,
+                                                        child: Row(
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                          children: [
+                                                            KText(
+                                                              text: _userdata['email'],
+                                                              style: SafeGoogleFont(
+                                                                'Nunito',
+                                                                fontSize: 18 * ffem,
+                                                                fontWeight: FontWeight.w400,
+                                                                height: 1.3625 * ffem / fem,
+                                                                color: const Color(0xff030229),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: height/14.78,
+                                                        width: width/7.2,
+                                                        child: Row(
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                          children: [
+                                                            KText(
+                                                              text: _userdata['Phone']
+                                                                  .toString(),
+                                                              style: SafeGoogleFont(
+                                                                'Nunito',
+                                                                fontSize: 18 * ffem,
+                                                                fontWeight: FontWeight.w400,
+                                                                height: 1.3625 * ffem / fem,
+                                                                color: const Color(0xff030229),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: width/10,
+                                                        height: height/14.78,
+                                                        child: Padding(
+                                                          padding: EdgeInsets.only(
+                                                              left: width / 54.64,
+                                                              right: width / 54.64),
+                                                          child: Container(
+                                                            width: width / 34.15,
+                                                            height: double.infinity,
+                                                            decoration: BoxDecoration(
+                                                              color:
+                                                              _userdata['Gender'] ==
+                                                                  "Male"
+                                                                  ? const Color(0x195b92ff)
+                                                                  : const Color(0xffFEF3F0),
+                                                              borderRadius:
+                                                              BorderRadius.circular(
+                                                                  33 * fem),
+                                                            ),
+                                                            child: Center(
+                                                              child: KText(
+                                                                text: _userdata['Gender'],
+                                                                style: SafeGoogleFont(
+                                                                  'Nunito',
+                                                                  fontSize: 16 * ffem,
+                                                                  fontWeight:
+                                                                  FontWeight.w400,
+                                                                  height:
+                                                                  1.3625 * ffem / fem,
+                                                                  color: _userdata[
+                                                                  'Gender'] ==
+                                                                      "Male"
+                                                                      ? const Color(0xff5b92ff)
+                                                                      : const Color(0xffFE8F6B),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: height/14.78,
+                                                        width: width/11.5,
+                                                        child: Row(
+                                                          crossAxisAlignment:
+                                                          CrossAxisAlignment.start,
+                                                          children: [
+                                                            SizedBox(
+                                                                width: width / 54.64),
+                                                            Container(
+                                                              // gender8qf (8:2320)
+                                                                margin:
+                                                                EdgeInsets.fromLTRB(
+                                                                    0 * fem,
+                                                                    0 * fem,
+                                                                    15.18 * fem,
+                                                                    0 * fem),
+                                                                padding: const EdgeInsets.only(
+                                                                    left: 5),
+                                                                child: _userdata['verifyed'] ==
+                                                                    true
+                                                                    ? Center(
+                                                                  child: const Icon(
+                                                                    Icons.verified,
+                                                                    color:
+                                                                    Colors.green,
+                                                                  ),
+                                                                )
+                                                                    : const Icon(
+                                                                  Icons
+                                                                      .verified_outlined,
+                                                                )
+                                                            ),
+                                                            Opacity(
+                                                              // arrowdown5rFs (8:2318)
+                                                              opacity: 0.0,
+                                                              child: Container(
+                                                                margin:
+                                                                EdgeInsets.fromLTRB(
+                                                                    0 * fem,
+                                                                    1.6 * fem,
+                                                                    0 * fem,
+                                                                    0 * fem),
+                                                                width: 7.82 * fem,
+                                                                height: 6.52 * fem,
+                                                                child: Image.asset(
+                                                                  'assets/images/arrow-down-5.png',
+                                                                  width: 7.82 * fem,
+                                                                  height: 6.52 * fem,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: height/14.78,
+                                                        width: width/11,
+                                                        child: Row(
+                                                          crossAxisAlignment:
+                                                          CrossAxisAlignment.start,
+                                                          children: [
+                                                            SizedBox(
+                                                                width: width / 54.64),
+                                                            Container(
+                                                              // gender8qf (8:2320)
+                                                              margin: EdgeInsets.fromLTRB(
+                                                                  0 * fem,
+                                                                  0 * fem,
+                                                                  15.18 * fem,
+                                                                  0 * fem),
+                                                              child: Center(
+                                                                child: KText(
+                                                                  text: _userdata['date'],
+                                                                  style: SafeGoogleFont(
+                                                                    'Nunito',
+                                                                    fontSize: 16 * ffem,
+                                                                    fontWeight:
+                                                                    FontWeight.w400,
+                                                                    height:
+                                                                    1.3625 * ffem / fem,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Opacity(
+                                                              // arrowdown5rFs (8:2318)
+                                                              opacity: 0.0,
+                                                              child: Container(
+                                                                margin:
+                                                                EdgeInsets.fromLTRB(
+                                                                    0 * fem,
+                                                                    1.6 * fem,
+                                                                    0 * fem,
+                                                                    0 * fem),
+                                                                width: 7.82 * fem,
+                                                                height: 6.52 * fem,
+                                                                child: Image.asset(
+                                                                  'assets/images/arrow-down-5.png',
+                                                                  width: 7.82 * fem,
+                                                                  height: 6.52 * fem,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      GestureDetector(
+                                                        onTap:(){
+                                                          Popupmenu(context, _userdata.id,popMenuKeys[index]);
+                                                          print(viewUser_details);
+
+                                                        },
+                                                        child: SizedBox(
+
+                                                            key:popMenuKeys[index] ,
+                                                            width: width/9.98,
+                                                            height: height / 26.04,
+                                                            child: const Icon(Icons.more_horiz)),
+                                                      ),
+                                                      /*GestureDetector(
+                                                    onTap: () {
+                                                      // setState(() {
+                                                      //   viewDocid=_userdata.id;
+                                                      //   viewUser_details=!viewUser_details;
+                                                      // });
+                                                      Popupmenu(context, _userdata.id);
+                                                      print(viewUser_details);
+                                                    },
+                                                    child: Container(
+                                                        key: popmenukey,
+                                                        color:Colors.red,
+                                                        width: width / 14.0,
+                                                        height: height / 26.04,
+                                                        child: Icon(Icons.more_horiz)),
+                                                  ),*/
+                                                    ],
+                                                  ),
+                                                ),
+                                                 NumberPaginator(
+                                            config: NumberPaginatorUIConfig(
+                                              buttonSelectedBackgroundColor: Constants().primaryAppColor,
+                                              buttonSelectedForegroundColor: Colors.white,
+                                            ),
+                                            numberPages: pagecount,
+                                            onPageChange: (int index) {
+                                              documentList.addAll(snapshot.data!.docs);
+                                              setState(() {
+                                                temp = index+1;
+                                              });
+                                            },
+                                          )
+                                              ],
+                                            );
+                                          }
+                                        }
+                                        else if(SerachController.text==""){
+                                          return Column(
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.only(left:width/136.6),
+                                                width: width / 1.21,
+                                                height: 78.22 * fem,
+                                                decoration: BoxDecoration(
+                                                  color: const Color(0xffffffff),
+                                                  borderRadius:
+                                                  BorderRadius.circular(10 * fem),
+                                                ),
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                                  children: [
+                                                    SizedBox(
+                                                      width: width/7.2,
+                                                      height: height/14.78,
+                                                      child: Row(
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          Container(
+                                                              height:height/21.7,
+                                                              width:width/45.533,
+                                                              margin: EdgeInsets.fromLTRB(
+                                                                  0 * fem,
+                                                                  0 * fem,
+                                                                  14.34 * fem,
+                                                                  0 * fem),
+                                                              decoration:
+                                                              BoxDecoration(
+                                                                color:Colors.grey.shade300,
+                                                                borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                    19.5553703308 *
+                                                                        fem),
+                                                                image:
+                                                                DecorationImage(
+                                                                  fit: BoxFit.cover,
+                                                                  image: NetworkImage(
+                                                                      _userdata[
+                                                                      'UserImg']
+                                                                          .toString()),
+                                                                ),
+                                                              ),
+                                                              child:Center(
+                                                                  child:_userdata['UserImg'].toString()==""?Icon(Icons.person):Text("")
+                                                              )
+                                                          ),
+                                                          Container(
+                                                            margin: EdgeInsets.fromLTRB(
+                                                                0 * fem,
+                                                                4.14 * fem,
+                                                                129.49 * fem,
+                                                                0 * fem),
+                                                            child: KText(
+                                                              text: _userdata['Name'],
+                                                              style: SafeGoogleFont(
+                                                                  'Nunito',
+                                                                  fontSize: 18 * ffem,
+                                                                  fontWeight:
+                                                                  FontWeight.w400,
+                                                                  height:
+                                                                  1.3625 * ffem / fem,
+                                                                  color:
+                                                                  const Color(0xff030229),
+                                                                  textStyle:TextStyle(
+                                                                      overflow: TextOverflow.ellipsis
+                                                                  )
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: height/14.78,
+                                                      width: width/6.2,
+                                                      child: Row(
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          KText(
+                                                            text: _userdata['email'],
+                                                            style: SafeGoogleFont(
+                                                              'Nunito',
+                                                              fontSize: 18 * ffem,
+                                                              fontWeight: FontWeight.w400,
+                                                              height: 1.3625 * ffem / fem,
+                                                              color: const Color(0xff030229),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: height/14.78,
+                                                      width: width/7.2,
+                                                      child: Row(
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          KText(
+                                                            text: _userdata['Phone']
+                                                                .toString(),
+                                                            style: SafeGoogleFont(
+                                                              'Nunito',
+                                                              fontSize: 18 * ffem,
+                                                              fontWeight: FontWeight.w400,
+                                                              height: 1.3625 * ffem / fem,
+                                                              color: const Color(0xff030229),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: width/10,
+                                                      height: height/14.78,
+                                                      child: Padding(
+                                                        padding: EdgeInsets.only(
+                                                            left: width / 54.64,
+                                                            right: width / 54.64),
+                                                        child: Container(
+                                                          width: width / 34.15,
+                                                          height: double.infinity,
+                                                          decoration: BoxDecoration(
+                                                            color:
+                                                            _userdata['Gender'] ==
+                                                                "Male"
+                                                                ? const Color(0x195b92ff)
+                                                                : const Color(0xffFEF3F0),
+                                                            borderRadius:
+                                                            BorderRadius.circular(
+                                                                33 * fem),
+                                                          ),
+                                                          child: Center(
+                                                            child: KText(
+                                                              text: _userdata['Gender'],
+                                                              style: SafeGoogleFont(
+                                                                'Nunito',
+                                                                fontSize: 16 * ffem,
+                                                                fontWeight:
+                                                                FontWeight.w400,
+                                                                height:
+                                                                1.3625 * ffem / fem,
+                                                                color: _userdata[
+                                                                'Gender'] ==
+                                                                    "Male"
+                                                                    ? const Color(0xff5b92ff)
+                                                                    : const Color(0xffFE8F6B),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: height/14.78,
+                                                      width: width/11.5,
+                                                      child: Row(
+                                                        crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                        children: [
+                                                          SizedBox(
+                                                              width: width / 54.64),
+                                                          Container(
+                                                            // gender8qf (8:2320)
+                                                              margin:
+                                                              EdgeInsets.fromLTRB(
+                                                                  0 * fem,
+                                                                  0 * fem,
+                                                                  15.18 * fem,
+                                                                  0 * fem),
+                                                              padding: const EdgeInsets.only(
+                                                                  left: 5),
+                                                              child: _userdata['verifyed'] ==
+                                                                  true
+                                                                  ? Center(
+                                                                child: const Icon(
+                                                                  Icons.verified,
+                                                                  color:
+                                                                  Colors.green,
+                                                                ),
+                                                              )
+                                                                  : const Icon(
+                                                                Icons
+                                                                    .verified_outlined,
+                                                              )
+                                                          ),
+                                                          Opacity(
+                                                            // arrowdown5rFs (8:2318)
+                                                            opacity: 0.0,
+                                                            child: Container(
+                                                              margin:
+                                                              EdgeInsets.fromLTRB(
+                                                                  0 * fem,
+                                                                  1.6 * fem,
+                                                                  0 * fem,
+                                                                  0 * fem),
+                                                              width: 7.82 * fem,
+                                                              height: 6.52 * fem,
+                                                              child: Image.asset(
+                                                                'assets/images/arrow-down-5.png',
+                                                                width: 7.82 * fem,
+                                                                height: 6.52 * fem,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: height/14.78,
+                                                      width: width/11,
+                                                      child: Row(
+                                                        crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                        children: [
+                                                          SizedBox(
+                                                              width: width / 54.64),
+                                                          Container(
+                                                            // gender8qf (8:2320)
+                                                            margin: EdgeInsets.fromLTRB(
+                                                                0 * fem,
+                                                                0 * fem,
+                                                                15.18 * fem,
+                                                                0 * fem),
+                                                            child: Center(
+                                                              child: KText(
+                                                                text: _userdata['date'],
+                                                                style: SafeGoogleFont(
+                                                                  'Nunito',
+                                                                  fontSize: 16 * ffem,
+                                                                  fontWeight:
+                                                                  FontWeight.w400,
+                                                                  height:
+                                                                  1.3625 * ffem / fem,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Opacity(
+                                                            // arrowdown5rFs (8:2318)
+                                                            opacity: 0.0,
+                                                            child: Container(
+                                                              margin:
+                                                              EdgeInsets.fromLTRB(
+                                                                  0 * fem,
+                                                                  1.6 * fem,
+                                                                  0 * fem,
+                                                                  0 * fem),
+                                                              width: 7.82 * fem,
+                                                              height: 6.52 * fem,
+                                                              child: Image.asset(
+                                                                'assets/images/arrow-down-5.png',
+                                                                width: 7.82 * fem,
+                                                                height: 6.52 * fem,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap:(){
+                                                        Popupmenu(context, _userdata.id,popMenuKeys[index]);
+                                                        print(viewUser_details);
+
+                                                      },
+                                                      child: SizedBox(
+
+                                                          key:popMenuKeys[index] ,
+                                                          width: width/9.98,
+                                                          height: height / 26.04,
+                                                          child: const Icon(Icons.more_horiz)),
+                                                    ),
+                                                    /*GestureDetector(
+                                                    onTap: () {
+                                                      // setState(() {
+                                                      //   viewDocid=_userdata.id;
+                                                      //   viewUser_details=!viewUser_details;
+                                                      // });
+                                                      Popupmenu(context, _userdata.id);
+                                                      print(viewUser_details);
+                                                    },
+                                                    child: Container(
+                                                        key: popmenukey,
+                                                        color:Colors.red,
+                                                        width: width / 14.0,
+                                                        height: height / 26.04,
+                                                        child: Icon(Icons.more_horiz)),
+                                                  ),*/
+                                                  ],
+                                                ),
+                                              ),
+                                              /* NumberPaginator(
+                                            config: NumberPaginatorUIConfig(
+                                              buttonSelectedBackgroundColor: Constants().primaryAppColor,
+                                              buttonSelectedForegroundColor: Colors.white,
+                                            ),
+                                            numberPages: pagecount,
+                                            onPageChange: (int index) {
+                                              documentList.addAll(snapshot.data!.docs);
+                                              setState(() {
+                                                temp = index+1;
+                                              });
+                                            },
+                                          )*/
+                                            ],
+                                          );
+                                        }
+                                      },
+                                    );
+
+                                  },
+                                ),
+
+
+
+                              ],
+                            ),
                           ),
-                        ),
+                                  Loading==true?
+                              SizedBox(
+                                height:height/ 2.38,
+                                width: width/5.106,
+                                child: Column(
+                                  children: [
+                                    Lottie.asset("assets/FsRGzkbt6x.json",
+                                      height:height/ 3.38,
+                                      width: width/6.106,),
+                                    Text("Please Wait",style:SafeGoogleFont(
+                                        'Nunito',fontWeight: FontWeight.w600,color: Colors.black))
+                                  ],
+                                ),
+                              ):const SizedBox(),
+                        ]
+                        )
                       ),
                     )
         ],
@@ -7339,10 +8752,30 @@ class _Users_ScreenState extends State<Users_Screen> {
     return _cities;
   }
 
+
+
+  ///Department Fetch Function
+ departmentdataFetchFunc()async{
+    setState(() {
+      departmentDataList.clear();
+    });
+    setState(() {
+      departmentDataList.add('Select Department');
+    });
+    var departmentdata=await FirebaseFirestore.instance.collection("Department").orderBy("name").get();
+    for(int x=0;x<departmentdata.docs.length;x++){
+      setState((){
+        departmentDataList.add(departmentdata.docs[x]['name'].toString());
+      });
+    }
+    print("department Data List $departmentDataList");
+ }
+
   ///clear controller functions--------------------------------
 
   controllersclearfunc() {
     setState(() {
+      Loading=false;
       firstNamecon.clear();
       middleNamecon.clear();
       lastNamecon.clear();
@@ -7359,7 +8792,7 @@ class _Users_ScreenState extends State<Users_Screen> {
       statecon.text = "Select State";
       countrycon.text = "Select Country";
       yearPassedcon.clear();
-      subjectStremdcon.clear();
+      subjectStremdcon.text="Select Department";
       //ownBussinesscon.clear();
       classcon.clear();
       rollnocon.clear();
@@ -7378,11 +8811,12 @@ class _Users_ScreenState extends State<Users_Screen> {
       no_of_childreancon.clear();
       Uploaddocument=null;
       imgUrl = "";
+      dropdownValidator2=false;
       userUpdateDocumentID = "";
     });
   }
 
-  ///choose the image fundtions------------------------
+  ///choose the image fundtions------------------------'\
 
   addImage(Size size) {
     InputElement input = FileUploadInputElement() as InputElement
@@ -7571,6 +9005,9 @@ class _Users_ScreenState extends State<Users_Screen> {
 
   userdatecreatefunc() async {
 
+    setState(() {
+      Loading=true;
+    });
     print("Craete Funtion Entered+++++++++++++++++++++++++++");
     String userid = generateRandomString(16);
 
@@ -7591,7 +9028,7 @@ class _Users_ScreenState extends State<Users_Screen> {
         "Phone": phoneNumbercon.text,
         "UserImg": imgUrl,
         "lastchat": "",
-        "verifyed": true,
+        "verifyed": false,
         "dob": dateofBirthcon.text,
         "alteremail": alterEmailIdcon.text,
         "aadhaarNo": aadhaarNumbercon.text,
@@ -7803,6 +9240,98 @@ class _Users_ScreenState extends State<Users_Screen> {
     },);
   }
 
+
+  userNotValidAgePopup(){
+    double height=MediaQuery.of(context).size.height;
+    double width=MediaQuery.of(context).size.width;
+
+    showDialog(
+      barrierColor: Colors.transparent,
+      context: context, builder:(context) {
+      return ZoomIn(
+        duration: const Duration(milliseconds: 300),
+        child: Padding(
+          padding:  const EdgeInsets.only(top: 160.0,bottom: 160,left: 400,right:400),
+          child: Material(
+            color: Colors.white,
+            shadowColor: const Color(0xff245BCA),
+            borderRadius: BorderRadius.circular(8),
+            elevation: 10,
+            child: Container(
+
+              decoration: BoxDecoration(
+                color: const Color(0xffFFFFFF),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Scaffold(
+                backgroundColor: const Color(0xffFFFFFF),
+                body: Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: height/24.6333),
+                      KText(text:"Please Select the Age Correctly ",style:
+                      SafeGoogleFont (
+                          'Nunito',
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black,
+                          fontSize: 18
+
+                      )),
+
+                      SizedBox(height: height/36.95),
+
+                      SizedBox(
+                        height: height/4.10555,
+                        width: width/8.53333,
+                        child: Icon(Icons.error_outline,color: Colors.red,size: width/10.5076,)
+                      ),
+
+                      SizedBox(height: height/36.95),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+
+                          InkWell(
+                            onTap: (){
+
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              height: height/18.475,
+                              width: width/8.53333,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  color:  const Color(0xff5D5FEF)
+                              ),
+                              child: Center(
+                                child:KText(text:"Okay",
+                                  style:
+                                  SafeGoogleFont (
+                                      'Nunito',
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white,
+                                      fontSize: 16
+
+                                  ),),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    },);
+  }
+
   userDataUpdatefuntio() async {
     print("UPdate Fucntion++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
     print(userUpdateDocumentID);
@@ -7921,6 +9450,7 @@ class _Users_ScreenState extends State<Users_Screen> {
     }
     else{
       print("Else Fucntion+++++++++++++++++++++++++++++++++++++++++++++++++++++");
+    if(imgUrl==""&&Url!=null){
       var snapshot = await FirebaseStorage.instance.ref().child('Images').child("${Url!.name}").putBlob(Url);
       String downloadUrl = await snapshot.ref.getDownloadURL();
       setState(() {
@@ -7934,7 +9464,7 @@ class _Users_ScreenState extends State<Users_Screen> {
         "lastName": lastNamecon.text,
         "Occupation": occupationcon.text,
         "Phone": phoneNumbercon.text,
-        "UserImg": imgUrl,
+        "UserImg": imgUrl==""?"":imgUrl,
         "lastchat": "",
         "dob": dateofBirthcon.text,
         "alteremail": alterEmailIdcon.text,
@@ -7968,6 +9498,53 @@ class _Users_ScreenState extends State<Users_Screen> {
         UserEdit=false;
       });
     }
+    else{
+      await FirebaseFirestore.instance.collection("Users").doc(userUpdateDocumentID).update({
+        "Address": adreesscon.text,
+        "Gender": gendercon.text,
+        "Name": firstNamecon.text,
+        "middleName": middleNamecon.text,
+        "lastName": lastNamecon.text,
+        "Occupation": occupationcon.text,
+        "Phone": phoneNumbercon.text,
+        "UserImg": imgUrl==""?"":imgUrl,
+        "lastchat": "",
+        "dob": dateofBirthcon.text,
+        "alteremail": alterEmailIdcon.text,
+        "aadhaarNo": aadhaarNumbercon.text,
+        "mobileNo": mobileNumbercon.text,
+        "email": emailIDcon.text,
+        "city": citycon.text,
+        "pinCode": pinCodecon.text,
+        "state": statecon.text,
+        "country": countrycon.text,
+        "yearofpassed": yearPassedcon.text,
+        "subjectStream": subjectStremdcon.text,
+        "class": classcon.text,
+        "rollNo": rollnocon.text,
+        "lastvisit": lastvisitcon.text,
+        "house": housecon.text,
+        "statusmessage": statusmessagecon.text,
+        "educationquvalification": educationquvalificationcon.text,
+        "additionalquvalification": additionalquvalificationcon.text,
+        "designation": designationcon.text,
+        "company_concern": company_concerncon.text,
+        "maritalStatus": maritalStatuscon.text,
+        "spouseName": spouseNamecon.text,
+        "anniversaryDate": anniversaryDatecon.text,
+        "childreancount": no_of_childreancon.text,
+        'workingStatus':alumniEmployedController.text,
+        //"Ownbusiness": ownBussinesscon.text,
+
+      });
+      setState(() {
+        UserEdit=false;
+      });
+    }
+
+    }
+
+
     controllersclearfunc();
   }
 
@@ -8089,6 +9666,75 @@ class _Users_ScreenState extends State<Users_Screen> {
   userDeteleFunction(){
     FirebaseFirestore.instance.collection("Users").doc(userUpdateDocumentID).delete();
   }
+
+  filterDataMenuItem(BuildContext context,  key, size) async {
+    print(
+        "Popupmenu open-----------------------------------------------------------");
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    final render = key.currentContext!.findRenderObject() as RenderBox;
+    await showMenu(
+      color: Colors.grey.shade200,
+      elevation: 0,
+      context: context,
+      position: RelativeRect.fromLTRB(
+          render.localToGlobal(Offset.zero).dx,
+          render.localToGlobal(Offset.zero).dy + 50,
+          double.infinity,
+          double.infinity),
+      items: filterDataList
+          .map((item) => PopupMenuItem<String>(
+        enabled: true,
+        onTap: () async {
+          // if (item == "Filter by Date") {
+          //   var result = await filterPopUp();
+          //   if (result) {
+          //     setState(() {
+          //       isFiltered = true;
+          //     });
+          //   }
+          // }
+        },
+        value: item,
+        child: Container(
+          height: height / 18.475,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              item == "Filter by Date"
+                  ? Icon(
+                Icons.print,
+                color: Color(0xff5B93FF),
+                size: 18,
+              ) : Icon(
+                Icons.circle,
+                color: Colors.transparent,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 5),
+                child: Text(
+                  item,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                    color: item == "Filter by Date"
+                        ? Color(0xff5B93FF)
+                        : Colors.white,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ))
+          .toList(),
+    );
+  }
+  
 
 }
 
