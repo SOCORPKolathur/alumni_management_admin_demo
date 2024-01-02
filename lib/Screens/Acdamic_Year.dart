@@ -1,17 +1,12 @@
 
 import 'dart:math';
-
 import 'package:alumni_management_admin/Models/Language_Model.dart';
 import 'package:alumni_management_admin/utils.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cool_alert/cool_alert.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import '../Constant_.dart';
 
 class Acadamic_Year extends StatefulWidget {

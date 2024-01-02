@@ -3,8 +3,6 @@ import 'package:alumni_management_admin/Screens/Job_Reports.dart';
 import 'package:alumni_management_admin/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 
 class Alldepartment extends StatefulWidget {
   List? derpartMentList;
@@ -67,7 +65,7 @@ class _AlldepartmentState extends State<Alldepartment> {
                     itemCount:widget.derpartMentList!.length,
                     itemBuilder: (context, index) {
                       return  Indicator(
-                        color: colors[index],
+                        color: colorHexCodes[index],
                         text: widget.derpartMentList![index].toString(),
                         isSquare: true,
                       );
@@ -90,7 +88,13 @@ var indicatorColor;
     '#FF5733', '#33FF57', '#5733FF', '#FFFF33', '#FFFF36',
   ];
 
-
+  List<Color> colorList = [
+    const Color(0xffD95AF3),
+    const Color(0xff3EE094),
+    const Color(0xff3398F6),
+    const Color(0xffFA4A42),
+    const Color(0xffFE9539)
+  ];
    List colors=[
      Colors.red,
      Colors.blue,
@@ -117,9 +121,32 @@ var indicatorColor;
      Colors.yellowAccent,
    ];
 
+  List colorHexCodes = [
+    const Color(0xffFF0000),// red
+    const Color(0xff0000FF), // blue
+    const Color(0xffFFC200), // amber // green
+    const Color(0xffFFA500), // orange
+    const Color(0xff800080), // purple
+    const Color(0xffFFC0CB).withOpacity(0.7), // pink
+    const Color(0xffA52A2A), // brown
+    const Color(0xff808080).withOpacity(0.8), // grey
+    const Color(0xff008080), // teal
+    const Color(0xff4B0082), // indigo
+    const Color(0xff00FF00).withOpacity(0.6), // lime
+    const Color(0xffADD8E6), // lightBlue
+    const Color(0xff90EE90), // lightGreen
+    const Color(0xffFF4500), // deepOrange
+    const Color(0xff800080), // deepPurple
+    const Color(0xff607D8B), // blueGrey
+    const Color(0xffFF1744), // redAccent
+    const Color(0xff2196F3), // blueAccent
+    const Color(0xff4CAF50), // greenAccent
+    const Color(0xffFFEB3B), // yellowAccent
+  ];
+
 
   Color color(int index) {
-    Set<Color> usedColors = Set<Color>();
+    Set<Color> usedColors = <Color>{};
     indicatorColor = hexColorCodes[index % hexColorCodes.length];
     Color color = Color(int.parse(indicatorColor.replaceAll("#", "0xFF")));
 
@@ -160,13 +187,10 @@ var indicatorColor;
       // Get the color for the current department
        departmentColor = hexColorCodes[i % hexColorCodes.length];
 
-      print(countForDepartment);
 
 
-      print(countForDepartment);
-      print(department);
       return PieChartSectionData(
-        color: colors[i],
+        color: colorHexCodes[i],
         value: (countForDepartment) / int.parse(widget.TotalAlumniUsers.toString()),
         title: '${((countForDepartment) / int.parse(widget.TotalAlumniUsers.toString()) * 100).toStringAsFixed(2)} %',
         radius: radius,
@@ -247,7 +271,7 @@ class Indicator extends StatelessWidget {
               fontSize: width/85.375,
               fontWeight: FontWeight.bold,
               color: textColor,
-              textStyle: TextStyle(
+              textStyle: const TextStyle(
                 overflow: TextOverflow.ellipsis
               )
             ),

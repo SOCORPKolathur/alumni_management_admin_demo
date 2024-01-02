@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 import 'package:alumni_management_admin/Models/Colleage_activity.dart';
-import 'package:alumni_management_admin/Models/Job_Post_Model.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;

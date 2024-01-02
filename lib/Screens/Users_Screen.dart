@@ -59,7 +59,8 @@ const List<String> StateList = <String>[
 const List<String> GenderList=<String>[
   'Select',
   "Male",
-  "Female"
+  "Female",
+  "Transgender"
 ];
 
 const List<String> coutryList = <String>[
@@ -1050,9 +1051,9 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 Row(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .spaceAround,
+                                                      .start,
                                                   children: [
-                                                    SizedBox(
+                                                   /* SizedBox(
                                                       height: height/9.369,
                                                       child: Column(
                                                         crossAxisAlignment:
@@ -1122,104 +1123,107 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           )
                                                         ],
                                                       ),
-                                                    ),
-                                                    SizedBox(
-                                                      height: height/9.369,
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                        children: [
-                                                          KText(
-                                                            text:
-                                                            'Aadhaar Number ',
-                                                            style:
-                                                            SafeGoogleFont(
-                                                              'Nunito',
-                                                              fontSize:
-                                                              20 * ffem,
-                                                              fontWeight:
-                                                              FontWeight
-                                                                  .w700,
-                                                              height:
-                                                              1.3625 *
-                                                                  ffem /
-                                                                  fem,
-                                                              color: const Color(
-                                                                  0xff000000),
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                              height: height/123.1666),
-                                                          Container(
-                                                              height: height/15.114,
-                                                              width: width/5.12,
-                                                              decoration: BoxDecoration(
-                                                                  color: const Color(
-                                                                      0xffDDDEEE),
-                                                                  borderRadius:
-                                                                  BorderRadius.circular(
-                                                                      3)),
-                                                              child:
-                                                              TextFormField(
-                                                                controller:
-                                                                aadhaarNumbercon,
-                                                                maxLength:
-                                                                14,
-                                                                inputFormatters: [
-                                                                  FilteringTextInputFormatter
-                                                                      .digitsOnly,
-                                                                  TextInputFormatter.withFunction(
-                                                                          (oldValue,
-                                                                          newValue) {
-                                                                        final newString =
-                                                                            newValue.text;
+                                                    ),*/
+                                                   Padding(
+                                                padding:EdgeInsets.only(left:width/71.8947),
+                                                     child: SizedBox(
+                                                     height: height/9.369,
+                                                     child: Column(
+                                                       crossAxisAlignment:
+                                                       CrossAxisAlignment
+                                                           .start,
+                                                       children: [
+                                                         KText(
+                                                           text:
+                                                           'Aadhaar Number ',
+                                                           style:
+                                                           SafeGoogleFont(
+                                                             'Nunito',
+                                                             fontSize:
+                                                             20 * ffem,
+                                                             fontWeight:
+                                                             FontWeight
+                                                                 .w700,
+                                                             height:
+                                                             1.3625 *
+                                                                 ffem /
+                                                                 fem,
+                                                             color: const Color(
+                                                                 0xff000000),
+                                                           ),
+                                                         ),
+                                                         SizedBox(
+                                                             height: height/123.1666),
+                                                         Container(
+                                                             height: height/15.114,
+                                                             width: width/5.12,
+                                                             decoration: BoxDecoration(
+                                                                 color: const Color(
+                                                                     0xffDDDEEE),
+                                                                 borderRadius:
+                                                                 BorderRadius.circular(
+                                                                     3)),
+                                                             child:
+                                                             TextFormField(
+                                                               controller:
+                                                               aadhaarNumbercon,
+                                                               maxLength:
+                                                               14,
+                                                               inputFormatters: [
+                                                                 FilteringTextInputFormatter
+                                                                     .digitsOnly,
+                                                                 TextInputFormatter.withFunction(
+                                                                         (oldValue,
+                                                                         newValue) {
+                                                                       final newString =
+                                                                           newValue.text;
 
-                                                                        if (_inputPattern
-                                                                            .hasMatch(newString)) {
-                                                                          return oldValue;
-                                                                        }
+                                                                       if (_inputPattern
+                                                                           .hasMatch(newString)) {
+                                                                         return oldValue;
+                                                                       }
 
-                                                                        var formattedValue = newString.replaceAllMapped(
-                                                                            RegExp(r'\d{4}'),
-                                                                                (match) {
-                                                                              return '${match.group(0)} ';
-                                                                            });
+                                                                       var formattedValue = newString.replaceAllMapped(
+                                                                           RegExp(r'\d{4}'),
+                                                                               (match) {
+                                                                             return '${match.group(0)} ';
+                                                                           });
 
-                                                                        // Remove any trailing space
-                                                                        if (formattedValue
-                                                                            .endsWith(' ')) {
-                                                                          formattedValue = formattedValue.substring(
-                                                                              0,
-                                                                              formattedValue.length - 1);
-                                                                        }
+                                                                       // Remove any trailing space
+                                                                       if (formattedValue
+                                                                           .endsWith(' ')) {
+                                                                         formattedValue = formattedValue.substring(
+                                                                             0,
+                                                                             formattedValue.length - 1);
+                                                                       }
 
-                                                                        return TextEditingValue(
-                                                                          text:
-                                                                          formattedValue,
-                                                                          selection:
-                                                                          TextSelection.collapsed(offset: formattedValue.length),
-                                                                        );
-                                                                      }),
-                                                                ],
-                                                                decoration:
-                                                                const InputDecoration(
-                                                                  border: InputBorder
-                                                                      .none,
-                                                                  counterText:
-                                                                  "",
-                                                                  contentPadding: EdgeInsets.only(
-                                                                      bottom:
-                                                                      10,
-                                                                      top:
-                                                                      2,
-                                                                      left:
-                                                                      10),
-                                                                ),
-                                                              ))
-                                                        ],
-                                                      ),
-                                                    ),
+                                                                       return TextEditingValue(
+                                                                         text:
+                                                                         formattedValue,
+                                                                         selection:
+                                                                         TextSelection.collapsed(offset: formattedValue.length),
+                                                                       );
+                                                                     }),
+                                                               ],
+                                                               decoration:
+                                                               const InputDecoration(
+                                                                 border: InputBorder
+                                                                     .none,
+                                                                 counterText:
+                                                                 "",
+                                                                 contentPadding: EdgeInsets.only(
+                                                                     bottom:
+                                                                     10,
+                                                                     top:
+                                                                     2,
+                                                                     left:
+                                                                     10),
+                                                               ),
+                                                             ))
+                                                       ],
+                                                     ),
+                                                   ),
+                                                   )
                                                   ],
                                                 ),
                                               ],
@@ -1610,6 +1614,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     child:
                                                     DropdownButtonHideUnderline(
                                                       child: DropdownButtonFormField2<String>(
+                                                        value:statecon.text,
                                                         isExpanded:true,
                                                         autovalidateMode: AutovalidateMode.onUserInteraction,
                                                         hint: Padding(
@@ -1628,7 +1633,6 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         item) =>
                                                             DropdownMenuItem<
                                                                 String>(
-
                                                               value:
                                                               item,
                                                               child:
@@ -1642,6 +1646,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 ),
                                                               ),
                                                             )).toList(),
+
                                                         validator: (value) {
                                                           if (value=='Select State') {
                                                             setState((){
@@ -1652,8 +1657,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         },
                                                         onChanged: (String?
                                                         value) {
-                                                          getCity(value.toString());
                                                           if (value=='Select State') {
+                                                            getCity(value.toString());
                                                             setState((){
                                                               dropdownValidator=true;
                                                             });
@@ -4429,9 +4434,9 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
-                                                                .spaceAround,
+                                                                .start,
                                                         children: [
-                                                          SizedBox(
+                                                        /*  SizedBox(
                                                              height: height/9.369,
                                                             child: Column(
                                                               crossAxisAlignment:
@@ -4501,104 +4506,108 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                             )
                                                               ],
                                                             ),
-                                                          ),
-                                                          SizedBox(
-                                                             height: height/9.369,
-                                                            child: Column(
-                                                              crossAxisAlignment:
+                                                          ),*/
+                                                          Padding(
+                                                              padding:EdgeInsets.only(left:width/71.8947),
+                                                              child:SizedBox(
+                                                                height: height/9.369,
+                                                                child: Column(
+                                                                  crossAxisAlignment:
                                                                   CrossAxisAlignment
                                                                       .start,
-                                                              children: [
-                                                                KText(
-                                                                  text:
+                                                                  children: [
+                                                                    KText(
+                                                                      text:
                                                                       'Aadhaar Number ',
-                                                                  style:
+                                                                      style:
                                                                       SafeGoogleFont(
-                                                                    'Nunito',
-                                                                    fontSize:
+                                                                        'Nunito',
+                                                                        fontSize:
                                                                         20 * ffem,
-                                                                    fontWeight:
+                                                                        fontWeight:
                                                                         FontWeight
                                                                             .w700,
-                                                                    height:
+                                                                        height:
                                                                         1.3625 *
                                                                             ffem /
                                                                             fem,
-                                                                    color: const Color(
-                                                                        0xff000000),
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                    height: height/123.1666),
-                                                                Container(
-                                                                    height: height/15.114,
-                                                                    width: width/5.12,
-                                                                    decoration: BoxDecoration(
                                                                         color: const Color(
-                                                                            0xffDDDEEE),
-                                                                        borderRadius:
+                                                                            0xff000000),
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                        height: height/123.1666),
+                                                                    Container(
+                                                                        height: height/15.114,
+                                                                        width: width/5.12,
+                                                                        decoration: BoxDecoration(
+                                                                            color: const Color(
+                                                                                0xffDDDEEE),
+                                                                            borderRadius:
                                                                             BorderRadius.circular(
                                                                                 3)),
-                                                                    child:
+                                                                        child:
                                                                         TextFormField(
-                                                                      controller:
+                                                                          controller:
                                                                           aadhaarNumbercon,
-                                                                      maxLength:
+                                                                          maxLength:
                                                                           14,
-                                                                      inputFormatters: [
-                                                                        FilteringTextInputFormatter
-                                                                            .digitsOnly,
-                                                                        TextInputFormatter.withFunction(
-                                                                            (oldValue,
-                                                                                newValue) {
-                                                                          final newString =
-                                                                              newValue.text;
+                                                                          inputFormatters: [
+                                                                            FilteringTextInputFormatter
+                                                                                .digitsOnly,
+                                                                            TextInputFormatter.withFunction(
+                                                                                    (oldValue,
+                                                                                    newValue) {
+                                                                                  final newString =
+                                                                                      newValue.text;
 
-                                                                          if (_inputPattern
-                                                                              .hasMatch(newString)) {
-                                                                            return oldValue;
-                                                                          }
+                                                                                  if (_inputPattern
+                                                                                      .hasMatch(newString)) {
+                                                                                    return oldValue;
+                                                                                  }
 
-                                                                          var formattedValue = newString.replaceAllMapped(
-                                                                              RegExp(r'\d{4}'),
-                                                                              (match) {
-                                                                            return '${match.group(0)} ';
-                                                                          });
+                                                                                  var formattedValue = newString.replaceAllMapped(
+                                                                                      RegExp(r'\d{4}'),
+                                                                                          (match) {
+                                                                                        return '${match.group(0)} ';
+                                                                                      });
 
-                                                                          // Remove any trailing space
-                                                                          if (formattedValue
-                                                                              .endsWith(' ')) {
-                                                                            formattedValue = formattedValue.substring(
-                                                                                0,
-                                                                                formattedValue.length - 1);
-                                                                          }
+                                                                                  // Remove any trailing space
+                                                                                  if (formattedValue
+                                                                                      .endsWith(' ')) {
+                                                                                    formattedValue = formattedValue.substring(
+                                                                                        0,
+                                                                                        formattedValue.length - 1);
+                                                                                  }
 
-                                                                          return TextEditingValue(
-                                                                            text:
-                                                                                formattedValue,
-                                                                            selection:
-                                                                                TextSelection.collapsed(offset: formattedValue.length),
-                                                                          );
-                                                                        }),
-                                                                      ],
-                                                                      decoration:
+                                                                                  return TextEditingValue(
+                                                                                    text:
+                                                                                    formattedValue,
+                                                                                    selection:
+                                                                                    TextSelection.collapsed(offset: formattedValue.length),
+                                                                                  );
+                                                                                }),
+                                                                          ],
+                                                                          decoration:
                                                                           const InputDecoration(
-                                                                        border: InputBorder
-                                                                            .none,
-                                                                        counterText:
+                                                                            border: InputBorder
+                                                                                .none,
+                                                                            counterText:
                                                                             "",
-                                                                        contentPadding: EdgeInsets.only(
-                                                                            bottom:
+                                                                            contentPadding: EdgeInsets.only(
+                                                                                bottom:
                                                                                 10,
-                                                                            top:
+                                                                                top:
                                                                                 2,
-                                                                            left:
+                                                                                left:
                                                                                 10),
-                                                                      ),
-                                                                    ))
-                                                              ],
-                                                            ),
+                                                                          ),
+                                                                        ))
+                                                                  ],
+                                                                ),
+                                                              ),
                                                           ),
+
                                                         ],
                                                       ),
                                                     ],
@@ -4989,6 +4998,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                           child:
                                                               DropdownButtonHideUnderline(
                                                                 child: DropdownButtonFormField2<String>(
+                                                                  value:statecon.text,
                                                                     isExpanded:true,
                                                                   autovalidateMode: AutovalidateMode.onUserInteraction,
                                                               hint: Padding(
@@ -8945,9 +8955,9 @@ class _Users_ScreenState extends State<Users_Screen> {
       alterEmailIdcon.text = value['alteremail'].toString();
       aadhaarNumbercon.text = value['aadhaarNo'].toString();
       mobileNumbercon.text = value['mobileNo'].toString();
+      statecon.text = value['state'].toString();
       citycon.text = value['city'].toString();
       pinCodecon.text = value['pinCode'].toString();
-      statecon.text = value['state'].toString();
       countrycon.text = value['country'].toString();
       yearPassedcon.text = value['yearofpassed'].toString();
       subjectStremdcon.text = value['subjectStream'].toString();
@@ -8968,39 +8978,9 @@ class _Users_ScreenState extends State<Users_Screen> {
       alumniEmployedController.text=value['workingStatus'].toString();
      // ownBussinesscon.text=value['Ownbusiness'].toString();
     });
-    print(adreesscon.text);
-    print(gendercon.text);
-    print(firstNamecon.text);
-    print(middleNamecon.text);
-    print(lastNamecon.text);
-    print(occupationcon.text);
-    print(phoneNumbercon.text);
-    print(imgUrl);
-    print(dateofBirthcon.text);
-    print(alterEmailIdcon.text);
-    print(aadhaarNumbercon.text);
-    print(mobileNumbercon.text);
-    print(emailIDcon.text);
-    print(citycon.text);
-    print(pinCodecon.text);
+
+    print("Sate Controller +++++++++++++++++++++++++++++++++++++++++++");
     print(statecon.text);
-    print(countrycon.text);
-    print(yearPassedcon.text);
-    print(subjectStremdcon.text);
-    print(classcon.text);
-    print(rollnocon.text);
-    print(lastvisitcon.text);
-    print(housecon.text);
-    print(statusmessagecon.text);
-    print(educationquvalificationcon.text);
-    print(additionalquvalificationcon.text);
-    print(designationcon.text);
-    print(company_concerncon.text);
-    print(maritalStatuscon.text);
-    print(spouseNamecon.text);
-    print(anniversaryDatecon.text);
-    print(no_of_childreancon.text);
-    print(alumniEmployedController.text);
     print("++++++++++++++++++++++++++++++++++++++++++++");
 
   }

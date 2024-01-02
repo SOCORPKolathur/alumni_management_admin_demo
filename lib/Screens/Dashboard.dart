@@ -100,7 +100,7 @@ class _DashBoardState extends State<DashBoard> {
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
     return  FadeInRight(
-      duration: Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 600),
 
       child: SizedBox(
         // autogroupnx99mr9 (T1hGz35EtnvJDP43Jynx99)
@@ -677,7 +677,7 @@ class _DashBoardState extends State<DashBoard> {
                                         KText(
                                           text:
                                           // totaleventsspV (6:1159)
-                                          'Total Studnets ',
+                                          'Total Students ',
                                           style: SafeGoogleFont (
                                             'Poppins',
                                             fontSize: 16*ffem,

@@ -19,32 +19,29 @@ class _notWorkingPiechartsState extends State<notWorkingPiecharts> {
 
   int touchedIndex= -1;
 
-  List colors=[
-    Colors.red,
-    Colors.blue,
-    Colors.green,
-    Colors.yellow,
-    Colors.orange,
-    Colors.purple,
-    Colors.pink,
-    Colors.brown,
-    Colors.grey,
-    Colors.cyan,
-    Colors.teal,
-    Colors.indigo,
-    Colors.amber,
-    Colors.lime,
-    Colors.lightBlue,
-    Colors.lightGreen,
-    Colors.deepOrange,
-    Colors.deepPurple,
-    Colors.blueGrey,
-    Colors.redAccent,
-    Colors.blueAccent,
-    Colors.greenAccent,
-    Colors.yellowAccent,
-  ];
 
+  List colorHexCodes = [
+    const Color(0xffFF0000),// red
+    const Color(0xff0000FF), // blue
+    const Color(0xffFFC200), // amber // green
+    const Color(0xffFFA500), // orange
+    const Color(0xff800080), // purple
+    const Color(0xffFFC0CB).withOpacity(0.7), // pink
+    const Color(0xffA52A2A), // brown
+    const Color(0xff808080).withOpacity(0.8), // grey
+    const Color(0xff008080), // teal
+    const Color(0xff4B0082), // indigo
+    const Color(0xff00FF00).withOpacity(0.6), // lime
+    const Color(0xffADD8E6), // lightBlue
+    const Color(0xff90EE90), // lightGreen
+    const Color(0xffFF4500), // deepOrange
+    const Color(0xff800080), // deepPurple
+    const Color(0xff607D8B), // blueGrey
+    const Color(0xffFF1744), // redAccent
+    const Color(0xff2196F3), // blueAccent
+    const Color(0xff4CAF50), // greenAccent
+    const Color(0xffFFEB3B), // yellowAccent
+  ];
   late List departmentListValues;
   @override
   void initState() {
@@ -105,7 +102,7 @@ class _notWorkingPiechartsState extends State<notWorkingPiecharts> {
                     itemCount:widget.derpartMentList!.length,
                     itemBuilder: (context, index) {
                       return  Indicator(
-                        color: colors[index],
+                        color: colorHexCodes[index],
                         text: departmentListValues[index].toString(),
                         isSquare: true,
                       );
@@ -171,13 +168,10 @@ class _notWorkingPiechartsState extends State<notWorkingPiecharts> {
       // Get the color for the current department
       departmentColor = hexColorCodes[i % hexColorCodes.length];
 
-      print(countForDepartment);
 
 
-      print(countForDepartment);
-      print(department);
       return PieChartSectionData(
-        color: colors[i],
+        color: colorHexCodes[i],
         value: (countForDepartment) / int.parse(widget.TotalAlumniUsers.toString()),
         title: '${((countForDepartment) / int.parse(widget.TotalAlumniUsers.toString()) * 100).toStringAsFixed(2)} %',
         radius: radius,
@@ -191,13 +185,10 @@ class _notWorkingPiechartsState extends State<notWorkingPiecharts> {
   }
 
   textingFunction(){
-    print("Not Working++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
     for(int i=0;i<widget.departviseWorkingList!.length;i++){
-      print("Working Status List value++++++++++++++++++++++++++++++++++++${widget.departviseWorkingList![i]}");
 
     }
     for(int j=0;j<widget.derpartMentList!.length;j++){
-      print("Working Status List value++++++++++++++++++++++++++++++++++++${widget.derpartMentList![j]}");
 
     }
 

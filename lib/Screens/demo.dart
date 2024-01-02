@@ -1935,7 +1935,7 @@ class _MyWidgetState extends State<MyWidget> {
                                   }*/
                                   if(navElements.indexOf(e)==2){
                                     setState(() {
-                                      pages=Users_Screen();
+                                      pages=const Users_Screen();
                                     });
                                   }
                                   if(navElements.indexOf(e)==3){
@@ -1950,22 +1950,22 @@ class _MyWidgetState extends State<MyWidget> {
                                   }
                                   if(navElements.indexOf(e)==5){
                                     setState(() {
-                                      pages=Job_Posts();
+                                      pages=const Job_Posts();
                                     });
                                   }
                                   if(navElements.indexOf(e)==6){
                                     setState(() {
-                                      pages=Colleage_Activities_Screen();
+                                      pages= const Colleage_Activities_Screen();
                                     });
                                   }
                                   if(navElements.indexOf(e)==7){
                                     setState(() {
-                                      pages=Acadamic_Year();
+                                      pages= const Acadamic_Year();
                                     });
                                   }
                                   if(navElements.indexOf(e)==8){
                                     setState(() {
-                                      pages=Department_Screen();
+                                      pages= const Department_Screen();
                                     });
                                   }
                                   if(navElements.indexOf(e)==9){
@@ -1975,7 +1975,7 @@ class _MyWidgetState extends State<MyWidget> {
                                   }
                                   if(navElements.indexOf(e)==10){
                                     setState(() {
-                                      pages=Message_Screen();
+                                      pages=const Message_Screen();
                                     });
                                   }
                                   if(navElements.indexOf(e)==11){
@@ -1985,34 +1985,34 @@ class _MyWidgetState extends State<MyWidget> {
                                   }
                                   if(navElements.indexOf(e)==12){
                                     setState(() {
-                                      pages=Login_Reports();
+                                      pages= const Login_Reports();
                                     });
                                   }
                                   if(navElements.indexOf(e)==13){
                                     setState(() {
-                                      pages=SMS_Screen();
+                                      pages= const SMS_Screen();
                                     });
                                   }
 
                                   if(navElements.indexOf(e)==14){
                                     setState(() {
-                                      pages=Email_Screen();
+                                      pages= const Email_Screen();
                                     });
                                   }
 
                                   if(navElements.indexOf(e)==15){
                                     setState(() {
-                                      pages=Com_Notification_Screen();
+                                      pages= const Com_Notification_Screen();
                                     });
                                   }
 
                                   if(navElements.indexOf(e)==1){
                                     setState(() {
-                                      pages=Job_Reports();
+                                      pages=const Job_Reports();
                                     });
                                   }
 
-                                  if(navElements.indexOf(e)==17){
+                                  if(navElements.indexOf(e)==16){
                                     LogoutPopup();
                                   }
                                 });

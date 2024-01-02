@@ -1,12 +1,11 @@
 import 'dart:html';
 import 'package:alumni_management_admin/Models/Colleage_activity.dart';
 import 'package:alumni_management_admin/Models/Response_Model.dart';
-import 'package:alumni_management_admin/Models/event_model.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-import '../Models/Job_Post_Model.dart';
+
 
 
 final FirebaseFirestore firestore = FirebaseFirestore.instance;
