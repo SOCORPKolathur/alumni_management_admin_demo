@@ -3,6 +3,7 @@ import 'package:alumni_management_admin/PieChart_all_department.dart';
 import 'package:alumni_management_admin/Screens/notWorkingPiecharts.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -100,6 +101,7 @@ class _Job_ReportsState extends State<Job_Reports> {
   List <AlumniData> lineGraphListWorkingAlumni=[];
   var departmentColor;
   var indicatorColor;
+
   List<String> hexColorCodes = [
     '#FF5733', '#33FF57', '#5733FF', '#FFFF33', '#FFFF36',
   ];
@@ -129,6 +131,7 @@ class _Job_ReportsState extends State<Job_Reports> {
     Colors.greenAccent,
     Colors.yellowAccent,
   ];
+
   Color color(int index) {
     Set<Color> usedColors = Set<Color>();
     indicatorColor = hexColorCodes[index % hexColorCodes.length];
@@ -145,6 +148,7 @@ class _Job_ReportsState extends State<Job_Reports> {
     }
     return color;
   }
+
   int touchedIndex=0;
   List<PieChartSectionData> showingSections() {
     return List.generate(departmentDataList.length, (i) {
@@ -191,6 +195,7 @@ class _Job_ReportsState extends State<Job_Reports> {
   }
 
 
+  bool functionstaus=false;
   @override
   Widget build(BuildContext context) {
     final List<Color> columnColors = chartData.map((data) => data.color).toList();
@@ -232,8 +237,6 @@ class _Job_ReportsState extends State<Job_Reports> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-
-
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -351,65 +354,67 @@ class _Job_ReportsState extends State<Job_Reports> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              GestureDetector(
-                                onTap: (){
-                                  print(height);
-                                  print(width);
-                                },
-                                child: Text("Select the Year",style:
-                                SafeGoogleFont('Nunito',
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black
-                                ),),
-                              ),
+
+                              Text("Select the Year",style:
+                              SafeGoogleFont('Nunito',
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.black
+                              ),),
+
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
+
                                   SingleChildScrollView(
-                                    controller: _horizontal,
+                                    dragStartBehavior: DragStartBehavior.start,
                                     child: SizedBox(
                                       height: height/13.02,
                                       width: width/1.3009,
                                       child: Row(
                                         children: [
+
                                           Padding(
                                             padding:  EdgeInsets.only(right: width/45.533),
                                             child: GestureDetector(
                                               onTap: () {
-
-                                                scrollToPreviousYear();
+                                                scrollToNextYear();
+                                               // scrollToPreviousYear();
                                               },
                                               child: CircleAvatar(
                                                 child: Icon(Icons.arrow_back),
                                               ),
                                             ),
                                           ),
+
                                           SizedBox(
                                             width: width/1.5177,
                                             child: ListView.builder(
                                               controller: _horizontal,
-                                              reverse: false,
+                                              reverse: true,
                                               scrollDirection: Axis.horizontal,
                                               itemCount: dateList.length,
                                               itemBuilder: (context, index) {
-                                                return Padding(
+                                                  controlllerPostionfunc();
+
+                                                return
+                                                  Padding(
                                                   padding:  EdgeInsets.symmetric(
                                                       horizontal: width/170.75,
                                                       vertical: height/81.375
                                                   ),
                                                   child: GestureDetector(
-                                                    onTap: () {
-                                                      scrollToYearWithAnimation(index);
+                                                    onTap:functionstaus==false?
+                                                        () {
+                                                     // scrollToYearWithAnimation(index);
                                                       setState(() {
                                                         currentBatchDYear = dateList[index];
+                                                        functionstaus=true;
                                                       });
-                                                      print(currentBatchDYear);
-                                                      print('Current Year ++++++++++++++++++++++++++++');
                                                       workingStatusAlumniFunc();
-                                                    },
+                                                    }:(){},
                                                     child: Container(
-                                                      height: 30,
-                                                      width: 80,
+                                                      height: height/24.6333,
+                                                      width: width/19.2,
                                                       decoration: BoxDecoration(
                                                           borderRadius: BorderRadius.circular(5),
                                                           color: currentBatchDYear == dateList[index]
@@ -437,11 +442,13 @@ class _Job_ReportsState extends State<Job_Reports> {
                                               },
                                             ),
                                           ),
+
                                           Padding(
                                             padding:  EdgeInsets.only(left: width/45.533),
                                             child: GestureDetector(
                                               onTap: () {
-                                                scrollToNextYear();
+                                               // scrollToNextYear();
+                                                scrollToPreviousYear();
                                               },
                                               child: CircleAvatar(
                                                 foregroundColor: Colors.red,
@@ -449,6 +456,8 @@ class _Job_ReportsState extends State<Job_Reports> {
                                               ),
                                             ),
                                           ),
+
+
                                         ],
                                       ),
                                     ),
@@ -462,9 +471,6 @@ class _Job_ReportsState extends State<Job_Reports> {
                         ),
                       ),
                     ),
-                   // Testing_screen(CurrentYearValue: currentBatchDYear,departmentDataList: departmentDataList),
-                   // LineChartSample2(),
-
 
 
                     ///pie charts
@@ -530,63 +536,6 @@ class _Job_ReportsState extends State<Job_Reports> {
                                       ),
                                       child: Text("Not Working  Alumna's",style: GoogleFonts.nunito(fontWeight: FontWeight.w700,fontSize: 15),),
                                     ),
-                                   /* SizedBox(
-                                      height: height/2.17,
-                                      width: width/2.483,
-                                      child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: <Widget>[
-
-                                          SizedBox(
-                                            width: width/5.253846153846154,
-                                            child: PieChart(
-                                              PieChartData(
-                                                pieTouchData: PieTouchData(
-                                                  touchCallback: (FlTouchEvent event, pieTouchResponse) {
-
-                                                  },
-                                                ),
-                                                borderData: FlBorderData(
-                                                  show: false,
-                                                ),
-                                                sectionsSpace: 0,
-                                                centerSpaceRadius: 40,
-                                                sections: showingSections(),
-                                              ),
-                                            ),
-                                          ),
-
-
-                                          SizedBox(
-                                            width: width/5.939130434782609,
-                                            child: SingleChildScrollView(
-                                              physics: const ScrollPhysics(),
-                                              child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: <Widget>[
-
-                                                  ListView.builder(
-                                                    shrinkWrap: true,
-                                                    physics: const NeverScrollableScrollPhysics(),
-                                                    itemCount:departmentDataList!.length,
-                                                    itemBuilder: (context, index) {
-                                                      return  Indicator(
-                                                        color: colors[index],
-                                                        text: departmentDataList![index].toString(),
-                                                        isSquare: true,
-                                                      );
-                                                    },),
-
-
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    )*/
 
                                     notWorkingPiecharts(
                                       derpartMentList:departmentDataList,
@@ -792,7 +741,7 @@ class _Job_ReportsState extends State<Job_Reports> {
                                 primaryYAxis: NumericAxis(
                                   title:AxisTitle(text: "Percentage",textStyle: GoogleFonts.nunito(fontWeight: FontWeight.w600)) ,
                                   minimum: 0,
-                                  maximum: 10,
+                                  maximum: 5,
                                   borderWidth: 0,
                                   borderColor: Constants().primaryAppColor,
                                   majorGridLines: const MajorGridLines(width: 0),
@@ -832,7 +781,6 @@ class _Job_ReportsState extends State<Job_Reports> {
 
 
 
-
   scrollToYear(int index) {
     _horizontal.animateTo(
       index * 100.0,
@@ -864,7 +812,7 @@ class _Job_ReportsState extends State<Job_Reports> {
 
   void scrollToYearWithAnimation(int index) {
     _horizontal.animateTo(
-      index * (80 + 2 * 8), // Adjust this value based on your item size and padding
+      index * (100 + 2 * 8), // Adjust this value based on your item size and padding
       duration: Duration(milliseconds: 500),
       curve: Curves.easeInOut,
     );
@@ -929,20 +877,16 @@ class _Job_ReportsState extends State<Job_Reports> {
        workingStatusOwnBus=0;
     });
 
-
-
+/// total of User get method line
     var UserData= await  FirebaseFirestore.instance.collection('Users').orderBy("yearofpassed").get();
-
-    setState(() {
-      TotalAlumniUserCount=UserData.docs.length;
-    });
-
     for(int x=0;x<UserData.docs.length;x++){
 
+      /// iin this id statement only add the selected year to add the workingpersonListData
       if(int.parse(UserData.docs[x]['yearofpassed'].toString())==currentBatchDYear){
         setState(() {
-          alumniWorkingCount=alumniWorkingCount+1;
-          workingPersonListData.add(
+          alumniWorkingCount=alumniWorkingCount+1;/// increase the working count value
+          TotalAlumniUserCount=TotalAlumniUserCount+1;/// selected  year user total count increase line
+          workingPersonListData.add(/// in this add function only selected year user to added
               workingPerson(
                 batch: UserData.docs[x]['yearofpassed'].toString(),
                 department:UserData.docs[x]['subjectStream'].toString() ,
@@ -953,11 +897,12 @@ class _Job_ReportsState extends State<Job_Reports> {
         });
       }
 
-     /* else{
+      /// in this if statement  overall user working person to filtered to add the line graph  list
         if(UserData.docs[x]['workingStatus']=="Yes"){
           yesValue=yesValue+1;
-          lineGraphListWorkingAlumni.add(AlumniData(sales:double.parse(((yesValue/TotalAlumniUserCount)).toString()),year:UserData.docs[x]['yearofpassed'].toString()  ));
+          lineGraphListWorkingAlumni.add(AlumniData(sales:double.parse(((yesValue/UserData.docs.length)).toString()),year:UserData.docs[x]['yearofpassed'].toString()  ));
 
+          /// in this if Statement too get department one list too check the that list of overall user department is equal to to add the  LineDataList list
           if(departmentDataList.contains(UserData.docs[x]['subjectStream'])){
             value=value+1;
             LineDataList.add(lineData(int.parse(UserData.docs[x]['yearofpassed']), double.parse(((value/TotalAlumniUserCount)).toString())));
@@ -965,13 +910,14 @@ class _Job_ReportsState extends State<Job_Reports> {
         }
         if(UserData.docs[x]['workingStatus']=="No"){
           noValue=noValue+1;
-
+          lineGraphListWorkingAlumni.add(AlumniData(sales:double.parse(((noValue/UserData.docs.length)).toString()),year:UserData.docs[x]['yearofpassed'].toString()  ));
           if(departmentDataList.contains(UserData.docs[x]['subjectStream'])){
             value2=value2+1;
             LineDataList2.add(lineData(int.parse(UserData.docs[x]['yearofpassed']), double.parse(((value2/TotalAlumniUserCount)*100).toString())));
           }
         }
-        if(UserData.docs[x]['workingStatus']=="Own Business"){
+
+      /*  if(UserData.docs[x]['workingStatus']=="Own Business"){
           ownsValue=ownsValue+1;
           areaLineOwnList.add(AreLineData(int.parse(UserData.docs[x]['yearofpassed'].toString()), double.parse(((ownsValue/TotalAlumniUserCount)).toString())));
           if(departmentDataList.contains(UserData.docs[x]['subjectStream'])){
@@ -979,47 +925,45 @@ class _Job_ReportsState extends State<Job_Reports> {
             LineDataList3.add(lineData(int.parse(UserData.docs[x]['yearofpassed']), double.parse(((value3/TotalAlumniUserCount)*100).toString()))
             );
           }
-        }
-      }*/
+        }*/
 
 
     }
 
 
 
-
+/// workingPersonListData in this selected year to check the circle progress and graph function for each loop
     workingPersonListData.forEach((element) {
 
-      if(element.workingStatus=="Yes"){
+      if(element.workingStatus=="Yes"){/// in this selected year only to calculate the how many person working to find the if statement
         workingStatusYes=workingStatusYes+1;
         setState(() {
-          workingAlumniPercentage= workingStatusYes/TotalAlumniUserCount;
-          workingAlumniUserCount=workingAlumniUserCount+1;
+          workingAlumniPercentage= workingStatusYes/TotalAlumniUserCount;/// in this line workingAlumniPercentage to calculate the selected year working person percentage value line
+          workingAlumniUserCount=workingAlumniUserCount+1;///workingAlumniUserCount working person counts
         });
-
-        lineGraphListWorkingAlumni.add(AlumniData(sales:double.parse(((workingStatusYes/TotalAlumniUserCount)).toString()),year:element.batch.toString()  ));
-
-        if(departmentDataList.contains(element.department)){
-          CountValue=CountValue+1;
-          chartData.add(BarChartData.randomColor(element.department.toString(), CountValue / TotalAlumniUserCount));
+        //  lineGraphListWorkingAlumni.add(AlumniData(sales:double.parse(((workingStatusYes/TotalAlumniUserCount)).toString()),year:element.batch.toString()  ));
+        if(departmentDataList.contains(element.department)){/// to equalto the user department and department list is equal to add lineDate List
+          CountValue=CountValue+1;/// to find the how many person contains the department count (local variable)
+          //chartData.add(BarChartData.randomColor(element.department.toString(), CountValue / TotalAlumniUserCount));
           LineDataList.add(lineData(int.parse(element.batch.toString()), double.parse(((CountValue/TotalAlumniUserCount)*100).toString())));
 
         }
       }
 
-      if(element.workingStatus=="No"){
+      if(element.workingStatus=="No"){/// in this selected year only to calculate the how many person Not working to find the if statement
         workingStatusNO=workingStatusNO+1;
         setState(() {
-          notworkingAlumniPercentage= (TotalAlumniUserCount-workingAlumniPercentage)/TotalAlumniUserCount;
-          notAlumniUserCount=notAlumniUserCount+1;
+          notworkingAlumniPercentage= workingStatusNO/TotalAlumniUserCount;/// in this line workingAlumniPercentage to calculate the selected year Not working person percentage value line
+          notAlumniUserCount=notAlumniUserCount+1;///workingAlumniUserCount Not working person counts
         });
-        if(departmentDataList.contains(element.department)){
-          CountValue=CountValue+1;
+        if(departmentDataList.contains(element.department)){/// to equalto the user department and department list is equal to add lineDate List
+          CountValue=CountValue+1;/// to find the how many person contains the department count (local variable)
           LineDataList2.add(lineData(int.parse(element.batch.toString()), double.parse(((CountValue/TotalAlumniUserCount)*100).toString())));
 
         }
       }
 
+      /// same scenario woking all if statement but defer from the user working status (working status Yes Or No Or Own business)
       if(element.workingStatus=="Own Business"){
         workingStatusOwnBus=workingStatusOwnBus+1;
         ownBusinessAlumniPercentage= (workingStatusOwnBus/TotalAlumniUserCount);
@@ -1033,15 +977,22 @@ class _Job_ReportsState extends State<Job_Reports> {
       }
 
       if(departmentDataList.contains(element.department)){
-        CountValue2=CountValue2+1;
-        OwnBusinesschartData.add(OwnBusinessBarChartData.randomColor(element.workingStatus.toString(), CountValue2 / TotalAlumniUserCount));
-      }
 
+        print("contains of department List+++++++++++++++++++++++++++++++++++ ${element.department.toString()}");
+
+        CountValue2=CountValue2+1;
+        chartData.add(BarChartData.randomColor(element.department.toString(), CountValue2 / TotalAlumniUserCount));
+        // OwnBusinesschartData.add(OwnBusinessBarChartData.randomColor(element.workingStatus.toString(), CountValue2 / TotalAlumniUserCount));
+      }
 
     });
 
     print("Current year Working Status User List ${workingPersonListData.length})))))))))))))))))))))))");
 
+
+    setState(() {
+      functionstaus=false;
+    });
   }
 
   getYears(int year) {
@@ -1057,6 +1008,19 @@ class _Job_ReportsState extends State<Job_Reports> {
       dateList=yearsTilPresent;
     });
 
+
+
+  }
+
+
+  controlllerPostionfunc(){
+
+    print("Controller function entgereddddddddd_______________________________________________");
+    for(int i=0;i<dateList.length;i++){
+      if(dateList[i]==DateTime.now().year-1){
+        _horizontal.animateTo((i*100).toDouble(), duration: const Duration(milliseconds: 500), curve: Curves.easeOut);
+      }
+    }
   }
 
 

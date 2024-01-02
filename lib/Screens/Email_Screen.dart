@@ -51,7 +51,7 @@ class _Email_ScreenState extends State<Email_Screen> {
                             'Nunito',
                           fontSize: width / 82.538,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xff030229),),
+                          color: const Color(0xff030229),),
                       ),
                     ),
                   ],
@@ -115,7 +115,7 @@ class _Email_ScreenState extends State<Email_Screen> {
                                   margin: EdgeInsets.symmetric(horizontal: width/68.3, vertical: height/32.55),
                                   decoration: BoxDecoration(
                   color: Colors.white,
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
                       color: Colors.black26,
                       offset: Offset(1, 2),
@@ -135,7 +135,7 @@ class _Email_ScreenState extends State<Email_Screen> {
                             horizontal: width/68.3, vertical: height/81.375),
                         child: Row(
                           children: [
-                            Icon(Icons.message),
+                            const Icon(Icons.message),
                             SizedBox(width: width/136.6),
                             KText(
                               text: "EMAIL",
@@ -152,7 +152,7 @@ class _Email_ScreenState extends State<Email_Screen> {
                     Expanded(
                       child: Container(
                         width: double.infinity,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(10),
@@ -209,7 +209,7 @@ class _Email_ScreenState extends State<Email_Screen> {
                                                           child: Text(
                                                             '#$option',
                                                             textAlign: TextAlign.left,
-                                                            style: TextStyle(
+                                                            style: const TextStyle(
                                                               color: Color.fromARGB(255, 74, 137, 92),
                                                             ),
                                                           ),
@@ -225,7 +225,7 @@ class _Email_ScreenState extends State<Email_Screen> {
                                       },
                                       optionsBuilder: (TextEditingValue textEditingValue) {
                                         if (textEditingValue.text == '') {
-                                          return Iterable<String>.empty();
+                                          return const Iterable<String>.empty();
                                         }
                                         return _pickLanguage.where((String option) {
                                           return option.contains(textEditingValue.text.toLowerCase());
@@ -239,8 +239,8 @@ class _Email_ScreenState extends State<Email_Screen> {
                                           textEditingController: ttec,
                                           focusNode: tfn,
                                           textfieldTagsController: controller,
-                                          initialTags: [],
-                                          textSeparators: [' ', ','],
+                                          initialTags: const [],
+                                          textSeparators: const [' ', ','],
                                           letterCase: LetterCase.normal,
                                           validator: (String tag) {
                                             if (tag == 'php') {
@@ -275,7 +275,7 @@ class _Email_ScreenState extends State<Email_Screen> {
                                                           children: tags.map((String tag) {
                                                             return Container(
                                                               decoration: BoxDecoration(
-                                                                borderRadius: BorderRadius.all(
+                                                                borderRadius: const BorderRadius.all(
                                                                   Radius.circular(20.0),
                                                                 ),
                                                                 color: Constants().primaryAppColor,
@@ -291,7 +291,7 @@ class _Email_ScreenState extends State<Email_Screen> {
                                                                   InkWell(
                                                                     child: Text(
                                                                       tag,
-                                                                      style: TextStyle(
+                                                                      style: const TextStyle(
                                                                           color: Colors.white),
                                                                     ),
                                                                   ),
@@ -345,12 +345,18 @@ class _Email_ScreenState extends State<Email_Screen> {
                                   Container(
                                     decoration: BoxDecoration(color: const Color(0xffDDDEEE),
                                         borderRadius: BorderRadius.circular(3)),
-                                    child: TextFormField(
-                                      decoration: InputDecoration(
-                                        border: InputBorder.none
+                                    child: Padding(
+                                      padding:  EdgeInsets.symmetric(
+                                          horizontal: width/192,
+                                          vertical: height/92.375
                                       ),
-                                      style: TextStyle(fontSize: width /113.83),
-                                      controller: subjectController,
+                                      child: TextFormField(
+                                        decoration: const InputDecoration(
+                                          border: InputBorder.none
+                                        ),
+                                        style: TextStyle(fontSize: width /113.83),
+                                        controller: subjectController,
+                                      ),
                                     ),
                                   )
                                 ],
@@ -439,7 +445,7 @@ class _Email_ScreenState extends State<Email_Screen> {
                                         height: height/18.475,
                                         width: width/12.8,
                                         decoration: BoxDecoration(
-                                          color: Color(0xffD60A0B),
+                                          color: const Color(0xffD60A0B),
                                           borderRadius:
                                           BorderRadius.circular(4),
                                         ),
@@ -447,7 +453,7 @@ class _Email_ScreenState extends State<Email_Screen> {
                                           child:Row(
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
-                                              Icon(Icons.send,
+                                              const Icon(Icons.send,
                                                   color: Colors.white),
                                               SizedBox(width: width /273.2),
                                               KText(
@@ -488,11 +494,11 @@ class _Email_ScreenState extends State<Email_Screen> {
     backgroundColor: Colors.transparent,
     elevation: 0,
     content: Container(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: Constants().primaryAppColor, width: 3),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Color(0x19000000),
               spreadRadius: 2.0,
@@ -505,14 +511,14 @@ class _Email_ScreenState extends State<Email_Screen> {
         child: Row(
           children: [
             Icon(Icons.info_outline, color: Constants().primaryAppColor),
-            Padding(
+            const Padding(
               padding: EdgeInsets.only(left: 8.0),
               child: Text('Please fill required fields !!',
                   style: TextStyle(color: Colors.black)),
             ),
-            Spacer(),
+            const Spacer(),
             TextButton(
-                onPressed: () => debugPrint("Undid"), child: Text("Undo"))
+                onPressed: () => debugPrint("Undid"), child: const Text("Undo"))
           ],
         )),
   );

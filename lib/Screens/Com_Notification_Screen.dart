@@ -22,7 +22,7 @@ class Com_Notification_Screen extends StatefulWidget {
 
 class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
   String currentTab = 'ADD';
-  bool isUsers = false;
+  bool isUsers = true;
   String Uservalue="All";
   List dropDownApplyedvalue=[];
 
@@ -407,13 +407,19 @@ class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
                                       Container(
                                         decoration: BoxDecoration(color: const Color(0xffDDDEEE),
                                             borderRadius: BorderRadius.circular(3)),
-                                        child: TextFormField(
-                                          decoration: InputDecoration(
-                                            border: InputBorder.none
+                                        child: Padding(
+                                          padding:  EdgeInsets.symmetric(
+                                            horizontal: width/192,
+                                            vertical: height/92.375
                                           ),
-                                          style: TextStyle(
-                                              fontSize: width / 113.83),
-                                          controller: subjectController,
+                                          child: TextFormField(
+                                            decoration: InputDecoration(
+                                              border: InputBorder.none
+                                            ),
+                                            style: TextStyle(
+                                                fontSize: width / 113.83),
+                                            controller: subjectController,
+                                          ),
                                         ),
                                       )
                                     ],

@@ -18,7 +18,7 @@ class Alldepartment extends StatefulWidget {
 
 class _AlldepartmentState extends State<Alldepartment> {
 
-  int touchedIndex= 1;
+  int touchedIndex= -1;
 
   @override
   Widget build(BuildContext context) {
@@ -239,12 +239,18 @@ class Indicator extends StatelessWidget {
         SizedBox(
           width: width/341.5,
         ),
-        Text(
-          text,
-          style: SafeGoogleFont('Nunito',
-            fontSize: width/85.375,
-            fontWeight: FontWeight.bold,
-            color: textColor,
+        SizedBox(
+          width: width/6.5361,
+          child: Text(
+            text,
+            style: SafeGoogleFont('Nunito',
+              fontSize: width/85.375,
+              fontWeight: FontWeight.bold,
+              color: textColor,
+              textStyle: TextStyle(
+                overflow: TextOverflow.ellipsis
+              )
+            ),
           ),
         )
       ],

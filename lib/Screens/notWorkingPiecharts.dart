@@ -17,7 +17,7 @@ class notWorkingPiecharts extends StatefulWidget {
 
 class _notWorkingPiechartsState extends State<notWorkingPiecharts> {
 
-  int touchedIndex= 0;
+  int touchedIndex= -1;
 
   List colors=[
     Colors.red,
@@ -45,9 +45,11 @@ class _notWorkingPiechartsState extends State<notWorkingPiecharts> {
     Colors.yellowAccent,
   ];
 
+  late List departmentListValues;
   @override
   void initState() {
     textingFunction();
+     departmentListValues=widget.derpartMentList!;
     // TODO: implement initState
     super.initState();
   }
@@ -65,9 +67,11 @@ class _notWorkingPiechartsState extends State<notWorkingPiecharts> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
 
+
           SizedBox(
             width: width/5.253846153846154,
-            child: PieChart(
+            child:
+            PieChart(
               PieChartData(
                 pieTouchData: PieTouchData(
                   touchCallback: (FlTouchEvent event, pieTouchResponse) {
@@ -83,6 +87,7 @@ class _notWorkingPiechartsState extends State<notWorkingPiecharts> {
               ),
             ),
           ),
+
 
 
           SizedBox(
@@ -101,7 +106,7 @@ class _notWorkingPiechartsState extends State<notWorkingPiecharts> {
                     itemBuilder: (context, index) {
                       return  Indicator(
                         color: colors[index],
-                        text: widget.derpartMentList![index].toString(),
+                        text: departmentListValues[index].toString(),
                         isSquare: true,
                       );
                     },),
