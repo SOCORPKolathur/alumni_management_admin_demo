@@ -4,13 +4,9 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-import 'package:get/get.dart';
 import 'dart:ui';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:alumni_management_admin/utils.dart';
 import 'package:intl/intl.dart';
-
-import 'Dashboard.dart';
 
 
 
@@ -645,7 +641,6 @@ class _SigninPageState extends State<SigninPage> {
 
 
  getUserLocation() async {
-
     WebBrowserInfo androidInfo = await deviceInfo.webBrowserInfo;
     setState(() {
       deviceId = androidInfo.productSub!;
@@ -658,7 +653,6 @@ class _SigninPageState extends State<SigninPage> {
     print(deviceLocation);
     print(browsername);
     print("+++++++++++++++++++++++++++++++++++");
-
   }
 
 }

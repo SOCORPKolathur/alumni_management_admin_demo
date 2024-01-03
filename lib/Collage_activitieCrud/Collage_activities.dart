@@ -36,6 +36,9 @@ class ActivityFireCrud {
     required File? image,
     required String description,
     required String date,
+    required String activityType,
+    required String activityDep,
+    required String activityYear,
   }) async {
     String downloadUrl = '';
     if(image != null){
@@ -47,6 +50,9 @@ class ActivityFireCrud {
     ColleageActivityModel event = ColleageActivityModel(
       time: time,
       title: title,
+      activityType: activityType,
+      activityDep: activityDep,
+      activityYear: activityYear,
       timestamp: tempDate.millisecondsSinceEpoch,
       location: location,
       imgUrl: image != null ? downloadUrl : '',

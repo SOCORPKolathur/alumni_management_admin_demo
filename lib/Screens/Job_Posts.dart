@@ -1362,7 +1362,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin{
                               return Container();
                             } else if (snapshot.hasData) {
                               List<JobPostModel> jobPost = snapshot.data!;
-                              exportdataListFromStream = jobPost;
+                              exportdataListFromStream = snapshot.data!;
                               List<GlobalKey<State<StatefulWidget>>>popMenuKeys = List.generate(jobPost.length, (index) => GlobalKey(),);
                               return ListView.builder(
                                 shrinkWrap: true,
@@ -1533,6 +1533,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin{
 
                             List<JobPostModel> verifyed=[];
                             List<JobPostModel> Notverifyed=[];
+                              exportdataListFromStream = snapshot.data!;
                             snapshot.data!.forEach((element){
                               if(element.verify==true){
                                 verifyed.add(element);
@@ -3704,6 +3705,8 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin{
       row.add(jobPost[i].description!);
       rows.add(row);
     }
+    print(row);
+    print("dynamic list++++++++++++++++++++++++++++++++++++++++++++++++++++++");
     String pdf = ListToCsvConverter().convert(rows);
     savePdfToFile(pdf);
   }
@@ -4071,7 +4074,6 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin{
   }
 
   Popupmenu(BuildContext context, jobPost, key, size) async {
-    print("Popupmenu open-----------------------------------------------------------");
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     final render = key.currentContext!.findRenderObject() as RenderBox;
@@ -4188,8 +4190,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin{
   }
 
   menuItemExportData(BuildContext context, jobPost, key, size) async {
-    print(
-        "Popupmenu open-----------------------------------------------------------");
+    print("Popupmenu open-----------------------------------------------------------");
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     final render = key.currentContext!.findRenderObject() as RenderBox;
@@ -4207,10 +4208,20 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin{
         enabled: true,
         onTap: () async {
           if (item == "Print") {
+            print(exportdataListFromStream.length);
+            print(jobPost.length);
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");
             var data = await generateJobPostPdf(PdfPageFormat.letter, jobPost, false);
           } else if (item == "Copy") {
+            print(exportdataListFromStream.length);
+            print(jobPost.length);
+            print("222222222222222222222222222222222222222222222222222222222222222222222222222");
             copyToClipBoard(jobPost);
           } else if (item == "Csv") {
+
+            print(exportdataListFromStream.length);
+            print(jobPost.length);
+            print("333333333333333333333333333333333333333333333333333333333333333333333");
             convertToCsv(jobPost);
           }
         },
@@ -4290,8 +4301,6 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin{
   }
 
   filterDataMenuItem(BuildContext context,  key, size) async {
-    print(
-        "Popupmenu open-----------------------------------------------------------");
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     final render = key.currentContext!.findRenderObject() as RenderBox;

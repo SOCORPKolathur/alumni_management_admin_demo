@@ -1,10 +1,12 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:country_flags/country_flags.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:intl/intl.dart';
 
 import '../Constant_.dart';
 import '../Demo_Page.dart';
@@ -48,10 +50,12 @@ class _DashBoardState extends State<DashBoard> {
 
   totalalumnifunc()async{
     var document=await FirebaseFirestore.instance.collection("Users").get();
-    var verifyedusers=await FirebaseFirestore.instance.collection("Users").get();
+    var verifyedusers=await FirebaseFirestore.instance.collection("Users").where("verifyed",isEqualTo:true).get();
+    var eventsCount=await FirebaseFirestore.instance.collection("Batch_events").get();
     setState(() {
       TotalUsers=document.docs.length;
       verifyedUsers=verifyedusers.docs.length;
+      totalEvents=eventsCount.docs.length;
     });
 
 
@@ -91,6 +95,7 @@ class _DashBoardState extends State<DashBoard> {
   TextEditingController no_of_childreancon = TextEditingController();
   TextEditingController ownBussinesscon = TextEditingController();
   TextEditingController alumniEmployedController = TextEditingController(text: "No");
+  TextEditingController requestedLanguageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -1834,140 +1839,108 @@ class _DashBoardState extends State<DashBoard> {
         shadowColor: Colors.black12,
         position:  const RelativeRect.fromLTRB(500, 70, 300, 550),
         items: [
-          PopupMenuItem(
-            child: PopupMenuButton(
-              surfaceTintColor:  const Color(0xffFFFFFF),
-              color: const Color(0xffFFFFFF),
-              shadowColor: Colors.transparent,
-              onSelected: (val) {
-                Navigator.pop(cxt);
-              },
-              position: PopupMenuPosition.over,
-              itemBuilder: (ctx) {
-                return [
-                  PopupMenuItem<String>(
-                    value: 'ta',
-                    child:  const Text('Tamil'),
-                    onTap: () {
-                      changeLocale(cxt, 'ta');
-                      Constants.flagvalue= "hi";
-                      Constants.langvalue='Tamil';
-                    },
-                  ),
-                  PopupMenuItem<String>(
-                    value: 'hi',
-                    child:  const Text('Hindi'),
-                    onTap: () {
-                      setState(() {
-                        changeLocale(cxt, 'hi');
-                        Constants. flagvalue= "hi";
-                        Constants.langvalue='Hindi';
-                      });
-                    },
-                  ),
-                  PopupMenuItem<String>(
-                    value: 'te',
-                    child:  const Text('Telugu'),
-                    onTap: () {
-                      changeLocale(cxt, 'te');
-                      Constants. flagvalue= "hi";
-                      Constants.langvalue='Telugu';
-                    },
-                  ),
-                  PopupMenuItem<String>(
-                    value: 'ml',
-                    child:  const Text('Malayalam'),
-                    onTap: () {
-                      setState(() {
-                        changeLocale(cxt, 'ml');
-                        Constants. flagvalue= "hi";
-                        Constants.langvalue='Malayalam';
-                      });
-                    },
-                  ),
-                  PopupMenuItem<String>(
-                    value: 'kn',
-                    child:  const Text('Kannada'),
-                    onTap: () {
-                      setState(() {
-                        changeLocale(cxt, 'kn');
-                        Constants.flagvalue= "hi";
-                        Constants. langvalue='Kannada';
-                      });
-                    },
-                  ),
-                  PopupMenuItem<String>(
-                    value: 'mr',
-                    child:  const Text('Marathi'),
-                    onTap: () {
-                      setState(() {
-                        changeLocale(cxt, 'mr');
-                        Constants.flagvalue= "hi";
-                        Constants.langvalue='Marathi';
-                      });
-                    },
-                  ),
-                  PopupMenuItem<String>(
-                    value: 'gu',
-                    child:  const Text('Gujarati'),
-                    onTap: () {
-                      setState(() {
-                        changeLocale(cxt, 'gu');
-                        Constants.flagvalue= "hi";
-                        Constants.langvalue='Gujarati';
-                      });
-                    },
-                  ),
-                  PopupMenuItem<String>(
-                    value: 'or',
-                    child:  const Text('Odia'),
-                    onTap: () {
-                      setState(() {
-                        changeLocale(cxt, 'or');
-                        Constants. flagvalue= "hi";
-                        Constants.langvalue='Odia';
-                      });
-                    },
-                  ),
-                  PopupMenuItem<String>(
-                    value: 'bn',
-                    child:  const Text('Bengali'),
-                    onTap: () {
-                      setState(() {
-                        changeLocale(cxt, 'bn');
-                        Constants.flagvalue= "hi";
-                        Constants.langvalue='Bengali';
-                      });
-                    },
-                  ),
-                ];
-              },
-              child: Row(
-                children: [
-                  CountryFlag.fromLanguageCode(
-                    "hi",
-                    height: height/16.275,
-                    width: width/45.53,
-                  ),
-                  SizedBox(width: width/136.6),
-                  const Text("India"),
-                ],
-              ),
-            ),
+
+
+          PopupMenuItem<String>(
+            value: 'ta',
+            child:  const Text('Tamil'),
+            onTap: () {
+              changeLocale(cxt, 'ta');
+              Constants.flagvalue= "hi";
+              Constants.langvalue='Tamil';
+            },
           ),
           PopupMenuItem<String>(
+            value: 'hi',
+            child:  const Text('Hindi'),
+            onTap: () {
+              setState(() {
+                changeLocale(cxt, 'hi');
+                Constants. flagvalue= "hi";
+                Constants.langvalue='Hindi';
+              });
+            },
+          ),
+          PopupMenuItem<String>(
+            value: 'te',
+            child:  const Text('Telugu'),
+            onTap: () {
+              changeLocale(cxt, 'te');
+              Constants. flagvalue= "hi";
+              Constants.langvalue='Telugu';
+            },
+          ),
+          PopupMenuItem<String>(
+            value: 'ml',
+            child:  const Text('Malayalam'),
+            onTap: () {
+              setState(() {
+                changeLocale(cxt, 'ml');
+                Constants. flagvalue= "hi";
+                Constants.langvalue='Malayalam';
+              });
+            },
+          ),
+          PopupMenuItem<String>(
+            value: 'kn',
+            child:  const Text('Kannada'),
+            onTap: () {
+              setState(() {
+                changeLocale(cxt, 'kn');
+                Constants.flagvalue= "hi";
+                Constants. langvalue='Kannada';
+              });
+            },
+          ),
+          PopupMenuItem<String>(
+            value: 'mr',
+            child:  const Text('Marathi'),
+            onTap: () {
+              setState(() {
+                changeLocale(cxt, 'mr');
+                Constants.flagvalue= "hi";
+                Constants.langvalue='Marathi';
+              });
+            },
+          ),
+          PopupMenuItem<String>(
+            value: 'gu',
+            child:  const Text('Gujarati'),
+            onTap: () {
+              setState(() {
+                changeLocale(cxt, 'gu');
+                Constants.flagvalue= "hi";
+                Constants.langvalue='Gujarath';
+              });
+            },
+          ),
+          PopupMenuItem<String>(
+            value: 'or_IN',
+            child:  const Text('Odia'),
+            onTap: () {
+              setState(() {
+                changeLocale(cxt, 'or_IN');
+                Constants. flagvalue= "hi";
+                Constants.langvalue='Odia';
+              });
+            },
+          ),
+          PopupMenuItem<String>(
+            value: 'bn',
+            child:  const Text('Bengali'),
+            onTap: () {
+              setState(() {
+                changeLocale(cxt, 'bn');
+                Constants.flagvalue= "hi";
+                Constants.langvalue='Bengali';
+              });
+            },
+          ),
+
+          /// english Language
+          PopupMenuItem<String>(
             value: 'en_US',
-            child: Row(
-              children: [
-                CountryFlag.fromLanguageCode(
-                  "en",
-                  height: height/16.275,
-                  width: width/45.53,
-                ),
-                SizedBox(width: width/136.6),
-                const Text('English'),
-              ],
-            ),
+            child: const Text('English'),
             onTap: () {
            setState(() {
              changeLocale(cxt, 'en_US');
@@ -1977,182 +1950,20 @@ class _DashBoardState extends State<DashBoard> {
               //changeHomeViewLanguage();
             },
           ),
+
+          ///requested language
           PopupMenuItem<String>(
             value: 'es',
             child: Row(
               children: [
-                CountryFlag.fromLanguageCode(
-                  "es",
-                  height: height/16.275,
-                  width: width/45.53,
-                ),
-                SizedBox(width: width/136.6),
-                const Text('Spanish'),
+                const Text('Requested Language'),
               ],
             ),
             onTap: () {
-              setState(() {
-                changeLocale(cxt, 'es');
-                Constants.flagvalue= "es";
-                Constants. langvalue='Spanish';
-                //changeHomeViewLanguage();
-              });
+              requesteLanguagePopup(context);
             },
           ),
-          PopupMenuItem<String>(
-            value: 'pt',
-            child: Row(
-              children: [
-                CountryFlag.fromCountryCode(
-                  "PT",
-                  height: height/16.275,
-                  width: width/45.53,
-                ),
-                SizedBox(width: width/136.6),
-                const Text('Portuguese'),
-              ],
-            ),
-            onTap: () {
-              setState(() {
-                Constants.flagvalue= "PT";
-                changeLocale(cxt, 'pt');
-                Constants.langvalue='Portuguese';
-                //changeHomeViewLanguage();
-              });
-            },
-          ),
-          PopupMenuItem<String>(
-            value: 'fr',
-            child: Row(
-              children: [
-                CountryFlag.fromLanguageCode(
-                  "fr",
-                  height: height/16.275,
-                  width: width/45.53,
-                ),
-                SizedBox(width: width/136.6),
-                const Text('French'),
-              ],
-            ),
-            onTap: () {
-              setState(() {
-                Constants.flagvalue= "Fr";
-                changeLocale(cxt, 'fr');
-                Constants.langvalue='French';
-                //changeHomeViewLanguage();
-              });
-            },
-          ),
-          PopupMenuItem<String>(
-            value: 'nl',
-            child: Row(
-              children: [
-                CountryFlag.fromCountryCode(
-                  "NL",
-                  height: height/16.275,
-                  width: width/45.53,
-                ),
-                SizedBox(width: width/136.6),
-                const Text('Dutch'),
-              ],
-            ),
-            onTap: () {
-              setState(() {
-                changeLocale(cxt, 'nl');
-                Constants.flagvalue= "nl";
-                Constants.langvalue='Dutch';
-                //changeHomeViewLanguage();
-              });
-            },
-          ),
-          PopupMenuItem<String>(
-            value: 'de',
-            child: Row(
-              children: [
-                CountryFlag.fromLanguageCode(
-                  "de",
-                  height: height/16.275,
-                  width: width/45.53,
-                ),
-                SizedBox(width: width/136.6),
-                const Text('German'),
-              ],
-            ),
-            onTap: () {
-              setState(() {
-                changeLocale(cxt, 'de');
-                Constants.flagvalue= "de";
-                Constants.langvalue='German';
-                //changeHomeViewLanguage();
-              });
-            },
-          ),
-          PopupMenuItem<String>(
-            value: 'it',
-            child: Row(
-              children: [
-                CountryFlag.fromLanguageCode(
-                  "it",
-                  height: height/16.275,
-                  width: width/45.53,
-                ),
-                SizedBox(width: width/136.6),
-                const Text('Italian'),
-              ],
-            ),
-            onTap: () {
-              setState(() {
-                changeLocale(cxt, 'it');
-                Constants.flagvalue= "it";
-                Constants.langvalue='Italian';
-                //changeHomeViewLanguage();
-              });
-            },
-          ),
-          PopupMenuItem<String>(
-            value: 'sv',
-            child: Row(
-              children: [
-                CountryFlag.fromCountryCode(
-                  "SE",
-                  height: height/16.275,
-                  width: width/45.53,
-                ),
-                SizedBox(width: width/136.6),
-                const Text('Swedish'),
-              ],
-            ),
-            onTap: () {
-              setState(() {
-                Constants.flagvalue= "SE";
-                changeLocale(cxt, 'sv');
-                Constants.langvalue='Swedish';
-                //changeHomeViewLanguage();
-              });
-            },
-          ),
-          PopupMenuItem<String>(
-            value: 'ltz',
-            child: Row(
-              children: [
-                CountryFlag.fromCountryCode(
-                  "lu",
-                  height: height/16.275,
-                  width: width/45.53,
-                ),
-                SizedBox(width: width/136.6),
-                const Text('Luxembourish'),
-              ],
-            ),
-            onTap: () {
-              setState(() {
-                Constants.flagvalue= "lu";
-                changeLocale(cxt, 'ltz');
-                Constants.langvalue='Luxembourish';
-                //changeHomeViewLanguage();
-              });
-            },
-          ),
+
         ],
         elevation: 8.0,
         useRootNavigator: true);
@@ -4871,6 +4682,228 @@ class _DashBoardState extends State<DashBoard> {
   }
 
 
+  /// requested language popup
 
+
+requesteLanguagePopup(ctx){
+
+  double height = MediaQuery.of(context).size.height;
+  double width = MediaQuery.of(context).size.width;
+  Size size = MediaQuery.of(context).size;
+    return showDialog(context: context, builder: (ctx) {
+      return AlertDialog(
+        backgroundColor: Colors.transparent,
+        content: Container(
+          width: width / 3.2418,
+          height:270,
+          margin: EdgeInsets.symmetric(horizontal: width / 68.3, vertical: height / 32.55),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                offset: Offset(1, 2),
+                blurRadius: 3,
+              ),
+            ],
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SizedBox(
+                height: size.height * 0.1,
+                width: double.infinity,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: width / 68.3, vertical: height / 81.375),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      KText(
+                        text: "Requested Language",
+                        style: SafeGoogleFont(
+                          'Nunito',
+                          fontSize: width / 88.3,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: Color(0xffF7FAFC),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10),
+                      )),
+                  padding: EdgeInsets.symmetric(horizontal: width / 68.3, vertical: height / 32.55),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment:
+                            CrossAxisAlignment.start,
+                            children: [
+                              KText(
+                                text: "Language Name ",
+                                style: SafeGoogleFont(
+                                  'Nunito',
+                                  fontSize: width / 105.571,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: height / 108.5),
+                              Material(
+                                borderRadius: BorderRadius.circular(3),
+                                color: Color(0xffDDDEEE),
+                                elevation: 5,
+                                child: SizedBox(
+                                  height: height / 16.02,
+                                  width: size.width * 0.17,
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: height / 81.375,
+                                        horizontal: width / 170.75),
+                                    child: TextFormField(
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter
+                                            .allow(RegExp(
+                                            "[a-zA-Z ]")),
+                                      ],
+                                      style: SafeGoogleFont(
+                                        'Nunito',
+                                        fontSize: width / 105.571,
+                                      ),
+                                      minLines: 1,
+                                      controller: requestedLanguageController,
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        hintStyle: SafeGoogleFont(
+                                          'Nunito',
+                                          fontSize: width / 105.571,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+
+                      Padding(
+                        padding:  EdgeInsets.only(top:30),
+                        child: Row(
+                          mainAxisAlignment:
+                          MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: width/10.6,
+                            ),
+
+                            /// Submit Button
+                            GestureDetector(
+                              onTap: () async {
+                                if (requestedLanguageController.text !=  "") {
+                                  Navigator.pop(context);
+                                  CoolAlert.show(
+                                    barrierDismissible: true,
+                                      context: ctx,
+                                      type: CoolAlertType.success,
+                                      text: "Requested Language  Submitted successfully!",
+                                      width: size.width * 0.4,
+                                      backgroundColor: Constants()
+                                         .primaryAppColor
+                                          .withOpacity(0.8));
+                                  FirebaseFirestore.instance.collection("requestlanguage").doc().set({
+                                    "name":requestedLanguageController.text,
+                                    "timestamp":DateTime.now().millisecondsSinceEpoch,
+                                    "date":"${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}",
+                                    "time":DateFormat("hh:mm a").format(DateTime.now())
+                                  });
+                                  setState(() {
+                                    requestedLanguageController.clear();
+                                  });
+                                }
+                              },
+                              child: Container(
+                                  height: height/18.475,
+                                  width: width/12.8,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xffD60A0B),
+                                    borderRadius:
+                                    BorderRadius.circular(4),
+                                  ),
+                                  child: Center(
+                                    child: KText(
+                                      text: 'Submit',
+                                      style: SafeGoogleFont(
+                                        'Nunito',
+                                        fontSize: width/96,
+                                        fontWeight:
+                                        FontWeight.w600,
+                                        color: Color(0xffFFFFFF),
+                                      ),
+                                    ),
+                                  )),
+                            ),
+                            SizedBox(
+                              width: width/76.8,
+                            ),
+
+                            ///Cancel Button
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  requestedLanguageController.clear();
+                                });
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                  height: height/18.475,
+                                  width: width/12.8,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xff00A0E3),
+                                    borderRadius:
+                                    BorderRadius.circular(4),
+                                  ),
+                                  child: Center(
+                                    child: KText(
+                                      text: 'Cancel',
+                                      style: SafeGoogleFont(
+                                        'Nunito',
+                                        fontSize: width/96,
+                                        fontWeight:
+                                        FontWeight.w600,
+                                        color: Color(0xffFFFFFF),
+                                      ),
+                                    ),
+                                  )),
+                            ),
+                            SizedBox(
+                              width: width/76.8,
+                            ),
+
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },);
+
+}
 
 }

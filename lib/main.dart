@@ -17,7 +17,7 @@ void main() async {
   var delegate = await LocalizationDelegate.create(
       basePath: 'assets/i18n/',
       fallbackLocale: 'en_US',
-      supportedLocales: ['ta','te','ml','kn','en_US','bn','hi','es','pt','fr','nl','de','it','sv']);
+      supportedLocales: ['ta','te','ml','kn','en_US','bn','hi','es','pt','fr','nl','de','it','sv','mr','gu','or','IN']);
  // runApp(LocalizedApp(delegate, MyApp()));
   runApp(LocalizedApp(delegate, MyApp()));
 }
@@ -30,16 +30,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     var localizationDelegate = LocalizedApp.of(context).delegate;
      return
-    // MaterialApp(
-    //   title: 'Alumni_Management_Admin',
-    //   debugShowCheckedModeBanner: false,
-    //   theme: ThemeData(
-    //     colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-    //     useMaterial3: true,
-    //   ),
-    //   home: MyWidget(),
-    //
-    // );
+
       LocalizationProvider(
       state: LocalizationProvider.of(context).state,
       child:
@@ -65,3 +56,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+

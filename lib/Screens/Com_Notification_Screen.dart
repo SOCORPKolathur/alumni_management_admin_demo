@@ -300,82 +300,92 @@ class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
                                             height:height/5.0,
                                             width: width/1.536,
                                             color: Colors.white,
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              children: [
-                                                Padding(
-                                                 padding: EdgeInsets.symmetric(
-                                                   vertical: height/92.375,
-                                                   horizontal: width/192
-                                                 ),
-                                                  child:
-                                                  Uservalue=="All"?
-                                                  Row(
-                                                    children: [
+                                            child: SingleChildScrollView(
+                                              physics: const ScrollPhysics(),
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                children: [
+                                                  Padding(
+                                                   padding: EdgeInsets.symmetric(
+                                                     vertical: height/92.375,
+                                                     horizontal: width/192
+                                                   ),
+                                                    child:
+                                                    Uservalue=="All"?
+                                                    Row(
+                                                      children: [
 
-                                                      Checkbox(
-                                                        value: isUsers,
-                                                        onChanged: (val) {
-                                                          setState(() {
-                                                            isUsers = val!;
-                                                          });
-                                                          print("Users Alll000000000000000000000000000000000000000000000000");
-                                                          print(isUsers);
-                                                        },
-                                                      ),
-                                                      SizedBox(width: width / 136.6),
-                                                      const Text("Users")
-                                                    ],
-                                                  ):
-                                                  GridView.builder(
-                                                    itemCount: StreamData.length,
-                                                      physics: const ScrollPhysics(),
-                                                      shrinkWrap: true,
-                                                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                                        crossAxisCount: 5,
-                                                        childAspectRatio: 110/50,
-                                                      ),
-                                                      itemBuilder: (context, index) {
-                                                        return SizedBox(
-                                                          height:height/18.475,
-                                                          width:width/10.24,
-                                                          child: Row(
-                                                            children: [
-
-                                                              Checkbox(
-                                                                value: Selected[index],
-                                                                onChanged: (val) {
-                                                                  setState(() {
-                                                                    Selected[index] = !Selected[index];
-                                                                  });
-                                                                  if(Selected[index]==true){
-                                                                    setState(() {
-                                                                      dropDownApplyedvalue.add(StreamData[index]);
-                                                                    });
-                                                                    print("if Funcion------------------------------------");
-                                                                    print(StreamData[index]);
-                                                                    print(Selected[index]);
-                                                                    print(dropDownApplyedvalue);
-                                                                  }
-                                                                  else{
-                                                                   setState(() {
-                                                                     dropDownApplyedvalue.remove(StreamData[index]);
-                                                                   });
-                                                                   print("Else Funcion------------------------------------");
-                                                                   print(StreamData[index]);
-                                                                   print(Selected[index]);
-                                                                   print(dropDownApplyedvalue);
-                                                                  }
-                                                                },
-                                                              ),
-                                                              SizedBox(width: width / 136.6),
-                                                              Text(StreamData[index])
-                                                            ],
+                                                        Checkbox(
+                                                          value: isUsers,
+                                                          onChanged: (val) {
+                                                            setState(() {
+                                                              isUsers = val!;
+                                                            });
+                                                            print("Users Alll000000000000000000000000000000000000000000000000");
+                                                            print(isUsers);
+                                                          },
+                                                        ),
+                                                        SizedBox(width: width / 136.6),
+                                                        const Text("Users")
+                                                      ],
+                                                    ):
+                                                    SizedBox(
+                                                      child: GridView.builder(
+                                                        itemCount: StreamData.length,
+                                                          physics: const ScrollPhysics(),
+                                                          shrinkWrap: true,
+                                                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                                            crossAxisCount: 5,
+                                                            childAspectRatio: 110/50,
                                                           ),
-                                                        );
-                                                      },)
-                                                ),
-                                              ],
+                                                          itemBuilder: (context, index) {
+                                                            return SizedBox(
+                                                              height:height/18.475,
+                                                              width:width/10.24,
+                                                              child: Row(
+                                                                children: [
+
+                                                                  Checkbox(
+                                                                    value: Selected[index],
+                                                                    onChanged: (val) {
+                                                                      setState(() {
+                                                                        Selected[index] = !Selected[index];
+                                                                      });
+                                                                      if(Selected[index]==true){
+                                                                        setState(() {
+                                                                          dropDownApplyedvalue.add(StreamData[index]);
+                                                                        });
+                                                                        print("if Funcion------------------------------------");
+                                                                        print(StreamData[index]);
+                                                                        print(Selected[index]);
+                                                                        print(dropDownApplyedvalue);
+                                                                      }
+                                                                      else{
+                                                                       setState(() {
+                                                                         dropDownApplyedvalue.remove(StreamData[index]);
+                                                                       });
+                                                                       print("Else Funcion------------------------------------");
+                                                                       print(StreamData[index]);
+                                                                       print(Selected[index]);
+                                                                       print(dropDownApplyedvalue);
+                                                                      }
+                                                                    },
+                                                                  ),
+                                                                  SizedBox(width: width / 136.6),
+                                                                  SizedBox(
+                                                                    width:width/12.8,
+                                                                    child: Text(StreamData[index],style: TextStyle(
+                                                                      overflow: TextOverflow.ellipsis
+                                                                    ),),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            );
+                                                          },),
+                                                    )
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ],

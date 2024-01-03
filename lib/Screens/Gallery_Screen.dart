@@ -48,17 +48,16 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
       reader.readAsDataUrl(file);
 
       reader.onLoadEnd.listen((event) async {
-
         var snapshot = await fs.ref().child('Photo').child("${file.name}").putBlob(file);
         String downloadUrl = await snapshot.ref.getDownloadURL();
-        FirebaseFirestore.instance.collection("Photos").doc(addphotoDocummentValue).collection(addphotoDocummentValue).doc().set({
+        FirebaseFirestore.instance.collection("SliderImages").doc().set({
           "imgUrl":downloadUrl,
           "timestamp":DateTime.now().millisecondsSinceEpoch
         });
         CoolAlert.show(
             context: context,
             type: CoolAlertType.success,
-            text: "Event created successfully!",
+            text: "successfully!",
             width: size.width * 0.4,
             backgroundColor: Constants().primaryAppColor.withOpacity(0.8)
         );
@@ -83,6 +82,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
   bool filtervalue=false;
 
   bool addPhoto=false;
+  bool SliderImg=false;
   String addphotoDocummentValue='';
 
   @override
@@ -170,9 +170,61 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                               ),
                             ),
                           )),
-                      addPhoto==true?const SizedBox():
+
                       Padding(
-                        padding:  EdgeInsets.only(left: width/1.58,),
+                        padding:  EdgeInsets.only(left:20),
+                        child: InkWell(
+                            onTap: () {
+                             setState(() {
+                               SliderImg=true;
+                             });
+                            },
+                            child: Container(
+                              height: height / 18.6,
+                              width: width/10.9714,
+                              decoration: BoxDecoration(
+                                color: Constants().primaryAppColor,
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black26,
+                                    offset: Offset(1, 2),
+                                    blurRadius: 3,
+                                  ),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: width / 227.66),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    currentTab.toUpperCase() != "VIEW"
+                                        ? const SizedBox()
+                                        : Icon(
+                                      Icons.add,
+                                      color: Colors.white,
+                                    ),
+                                    KText(
+                                      text: currentTab.toUpperCase() == "VIEW"
+                                          ? "Add SliderImg"
+                                          : "View SliderImg",
+                                      style: SafeGoogleFont(
+                                        'Nunito',
+                                        fontSize: width / 120.07,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )),
+                      ),
+                      addPhoto==true||SliderImg==true?const SizedBox():
+                      Padding(
+                        padding:  EdgeInsets.only(left: width/1.89,),
                         child: InkWell(
                           key: filterDataKey,
                           onTap: () async {
@@ -218,7 +270,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
               ],
             ),
             SizedBox(height:height/65.1),
-            addPhoto==true?const SizedBox():
+            addPhoto==true||SliderImg==true?const SizedBox():
             Container(
                 color: Colors.white,
                 width: width/1.2418,
@@ -688,6 +740,225 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                 ],
               ),
             ):
+            SliderImg==true?
+            Container(
+              height: size.height * 0.3,
+              width: width/1.2418,
+              decoration: BoxDecoration(
+                color: Constants().primaryAppColor,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    offset: Offset(1, 2),
+                    blurRadius: 3,
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: size.height * 0.1,
+                    width: double.infinity,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width/68.3),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+
+                          Row(
+                            children: [
+                              InkWell(
+                                  onTap: (){
+                                    setState(() {
+                                      addPhoto=false;
+                                      isEditSI=false;
+                                      SliderImg=false;
+                                      addphotoDocummentValue='';
+                                    });
+                                  },
+                                  child: Icon(Icons.arrow_back,color: Colors.white,)),
+                              Padding(
+                                padding:  EdgeInsets.only(left:width/192),
+                                child: KText(
+                                  text:" Slider Images",
+                                  style :SafeGoogleFont (
+                                    'Poppins',
+                                    fontSize: 22*ffem,
+                                    fontWeight: FontWeight.w500,
+                                    height: 1.6*ffem/fem,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  addImage("SliderImages",size);
+                                },
+                                child: KText(
+                                  text: "ADD",
+                                  style: SafeGoogleFont (
+                                    'Poppins',
+                                    fontSize: 20*ffem,
+                                    fontWeight: FontWeight.w500,
+                                    height: 1.6*ffem/fem,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width:width/307.2),
+                              Icon(
+                                Icons.add_circle,
+                                color: Colors.white,
+                              ),
+                              SizedBox(width: width/91.06),
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    isEditSI = !isEditSI;
+                                  });
+                                },
+                                child: KText(
+                                  text: isEditSI?"CLOSE":"EDIT",
+                                  style: SafeGoogleFont (
+                                    'Poppins',
+                                    fontSize: 20*ffem,
+                                    fontWeight: FontWeight.w500,
+                                    height: 1.6*ffem/fem,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width:width/307.2),
+                              Icon(
+                                Icons.edit_note,
+                                color: Colors.white,
+                              ),
+                              SizedBox(width: width/91.06),
+                              InkWell(
+                                onTap: () {
+                                  showImageSlidersGidView(context, 'SliderImages');
+                                },
+                                child: KText(
+                                  text: "VIEW MORE",
+                                  style: SafeGoogleFont (
+                                    'Poppins',
+                                    fontSize: 20*ffem,
+                                    fontWeight: FontWeight.w500,
+                                    height: 1.6*ffem/fem,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width:width/307.2),
+                              RotatedBox(
+                                quarterTurns: 3,
+                                child: Icon(
+                                  Icons.expand_circle_down_outlined,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  Container(
+                    height: size.height * 0.2,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10),
+                      ),
+                    ),
+                    child: StreamBuilder(
+                      stream: FirebaseFirestore.instance.collection("SliderImages").orderBy("timestamp").snapshots(),
+                      builder: (context, snapshot) {
+                        if(!snapshot.hasData){
+                          return const Center(child:CircularProgressIndicator());
+                        }
+                        if(snapshot.hasData==null){
+                          return const Center(child:CircularProgressIndicator());
+                        }
+                        return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (ctx, i) {
+                            var allData=snapshot.data!.docs[i];
+                            return InkWell(
+                              onTap: () {
+                                showImageModel(context, allData["imgUrl"]);
+                              },
+                              child: isEditSI
+                                  ? Stack(
+                                alignment: Alignment.topRight,
+                                children: [
+                                  Container(
+                                    height: height/5.007,
+                                    width: width/13.66,
+                                    margin: EdgeInsets.symmetric(horizontal: width/68.3, vertical: height/32.55),
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                      BorderRadius.circular(10),
+                                      image: DecorationImage(
+                                        fit: BoxFit.fill,
+                                        image: NetworkImage(
+                                          allData['imgUrl'],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    right: width/136.6,
+                                    top: height/65.1,
+                                    child: InkWell(
+                                      onTap: () {
+                                        FirebaseFirestore.instance.collection("SliderImages").doc(allData.id).delete();
+                                      },
+                                      child: CircleAvatar(
+                                        radius: 15,
+                                        backgroundColor: Colors.red,
+                                        child: Icon(
+                                          Icons.remove_circle_outline,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+
+                                ],
+                              )
+                                  : Container(
+                                height: height/5.007,
+                                width: width/13.66,
+                                margin: EdgeInsets.symmetric(horizontal: width/68.3, vertical: height/32.55),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  image: DecorationImage(
+                                    fit: BoxFit.fill,
+                                    image: NetworkImage(
+                                      allData['imgUrl'],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ):
             SizedBox(
               height: height/1.34363,
               width: width/1.2418,
@@ -988,6 +1259,130 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
             ),
             child: StreamBuilder(
               stream:  FirebaseFirestore.instance.collection('Photos').doc(addphotoDocummentValue).collection(addphotoDocummentValue).snapshots(),
+              builder: (ctx, snapshot) {
+                if (snapshot.hasError) {
+                  return Container();
+                }
+                return Container(
+                  height: size.height * 0.7,
+                  width: size.width * 0.7,
+                  decoration: BoxDecoration(
+                      color: Constants().primaryAppColor,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(color: Colors.black26,offset: Offset(2,3),blurRadius: 3)
+                      ]
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: size.height * 0.1,
+                        padding: EdgeInsets.symmetric(horizontal: width/68.3, vertical: height/32.55),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            KText(
+                              text: 'Images',
+                              style:SafeGoogleFont (
+                                'Poppins',
+                                fontSize: 22*ffem,
+                                fontWeight: FontWeight.w600,
+                                height: 1.6*ffem/fem,
+                                color: Colors.white,
+                              ),
+                            ),
+                            InkWell(
+                              onTap: (){
+                                Navigator.pop(context);
+                              },
+                              child: KText(
+                                text: 'Close',
+                                style: SafeGoogleFont (
+                                  'Poppins',
+                                  fontSize: 20*ffem,
+                                  fontWeight: FontWeight.w500,
+                                  height: 1.6*ffem/fem,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              bottomRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                            ),
+                            color: Colors.white,
+                          ),
+                          child: GridView.builder(
+                              gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisSpacing: 4.0,
+                                mainAxisSpacing: 4.0,
+                                crossAxisCount: 3,
+                                childAspectRatio: 12 / 9,
+                              ),
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (ctx, i) {
+                                var data = snapshot.data!.docs[i];
+                                return Padding(
+                                  padding: EdgeInsets.symmetric(vertical: height/81.375, horizontal: width/170.75),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      image: DecorationImage(
+                                        fit: BoxFit.fill,
+                                        image: NetworkImage(
+                                          data['imgUrl'],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              })
+                          ,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
+  showImageSlidersGidView(context, String collection) {
+    Size size = MediaQuery.of(context).size;
+    final double width=MediaQuery.of(context).size.width;
+    final double height=MediaQuery.of(context).size.height;
+    double baseWidth = 1920;
+    double fem = MediaQuery.of(context).size.width / baseWidth;
+    double ffem = fem * 0.97;
+    showDialog(
+      barrierColor: Colors.transparent,
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding:  EdgeInsets.only(left:width/6.83),
+          child: Dialog(
+            surfaceTintColor: Colors.transparent,
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            insetPadding: EdgeInsets.all(12),
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: StreamBuilder(
+              stream:  FirebaseFirestore.instance.collection('SliderImages').orderBy('timestamp').snapshots(),
               builder: (ctx, snapshot) {
                 if (snapshot.hasError) {
                   return Container();

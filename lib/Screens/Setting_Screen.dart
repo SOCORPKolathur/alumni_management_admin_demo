@@ -692,7 +692,7 @@ class _SettingsTabsState extends State<SettingsTabs> {
                                         CrossAxisAlignment.start,
                                         children: [
                                           KText(
-                                            text: "MemberID prefix",
+                                            text: "UserID",
                                             style: SafeGoogleFont (
                                               'Nunito',
                                               fontSize: 20*ffem,
@@ -729,7 +729,7 @@ class _SettingsTabsState extends State<SettingsTabs> {
 
                                     ],
                                   ),
-                                  SizedBox(height: height/21.7),
+                                  /*SizedBox(height: height/21.7),
                                   Row(
 
                                     children: [
@@ -772,7 +772,7 @@ class _SettingsTabsState extends State<SettingsTabs> {
                                         ],
                                       ),
                                     ],
-                                  ),
+                                  ),*/
                                   SizedBox(height: height/11.7),
 
                                   Row(

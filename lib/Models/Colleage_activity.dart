@@ -9,14 +9,22 @@ class ColleageActivityModel {
   String? imgUrl;
   String? location;
   String? time;
+  String? activityYear;
+  String? activityDep;
+  String? activityType;
 
   ColleageActivityModel(
-      {this.id, this.title,this.date, this.views,this.registeredUsers, this.description, this.imgUrl, this.timestamp, this.location, this.time});
+      {this.id, this.title,this.date, this.views,this.registeredUsers, this.description, this.imgUrl, this.timestamp,
+        this.activityDep,this.activityType,this.activityYear,
+        this.location, this.time});
 
   ColleageActivityModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     date = json['date'];
+    activityType = json['activityType'];
+    activityDep = json['activityDep'];
+    activityYear = json['activityYear'];
     if (json['views'] != null) {
       views = <String>[];
       json['views'].forEach((v) {
@@ -41,6 +49,9 @@ class ColleageActivityModel {
     data['id'] = this.id;
     data['title'] = this.title;
     data['date'] = this.date;
+    data['activityType'] = this.activityType;
+    data['activityDep'] = this.activityDep;
+    data['activityYear'] = this.activityYear;
     if (this.views != null) {
       data['views'] = this.views!.map((v) => v).toList();
     }
@@ -67,6 +78,13 @@ class ColleageActivityModel {
         return location!.toString();
       case 4:
         return description!;
+      case 5:
+        return activityType!;
+      case 6:
+        return activityDep!;
+      case 7:
+        return activityYear!;
+
     }
     return '';
   }

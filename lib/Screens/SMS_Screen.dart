@@ -2,7 +2,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:textfield_tags/textfield_tags.dart';
-
+import 'package:flutter_sms/flutter_sms.dart';
 import '../Constant_.dart';
 import '../Models/Language_Model.dart';
 import '../utils.dart';
@@ -24,27 +24,37 @@ class _SMS_ScreenState extends State<SMS_Screen> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+    Size size = MediaQuery
+        .of(context)
+        .size;
+    double height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: height/81.375, horizontal: width/170.75),
+      padding: EdgeInsets.symmetric(
+          vertical: height / 81.375, horizontal: width / 170.75),
       child: SingleChildScrollView(
         child: FadeInRight(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(vertical: height/81.375, horizontal: width/170.75),
+                padding: EdgeInsets.symmetric(
+                    vertical: height / 81.375, horizontal: width / 170.75),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding:  EdgeInsets.only(top:height/81.375),
+                      padding: EdgeInsets.only(top: height / 81.375),
                       child: KText(
                         text: "SMS COMMUNICATION",
-                        style: SafeGoogleFont (
-                            'Nunito',
+                        style: SafeGoogleFont(
+                          'Nunito',
                           fontSize: width / 82.538,
                           fontWeight: FontWeight.w700,
                           color: Color(0xff030229),),
@@ -58,23 +68,22 @@ class _SMS_ScreenState extends State<SMS_Screen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Padding(
-                    padding:  EdgeInsets.only(left:width/1.39),
+                    padding: EdgeInsets.only(left: width / 1.39),
                     child: InkWell(
-                        onTap:(){
-                          if(currentTab.toUpperCase() == "VIEW") {
+                        onTap: () {
+                          if (currentTab.toUpperCase() == "VIEW") {
                             setState(() {
                               currentTab = "Add";
                             });
-                          }else{
+                          } else {
                             setState(() {
                               currentTab = 'View';
                             });
                           }
-
                         },
                         child: Container(
-                          height:height/18.6,
-                          width: width/10.9714,
+                          height: height / 18.6,
+                          width: width / 10.9714,
                           decoration: BoxDecoration(
                             color: Constants().primaryAppColor,
                             borderRadius: BorderRadius.circular(8),
@@ -88,14 +97,16 @@ class _SMS_ScreenState extends State<SMS_Screen> {
                           ),
                           child: Padding(
                             padding:
-                            EdgeInsets.symmetric(horizontal:width/227.66),
+                            EdgeInsets.symmetric(horizontal: width / 227.66),
                             child: Center(
                               child: KText(
-                                text: currentTab.toUpperCase() == "VIEW" ? "Send SMS" : "View SMS",
-                                style:SafeGoogleFont (
+                                text: currentTab.toUpperCase() == "VIEW"
+                                    ? "Send SMS"
+                                    : "View SMS",
+                                style: SafeGoogleFont(
                                   'Nunito',
                                   color: Colors.white,
-                                  fontSize:width/105.07,
+                                  fontSize: width / 105.07,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -108,10 +119,11 @@ class _SMS_ScreenState extends State<SMS_Screen> {
               ),
               currentTab.toUpperCase() == "ADD"
                   ? Container(
-                                height: size.height * 0.85,
-                                width: width/1.28,
-                                margin: EdgeInsets.symmetric(horizontal: width/68.3, vertical: height/32.55),
-                                decoration: BoxDecoration(
+                height: size.height * 0.85,
+                width: width / 1.28,
+                margin: EdgeInsets.symmetric(
+                    horizontal: width / 68.3, vertical: height / 32.55),
+                decoration: BoxDecoration(
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
@@ -121,24 +133,25 @@ class _SMS_ScreenState extends State<SMS_Screen> {
                     ),
                   ],
                   borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Column(
+                ),
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     SizedBox(
                       height: size.height * 0.1,
                       width: double.infinity,
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: width/68.3, vertical: height/81.375),
+                        padding: EdgeInsets.symmetric(horizontal: width / 68.3,
+                            vertical: height / 81.375),
                         child: Row(
                           children: [
                             Icon(Icons.message),
-                            SizedBox(width:width/136.6),
+                            SizedBox(width: width / 136.6),
                             KText(
                               text: "SMS",
-                              style:SafeGoogleFont (
+                              style: SafeGoogleFont(
                                 'Nunito',
-                                fontSize:width/68.3,
+                                fontSize: width / 68.3,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -155,7 +168,8 @@ class _SMS_ScreenState extends State<SMS_Screen> {
                               bottomLeft: Radius.circular(10),
                               bottomRight: Radius.circular(10),
                             )),
-                        padding: EdgeInsets.symmetric(horizontal: width/68.3, vertical: height/32.55),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: width / 68.3, vertical: height / 32.55),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -166,47 +180,62 @@ class _SMS_ScreenState extends State<SMS_Screen> {
                                 children: [
                                   KText(
                                     text: "Single/Mulitiple Phone Numbers *",
-                                    style: SafeGoogleFont (
+                                    style: SafeGoogleFont(
                                       'Nunito',
                                       color: Colors.black,
-                                      fontSize:width/105.07,
+                                      fontSize: width / 105.07,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  SizedBox(height:height/73.9),
+                                  SizedBox(height: height / 73.9),
 
                                   Container(
-                                    decoration: BoxDecoration(color: const Color(0xffDDDEEE),
+                                    decoration: BoxDecoration(
+                                        color: const Color(0xffDDDEEE),
                                         borderRadius: BorderRadius.circular(3)),
                                     child: Autocomplete<String>(
-                                      optionsViewBuilder: (context, onSelected, options) {
+                                      optionsViewBuilder: (context, onSelected,
+                                          options) {
                                         return Container(
-                                          margin: EdgeInsets.symmetric(horizontal:width/136.6, vertical: height/162.75),
+                                          margin: EdgeInsets.symmetric(
+                                              horizontal: width / 136.6,
+                                              vertical: height / 162.75),
                                           child: Align(
                                             alignment: Alignment.topCenter,
                                             child: Material(
                                               elevation: 4.0,
                                               child: ConstrainedBox(
-                                                constraints:  const BoxConstraints(maxHeight: 20),
+                                                constraints: const BoxConstraints(
+                                                    maxHeight: 20),
                                                 child: ListView.builder(
                                                   shrinkWrap: true,
                                                   itemCount: options.length,
-                                                  itemBuilder: (BuildContext context, int index) {
-                                                    final dynamic option = options.elementAt(index);
+                                                  itemBuilder: (
+                                                      BuildContext context,
+                                                      int index) {
+                                                    final dynamic option = options
+                                                        .elementAt(index);
                                                     return TextButton(
                                                       onPressed: () {
                                                         onSelected(option);
                                                       },
                                                       child: Align(
-                                                        alignment: Alignment.centerLeft,
+                                                        alignment: Alignment
+                                                            .centerLeft,
                                                         child: Padding(
-                                                          padding: EdgeInsets.symmetric(
-                                                              vertical: height/43.4),
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                              vertical: height /
+                                                                  43.4),
                                                           child: Text(
                                                             '#$option',
-                                                            textAlign: TextAlign.left,
+                                                            textAlign: TextAlign
+                                                                .left,
                                                             style: TextStyle(
-                                                              color: Color.fromARGB(255, 74, 137, 92),
+                                                              color: Color
+                                                                  .fromARGB(
+                                                                  255, 74, 137,
+                                                                  92),
                                                             ),
                                                           ),
                                                         ),
@@ -219,87 +248,120 @@ class _SMS_ScreenState extends State<SMS_Screen> {
                                           ),
                                         );
                                       },
-                                      optionsBuilder: (TextEditingValue textEditingValue) {
+                                      optionsBuilder: (
+                                          TextEditingValue textEditingValue) {
                                         if (textEditingValue.text == '') {
                                           return Iterable<String>.empty();
                                         }
-                                        return _pickLanguage.where((String option) {
-                                          return option.contains(textEditingValue.text.toLowerCase());
+                                        return _pickLanguage.where((
+                                            String option) {
+                                          return option.contains(
+                                              textEditingValue.text
+                                                  .toLowerCase());
                                         });
                                       },
                                       onSelected: (String selectedTag) {
                                         controller.addTag = selectedTag;
                                       },
-                                      fieldViewBuilder: (context, ttec, tfn, onFieldSubmitted) {
+                                      fieldViewBuilder: (context, ttec, tfn,
+                                          onFieldSubmitted) {
                                         return TextFieldTags(
                                           textEditingController: ttec,
                                           focusNode: tfn,
                                           textfieldTagsController: controller,
                                           initialTags: [],
-                                          textSeparators: [' ',','],
+                                          textSeparators: [' ', ','],
                                           letterCase: LetterCase.normal,
                                           validator: (String tag) {
                                             if (tag == 'php') {
                                               return 'No, please just no';
-                                            } else if (controller.getTags!.contains(tag)) {
+                                            } else
+                                            if (controller.getTags!.contains(
+                                                tag)) {
                                               return 'you already entered that';
                                             }
                                             return null;
                                           },
                                           inputfieldBuilder:
-                                              (context, tec, fn, error, onChanged, onSubmitted) {
-                                            return ((context, sc, tags, onTagDelete) {
+                                              (context, tec, fn, error,
+                                              onChanged, onSubmitted) {
+                                            return ((context, sc, tags,
+                                                onTagDelete) {
                                               return Padding(
-                                                padding: EdgeInsets.symmetric(horizontal:width/136.6),
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: width / 136.6),
                                                 child: TextField(
                                                   controller: tec,
                                                   focusNode: fn,
                                                   decoration: InputDecoration(
                                                     border: InputBorder.none,
-                                                    focusedBorder:InputBorder.none,
+                                                    focusedBorder: InputBorder
+                                                        .none,
                                                     helperStyle: TextStyle(
-                                                      color: Constants().primaryAppColor,
+                                                      color: Constants()
+                                                          .primaryAppColor,
                                                     ),
                                                     errorText: error,
                                                     prefixIconConstraints: BoxConstraints(
-                                                        maxWidth: size.width * 0.74),
+                                                        maxWidth: size.width *
+                                                            0.74),
                                                     prefixIcon: tags.isNotEmpty
                                                         ? SingleChildScrollView(
                                                       controller: sc,
-                                                      scrollDirection: Axis.horizontal,
+                                                      scrollDirection: Axis
+                                                          .horizontal,
                                                       child: Row(
-                                                          children: tags.map((String tag) {
+                                                          children: tags.map((
+                                                              String tag) {
                                                             return Container(
                                                               decoration: BoxDecoration(
-                                                                borderRadius: BorderRadius.all(
-                                                                  Radius.circular(20.0),
+                                                                borderRadius: BorderRadius
+                                                                    .all(
+                                                                  Radius
+                                                                      .circular(
+                                                                      20.0),
                                                                 ),
-                                                                color: Constants().primaryAppColor,
+                                                                color: Constants()
+                                                                    .primaryAppColor,
                                                               ),
                                                               margin:
-                                                              EdgeInsets.only(right: width/136.6),
-                                                              padding: EdgeInsets.symmetric(
-                                                                  horizontal: width/136.6, vertical: height/162.75),
+                                                              EdgeInsets.only(
+                                                                  right: width /
+                                                                      136.6),
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal: width /
+                                                                      136.6,
+                                                                  vertical: height /
+                                                                      162.75),
                                                               child: Row(
                                                                 mainAxisAlignment:
-                                                                MainAxisAlignment.spaceBetween,
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
                                                                 children: [
                                                                   InkWell(
                                                                     child: Text(
                                                                       tag,
                                                                       style: TextStyle(
-                                                                          color: Colors.white),
+                                                                          color: Colors
+                                                                              .white),
                                                                     ),
                                                                   ),
-                                                                  SizedBox(width: width/341.5),
+                                                                  SizedBox(
+                                                                      width: width /
+                                                                          341.5),
                                                                   InkWell(
                                                                     child: Icon(
-                                                                        Icons.cancel,
-                                                                        size:width/97.571,
-                                                                        color: Colors.black
+                                                                        Icons
+                                                                            .cancel,
+                                                                        size: width /
+                                                                            97.571,
+                                                                        color: Colors
+                                                                            .black
                                                                     ),
                                                                     onTap: () {
-                                                                      onTagDelete(tag);
+                                                                      onTagDelete(
+                                                                          tag);
                                                                     },
                                                                   )
                                                                 ],
@@ -309,10 +371,11 @@ class _SMS_ScreenState extends State<SMS_Screen> {
                                                     )
                                                         : null,
                                                   ),
-                                                  onChanged: (text){
-                                                    if(text.length == 10){
+                                                  onChanged: (text) {
+                                                    if (text.length == 10) {
                                                       setState(() {
-                                                        controller.addTag = text;
+                                                        controller.addTag =
+                                                            text;
                                                       });
                                                     }
                                                   },
@@ -328,65 +391,70 @@ class _SMS_ScreenState extends State<SMS_Screen> {
                                 ],
                               ),
                             ),
-                            SizedBox(height: height/21.7),
+                            SizedBox(height: height / 21.7),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 KText(
                                   text: "Description",
-                                  style: SafeGoogleFont (
+                                  style: SafeGoogleFont(
                                     'Nunito',
                                     color: Colors.black,
-                                    fontSize:width/105.07,
+                                    fontSize: width / 105.07,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                SizedBox(height:height/73.9),
+                                SizedBox(height: height / 73.9),
                                 Container(
-                                  height:160,
+                                    height: 160,
                                     width: double.infinity,
-                                  decoration: BoxDecoration(color: const Color(0xffDDDEEE),
-                                      borderRadius: BorderRadius.circular(3)),
+                                    decoration: BoxDecoration(
+                                        color: const Color(0xffDDDEEE),
+                                        borderRadius: BorderRadius.circular(3)),
                                     child: TextFormField(
                                       style: TextStyle(
-                                          fontSize:width/113.83),
+                                          fontSize: width / 113.83),
                                       controller: descriptionController,
                                       decoration: InputDecoration(
                                           border: InputBorder.none,
-                                          contentPadding: EdgeInsets.only(left: width/91.066,top: height/162.75,bottom: height/162.75)
+                                          contentPadding: EdgeInsets.only(
+                                              left: width / 91.066,
+                                              top: height / 162.75,
+                                              bottom: height / 162.75)
                                       ),
                                       maxLines: null,
                                     )
                                 ),
                               ],
                             ),
-                            SizedBox(height:height/6.1),
+                            SizedBox(height: height / 6.1),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 GestureDetector(
-                                  onTap: (){},
+                                  onTap: () {},
                                   child: Container(
-                                      height: height/18.475,
-                                      width: width/12.8,
+                                      height: height / 18.475,
+                                      width: width / 12.8,
                                       decoration: BoxDecoration(
                                         color: Color(0xffD60A0B),
                                         borderRadius:
                                         BorderRadius.circular(4),
                                       ),
                                       child: Center(
-                                        child:Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment
+                                              .center,
                                           children: [
                                             Icon(Icons.send,
                                                 color: Colors.white),
-                                            SizedBox(width: width /273.2),
+                                            SizedBox(width: width / 273.2),
                                             KText(
                                               text: "SEND",
-                                              style: SafeGoogleFont (
+                                              style: SafeGoogleFont(
                                                 'Nunito',
                                                 color: Colors.white,
-                                                fontSize: width /136.6,
+                                                fontSize: width / 136.6,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
@@ -401,12 +469,12 @@ class _SMS_ScreenState extends State<SMS_Screen> {
                       ),
                     ),
                   ],
-                                ),
-                              )
+                ),
+              )
                   : currentTab.toUpperCase() == "VIEW" ?
               SizedBox(
                 height: size.height * 0.85,
-                width: width/1.28,
+                width: width / 1.28,
               )
               /*StreamBuilder(
                 stream: DepartmentFireCrud.fetchDepartments(),
@@ -865,4 +933,17 @@ class _SMS_ScreenState extends State<SMS_Screen> {
           ],
         )),
   );
+
+/*
+  void sendSMS(List<String> recipients, String message) async {
+    try {
+      String _result = await sendSMSmessage(
+        message,
+        recipients,
+      );
+      print('SMS Sent successfully! Result: $_result');
+    } catch (error) {
+      print('Error sending SMS: $error');
+    }
+  }*/
 }

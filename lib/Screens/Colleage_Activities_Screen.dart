@@ -12,9 +12,9 @@ import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' as cf;
 import 'package:cool_alert/cool_alert.dart';
 import 'package:csv/csv.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:pdf/pdf.dart';
 import 'package:intl/intl.dart';
 
@@ -37,10 +37,19 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
   TextEditingController timeController = TextEditingController();
   TextEditingController locationController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  TextEditingController departmentcon = TextEditingController(text:'Select Department');
+  TextEditingController yearcon = TextEditingController(text:'Select Year');
+  TextEditingController avtivityType = TextEditingController(text:'All');
 
+
+  bool alldepartBoolean=true;
+  bool individualdepartBoolean=false;
+  bool dataSaved=false;
   DateTime? dateRangeStart;
   DateTime? dateRangeEnd;
   bool isFiltered = false;
+  List <String> departmentDataList=[];
+  List <String> yearDataList=[];
 
   File? profileImage;
   var uploadedImage;
@@ -113,9 +122,40 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
     });
   }
 
+
+
+  ///Department Fetch Function
+  dropDowndataFetchFunc()async{
+    setState(() {
+      departmentDataList.clear();
+      yearDataList.clear();
+    });
+    setState(() {
+      departmentDataList.add('Select Department');
+      yearDataList.add('Select Year');
+    });
+    var departmentdata=await cf.FirebaseFirestore.instance.collection("Department").orderBy("name").get();
+    var acadamicYeardata=await cf.FirebaseFirestore.instance.collection("AcademicYear").orderBy("name").get();
+    for(int x=0;x<departmentdata.docs.length;x++){
+      setState((){
+        departmentDataList.add(departmentdata.docs[x]['name'].toString());
+      });
+    }
+    for(int y=0;y<acadamicYeardata.docs.length;y++){
+      setState((){
+        yearDataList.add(acadamicYeardata.docs[y]['name'].toString());
+      });
+    }
+    print("department Data List $departmentDataList");
+    print("Year Data List $yearDataList");
+  }
+
+
+
   @override
   void initState() {
     setDateTime();
+    dropDowndataFetchFunc();
     lottieController = AnimationController(vsync: this);
     lottieController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -453,467 +493,734 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                             )),
                         padding: EdgeInsets.symmetric(
                             horizontal: width / 68.3, vertical: height / 32.55),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        child: 
+                        SingleChildScrollView(
+                          physics: const ScrollPhysics(),
+                            child:Column(
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   children: [
-                                    Row(
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                        Row(
                                           children: [
-                                            KText(
-                                              text: "Date *",
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                fontSize: width / 105.571,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            SizedBox(height: height / 108.5),
-                                            Material(
-                                              borderRadius: BorderRadius.circular(3),
-                                              color: Color(0xffDDDEEE),
-                                              elevation: 5,
-                                              child: SizedBox(
-                                                height: height / 16.02,
-                                                width: width / 9.106,
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      vertical: height / 81.375,
-                                                      horizontal: width / 170.75),
-                                                  child: TextFormField(
-                                                    style: SafeGoogleFont(
-                                                      'Nunito',
-                                                      fontSize: width / 105.571,
+                                            SizedBox(
+                                              height: height / 16.02,
+                                              width: width / 7.0,
+                                              child:
+                                              Row(
+                                                children: [
+                                                  Padding(
+                                                    padding:  EdgeInsets.only(right:width/192),
+                                                    child: KText(
+                                                      text: "All",
+                                                      style: SafeGoogleFont(
+                                                        'Nunito',
+                                                        fontSize: width / 105.571,
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
                                                     ),
-                                                    readOnly: true,
-                                                    decoration: InputDecoration(
-                                                        border: InputBorder.none),
-                                                    controller: dateController,
-                                                    onTap: () async {
-                                                      DateTime? pickedDate =
-                                                      await showDatePicker(
-                                                          context: context,
-                                                          initialDate:
-                                                          DateTime.now(),
-                                                          firstDate:
-                                                          DateTime(1900),
-                                                          lastDate:
-                                                          DateTime(3000));
-                                                      if (pickedDate != null) {
+                                                  ),
+                                                  Checkbox(
+                                                      value: alldepartBoolean,
+                                                      onChanged: (val) {
                                                         setState(() {
-                                                          dateController.text =
-                                                              formatter.format(
-                                                                  pickedDate);
+                                                          alldepartBoolean = !alldepartBoolean;
                                                         });
-                                                      }
-                                                    },
-                                                  ),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        SizedBox(width: width / 68.3),
-                                        Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            KText(
-                                              text: "Time *",
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                fontSize: width / 105.571,
-                                                fontWeight: FontWeight.bold,
+                                                        if (alldepartBoolean == true) {
+                                                          setState(() {
+                                                            avtivityType.text="All";
+                                                            individualdepartBoolean=false;
+                                                          });
+                                                        }
+
+                                                        print("avtivityType Controller+++++++++++++++++++++++++++++++++++++++++");
+                                                        print(avtivityType.text);
+                                                      }),
+                                                ],
                                               ),
                                             ),
-                                            SizedBox(height: height / 108.5),
-                                            Material(
-                                              borderRadius: BorderRadius.circular(3),
-                                              color: Color(0xffDDDEEE),
-                                              elevation: 5,
-                                              child: SizedBox(
-                                                height: height / 16.02,
-                                                width: width / 9.106,
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      vertical: height / 81.375,
-                                                      horizontal: width / 170.75),
-                                                  child: TextFormField(
-                                                    readOnly: true,
-                                                    onTap: () {
-                                                      _selectTime(context);
-                                                    },
-                                                    controller: timeController,
-                                                    decoration: InputDecoration(
-                                                      border: InputBorder.none,
-                                                      hintStyle: SafeGoogleFont(
+                                            SizedBox(width: width / 68.3),
+                                            SizedBox(
+                                              height: height / 16.02,
+                                              width: width / 7.0,
+                                              child:
+                                              Row(
+                                                children: [
+                                                  Padding(
+                                                    padding:  EdgeInsets.only(right:width/192),
+                                                    child: KText(
+                                                      text: "Individual",
+                                                      style: SafeGoogleFont(
                                                         'Nunito',
                                                         fontSize: width / 105.571,
-                                                      ),
-                                                    ),
-                                                    style: SafeGoogleFont(
-                                                      'Nunito',
-                                                      fontSize: width / 105.571,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        SizedBox(width: width / 68.3),
-                                       /* Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            KText(
-                                              text: "Location *",
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                fontSize: width / 105.571,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            SizedBox(height: height / 108.5),
-                                            Material(
-                                              borderRadius:
-                                              BorderRadius.circular(5),
-                                              color: Colors.white,
-                                              elevation: 10,
-                                              child: SizedBox(
-                                                height: height / 13.02,
-                                                width: width / 6.830,
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      vertical: height / 81.375,
-                                                      horizontal: width / 170.75),
-                                                  child: TextFormField(
-                                                    style: SafeGoogleFont(
-                                                      'Nunito',
-                                                      fontSize: width / 105.571,
-                                                    ),
-                                                    controller: locationController,
-                                                    decoration: InputDecoration(
-                                                      contentPadding:
-                                                      EdgeInsets.symmetric(
-                                                          vertical: 5),
-                                                      border: InputBorder.none,
-                                                      hintStyle: SafeGoogleFont(
-                                                        'Nunito',
-                                                        fontSize: width / 105.571,
+                                                        fontWeight: FontWeight.bold,
                                                       ),
                                                     ),
                                                   ),
+                                                  Checkbox(
+                                                      value: individualdepartBoolean,
+                                                      onChanged: (val) {
+                                                        setState(() {
+                                                          individualdepartBoolean = !individualdepartBoolean;
+                                                        });
+                                                        if (individualdepartBoolean == true) {
+                                                          setState(() {
+                                                            avtivityType.text="Individual";
+                                                            alldepartBoolean=false;
+                                                          });
+                                                        }
+                                                        print("avtivityType Controller+++++++++++++++++++++++++++++++++++++++++");
+                                                        print(avtivityType.text);
+                                                      }),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                KText(
+                                                  text: "Date *",
+                                                  style: SafeGoogleFont(
+                                                    'Nunito',
+                                                    fontSize: width / 105.571,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                SizedBox(height: height / 108.5),
+                                                Material(
+                                                  borderRadius: BorderRadius.circular(3),
+                                                  color: Color(0xffDDDEEE),
+                                                  elevation: 5,
+                                                  child: SizedBox(
+                                                    height: height / 16.02,
+                                                    width: width / 7.0,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.symmetric(
+                                                          vertical: height / 81.375,
+                                                          horizontal: width / 170.75),
+                                                      child: TextFormField(
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: width / 105.571,
+                                                        ),
+                                                        readOnly: true,
+                                                        decoration: InputDecoration(
+                                                            border: InputBorder.none),
+                                                        controller: dateController,
+                                                        onTap: () async {
+                                                          DateTime? pickedDate =
+                                                          await showDatePicker(
+                                                              context: context,
+                                                              initialDate:
+                                                              DateTime.now(),
+                                                              firstDate:
+                                                              DateTime(1900),
+                                                              lastDate:
+                                                              DateTime(3000));
+                                                          if (pickedDate != null) {
+                                                            setState(() {
+                                                              dateController.text =
+                                                                  formatter.format(
+                                                                      pickedDate);
+                                                            });
+                                                          }
+                                                        },
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            SizedBox(width: width / 68.3),
+                                            Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                KText(
+                                                  text: "Time *",
+                                                  style: SafeGoogleFont(
+                                                    'Nunito',
+                                                    fontSize: width / 105.571,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                SizedBox(height: height / 108.5),
+                                                Material(
+                                                  borderRadius: BorderRadius.circular(3),
+                                                  color: Color(0xffDDDEEE),
+                                                  elevation: 5,
+                                                  child:
+                                                  SizedBox(
+                                                    height: height / 16.02,
+                                                    width: width / 7.0,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.symmetric(
+                                                          vertical: height / 81.375,
+                                                          horizontal: width / 170.75),
+                                                      child: TextFormField(
+                                                        readOnly: true,
+                                                        onTap: () {
+                                                          _selectTime(context);
+                                                        },
+                                                        controller: timeController,
+                                                        decoration: InputDecoration(
+                                                          border: InputBorder.none,
+                                                          hintStyle: SafeGoogleFont(
+                                                            'Nunito',
+                                                            fontSize: width / 105.571,
+                                                          ),
+                                                        ),
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: width / 105.571,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            SizedBox(width: width / 68.3),
+                                            /* Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                            children: [
+                                              KText(
+                                                text: "Location *",
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  fontSize: width / 105.571,
+                                                  fontWeight: FontWeight.bold,
                                                 ),
                                               ),
-                                            )
+                                              SizedBox(height: height / 108.5),
+                                              Material(
+                                                borderRadius:
+                                                BorderRadius.circular(5),
+                                                color: Colors.white,
+                                                elevation: 10,
+                                                child: SizedBox(
+                                                  height: height / 13.02,
+                                                  width: width / 6.830,
+                                                  child: Padding(
+                                                    padding: EdgeInsets.symmetric(
+                                                        vertical: height / 81.375,
+                                                        horizontal: width / 170.75),
+                                                    child: TextFormField(
+                                                      style: SafeGoogleFont(
+                                                        'Nunito',
+                                                        fontSize: width / 105.571,
+                                                      ),
+                                                      controller: locationController,
+                                                      decoration: InputDecoration(
+                                                        contentPadding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 5),
+                                                        border: InputBorder.none,
+                                                        hintStyle: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: width / 105.571,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),*/
                                           ],
-                                        ),*/
+                                        ),
+                                        SizedBox(height: height / 65.1),
+                                           avtivityType.text=="Individual"? Row(
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                KText(
+                                                  text: "Department",
+                                                  style: SafeGoogleFont(
+                                                    'Nunito',
+                                                    fontSize: width / 105.571,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                SizedBox(height: height / 108.5),
+                                                Material(
+                                                  borderRadius: BorderRadius.circular(3),
+                                                  color: Color(0xffDDDEEE),
+                                                  elevation: 5,
+                                                  child:
+                                                  SizedBox(
+                                                    height: height / 16.02,
+                                                    width: width / 7.0,
+                                                    child: DropdownButtonHideUnderline(
+                                                      child:
+                                                      DropdownButtonFormField2<
+                                                          String>(
+                                                        isExpanded:true,
+                                                        hint: Text(
+                                                          'Select Department',
+                                                          style:
+                                                          SafeGoogleFont(
+                                                            'Nunito',
+                                                          ),
+                                                        ),
+                                                        items: departmentDataList
+                                                            .map((String
+                                                        item) =>
+                                                            DropdownMenuItem<
+                                                                String>(
+                                                              value: item,
+                                                              child: Text(
+                                                                item,
+                                                                style:
+                                                                SafeGoogleFont(
+                                                                  'Nunito',
+                                                                ),
+                                                              ),
+                                                            )).toList(),
+                                                        value:
+                                                        departmentcon.text,
+                                                        onChanged:
+                                                            (String? value) {
+                                                          setState(() {
+                                                            departmentcon.text =
+                                                            value!;
+                                                          });
+
+                                                        },
+                                                        buttonStyleData:
+                                                        const ButtonStyleData(
+
+
+                                                        ),
+                                                        menuItemStyleData:
+                                                        const MenuItemStyleData(
+
+                                                        ),
+                                                        decoration:
+                                                        const InputDecoration(
+                                                            border:
+                                                            InputBorder
+                                                                .none),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            SizedBox(width: width / 68.3),
+                                            Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                KText(
+                                                  text: "Year",
+                                                  style: SafeGoogleFont(
+                                                    'Nunito',
+                                                    fontSize: width / 105.571,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                SizedBox(height: height / 108.5),
+                                                Material(
+                                                  borderRadius: BorderRadius.circular(3),
+                                                  color: Color(0xffDDDEEE),
+                                                  elevation: 5,
+                                                  child: SizedBox(
+                                                    height: height / 16.02,
+                                                    width: width / 7.0,
+                                                    child: DropdownButtonHideUnderline(
+                                                      child:
+                                                      DropdownButtonFormField2<
+                                                          String>(
+                                                        isExpanded:true,
+                                                        hint: Text(
+                                                          'Select Year',
+                                                          style:
+                                                          SafeGoogleFont(
+                                                            'Nunito',
+                                                          ),
+                                                        ),
+                                                        items: yearDataList
+                                                            .map((String
+                                                        item) =>
+                                                            DropdownMenuItem<
+                                                                String>(
+                                                              value: item,
+                                                              child: Text(
+                                                                item,
+                                                                style:
+                                                                SafeGoogleFont(
+                                                                  'Nunito',
+                                                                ),
+                                                              ),
+                                                            )).toList(),
+                                                        value:
+                                                        yearcon.text,
+                                                        onChanged:
+                                                            (String? value) {
+                                                          setState(() {
+                                                            yearcon.text =
+                                                            value!;
+                                                          });
+
+                                                        },
+                                                        buttonStyleData:
+                                                        const ButtonStyleData(
+
+
+                                                        ),
+                                                        menuItemStyleData:
+                                                        const MenuItemStyleData(
+
+                                                        ),
+                                                        decoration:
+                                                        const InputDecoration(
+                                                            border:
+                                                            InputBorder
+                                                                .none),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        ):const SizedBox(),
+                                        avtivityType.text=="Individual"? SizedBox(height: height / 65.1):const SizedBox(),
+                                        Row(
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                KText(
+                                                  text: "Title *",
+                                                  style: SafeGoogleFont(
+                                                    'Nunito',
+                                                    fontSize: width / 105.571,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                SizedBox(height: height / 108.5),
+                                                Material(
+                                                  borderRadius: BorderRadius.circular(3),
+                                                  color: Color(0xffDDDEEE),
+                                                  elevation: 5,
+                                                  child: SizedBox(
+                                                    height: height / 10.850,
+                                                    width: size.width * 0.36,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.symmetric(
+                                                          vertical: height / 81.375,
+                                                          horizontal: width / 170.75),
+                                                      child: TextFormField(
+                                                        inputFormatters: [
+                                                          FilteringTextInputFormatter
+                                                              .allow(RegExp(
+                                                              "[a-zA-Z ]")),
+                                                        ],
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: width / 105.571,
+                                                        ),
+                                                        keyboardType:
+                                                        TextInputType.multiline,
+                                                        minLines: 1,
+                                                        maxLines: null,
+                                                        controller: titleController,
+                                                        decoration: InputDecoration(
+                                                          border: InputBorder.none,
+                                                          hintStyle: SafeGoogleFont(
+                                                            'Nunito',
+                                                            fontSize: width / 105.571,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: height / 65.1),
+                                        Row(
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                KText(
+                                                  text: "Description",
+                                                  style: SafeGoogleFont(
+                                                    'Nunito',
+                                                    fontSize: width / 105.571,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                SizedBox(height: height / 108.5),
+                                                Material(
+                                                  borderRadius: BorderRadius.circular(3),
+                                                  color: Color(0xffDDDEEE),
+                                                  elevation: 5,
+                                                  child: SizedBox(
+                                                    height: height / 6.510,
+                                                    width: size.width * 0.36,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.symmetric(
+                                                          vertical: height / 81.375,
+                                                          horizontal: width / 170.75),
+                                                      child: TextFormField(
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: width / 105.571,
+                                                        ),
+                                                        keyboardType:
+                                                        TextInputType.multiline,
+                                                        minLines: 1,
+                                                        maxLines: 5,
+                                                        controller:
+                                                        descriptionController,
+                                                        decoration: InputDecoration(
+                                                          border: InputBorder.none,
+                                                          hintStyle: SafeGoogleFont(
+                                                            'Nunito',
+                                                            fontSize: width / 105.571,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ],
                                     ),
-                                    SizedBox(height: height / 65.1),
-                                    Row(
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            KText(
-                                              text: "Title *",
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                fontSize: width / 105.571,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            SizedBox(height: height / 108.5),
-                                            Material(
-                                              borderRadius: BorderRadius.circular(3),
-                                              color: Color(0xffDDDEEE),
-                                              elevation: 5,
-                                              child: SizedBox(
-                                                height: height / 10.850,
-                                                width: size.width * 0.36,
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      vertical: height / 81.375,
-                                                      horizontal: width / 170.75),
-                                                  child: TextFormField(
-                                                    inputFormatters: [
-                                                      FilteringTextInputFormatter
-                                                          .allow(RegExp(
-                                                          "[a-zA-Z ]")),
-                                                    ],
-                                                    style: SafeGoogleFont(
-                                                      'Nunito',
-                                                      fontSize: width / 105.571,
-                                                    ),
-                                                    keyboardType:
-                                                    TextInputType.multiline,
-                                                    minLines: 1,
-                                                    maxLines: null,
-                                                    controller: titleController,
-                                                    decoration: InputDecoration(
-                                                      border: InputBorder.none,
-                                                      hintStyle: SafeGoogleFont(
-                                                        'Nunito',
-                                                        fontSize: width / 105.571,
-                                                      ),
-                                                    ),
-                                                  ),
+                                    InkWell(
+                                      onTap: selectImage,
+                                      child: Container(
+                                        height: size.height * 0.2,
+                                        width: size.width * 0.10,
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            image: uploadedImage != null
+                                                ? DecorationImage(
+                                              fit: BoxFit.fill,
+                                              image: MemoryImage(
+                                                Uint8List.fromList(
+                                                  base64Decode(uploadedImage!
+                                                      .split(',')
+                                                      .last),
                                                 ),
                                               ),
                                             )
-                                          ],
+                                                : null),
+                                        child: uploadedImage != null
+                                            ? null
+                                            : Icon(
+                                          Icons.add_photo_alternate,
+                                          size: size.height * 0.2,
                                         ),
-                                      ],
-                                    ),
-                                    SizedBox(height: height / 65.1),
-                                    Row(
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            KText(
-                                              text: "Description",
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                fontSize: width / 105.571,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            SizedBox(height: height / 108.5),
-                                            Material(
-                                              borderRadius: BorderRadius.circular(3),
-                                              color: Color(0xffDDDEEE),
-                                              elevation: 5,
-                                              child: SizedBox(
-                                                height: height / 6.510,
-                                                width: size.width * 0.36,
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      vertical: height / 81.375,
-                                                      horizontal: width / 170.75),
-                                                  child: TextFormField(
-                                                    style: SafeGoogleFont(
-                                                      'Nunito',
-                                                      fontSize: width / 105.571,
-                                                    ),
-                                                    keyboardType:
-                                                    TextInputType.multiline,
-                                                    minLines: 1,
-                                                    maxLines: 5,
-                                                    controller:
-                                                    descriptionController,
-                                                    decoration: InputDecoration(
-                                                      border: InputBorder.none,
-                                                      hintStyle: SafeGoogleFont(
-                                                        'Nunito',
-                                                        fontSize: width / 105.571,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ],
+                                      ),
                                     ),
                                   ],
                                 ),
-                                InkWell(
-                                  onTap: selectImage,
-                                  child: Container(
-                                    height: size.height * 0.2,
-                                    width: size.width * 0.10,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        image: uploadedImage != null
-                                            ? DecorationImage(
-                                          fit: BoxFit.fill,
-                                          image: MemoryImage(
-                                            Uint8List.fromList(
-                                              base64Decode(uploadedImage!
-                                                  .split(',')
-                                                  .last),
+
+                                Padding(
+                                  padding:  EdgeInsets.only(top:height/8.9),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.end,
+                                    children: [
+                                      SizedBox(
+                                        width: width/2.2925,
+                                      ),
+
+                                      ///Save  button
+                                      GestureDetector(
+                                        onTap:dataSaved==false?
+                                            () async {
+                                          if (dateController.text != "" &&
+                                              timeController.text != "" ) {
+                                            setState(() {
+                                              dataSaved=true;
+                                            });
+                                            Response response =
+                                            await ActivityFireCrud.addEvent(
+                                              title: titleController.text,
+                                              time: timeController.text,
+                                              location: locationController.text,
+                                              image: profileImage,
+                                              description: descriptionController.text,
+                                              date: dateController.text,
+                                              activityDep:departmentcon.text ,
+                                              activityType: avtivityType.text,
+                                              activityYear: yearcon.text ,
+                                            );
+                                            if (response.code == 200) {
+                                              CoolAlert.show(
+                                                  context: context,
+                                                  type: CoolAlertType.success,
+                                                  text: "Activity created successfully!",
+                                                  width: size.width * 0.4,
+                                                  backgroundColor: Constants()
+                                                      .primaryAppColor
+                                                      .withOpacity(0.8));
+                                              setState(() {
+                                                locationController.text = "";
+                                                descriptionController.text = "";
+                                                titleController.text = "";
+                                                avtivityType.text = "All";
+                                                departmentcon.text='Select Department';
+                                                yearcon.text = 'Select Year';
+                                                alldepartBoolean=true;
+                                                individualdepartBoolean=false;
+                                                dataSaved=false;
+                                                departmentcon.text = "";
+                                                uploadedImage = null;
+                                                profileImage = null;
+                                                currentTab = 'View';
+                                              });
+                                            } else {
+                                              CoolAlert.show(
+                                                  context: context,
+                                                  type: CoolAlertType.error,
+                                                  text: "Failed to Create Activity!",
+                                                  width: size.width * 0.4,
+                                                  backgroundColor: Constants()
+                                                      .primaryAppColor
+                                                      .withOpacity(0.8));
+                                            }
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(snackBar);
+                                          }
+                                        }:(){},
+                                        child: Container(
+                                            height: height/18.475,
+                                            width: width/12.8,
+                                            decoration: BoxDecoration(
+                                              color: Color(0xffD60A0B),
+                                              borderRadius:
+                                              BorderRadius.circular(4),
                                             ),
-                                          ),
-                                        )
-                                            : null),
-                                    child: uploadedImage != null
-                                        ? null
-                                        : Icon(
-                                      Icons.add_photo_alternate,
-                                      size: size.height * 0.2,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                                            child: Center(
+                                              child: KText(
+                                                text: 'Save',
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  fontSize: width/96,
+                                                  fontWeight:
+                                                  FontWeight.w600,
+                                                  color: Color(0xffFFFFFF),
+                                                ),
+                                              ),
+                                            )),
+                                      ),
+                                      SizedBox(
+                                        width: width/76.8,
+                                      ),
 
-                              Padding(
-                              padding:  EdgeInsets.only(top:height/8.9),
-                              child: Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.end,
-                                children: [
-                                  SizedBox(
-                                    width: width/2.2925,
-                                  ),
-
-                                  ///Save  button
-                                  GestureDetector(
-                                    onTap: () async {
-                                      if (dateController.text != "" &&
-                                          timeController.text != "" ) {
-                                        Response response =
-                                        await ActivityFireCrud.addEvent(
-                                          title: titleController.text,
-                                          time: timeController.text,
-                                          location: locationController.text,
-                                          image: profileImage,
-                                          description: descriptionController.text,
-                                          date: dateController.text,
-                                        );
-                                        if (response.code == 200) {
-                                          CoolAlert.show(
-                                              context: context,
-                                              type: CoolAlertType.success,
-                                              text: "Activity created successfully!",
-                                              width: size.width * 0.4,
-                                              backgroundColor: Constants()
-                                                  .primaryAppColor
-                                                  .withOpacity(0.8));
+                                      ///Reset Button
+                                      GestureDetector(
+                                        onTap: () {
                                           setState(() {
                                             locationController.text = "";
                                             descriptionController.text = "";
+                                            titleController.text = "";
+                                            avtivityType.text = "All";
+                                            departmentcon.text='Select Department';
+                                            yearcon.text = 'Select Year';
+                                            alldepartBoolean=true;
+                                            individualdepartBoolean=false;
+                                            dataSaved=false;
+                                            uploadedImage = null;
+                                            profileImage = null;
+                                          });
+                                        },
+                                        child: Container(
+                                            height: height/18.475,
+                                            width: width/12.8,
+                                            decoration: BoxDecoration(
+                                              color: Color(0xff00A0E3),
+                                              borderRadius:
+                                              BorderRadius.circular(4),
+                                            ),
+                                            child: Center(
+                                              child: KText(
+                                                text: 'Reset',
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  fontSize: width/96,
+                                                  fontWeight:
+                                                  FontWeight.w600,
+                                                  color: Color(0xffFFFFFF),
+                                                ),
+                                              ),
+                                            )),
+                                      ),
+                                      SizedBox(
+                                        width: width/76.8,
+                                      ),
+
+                                      ///back Button
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            locationController.text = "";
+                                            descriptionController.text = "";
+                                            titleController.text = "";
+                                            avtivityType.text = "All";
+                                            departmentcon.text='Select Department';
+                                            yearcon.text = 'Select Year';
+                                            alldepartBoolean=true;
+                                            individualdepartBoolean=false;
+                                            dataSaved=false;
                                             uploadedImage = null;
                                             profileImage = null;
                                             currentTab = 'View';
                                           });
-                                        } else {
-                                          CoolAlert.show(
-                                              context: context,
-                                              type: CoolAlertType.error,
-                                              text: "Failed to Create Activity!",
-                                              width: size.width * 0.4,
-                                              backgroundColor: Constants()
-                                                  .primaryAppColor
-                                                  .withOpacity(0.8));
-                                        }
-                                      } else {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(snackBar);
-                                      }
-                                    },
-                                    child: Container(
-                                        height: height/18.475,
-                                        width: width/12.8,
-                                        decoration: BoxDecoration(
-                                          color: Color(0xffD60A0B),
-                                          borderRadius:
-                                          BorderRadius.circular(4),
-                                        ),
-                                        child: Center(
-                                          child: KText(
-                                            text: 'Save',
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              fontSize: width/96,
-                                              fontWeight:
-                                              FontWeight.w600,
-                                              color: Color(0xffFFFFFF),
+                                        },
+                                        child: Container(
+                                            height: height/18.475,
+                                            width: width/12.8,
+                                            decoration: BoxDecoration(
+                                              color: Colors.green,
+                                              borderRadius:
+                                              BorderRadius.circular(4),
                                             ),
-                                          ),
-                                        )),
+                                            child: Center(
+                                              child: KText(
+                                                text: 'Back',
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  fontSize: width/96,
+                                                  fontWeight:
+                                                  FontWeight.w600,
+                                                  color: Color(0xffFFFFFF),
+                                                ),
+                                              ),
+                                            )),
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(
-                                    width: width/76.8,
-                                  ),
-
-                                  ///Reset Button
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        locationController.text = "";
-                                        descriptionController.text = "";
-                                        titleController.text = "";
-                                        uploadedImage = null;
-                                        profileImage = null;
-                                      });
-                                    },
-                                    child: Container(
-                                        height: height/18.475,
-                                        width: width/12.8,
-                                        decoration: BoxDecoration(
-                                          color: Color(0xff00A0E3),
-                                          borderRadius:
-                                          BorderRadius.circular(4),
-                                        ),
-                                        child: Center(
-                                          child: KText(
-                                            text: 'Reset',
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              fontSize: width/96,
-                                              fontWeight:
-                                              FontWeight.w600,
-                                              color: Color(0xffFFFFFF),
-                                            ),
-                                          ),
-                                        )),
-                                  ),
-                                  SizedBox(
-                                    width: width/76.8,
-                                  ),
-
-                                  ///back Button
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        locationController.text = "";
-                                        descriptionController.text = "";
-                                        titleController.text = "";
-                                        uploadedImage = null;
-                                        profileImage = null;
-                                        currentTab = 'View';
-                                      });
-                                    },
-                                    child: Container(
-                                        height: height/18.475,
-                                        width: width/12.8,
-                                        decoration: BoxDecoration(
-                                          color: Colors.green,
-                                          borderRadius:
-                                          BorderRadius.circular(4),
-                                        ),
-                                        child: Center(
-                                          child: KText(
-                                            text: 'Back',
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              fontSize: width/96,
-                                              fontWeight:
-                                              FontWeight.w600,
-                                              color: Color(0xffFFFFFF),
-                                            ),
-                                          ),
-                                        )),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                        )
                       ),
                     ],
                                     ),
@@ -2189,166 +2496,110 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          /*Row(
-                            children: [
-                              InkWell(
-                                onTap: () async {
-                                  if (titleController.text != "" &&
-                                      dateController.text != "" &&
-                                      timeController.text != "") {
-                                    Response response =
-                                    await ActivityFireCrud.updateRecord(
-                                        ColleageActivityModel(
-                                          id: clgActivityData.id,
-                                          title: titleController.text,
-                                          imgUrl: clgActivityData.imgUrl,
-                                          timestamp: clgActivityData.timestamp,
-                                          views: clgActivityData.views,
-                                          time: timeController.text,
-                                          location: locationController.text,
-                                          description:
-                                          descriptionController.text,
-                                          date: dateController.text,
-                                          registeredUsers:
-                                          clgActivityData.registeredUsers,
-                                        ),
-                                        profileImage,
-                                        clgActivityData.imgUrl ?? "");
-                                    if (response.code == 200) {
-                                      CoolAlert.show(
-                                          context: context,
-                                          type: CoolAlertType.success,
-                                          text: "Activity updated successfully!",
-                                          width: size.width * 0.4,
-                                          backgroundColor: Constants()
-                                              .primaryAppColor
-                                              .withOpacity(0.8));
-                                      setState(() {
-                                        locationController.text = "";
-                                        descriptionController.text = "";
-                                        titleController.text = "";
-                                        uploadedImage = null;
-                                        profileImage = null;
-                                      });
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                    } else {
-                                      CoolAlert.show(
-                                          context: context,
-                                          type: CoolAlertType.error,
-                                          text: "Failed to update Activity!",
-                                          width: size.width * 0.4,
-                                          backgroundColor: Constants()
-                                              .primaryAppColor
-                                              .withOpacity(0.8));
-                                      Navigator.pop(context);
-                                    }
-                                  } else {
-                                    CoolAlert.show(
-                                        context: context,
-                                        type: CoolAlertType.warning,
-                                        text: "Please fill the required fields",
-                                        width: size.width * 0.4,
-                                        backgroundColor: Constants()
-                                            .primaryAppColor
-                                            .withOpacity(0.8));
-                                  }
-                                },
-                                child: Container(
-                                  height: height / 16.275,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black26,
-                                        offset: Offset(1, 2),
-                                        blurRadius: 3,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: width / 227.66),
-                                    child: Center(
-                                      child: KText(
-                                        text: "UPDATE",
-                                        style: SafeGoogleFont(
-                                          'Nunito',
-                                          fontSize: width / 105.375,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: width / 136.6),
-                              InkWell(
-                                onTap: () async {
-                                  setState(() {
-                                    locationController.text = "";
-                                    descriptionController.text = "";
-                                    titleController.text = "";
-                                    uploadedImage = null;
-                                    profileImage = null;
-                                  });
-                                  Navigator.pop(context);
-                                },
-                                child: Container(
-                                  height: height / 16.275,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black26,
-                                        offset: Offset(1, 2),
-                                        blurRadius: 3,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: width / 227.66),
-                                    child: Center(
-                                      child: KText(
-                                        text: "CANCEL",
-                                        style: SafeGoogleFont(
-                                          'Nunito',
-                                          fontSize: width / 105.375,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )*/
+
                         ],
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          color: Color(0xffF7FAFC),
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10),
-                          )),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: width / 68.3, vertical: height / 32.55),
+                  Container(
+                    width: double.infinity,
+
+                    height: height/1.421153,
+                    decoration: BoxDecoration(
+                        color: Color(0xffF7FAFC),
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
+                        )),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: width / 68.3, vertical: height / 32.55),
+                    child: SingleChildScrollView(
+                      physics: const ScrollPhysics(),
                       child: Column(
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
+
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        height: height / 16.02,
+                                        width: width / 7.0,
+                                        child:
+                                        Row(
+                                          children: [
+                                            Padding(
+                                              padding:  EdgeInsets.only(right:width/192),
+                                              child: KText(
+                                                text: "All",
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  fontSize: width / 105.571,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                            Checkbox(
+                                                value: alldepartBoolean,
+                                                onChanged: (val) {
+                                                  setState(() {
+                                                    alldepartBoolean = !alldepartBoolean;
+                                                  });
+                                                  if (alldepartBoolean == true) {
+                                                    setState(() {
+                                                      avtivityType.text="All";
+                                                      individualdepartBoolean=false;
+                                                    });
+                                                  }
+
+                                                  print("avtivityType Controller+++++++++++++++++++++++++++++++++++++++++");
+                                                  print(avtivityType.text);
+                                                }),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(width: width / 68.3),
+                                      SizedBox(
+                                        height: height / 16.02,
+                                        width: width / 7.0,
+                                        child:
+                                        Row(
+                                          children: [
+                                            Padding(
+                                              padding:  EdgeInsets.only(right:width/192),
+                                              child: KText(
+                                                text: "Individual",
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  fontSize: width / 105.571,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                            Checkbox(
+                                                value: individualdepartBoolean,
+                                                onChanged: (val) {
+                                                  setState(() {
+                                                    individualdepartBoolean = !individualdepartBoolean;
+                                                  });
+                                                  if (individualdepartBoolean == true) {
+                                                    setState(() {
+                                                      avtivityType.text="Individual";
+                                                      alldepartBoolean=false;
+                                                    });
+                                                  }
+                                                  print("avtivityType Controller+++++++++++++++++++++++++++++++++++++++++");
+                                                  print(avtivityType.text);
+                                                }),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                   Row(
                                     children: [
                                       Column(
@@ -2359,7 +2610,7 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                             text: "Date *",
                                             style: SafeGoogleFont(
                                               'Nunito',
-                                              fontSize: width / 97.571,
+                                              fontSize: width / 105.571,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
@@ -2369,13 +2620,17 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                             color: Color(0xffDDDEEE),
                                             elevation: 5,
                                             child: SizedBox(
-                                              height: height / 16.275,
-                                              width: width / 9.106,
+                                              height: height / 16.02,
+                                              width: width / 7.0,
                                               child: Padding(
                                                 padding: EdgeInsets.symmetric(
                                                     vertical: height / 81.375,
                                                     horizontal: width / 170.75),
                                                 child: TextFormField(
+                                                  style: SafeGoogleFont(
+                                                    'Nunito',
+                                                    fontSize: width / 105.571,
+                                                  ),
                                                   readOnly: true,
                                                   decoration: InputDecoration(
                                                       border: InputBorder.none),
@@ -2393,8 +2648,8 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                                     if (pickedDate != null) {
                                                       setState(() {
                                                         dateController.text =
-                                                            formatter
-                                                                .format(pickedDate);
+                                                            formatter.format(
+                                                                pickedDate);
                                                       });
                                                     }
                                                   },
@@ -2413,7 +2668,7 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                             text: "Time *",
                                             style: SafeGoogleFont(
                                               'Nunito',
-                                              fontSize: width / 97.571,
+                                              fontSize: width / 105.571,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
@@ -2422,9 +2677,10 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                             borderRadius: BorderRadius.circular(3),
                                             color: Color(0xffDDDEEE),
                                             elevation: 5,
-                                            child: SizedBox(
-                                              height: height / 16.275,
-                                              width: width / 9.106,
+                                            child:
+                                            SizedBox(
+                                              height: height / 16.02,
+                                              width: width / 7.0,
                                               child: Padding(
                                                 padding: EdgeInsets.symmetric(
                                                     vertical: height / 81.375,
@@ -2439,8 +2695,12 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                                     border: InputBorder.none,
                                                     hintStyle: SafeGoogleFont(
                                                       'Nunito',
-                                                      fontSize: width / 97.571,
+                                                      fontSize: width / 105.571,
                                                     ),
+                                                  ),
+                                                  style: SafeGoogleFont(
+                                                    'Nunito',
+                                                    fontSize: width / 105.571,
                                                   ),
                                                 ),
                                               ),
@@ -2449,49 +2709,215 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                         ],
                                       ),
                                       SizedBox(width: width / 68.3),
-                                     /* Column(
+                                      /* Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                KText(
+                                                  text: "Location *",
+                                                  style: SafeGoogleFont(
+                                                    'Nunito',
+                                                    fontSize: width / 105.571,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                SizedBox(height: height / 108.5),
+                                                Material(
+                                                  borderRadius:
+                                                  BorderRadius.circular(5),
+                                                  color: Colors.white,
+                                                  elevation: 10,
+                                                  child: SizedBox(
+                                                    height: height / 13.02,
+                                                    width: width / 6.830,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.symmetric(
+                                                          vertical: height / 81.375,
+                                                          horizontal: width / 170.75),
+                                                      child: TextFormField(
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: width / 105.571,
+                                                        ),
+                                                        controller: locationController,
+                                                        decoration: InputDecoration(
+                                                          contentPadding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 5),
+                                                          border: InputBorder.none,
+                                                          hintStyle: SafeGoogleFont(
+                                                            'Nunito',
+                                                            fontSize: width / 105.571,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),*/
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 65.1),
+                                  avtivityType.text=="Individual"? Row(
+                                    children: [
+                                      Column(
                                         crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                         children: [
                                           KText(
-                                            text: "Location *",
+                                            text: "Department",
                                             style: SafeGoogleFont(
                                               'Nunito',
-                                              fontSize: width / 97.571,
+                                              fontSize: width / 105.571,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                           SizedBox(height: height / 108.5),
                                           Material(
-                                            borderRadius: BorderRadius.circular(5),
-                                            color: Colors.white,
-                                            elevation: 10,
-                                            child: SizedBox(
-                                              height: height / 16.275,
-                                              width: width / 6.830,
-                                              child: Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: height / 81.375,
-                                                    horizontal: width / 170.75),
-                                                child: TextFormField(
-                                                  controller: locationController,
-                                                  decoration: InputDecoration(
-                                                    border: InputBorder.none,
-                                                    hintText: "Select Type",
-                                                    hintStyle: SafeGoogleFont(
+                                            borderRadius: BorderRadius.circular(3),
+                                            color: Color(0xffDDDEEE),
+                                            elevation: 5,
+                                            child:
+                                            SizedBox(
+                                              height: height / 16.02,
+                                              width: width / 7.0,
+                                              child: DropdownButtonHideUnderline(
+                                                child:
+                                                DropdownButtonFormField2<
+                                                    String>(
+                                                  isExpanded:true,
+                                                  hint: Text(
+                                                    'Select Department',
+                                                    style:
+                                                    SafeGoogleFont(
                                                       'Nunito',
-                                                      fontSize: width / 97.571,
                                                     ),
                                                   ),
+                                                  items: departmentDataList
+                                                      .map((String
+                                                  item) =>
+                                                      DropdownMenuItem<
+                                                          String>(
+                                                        value: item,
+                                                        child: Text(
+                                                          item,
+                                                          style:
+                                                          SafeGoogleFont(
+                                                            'Nunito',
+                                                          ),
+                                                        ),
+                                                      )).toList(),
+                                                  value:
+                                                  departmentcon.text,
+                                                  onChanged:
+                                                      (String? value) {
+                                                    setState(() {
+                                                      departmentcon.text =
+                                                      value!;
+                                                    });
+
+                                                  },
+                                                  buttonStyleData:
+                                                  const ButtonStyleData(
+
+
+                                                  ),
+                                                  menuItemStyleData:
+                                                  const MenuItemStyleData(
+
+                                                  ),
+                                                  decoration:
+                                                  const InputDecoration(
+                                                      border:
+                                                      InputBorder
+                                                          .none),
                                                 ),
                                               ),
                                             ),
                                           )
                                         ],
-                                      ),*/
+                                      ),
+                                      SizedBox(width: width / 68.3),
+                                      Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          KText(
+                                            text: "Year",
+                                            style: SafeGoogleFont(
+                                              'Nunito',
+                                              fontSize: width / 105.571,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height: height / 108.5),
+                                          Material(
+                                            borderRadius: BorderRadius.circular(3),
+                                            color: Color(0xffDDDEEE),
+                                            elevation: 5,
+                                            child: SizedBox(
+                                              height: height / 16.02,
+                                              width: width / 7.0,
+                                              child: DropdownButtonHideUnderline(
+                                                child:
+                                                DropdownButtonFormField2<
+                                                    String>(
+                                                  isExpanded:true,
+                                                  hint: Text(
+                                                    'Select Year',
+                                                    style:
+                                                    SafeGoogleFont(
+                                                      'Nunito',
+                                                    ),
+                                                  ),
+                                                  items: yearDataList
+                                                      .map((String
+                                                  item) =>
+                                                      DropdownMenuItem<
+                                                          String>(
+                                                        value: item,
+                                                        child: Text(
+                                                          item,
+                                                          style:
+                                                          SafeGoogleFont(
+                                                            'Nunito',
+                                                          ),
+                                                        ),
+                                                      )).toList(),
+                                                  value:
+                                                  yearcon.text,
+                                                  onChanged:
+                                                      (String? value) {
+                                                    setState(() {
+                                                      yearcon.text =
+                                                      value!;
+                                                    });
+
+                                                  },
+                                                  buttonStyleData:
+                                                  const ButtonStyleData(
+
+
+                                                  ),
+                                                  menuItemStyleData:
+                                                  const MenuItemStyleData(
+
+                                                  ),
+                                                  decoration:
+                                                  const InputDecoration(
+                                                      border:
+                                                      InputBorder
+                                                          .none),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ],
-                                  ),
-                                  SizedBox(height: height / 65.1),
+                                  ):const SizedBox(),
+                                  avtivityType.text=="Individual"? SizedBox(height: height / 65.1):const SizedBox(),
                                   Row(
                                     children: [
                                       Column(
@@ -2502,7 +2928,7 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                             text: "Title *",
                                             style: SafeGoogleFont(
                                               'Nunito',
-                                              fontSize: width / 97.571,
+                                              fontSize: width / 105.571,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
@@ -2524,16 +2950,20 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                                         .allow(RegExp(
                                                         "[a-zA-Z ]")),
                                                   ],
+                                                  style: SafeGoogleFont(
+                                                    'Nunito',
+                                                    fontSize: width / 105.571,
+                                                  ),
                                                   keyboardType:
                                                   TextInputType.multiline,
                                                   minLines: 1,
-                                                  maxLines: 5,
+                                                  maxLines: null,
                                                   controller: titleController,
                                                   decoration: InputDecoration(
                                                     border: InputBorder.none,
                                                     hintStyle: SafeGoogleFont(
                                                       'Nunito',
-                                                      fontSize: width / 97.571,
+                                                      fontSize: width / 105.571,
                                                     ),
                                                   ),
                                                 ),
@@ -2555,7 +2985,7 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                             text: "Description",
                                             style: SafeGoogleFont(
                                               'Nunito',
-                                              fontSize: width / 97.571,
+                                              fontSize: width / 105.571,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
@@ -2572,17 +3002,21 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                                     vertical: height / 81.375,
                                                     horizontal: width / 170.75),
                                                 child: TextFormField(
+                                                  style: SafeGoogleFont(
+                                                    'Nunito',
+                                                    fontSize: width / 105.571,
+                                                  ),
                                                   keyboardType:
                                                   TextInputType.multiline,
                                                   minLines: 1,
                                                   maxLines: 5,
-                                                  controller: descriptionController,
+                                                  controller:
+                                                  descriptionController,
                                                   decoration: InputDecoration(
                                                     border: InputBorder.none,
-                                                    hintText: "Lucky",
                                                     hintStyle: SafeGoogleFont(
                                                       'Nunito',
-                                                      fontSize: width / 97.571,
+                                                      fontSize: width / 105.571,
                                                     ),
                                                   ),
                                                 ),
@@ -2595,6 +3029,7 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                   ),
                                 ],
                               ),
+
                               InkWell(
                                 onTap: selectImage,
                                 child: Container(
@@ -2640,10 +3075,14 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
 
                                 /// Update Button
                                 GestureDetector(
-                                  onTap: () async {
+                                  onTap:
+                                  dataSaved==false?     () async {
                                     if (titleController.text != "" &&
                                         dateController.text != "" &&
                                         timeController.text != "") {
+                                      setState((){
+                                        dataSaved=true;
+                                      });
                                       Response response =
                                       await ActivityFireCrud.updateRecord(
                                           ColleageActivityModel(
@@ -2659,6 +3098,9 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                             date: dateController.text,
                                             registeredUsers:
                                             clgActivityData.registeredUsers,
+                                            activityType: avtivityType.text ,
+                                            activityDep:departmentcon.text ,
+                                            activityYear: yearcon.text,
                                           ),
                                           profileImage,
                                           clgActivityData.imgUrl ?? "");
@@ -2675,6 +3117,12 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                           locationController.text = "";
                                           descriptionController.text = "";
                                           titleController.text = "";
+                                          avtivityType.text = "All";
+                                          departmentcon.text='Select Department';
+                                          yearcon.text = 'Select Year';
+                                          alldepartBoolean=true;
+                                          individualdepartBoolean=false;
+                                          dataSaved=false;
                                           uploadedImage = null;
                                           profileImage = null;
                                         });
@@ -2701,7 +3149,7 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                               .primaryAppColor
                                               .withOpacity(0.8));
                                     }
-                                  },
+                                  }:(){},
                                   child: Container(
                                       height: height/18.475,
                                       width: width/12.8,
@@ -2734,6 +3182,12 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                       locationController.text = "";
                                       descriptionController.text = "";
                                       titleController.text = "";
+                                      avtivityType.text = "All";
+                                      departmentcon.text='Select Department';
+                                      yearcon.text = 'Select Year';
+                                      alldepartBoolean=true;
+                                      individualdepartBoolean=false;
+                                      dataSaved=false;
                                       uploadedImage = null;
                                       profileImage = null;
                                     });
@@ -2786,16 +3240,20 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
     row.add("No.");
     row.add("Date");
     row.add("Time");
-    row.add("Location");
     row.add("Description");
+    row.add("Activity Type");
+    row.add("Activity Department");
+    row.add("Activity Year");
     rows.add(row);
     for (int i = 0; i < clgActivityData.length; i++) {
       List<dynamic> row = [];
       row.add(i + 1);
       row.add(clgActivityData[i].date!);
       row.add(clgActivityData[i].time!);
-      row.add(clgActivityData[i].location!);
       row.add(clgActivityData[i].description!);
+      row.add(clgActivityData[i].activityType!);
+      row.add(clgActivityData[i].activityDep!);
+      row.add(clgActivityData[i].activityYear!);
       rows.add(row);
     }
     String csv = ListToCsvConverter().convert(rows);
@@ -2808,16 +3266,20 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
     row.add("No.");
     row.add("Date");
     row.add("Time");
-    row.add("Location");
     row.add("Description");
+    row.add("Activity Type");
+    row.add("Activity Department");
+    row.add("Activity Year");
     rows.add(row);
     for (int i = 0; i < clgActivityData.length; i++) {
       List<dynamic> row = [];
       row.add(i + 1);
       row.add(clgActivityData[i].date!);
       row.add(clgActivityData[i].time!);
-      row.add(clgActivityData[i].location!);
       row.add(clgActivityData[i].description!);
+      row.add(clgActivityData[i].activityType!);
+      row.add(clgActivityData[i].activityDep!);
+      row.add(clgActivityData[i].activityYear!);
       rows.add(row);
     }
     String pdf = ListToCsvConverter().convert(rows);
@@ -3213,7 +3675,26 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
               locationController.text = clgActivityData.location!;
               descriptionController.text = clgActivityData.description!;
               selectedImg = clgActivityData.imgUrl;
+              avtivityType.text = clgActivityData.activityType;
+              departmentcon.text = clgActivityData.activityDep;
+              yearcon.text = clgActivityData.activityYear;
+              dataSaved=false;
             });
+            if(clgActivityData.activityType=="All"){
+              setState(() {
+                alldepartBoolean=true;
+                avtivityType.text = "All";
+                individualdepartBoolean=false;
+              });
+            }
+            if(clgActivityData.activityType=="Individual"){
+              setState(() {
+                individualdepartBoolean=true;
+                avtivityType.text = "Individual";
+                alldepartBoolean=false;
+              });
+
+            }
             editPopUp(clgActivityData, size);
           } else if (item == "Delete") {
             ActivityFireCrud.deleteRecord(id: clgActivityData.id);
