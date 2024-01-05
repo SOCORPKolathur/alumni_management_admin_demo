@@ -80,12 +80,16 @@ class JobPostModel {
       case 0:
         return (row + 1).toString();
       case 1:
-        return date!;
+        return title!;
       case 2:
-        return time!;
+        return userName!;
       case 3:
-        return location!.toString();
+        return date!;
       case 4:
+        return time!;
+      case 5:
+        return location!.toString();
+      case 6:
         return description!;
     }
     return '';

@@ -43,7 +43,7 @@ class _DashBoardState extends State<DashBoard> {
   int TotalUsers=0;
   int verifyedUsers=0;
   int totalEvents=0;
-  int newsUpdates=0;
+  int jobPost=0;
   int totalStudnets=0;
   String viewDocid="";
   bool viewUser_details=false;
@@ -52,10 +52,14 @@ class _DashBoardState extends State<DashBoard> {
     var document=await FirebaseFirestore.instance.collection("Users").get();
     var verifyedusers=await FirebaseFirestore.instance.collection("Users").where("verifyed",isEqualTo:true).get();
     var eventsCount=await FirebaseFirestore.instance.collection("Batch_events").get();
+
+    var jobpostCount=await FirebaseFirestore.instance.collection("JobPosts").get();
+
     setState(() {
       TotalUsers=document.docs.length;
       verifyedUsers=verifyedusers.docs.length;
       totalEvents=eventsCount.docs.length;
+      jobPost=jobpostCount.docs.length;
     });
 
 
@@ -765,7 +769,7 @@ class _DashBoardState extends State<DashBoard> {
                                           margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 8*fem),
                                           child: KText(
                                             text:
-                                            newsUpdates.toString(),
+                                            jobPost.toString(),
                                             style: SafeGoogleFont (
                                               'Poppins',
                                               fontSize: 24*ffem,
@@ -778,7 +782,7 @@ class _DashBoardState extends State<DashBoard> {
                                         KText(
                                           text:
                                           // totaleventsspV (6:1159)
-                                          'Total News & Updates ',
+                                          'Total  Job posts',
                                           style: SafeGoogleFont (
                                             'Poppins',
                                             fontSize: 16*ffem,
@@ -1915,11 +1919,11 @@ class _DashBoardState extends State<DashBoard> {
             },
           ),
           PopupMenuItem<String>(
-            value: 'or_IN',
+            value: 'ori',
             child:  const Text('Odia'),
             onTap: () {
               setState(() {
-                changeLocale(cxt, 'or_IN');
+                changeLocale(cxt, 'ori');
                 Constants. flagvalue= "hi";
                 Constants.langvalue='Odia';
               });

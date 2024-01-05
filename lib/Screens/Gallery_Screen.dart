@@ -124,7 +124,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                   padding: EdgeInsets.only(top: height/81.375,),
                   child: Row(
                     children: [
-                      InkWell(
+                      addPhoto==false&&SliderImg==false?InkWell(
                           onTap: () {
                               addItemPopUp();
                           },
@@ -169,10 +169,10 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                                 ],
                               ),
                             ),
-                          )),
-
+                          )):SizedBox(height: height / 18.6, width: width/10.9714,),
+                      addPhoto==false&&SliderImg==false?
                       Padding(
-                        padding:  EdgeInsets.only(left:20),
+                        padding:  EdgeInsets.only(left:width/68.3),
                         child: InkWell(
                             onTap: () {
                              setState(() {
@@ -181,7 +181,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                             },
                             child: Container(
                               height: height / 18.6,
-                              width: width/10.9714,
+                              width: width/10.6,
                               decoration: BoxDecoration(
                                 color: Constants().primaryAppColor,
                                 borderRadius: BorderRadius.circular(8),
@@ -208,8 +208,8 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                                     ),
                                     KText(
                                       text: currentTab.toUpperCase() == "VIEW"
-                                          ? "Add SliderImg"
-                                          : "View SliderImg",
+                                          ? "Add SliderImage"
+                                          : "View SliderImage",
                                       style: SafeGoogleFont(
                                         'Nunito',
                                         fontSize: width / 120.07,
@@ -220,11 +220,15 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                                   ],
                                 ),
                               ),
-                            )),
-                      ),
+                            )
+                        ),
+                      ) :SizedBox(
+                        height: height / 18.6,
+                        width: width/10.6,
+                        ),
                       addPhoto==true||SliderImg==true?const SizedBox():
                       Padding(
-                        padding:  EdgeInsets.only(left: width/1.89,),
+                        padding:  EdgeInsets.only(left: width/1.905,),
                         child: InkWell(
                           key: filterDataKey,
                           onTap: () async {

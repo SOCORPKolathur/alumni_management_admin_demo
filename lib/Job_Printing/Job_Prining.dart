@@ -43,9 +43,11 @@ class JobPosttModelforPdf{
   pw.Widget _contentTable(pw.Context context) {
     const tableHeaders = [
       'Si.NO',
+      "Post Name",
+      "Posted By",
       'Date',
       'Time',
-     // 'Location',
+      'Location',
       'Description'
     ];
 
@@ -63,7 +65,9 @@ class JobPosttModelforPdf{
         1: pw.Alignment.center,
         2: pw.Alignment.center,
         3: pw.Alignment.center,
-        //4: pw.Alignment.center,
+        4: pw.Alignment.center,
+        5: pw.Alignment.center,
+        6: pw.Alignment.center,
       },
       headerStyle: pw.TextStyle(
         color: PdfColors.amber,

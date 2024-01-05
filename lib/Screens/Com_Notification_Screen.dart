@@ -48,6 +48,7 @@ class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: height/81.375, horizontal: width/170.75),
       child: SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
         child: FadeInRight(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -177,9 +178,12 @@ class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
                                   bottomLeft: Radius.circular(10),
                                   bottomRight: Radius.circular(10),
                                 )),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: width / 68.3,
-                                vertical: height / 42.55),
+                            padding: EdgeInsets.only(
+                             // top:height / 72.55 ,
+                                bottom: height / 42.55,
+                                left: width / 68.3,
+                              right: width / 68.3
+                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -273,14 +277,14 @@ class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
                                                       ),
                                                       child: Padding(
                                                         padding: EdgeInsets.symmetric(
-                                                            horizontal: width / 80.6),
+                                                            horizontal: width /60.6),
                                                         child: Center(
                                                           child: KText(
                                                             text: "Apply",
                                                             style: SafeGoogleFont(
                                                               'Nunito',
                                                               color: Colors.white,
-                                                              fontSize: width / 136.6,
+                                                              fontSize: width / 106.6,
                                                               fontWeight: FontWeight.bold,
                                                             ),
                                                           ),
@@ -921,6 +925,9 @@ class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
             "timestamp":DateTime.now().millisecondsSinceEpoch
           });
           sendPushMessage(token: sendList[x],body: descriptionController.text,title: subjectController.text);
+
+
+
         }
       }
 
@@ -928,22 +935,7 @@ class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
     else{
       print("Error");
     }
-    setState(() {
-      sendList.clear();
-      dropDownApplyedvalue.clear();
-      descriptionController.clear();
-      subjectController.clear();
-      Uservalue="All";
-      String currentTab = 'ADD';
-      isUsers = false;
-      StreamData.clear();
-    });
 
-    for(int i=0;i< Selected.length;i++){
-      setState(() {
-        Selected[i]=false;
-      });
-    }
 
 
   }
@@ -974,6 +966,23 @@ class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
     } catch (e) {
       print("error push notification");
     }
+
+    setState(() {
+      sendList.clear();
+      dropDownApplyedvalue.clear();
+      descriptionController.clear();
+      subjectController.clear();
+      Uservalue="All";
+       currentTab = 'ADD';
+      isUsers = true;
+      StreamData.clear();
+    });
+    for(int i=0;i< Selected.length;i++){
+      setState(() {
+        Selected[i]=false;
+      });
+    }
+
   }
 
 

@@ -1,5 +1,7 @@
 
 import 'package:animate_do/animate_do.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:textfield_tags/textfield_tags.dart';
 import 'package:flutter_sms/flutter_sms.dart';
@@ -432,7 +434,36 @@ class _SMS_ScreenState extends State<SMS_Screen> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 GestureDetector(
-                                  onTap: () {},
+                                  onTap: () async {
+                                    List<String>? tagss = await controller.getTags;
+                                    if(tagss!.isNotEmpty) {
+                                      sending_SMS(descriptionController.text,tagss);
+                                      for(int i=0;i<tagss.length;i++){
+                                        FirebaseFirestore.instance.collection("Sms").doc().set({
+                                          "number":tagss[i],
+                                          "description":descriptionController.text,
+                                          "date":"${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}",
+                                          "time":DateTime.now().millisecondsSinceEpoch,
+                                        });
+                                      }
+                                      CoolAlert.show(
+                                          context: context,
+                                          type: CoolAlertType.success,
+                                          text: "Mail Sended successfully!",
+                                          width: size.width * 0.4,
+                                          backgroundColor: Constants()
+                                              .primaryAppColor
+                                              .withOpacity(0.8));
+                                      setState(() {
+                                        controller.clearTags();
+                                        descriptionController.text = "";
+                                        currentTab = 'ADD';
+                                      });
+                                    }
+                                    else{
+                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                    }
+                                  },
                                   child: Container(
                                       height: height / 18.475,
                                       width: width / 12.8,
@@ -899,6 +930,14 @@ class _SMS_ScreenState extends State<SMS_Screen> {
         ),
       ),
     );
+  }
+
+  void sending_SMS(String msg, List<String> list_receipents) async {
+    String send_result = await sendSMS(message: msg, recipients: list_receipents)
+        .catchError((err) {
+      print(err);
+    });
+    print(send_result);
   }
 
   final snackBar = SnackBar(

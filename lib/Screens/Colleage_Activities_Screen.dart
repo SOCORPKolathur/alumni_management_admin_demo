@@ -552,7 +552,7 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                                   Padding(
                                                     padding:  EdgeInsets.only(right:width/192),
                                                     child: KText(
-                                                      text: "Individual",
+                                                      text: "Department/Batch",
                                                       style: SafeGoogleFont(
                                                         'Nunito',
                                                         fontSize: width / 105.571,
@@ -2463,8 +2463,11 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
             backgroundColor: Colors.transparent,
             content: Container(
               width: width / 1.2418,
+
+
+              height: height/1.231666,
               margin: EdgeInsets.symmetric(
-                  horizontal: width / 68.3, vertical: height / 32.55),
+                  horizontal: width / 68.5, vertical: height / 32.55),
               decoration: BoxDecoration(
                 color: Colors.white,
                 boxShadow: [
@@ -2480,7 +2483,7 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   SizedBox(
-                    height: size.height * 0.1,
+                    height: height/10.3,
                     width: double.infinity,
                     child: Padding(
                       padding: EdgeInsets.symmetric(
@@ -2503,7 +2506,6 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                   ),
                   Container(
                     width: double.infinity,
-
                     height: height/1.421153,
                     decoration: BoxDecoration(
                         color: Color(0xffF7FAFC),
@@ -2572,7 +2574,7 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                             Padding(
                                               padding:  EdgeInsets.only(right:width/192),
                                               child: KText(
-                                                text: "Individual",
+                                                text: "Department/Batch",
                                                 style: SafeGoogleFont(
                                                   'Nunito',
                                                   fontSize: width / 105.571,

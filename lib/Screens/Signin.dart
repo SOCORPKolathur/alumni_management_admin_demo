@@ -627,7 +627,7 @@ class _SigninPageState extends State<SigninPage> {
           "date":DateFormat('dd-MM-yyyy').format(DateTime.now()).toString(),
           "time":DateFormat("hh:mm a").format(DateTime.now()),
           "timestamp":DateTime.now().millisecondsSinceEpoch,
-          "deviceOs":deviceLocation,
+          "deviceOs":"Windows",
           "deviceId":deviceId,
           "Browser":browsername,
         });

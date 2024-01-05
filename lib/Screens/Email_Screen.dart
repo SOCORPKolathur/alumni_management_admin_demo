@@ -110,10 +110,10 @@ class _Email_ScreenState extends State<Email_Screen> {
               ),
               currentTab.toUpperCase() == "ADD"
                   ? Container(
-                                  height: size.height * 0.85,
-                                  width: width/1.28,
-                                  margin: EdgeInsets.symmetric(horizontal: width/68.3, vertical: height/32.55),
-                                  decoration: BoxDecoration(
+                height: size.height * 0.85,
+                width: width/1.28,
+                margin: EdgeInsets.symmetric(horizontal: width/68.3, vertical: height/32.55),
+                decoration: BoxDecoration(
                   color: Colors.white,
                   boxShadow: const [
                     BoxShadow(
@@ -122,9 +122,8 @@ class _Email_ScreenState extends State<Email_Screen> {
                       blurRadius: 3,
                     ),
                   ],
-                  borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Column(
+                  borderRadius: BorderRadius.circular(10),),
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     SizedBox(
@@ -169,7 +168,7 @@ class _Email_ScreenState extends State<Email_Screen> {
                                 children: [
                                   KText(
                                     text:
-                                    "Single/Mulitiple Email (Seperate By Comma) *",
+                                    "Single/Multiple Email (Separate By Comma) *",
                                     style:SafeGoogleFont (
                                       'Nunito',
                                       color: Colors.black,
@@ -420,9 +419,10 @@ class _Email_ScreenState extends State<Email_Screen> {
                                             controller.clearTags();
                                             subjectController.text = "";
                                             descriptionController.text = "";
-                                            currentTab = 'View';
+                                            currentTab = 'ADD';
                                           });
-                                        } else {
+                                        }
+                                        else {
                                           CoolAlert.show(
                                               context: context,
                                               type: CoolAlertType.error,
@@ -437,7 +437,8 @@ class _Email_ScreenState extends State<Email_Screen> {
                                             descriptionController.text = "";
                                           });
                                         }
-                                      }else{
+                                      }
+                                      else{
                                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                       }
                                     },
@@ -480,7 +481,8 @@ class _Email_ScreenState extends State<Email_Screen> {
                   ],
                                   ),
                                 )
-                  : currentTab.toUpperCase() == "VIEW" ? SizedBox(  height: size.height * 0.85,
+                  : currentTab.toUpperCase() == "VIEW" ?
+              SizedBox(  height: size.height * 0.85,
                                   width: width/1.28,)
                   : Container()
             ],

@@ -733,7 +733,8 @@ class _Job_ReportsState extends State<Job_Reports> {
                         child: SizedBox(
                             height: height/1.6275,
                             width: width/1.11056,
-                            child:  SfCartesianChart(
+                            child:
+                            SfCartesianChart(
                                 primaryXAxis: CategoryAxis(
                                   title:AxisTitle(text: "Department",textStyle: GoogleFonts.nunito(fontWeight: FontWeight.w600)) ,
                                   majorGridLines: const MajorGridLines(width: 0),

@@ -3,14 +3,10 @@ import 'package:alumni_management_admin/Models/Language_Model.dart';
 import 'package:alumni_management_admin/utils.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'package:flutter/gestures.dart';
-import 'package:http/http.dart' as http;
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+
 class Login_Reports extends StatefulWidget {
   const Login_Reports({super.key});
 
@@ -24,11 +20,34 @@ class _Login_ReportsState extends State<Login_Reports> with SingleTickerProvider
   int currentTabIndex = 0;
 
   List<DocumentSnapshot> todayReports = [];
+  int iosUsersCount = 0;
+  int androidUsersCount = 0;
+  int webUsersCount = 0;
 
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
+    setUsers();
     super.initState();
+  }
+
+  setUsers() async {
+    var userDoc = await FirebaseFirestore.instance.collection('LoginReports').orderBy('timestamp',descending: true).get();
+    userDoc.docs.forEach((element) {
+      if(element.get("deviceOs").toString().toLowerCase() == "android"){
+        setState(() {
+          androidUsersCount++;
+        });
+      }else if(element.get("deviceOs").toString().toLowerCase() == "ios"){
+        setState(() {
+          iosUsersCount++;
+        });
+      }else{
+        setState(() {
+          webUsersCount++;
+        });
+      }
+    });
   }
 
   @override
@@ -63,6 +82,356 @@ class _Login_ReportsState extends State<Login_Reports> with SingleTickerProvider
                   )
                 ),
               ),
+
+              /// platform Counter Container
+              SizedBox(
+                width: width/1.2418,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      height: height/4.06875,
+                      width: width/4.06875,
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black26,
+                              offset: Offset(1, 2),
+                              blurRadius: 3),
+                        ],
+                        borderRadius: BorderRadius.circular(10),
+                        color: Constants().primaryAppColor,
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: size.height * 0.06,
+                            width: size.width * 0.2,
+                            child: Center(
+                              child: KText(
+                                text: "Total Android Users",
+                                style: SafeGoogleFont (
+                                  'Nunito',
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: width/56.916,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              width: width/4.06875,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(10),
+                                  bottomLeft: Radius.circular(10),
+                                ),
+                              ),
+                              child: Column(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: width/105.076),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            KText(
+                                              text: androidUsersCount.toString(),
+                                              style: SafeGoogleFont (
+                                                'Nunito',
+                                                fontSize: width/41.393,
+                                              ),
+                                            ),
+                                            KText(
+                                              text: androidUsersCount.toString(),
+                                              style: SafeGoogleFont (
+                                                'Nunito',
+                                                fontSize: width/85.375,
+                                                color:
+                                                Color(0xff8A92A6),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(width: width/68.3),
+                                        Container(
+                                          height: height/16.275,
+                                          width: width/34.15,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                            BorderRadius.circular(8),
+                                            color: Color(0xfff2d6d3),
+                                          ),
+                                          child: Center(
+                                            child: Icon(
+                                              Icons.android,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: height/54.25,
+                                        horizontal: width/113.833
+                                    ),
+                                    child: LinearProgressIndicator(
+                                      backgroundColor:
+                                      Color(0xfff2d6d3),
+                                      color: Color(0xffC03221),
+                                      value: 10,
+                                      semanticsLabel:
+                                      'Linear progress indicator',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: height/4.06875,
+                      width: width/4.06875,
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black26,
+                              offset: Offset(1, 2),
+                              blurRadius: 3),
+                        ],
+                        borderRadius: BorderRadius.circular(10),
+                        color: Constants().primaryAppColor,
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: size.height * 0.06,
+                            width: size.width * 0.2,
+                            child: Center(
+                              child: KText(
+                                text: "Total Ios Users",
+                                style: SafeGoogleFont (
+                                  'Nunito',
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: width/56.916,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              width: width/4.06875,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(10),
+                                  bottomLeft: Radius.circular(10),
+                                ),
+                              ),
+                              child: Column(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: width/105.076),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            KText(
+                                              text: iosUsersCount.toString(),
+                                              style: SafeGoogleFont (
+                                                'Nunito',
+                                                fontSize: width/41.393,
+                                              ),
+                                            ),
+                                            KText(
+                                              text: iosUsersCount.toString(),
+                                              style: SafeGoogleFont (
+                                                'Nunito',
+                                                fontSize: width/85.375,
+                                                color:
+                                                Color(0xff8A92A6),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(width: width/68.3),
+                                        Container(
+                                          height: height/16.275,
+                                          width: width/34.15,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                            BorderRadius.circular(8),
+                                            color: Color(0xffcdebec),
+                                          ),
+                                          child: Center(
+                                            child: Icon(
+                                                Icons.apple,
+                                                color: Color(0xff068B92)),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: height/54.25,
+                                        horizontal: width/113.833
+                                    ),
+                                    child: LinearProgressIndicator(
+                                      backgroundColor:
+                                      Color(0xffcdebec),
+                                      color: Color(0xff068B92),
+                                      value: 4,
+                                      semanticsLabel:
+                                      'Linear progress indicator',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: height/4.06875,
+                      width: width/4.06875,
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black26,
+                              offset: Offset(1, 2),
+                              blurRadius: 3),
+                        ],
+                        borderRadius: BorderRadius.circular(10),
+                        color: Constants().primaryAppColor,
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: size.height * 0.06,
+                            width: size.width * 0.2,
+                            child: Center(
+                              child: KText(
+                                text: "Total Web Users",
+                                style: SafeGoogleFont (
+                                  'Nunito',
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: width/56.916,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              width: width/4.06875,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(10),
+                                  bottomLeft: Radius.circular(10),
+                                ),
+                              ),
+                              child: Column(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceAround,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: width/105.076),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            KText(
+                                              text: webUsersCount.toString(),
+                                              style: SafeGoogleFont (
+                                                'Nunito',
+                                                fontSize: width/41.393,
+                                              ),
+                                            ),
+                                            KText(
+                                              text: webUsersCount.toString(),
+                                              style: SafeGoogleFont (
+                                                'Nunito',
+                                                fontSize: width/85.375,
+                                                color:
+                                                Color(0xff8A92A6),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(width: width/68.3),
+                                        Container(
+                                          height: height/16.275,
+                                          width: width/34.15,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                            BorderRadius.circular(8),
+                                            color: Color(0xffd1ecdd),
+                                          ),
+                                          child: Center(
+                                            child: Icon(
+                                                Icons.web,
+                                                color: Color(0xff17904B)),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: height/54.25,
+                                        horizontal: width/113.833
+                                    ),
+                                    child: LinearProgressIndicator(
+                                      backgroundColor:
+                                      Color(0xffd1ecdd),
+                                      color: Color(0xff17904B),
+                                      value: 20,
+                                      semanticsLabel:
+                                      'Linear progress indicator',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+
+
               SizedBox(
                 height: size.height * 0.9,
                 width: width/1.2538,

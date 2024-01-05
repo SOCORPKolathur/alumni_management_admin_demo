@@ -17,6 +17,7 @@ import '../utils.dart';
 import 'dart:html';
 import 'package:number_paginator/number_paginator.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 class Users_Screen extends StatefulWidget {
   const Users_Screen({super.key});
@@ -62,7 +63,6 @@ const List<String> GenderList = <String>[
   "Female",
   "Transgender"
 ];
-
 const List<String> coutryList = <String>[
   'Select Country',
   "Afghanistan",
@@ -260,9 +260,7 @@ const List<String> coutryList = <String>[
   'Zambia',
   'Zimbabwe',
 ];
-
 const List<String> MaritalStatusList = ['Marital Status', 'Yes', 'No'];
-
 const List<String> WorkingEmpList = [ 'No', 'Yes', "Own Business"];
 
 class _Users_ScreenState extends State<Users_Screen> {
@@ -308,11 +306,9 @@ class _Users_ScreenState extends State<Users_Screen> {
   TextEditingController citycon = TextEditingController(text: "Select City");
   TextEditingController pinCodecon = TextEditingController();
   TextEditingController statecon = TextEditingController(text: "Select State");
-  TextEditingController countrycon = TextEditingController(
-      text: "Select Country");
+  TextEditingController countrycon = TextEditingController(text: "Select Country");
   TextEditingController yearPassedcon = TextEditingController();
-  TextEditingController subjectStremdcon = TextEditingController(
-      text: "Select Department");
+  TextEditingController subjectStremdcon = TextEditingController(text: "Select Department");
   TextEditingController classcon = TextEditingController();
   TextEditingController rollnocon = TextEditingController();
   TextEditingController lastvisitcon = TextEditingController();
@@ -323,18 +319,18 @@ class _Users_ScreenState extends State<Users_Screen> {
   TextEditingController occupationcon = TextEditingController();
   TextEditingController designationcon = TextEditingController();
   TextEditingController company_concerncon = TextEditingController();
-  TextEditingController maritalStatuscon = TextEditingController(
-      text: "Marital Status");
+  TextEditingController maritalStatuscon = TextEditingController(text: "Marital Status");
   TextEditingController spouseNamecon = TextEditingController();
   TextEditingController anniversaryDatecon = TextEditingController();
   TextEditingController no_of_childreancon = TextEditingController();
   TextEditingController ownBussinesscon = TextEditingController();
-  TextEditingController alumniEmployedController = TextEditingController(
-      text: "No");
+  TextEditingController alumniEmployedController = TextEditingController(text: "No");
 
   TextEditingController SerachController = TextEditingController();
 
   String SerachValue = "";
+
+  int BatchYearValid=0;
   List usereditlist = [
     "Edit",
     "Delete",
@@ -360,9 +356,19 @@ class _Users_ScreenState extends State<Users_Screen> {
   @override
   void initState() {
     userCounta();
+    _isMounted = true;
     departmentdataFetchFunc();
     // TODO: implement initState
     super.initState();
+  }
+  bool _isMounted = false;
+
+
+
+  @override
+  void dispose() {
+    _isMounted = false;
+    super.dispose();
   }
 
   int billcount = 0;
@@ -919,8 +925,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                             : null,
                                                         readOnly:
                                                         true,
-                                                        onTap:
-                                                            () async {
+                                                        onTap: () async {
                                                           DateTime? pickedDate = await showDatePicker(
                                                               context: context,
                                                               initialDate: DateTime
@@ -933,28 +938,20 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                                                           if (pickedDate !=
                                                               null) {
+                                                            BatchYearValid= pickedDate.year;
                                                             //pickedDate output format => 2021-03-10 00:00:00.000
-                                                            String
-                                                            formattedDate =
-                                                            DateFormat(
-                                                                'dd/MM/yyyy')
-                                                                .format(
-                                                                pickedDate);
+                                                            String formattedDate =
+                                                            DateFormat('dd/MM/yyyy').format(pickedDate);
                                                             //formatted date output using intl package =>  2021-03-16
 
                                                             // Calculate age difference
                                                             DateTime currentDate = DateTime
                                                                 .now();
-                                                            Duration difference = currentDate
-                                                                .difference(
-                                                                pickedDate);
-                                                            int age = (difference
-                                                                .inDays / 365)
-                                                                .floor();
-                                                            print(
-                                                                'Age: $age years');
+                                                            Duration difference = currentDate.difference(pickedDate);
+                                                            int age = (difference.inDays / 365).floor();
+                                                            print('Age: $age years');
 
-                                                            if (age >= 1) {
+                                                            if (age >=17) {
                                                               setState(
                                                                       () {
                                                                     dateofBirthcon
@@ -1672,9 +1669,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                     )
                                   ],
                                 ),
-
                                 Padding(
-                                  padding: const EdgeInsets.only(left: 5),
+                                  padding:  EdgeInsets.only(left: width/273.2),
                                   child: Row(
                                     children: [
 
@@ -1700,7 +1696,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 const Color(0xff000000),
                                               ),
                                             ),
-                                            SizedBox(height: height / 123.1666),
+                                            SizedBox(
+                                                height: height / 123.1666),
                                             Container(
                                               height: height / 15.114,
                                               width: width / 6.4,
@@ -1711,91 +1708,124 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   BorderRadius
                                                       .circular(
                                                       3)),
-                                              padding: const EdgeInsets.only(
-                                                  left: 5),
+                                              padding:  EdgeInsets.only(
+                                                  left: width/273.2),
                                               child:
-                                              DropdownButtonHideUnderline(
-                                                child: DropdownButtonFormField2<
-                                                    String>(
-                                                  value: statecon.text,
-                                                  isExpanded: true,
-                                                  autovalidateMode: AutovalidateMode
-                                                      .onUserInteraction,
-                                                  hint: Padding(
-                                                    padding: const EdgeInsets
-                                                        .only(left: 8.0),
-                                                    child: Text(
-                                                      'Select State',
-                                                      style:
-                                                      SafeGoogleFont('Nunito',
-                                                        fontSize:
-                                                        20 * ffem,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  items: StateList
-                                                      .map((String
-                                                  item) =>
-                                                      DropdownMenuItem<
-                                                          String>(
-                                                        value:
-                                                        item,
-                                                        child:
-                                                        Text(
-                                                          item,
-                                                          style:
-                                                          SafeGoogleFont(
-                                                            'Nunito',
-                                                            fontSize:
-                                                            20 * ffem,
-                                                          ),
-                                                        ),
-                                                      )).toList(),
-
-                                                  validator: (value) {
-                                                    if (value ==
-                                                        'Select State') {
-                                                      setState(() {
-                                                        dropdownValidator =
-                                                        true;
-                                                      });
-                                                    }
-                                                    return null;
-                                                  },
-                                                  onChanged: (String?
-                                                  value) {
-                                                    if (value ==
-                                                        'Select State') {
-                                                      getCity(value.toString());
-                                                      setState(() {
-                                                        dropdownValidator =
-                                                        true;
-                                                      });
-                                                    } else {
-                                                      setState(() {
-                                                        statecon.text =
-                                                        value!;
-                                                        dropdownValidator =
-                                                        false;
-                                                      });
-                                                    }
-                                                  },
-                                                  buttonStyleData:
-                                                  ButtonStyleData(height: 20,
-                                                    width:
-                                                    width / 2.571,
-                                                  ),
-                                                  menuItemStyleData: const MenuItemStyleData(),
-                                                  decoration:
-                                                  const InputDecoration(
-                                                      border:
-                                                      InputBorder
-                                                          .none),
+                                              DropdownSearch <String>(
+                                                autoValidateMode: AutovalidateMode.onUserInteraction,
+                                                selectedItem: statecon.text,
+                                                popupProps: PopupProps.menu(
+                                                  showSearchBox: true,
                                                 ),
+                                                dropdownDecoratorProps: DropDownDecoratorProps(
+                                                  baseStyle:SafeGoogleFont( 'Nunito', fontSize:  20 * ffem,),
+                                                  textAlignVertical: TextAlignVertical.center,
+                                                  dropdownSearchDecoration: InputDecoration(
+                                                      border: InputBorder.none),
+                                                ),
+                                                items: StateList,
+                                                validator: (value) {
+                                                  if (value=='Select State') {
+                                                    setState((){
+                                                      dropdownValidator=true;
+                                                    });
+                                                  }
+                                                  return null;
+                                                },
+                                                onChanged: (String? value) {
+                                                  getCity(value.toString());
+                                                  if (value=='Select State') {
+                                                    setState((){
+                                                      dropdownValidator=true;
+                                                    });
+                                                  }else{
+
+                                                    setState(() {
+                                                      statecon.text =
+                                                      value!;
+                                                      dropdownValidator=false;
+                                                    });
+                                                  }
+                                                },
                                               ),
+
+                                              /*  DropdownButtonHideUnderline(
+                                                                  child: DropdownButtonFormField2<String>(
+                                                                  value:statecon.text,
+                                                                    isExpanded:true,
+                                                                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                                                              hint: Padding(
+                                                                padding:  EdgeInsets.only(left:width/170.75),
+                                                                child: Text(
+                                                                  'Select State',
+                                                                  style:
+                                                                  SafeGoogleFont('Nunito',
+                                                                    fontSize:
+                                                                       20 * ffem,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              items: StateList
+                                                                  .map((String
+                                                                          item) =>
+                                                                      DropdownMenuItem<
+                                                                          String>(
+
+                                                                        value:
+                                                                            item,
+                                                                        child:
+                                                                            Text(
+                                                                              item,
+                                                                              style:
+                                                                              SafeGoogleFont(
+                                                                            'Nunito',
+                                                                            fontSize:
+                                                                                20 * ffem,
+                                                                                                                                                      ),
+                                                                                                                                                    ),
+                                                                      )).toList(),
+                                                                  validator: (value) {
+                                                                    if (value=='Select State') {
+                                                                     setState((){
+                                                                       dropdownValidator=true;
+                                                                     });
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                              onChanged: (String?
+                                                                  value) {
+                                                                getCity(value.toString());
+                                                                if (value=='Select State') {
+                                                                  setState((){
+                                                                    dropdownValidator=true;
+                                                                  });
+                                                                }else{
+
+                                                                  setState(() {
+                                                                    statecon.text =
+                                                                    value!;
+                                                                    dropdownValidator=false;
+                                                                  });
+                                                                }
+                                                              },
+                                                              buttonStyleData:
+                                                              ButtonStyleData(height:20,
+                                                                width:
+                                                                width / 2.571,
+                                                              ),
+                                                              menuItemStyleData: const MenuItemStyleData(),
+                                                              decoration:
+                                                              const InputDecoration(
+                                                                      border:
+                                                                          InputBorder
+                                                                              .none),
+                                                                     ),
+                                                                    ),*/
+
                                             ),
                                             dropdownValidator == true &&
-                                                statecon.text == "Select State"
+                                                statecon.text ==
+                                                    "Select State"
                                                 ? Text("Field is required",
                                                 style: TextStyle(
                                                     color: Colors.red,
@@ -1828,7 +1858,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 const Color(0xff000000),
                                               ),
                                             ),
-                                            SizedBox(height: height / 123.1666),
+                                            SizedBox(
+                                                height: height / 123.1666),
                                             Container(
                                               height: height / 15.114,
                                               width: width / 6.4,
@@ -1839,87 +1870,133 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   BorderRadius
                                                       .circular(
                                                       3)),
+                                              padding:  EdgeInsets.only(
+                                                  left: width/273.2),
                                               child:
-                                              DropdownButtonHideUnderline(
-                                                child:
-                                                DropdownButtonFormField2<
-                                                    String>(
-                                                  isExpanded: true,
-                                                  autovalidateMode: AutovalidateMode
-                                                      .onUserInteraction,
-                                                  hint: Text(
-                                                    'Select City',
-                                                    style:
-                                                    SafeGoogleFont(
-                                                      'Nunito',
-                                                      fontSize:
-                                                      20 * ffem,
-                                                    ),
-                                                  ),
-                                                  items: _cities
-                                                      .map((String
-                                                  item) =>
-                                                      DropdownMenuItem<
-                                                          String>(
-                                                        value:
-                                                        item,
-                                                        child:
-                                                        Text(
-                                                          item,
-                                                          style:
-                                                          SafeGoogleFont(
-                                                            'Nunito',
-                                                            fontSize:
-                                                            20 * ffem,
-                                                          ),
-                                                        ),
-                                                      ))
-                                                      .toList(),
-                                                  value: citycon.text,
-                                                  validator: (value) {
-                                                    if (value ==
-                                                        'Select City') {
-                                                      setState(() {
-                                                        dropdownValidator2 =
-                                                        true;
-                                                      });
-                                                    }
-                                                    return null;
-                                                  },
-                                                  onChanged: (String?
-                                                  value) {
-                                                    if (value ==
-                                                        'Select City') {
-                                                      setState(() {
-                                                        dropdownValidator2 =
-                                                        true;
-                                                      });
-                                                    }
-                                                    else {
-                                                      setState(() {
-                                                        citycon.text =
-                                                        value!;
-                                                        dropdownValidator2 =
-                                                        false;
-                                                      });
-                                                    }
-                                                  },
-                                                  buttonStyleData:
-                                                  const ButtonStyleData(
-
-
-                                                  ),
-                                                  menuItemStyleData:
-                                                  const MenuItemStyleData(
-
-                                                  ),
-                                                  decoration:
-                                                  const InputDecoration(
-                                                      border:
-                                                      InputBorder
-                                                          .none),
+                                              DropdownSearch <String>(
+                                                autoValidateMode: AutovalidateMode.onUserInteraction,
+                                                selectedItem: citycon.text,
+                                                popupProps: PopupProps.menu(
+                                                  showSearchBox: true,
                                                 ),
+
+                                                dropdownDecoratorProps: DropDownDecoratorProps(
+                                                  baseStyle:SafeGoogleFont( 'Nunito', fontSize:  20 * ffem,),
+                                                  textAlignVertical: TextAlignVertical.center,
+                                                  dropdownSearchDecoration: InputDecoration(
+                                                      border: InputBorder.none),
+                                                ),
+                                                items: _cities,
+                                                validator: (value) {
+                                                  if (value ==
+                                                      'Select City') {
+                                                    setState(() {
+                                                      dropdownValidator2 =
+                                                      true;
+                                                    });
+                                                  }
+                                                  return null;
+                                                },
+                                                onChanged: (String?
+                                                value) {
+                                                  if (value ==
+                                                      'Select City') {
+                                                    setState(() {
+                                                      dropdownValidator2 =
+                                                      true;
+                                                    });
+                                                  }
+                                                  else {
+                                                    setState(() {
+                                                      citycon.text =
+                                                      value!;
+                                                      dropdownValidator2 =
+                                                      false;
+                                                    });
+                                                  }
+                                                },
                                               ),
+
+                                              /*  DropdownButtonHideUnderline(
+                                                  child:
+                                                  DropdownButtonFormField2<
+                                                      String>(
+                                                    isExpanded: true,
+                                                    autovalidateMode: AutovalidateMode
+                                                        .onUserInteraction,
+                                                    hint: Text(
+                                                      'Select City',
+                                                      style:
+                                                      SafeGoogleFont(
+                                                        'Nunito',
+                                                        fontSize:
+                                                        20 * ffem,
+                                                      ),
+                                                    ),
+                                                    items: _cities
+                                                        .map((String
+                                                    item) =>
+                                                        DropdownMenuItem<
+                                                            String>(
+                                                          value:
+                                                          item,
+                                                          child:
+                                                          Text(
+                                                            item,
+                                                            style:
+                                                            SafeGoogleFont(
+                                                              'Nunito',
+                                                              fontSize:
+                                                              20 * ffem,
+                                                            ),
+                                                          ),
+                                                        ))
+                                                        .toList(),
+                                                    value: citycon.text,
+                                                    validator: (value) {
+                                                      if (value ==
+                                                          'Select City') {
+                                                        setState(() {
+                                                          dropdownValidator2 =
+                                                          true;
+                                                        });
+                                                      }
+                                                      return null;
+                                                    },
+                                                    onChanged: (String?
+                                                    value) {
+                                                      if (value ==
+                                                          'Select City') {
+                                                        setState(() {
+                                                          dropdownValidator2 =
+                                                          true;
+                                                        });
+                                                      }
+                                                      else {
+                                                        setState(() {
+                                                          citycon.text =
+                                                          value!;
+                                                          dropdownValidator2 =
+                                                          false;
+                                                        });
+                                                      }
+                                                    },
+                                                    buttonStyleData:
+                                                    const ButtonStyleData(
+
+
+                                                    ),
+                                                    menuItemStyleData:
+                                                    const MenuItemStyleData(
+
+                                                    ),
+                                                    decoration:
+                                                    const InputDecoration(
+                                                        border:
+                                                        InputBorder
+                                                            .none),
+                                                  ),
+                                                ),*/
                                             ),
                                             dropdownValidator2 == true &&
                                                 citycon.text == "Select City"
@@ -1955,7 +2032,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 const Color(0xff000000),
                                               ),
                                             ),
-                                            SizedBox(height: height / 123.1666),
+                                            SizedBox(
+                                                height: height / 123.1666),
                                             Container(
                                                 height: height / 15.114,
                                                 width: width / 6.4,
@@ -2032,7 +2110,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 const Color(0xff000000),
                                               ),
                                             ),
-                                            SizedBox(height: height / 123.1666),
+                                            SizedBox(
+                                                height: height / 123.1666),
                                             Container(
                                               height: height / 15.114,
                                               width: width / 6.4,
@@ -2043,89 +2122,134 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   BorderRadius
                                                       .circular(
                                                       3)),
+                                              padding:  EdgeInsets.only(
+                                                  left: width/273.2),
                                               child:
-                                              DropdownButtonHideUnderline(
-
-                                                child:
-                                                DropdownButtonFormField2<
-                                                    String>(
-                                                  isExpanded: true,
-                                                  autovalidateMode: AutovalidateMode
-                                                      .onUserInteraction,
-                                                  hint: Text(
-                                                    'Select Country',
-                                                    style:
-                                                    SafeGoogleFont(
-                                                      'Nunito',
-                                                      fontSize:
-                                                      20 * ffem,
-                                                    ),
-                                                  ),
-                                                  items: coutryList
-                                                      .map((String
-                                                  item) =>
-                                                      DropdownMenuItem<
-                                                          String>(
-                                                        value:
-                                                        item,
-                                                        child:
-                                                        Text(
-                                                          item,
-                                                          style:
-                                                          SafeGoogleFont(
-                                                            'Nunito',
-                                                            fontSize:
-                                                            20 * ffem,
-                                                          ),
-                                                        ),
-                                                      ))
-                                                      .toList(),
-                                                  value:
-                                                  countrycon.text,
-                                                  validator: (value) {
-                                                    if (value ==
-                                                        "Select Country") {
-                                                      setState(() {
-                                                        dropdownValidator3 =
-                                                        true;
-                                                      });
-                                                    }
-                                                    return null;
-                                                  },
-                                                  onChanged: (String?
-                                                  value) {
-                                                    if (value ==
-                                                        'Select Country') {
-                                                      setState(() {
-                                                        dropdownValidator3 =
-                                                        true;
-                                                      });
-                                                    }
-                                                    else {
-                                                      setState(() {
-                                                        countrycon
-                                                            .text =
-                                                        value!;
-                                                        dropdownValidator3 =
-                                                        false;
-                                                      });
-                                                    }
-                                                  },
-                                                  buttonStyleData:
-                                                  const ButtonStyleData(
-
-                                                  ),
-                                                  menuItemStyleData:
-                                                  const MenuItemStyleData(
-
-                                                  ),
-                                                  decoration:
-                                                  const InputDecoration(
-                                                      border:
-                                                      InputBorder
-                                                          .none),
+                                              DropdownSearch <String>(
+                                                autoValidateMode: AutovalidateMode.onUserInteraction,
+                                                selectedItem: countrycon.text,
+                                                popupProps: PopupProps.menu(
+                                                  showSearchBox: true,
                                                 ),
+                                                dropdownDecoratorProps: DropDownDecoratorProps(
+                                                  baseStyle:SafeGoogleFont( 'Nunito', fontSize:  20 * ffem,),
+                                                  textAlignVertical: TextAlignVertical.center,
+                                                  dropdownSearchDecoration: InputDecoration(
+                                                      border: InputBorder.none),
+                                                ),
+                                                items: coutryList,
+                                                validator: (value) {
+                                                  if (value ==
+                                                      "Select Country") {
+                                                    setState(() {
+                                                      dropdownValidator3 =
+                                                      true;
+                                                    });
+                                                  }
+                                                  return null;
+                                                },
+                                                onChanged: (String?
+                                                value) {
+                                                  if (value ==
+                                                      'Select Country') {
+                                                    setState(() {
+                                                      dropdownValidator3 =
+                                                      true;
+                                                    });
+                                                  }
+                                                  else {
+                                                    setState(() {
+                                                      countrycon
+                                                          .text =
+                                                      value!;
+                                                      dropdownValidator3 =
+                                                      false;
+                                                    });
+                                                  }
+                                                },
                                               ),
+                                              /* DropdownButtonHideUnderline(
+
+                                                  child:
+                                                  DropdownButtonFormField2<
+                                                      String>(
+                                                    isExpanded: true,
+                                                    autovalidateMode: AutovalidateMode
+                                                        .onUserInteraction,
+                                                    hint: Text(
+                                                      'Select Country',
+                                                      style:
+                                                      SafeGoogleFont(
+                                                        'Nunito',
+                                                        fontSize:
+                                                        20 * ffem,
+                                                      ),
+                                                    ),
+                                                    items: coutryList
+                                                        .map((String
+                                                    item) =>
+                                                        DropdownMenuItem<
+                                                            String>(
+                                                          value:
+                                                          item,
+                                                          child:
+                                                          Text(
+                                                            item,
+                                                            style:
+                                                            SafeGoogleFont(
+                                                              'Nunito',
+                                                              fontSize:
+                                                              20 * ffem,
+                                                            ),
+                                                          ),
+                                                        ))
+                                                        .toList(),
+                                                    value:
+                                                    countrycon.text,
+                                                    validator: (value) {
+                                                      if (value ==
+                                                          "Select Country") {
+                                                        setState(() {
+                                                          dropdownValidator3 =
+                                                          true;
+                                                        });
+                                                      }
+                                                      return null;
+                                                    },
+                                                    onChanged: (String?
+                                                    value) {
+                                                      if (value ==
+                                                          'Select Country') {
+                                                        setState(() {
+                                                          dropdownValidator3 =
+                                                          true;
+                                                        });
+                                                      }
+                                                      else {
+                                                        setState(() {
+                                                          countrycon
+                                                              .text =
+                                                          value!;
+                                                          dropdownValidator3 =
+                                                          false;
+                                                        });
+                                                      }
+                                                    },
+                                                    buttonStyleData:
+                                                    const ButtonStyleData(
+
+                                                    ),
+                                                    menuItemStyleData:
+                                                    const MenuItemStyleData(
+
+                                                    ),
+                                                    decoration:
+                                                    const InputDecoration(
+                                                        border:
+                                                        InputBorder
+                                                            .none),
+                                                  ),
+                                                ),*/
                                             ),
                                             dropdownValidator3 == true &&
                                                 countrycon.text ==
@@ -2142,6 +2266,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                     ],
                                   ),
                                 ),
+
 
                                 ///alumni details
                                 SizedBox(height: height / 36.95),
@@ -2255,6 +2380,9 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   .year,
                                                             );
 
+                                                            if(picked!.year<(BatchYearValid+17)){
+                                                              userNotValidYearOfPassedPopup();
+                                                            }
                                                             if (picked !=
                                                                 null &&
                                                                 picked !=
@@ -4488,35 +4616,20 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 lastDate: DateTime(
                                                                     2100));
 
-                                                            if (pickedDate !=
-                                                                null) {
+                                                            if (pickedDate != null) {
+                                                              BatchYearValid= pickedDate.year;
                                                               //pickedDate output format => 2021-03-10 00:00:00.000
-                                                              String
-                                                              formattedDate =
-                                                              DateFormat(
-                                                                  'dd/MM/yyyy')
-                                                                  .format(
-                                                                  pickedDate);
+                                                              String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
                                                               //formatted date output using intl package =>  2021-03-16
 
                                                               // Calculate age difference
-                                                              DateTime currentDate = DateTime
-                                                                  .now();
-                                                              Duration difference = currentDate
-                                                                  .difference(
-                                                                  pickedDate);
-                                                              int age = (difference
-                                                                  .inDays / 365)
-                                                                  .floor();
-                                                              print(
-                                                                  'Age: $age years');
-
-                                                              if (age >= 1) {
-                                                                setState(
-                                                                        () {
-                                                                      dateofBirthcon
-                                                                          .text =
-                                                                          formattedDate; //set output date to TextField value.
+                                                              DateTime currentDate = DateTime.now();
+                                                              Duration difference = currentDate.difference(pickedDate);
+                                                              int age = (difference.inDays / 365).floor();
+                                                              print('Age: $age years');
+                                                              if (age >=17) {
+                                                                setState(() {
+                                                                  dateofBirthcon.text = formattedDate; //set output date to TextField value.
                                                                     });
                                                               }
                                                               else {
@@ -5240,7 +5353,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                   ),
 
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 5),
+                                    padding:  EdgeInsets.only(left: width/273.2),
                                     child: Row(
                                       children: [
 
@@ -5278,15 +5391,54 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     BorderRadius
                                                         .circular(
                                                         3)),
-                                                padding: const EdgeInsets.only(
-                                                    left: 5),
-                                                child: DropdownButtonHideUnderline(
+                                                padding:  EdgeInsets.only(
+                                                    left: width/273.2),
+                                                child:
+                                                DropdownSearch <String>(
+                                                  autoValidateMode: AutovalidateMode.onUserInteraction,
+                                                  selectedItem: statecon.text,
+                                                  popupProps: PopupProps.menu(
+                                                    showSearchBox: true,
+                                                  ),
+                                                  dropdownDecoratorProps: DropDownDecoratorProps(
+                                                      baseStyle:SafeGoogleFont( 'Nunito', fontSize:  20 * ffem,),
+                                                    textAlignVertical: TextAlignVertical.center,
+                                                    dropdownSearchDecoration: InputDecoration(
+                                                        border: InputBorder.none),
+                                                  ),
+                                                  items: StateList,
+                                                  validator: (value) {
+                                                    if (value=='Select State') {
+                                                      setState((){
+                                                        dropdownValidator=true;
+                                                      });
+                                                    }
+                                                    return null;
+                                                  },
+                                                  onChanged: (String? value) {
+                                                    getCity(value.toString());
+                                                    if (value=='Select State') {
+                                                      setState((){
+                                                        dropdownValidator=true;
+                                                      });
+                                                    }else{
+
+                                                      setState(() {
+                                                        statecon.text =
+                                                        value!;
+                                                        dropdownValidator=false;
+                                                      });
+                                                    }
+                                                  },
+                                                ),
+                                            
+                                              /*  DropdownButtonHideUnderline(
                                                                   child: DropdownButtonFormField2<String>(
                                                                   value:statecon.text,
                                                                     isExpanded:true,
                                                                   autovalidateMode: AutovalidateMode.onUserInteraction,
                                                               hint: Padding(
-                                                                padding: const EdgeInsets.only(left:8.0),
+                                                                padding:  EdgeInsets.only(left:width/170.75),
                                                                 child: Text(
                                                                   'Select State',
                                                                   style:
@@ -5351,7 +5503,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                           InputBorder
                                                                               .none),
                                                                      ),
-                                                                    ),
+                                                                    ),*/
+                                                
                                               ),
                                               dropdownValidator == true &&
                                                   statecon.text ==
@@ -5400,8 +5553,54 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     BorderRadius
                                                         .circular(
                                                         3)),
+                                                padding:  EdgeInsets.only(
+                                                    left: width/273.2),
                                                 child:
-                                                DropdownButtonHideUnderline(
+                                                DropdownSearch <String>(
+                                                  autoValidateMode: AutovalidateMode.onUserInteraction,
+                                                  selectedItem: citycon.text,
+                                                  popupProps: PopupProps.menu(
+                                                    showSearchBox: true,
+                                                  ),
+
+                                                  dropdownDecoratorProps: DropDownDecoratorProps(
+                                                      baseStyle:SafeGoogleFont( 'Nunito', fontSize:  20 * ffem,),
+                                                    textAlignVertical: TextAlignVertical.center,
+                                                    dropdownSearchDecoration: InputDecoration(
+                                                        border: InputBorder.none),
+                                                  ),
+                                                  items: _cities,
+                                                  validator: (value) {
+                                                    if (value ==
+                                                        'Select City') {
+                                                      setState(() {
+                                                        dropdownValidator2 =
+                                                        true;
+                                                      });
+                                                    }
+                                                    return null;
+                                                  },
+                                                  onChanged: (String?
+                                                  value) {
+                                                    if (value ==
+                                                        'Select City') {
+                                                      setState(() {
+                                                        dropdownValidator2 =
+                                                        true;
+                                                      });
+                                                    }
+                                                    else {
+                                                      setState(() {
+                                                        citycon.text =
+                                                        value!;
+                                                        dropdownValidator2 =
+                                                        false;
+                                                      });
+                                                    }
+                                                  },
+                                                ),
+
+                                              /*  DropdownButtonHideUnderline(
                                                   child:
                                                   DropdownButtonFormField2<
                                                       String>(
@@ -5480,7 +5679,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         InputBorder
                                                             .none),
                                                   ),
-                                                ),
+                                                ),*/
                                               ),
                                               dropdownValidator2 == true &&
                                                   citycon.text == "Select City"
@@ -5606,8 +5805,53 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     BorderRadius
                                                         .circular(
                                                         3)),
+                                                padding:  EdgeInsets.only(
+                                                    left: width/273.2),
                                                 child:
-                                                DropdownButtonHideUnderline(
+                                                DropdownSearch <String>(
+                                                  autoValidateMode: AutovalidateMode.onUserInteraction,
+                                                  selectedItem: countrycon.text,
+                                                  popupProps: PopupProps.menu(
+                                                    showSearchBox: true,
+                                                  ),
+                                                  dropdownDecoratorProps: DropDownDecoratorProps(
+                                                    baseStyle:SafeGoogleFont( 'Nunito', fontSize:  20 * ffem,),
+                                                    textAlignVertical: TextAlignVertical.center,
+                                                    dropdownSearchDecoration: InputDecoration(
+                                                        border: InputBorder.none),
+                                                  ),
+                                                  items: coutryList,
+                                                  validator: (value) {
+                                                    if (value ==
+                                                        "Select Country") {
+                                                      setState(() {
+                                                        dropdownValidator3 =
+                                                        true;
+                                                      });
+                                                    }
+                                                    return null;
+                                                  },
+                                                  onChanged: (String?
+                                                  value) {
+                                                    if (value ==
+                                                        'Select Country') {
+                                                      setState(() {
+                                                        dropdownValidator3 =
+                                                        true;
+                                                      });
+                                                    }
+                                                    else {
+                                                      setState(() {
+                                                        countrycon
+                                                            .text =
+                                                        value!;
+                                                        dropdownValidator3 =
+                                                        false;
+                                                      });
+                                                    }
+                                                  },
+                                                ),
+                                               /* DropdownButtonHideUnderline(
 
                                                   child:
                                                   DropdownButtonFormField2<
@@ -5688,7 +5932,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                         InputBorder
                                                             .none),
                                                   ),
-                                                ),
+                                                ),*/
                                               ),
                                               dropdownValidator3 == true &&
                                                   countrycon.text ==
@@ -5819,11 +6063,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                     .year,
                                                               );
 
-                                                              if (picked !=
-                                                                  null &&
-                                                                  picked !=
-                                                                      DateTime
-                                                                          .now()) {
+                                                              if(picked!.year<(BatchYearValid+17)){
+                                                                userNotValidYearOfPassedPopup();
+                                                              }
+
+
+                                                              if (picked != null && picked != DateTime.now()) {
                                                                 print(
                                                                     'Selected year: ${picked
                                                                         .year}');
@@ -5899,6 +6144,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 .circular(
                                                                 3)),
                                                         child:
+                                                        
+                                                        
                                                         DropdownButtonHideUnderline(
                                                           child:
                                                           DropdownButtonFormField2<
@@ -5958,28 +6205,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                     .none),
                                                           ),
                                                         ),
-                                                        /*  TextFormField(
-                                                                      controller:
-                                                                          subjectStremdcon,
-                                                                      inputFormatters: [
-                                                                        FilteringTextInputFormatter
-                                                                            .allow(
-                                                                                RegExp("[a-zA-Z ]")),
-                                                                      ],
-                                                                      decoration:
-                                                                          const InputDecoration(
-                                                                        border: InputBorder
-                                                                            .none,
-                                                                        contentPadding: EdgeInsets.only(
-                                                                            bottom:
-                                                                                10,
-                                                                            top:
-                                                                                2,
-                                                                            left:
-                                                                                10),
-                                                                      ),
-                                                                      // validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                                    )*/
+                                                   
                                                       )
                                                     ],
                                                   ),
@@ -7680,17 +7906,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               .none
                                                       ),
                                                       onChanged: (value) {
-                                                        if (value.isNotEmpty) {
+                                                        if(_isMounted){
                                                           setState(() {
-                                                            SerachValue = value
-                                                                .toString();
+                                                            SerachValue = value.toString();
                                                           });
                                                         }
-                                                        else {
-                                                          setState(() {
-                                                            SerachValue = "";
-                                                          });
-                                                        }
+
                                                       }
                                                   ),
                                                 )
@@ -8484,7 +8705,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                   .orderBy(
                                   filterChageValue, descending: filtervalue)
                                   .startAfterDocument(
-                                  documentList[documentList.length - 1]).limit(10).orderBy("timestamp")
+                                  documentList[documentList.length - 1]).limit(10)
                                   .snapshots() :
                               filterChageValue == "Name" ? FirebaseFirestore
                                   .instance.collection("Users").orderBy(
@@ -8918,8 +9139,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               );
                                             }
                                           }
-                                          else
-                                          if (SerachController.text == "") {
+
+                                          else if (SerachValue == "") {
                                             return GestureDetector(
                                               onTap: () {
                                                 print(height);
@@ -9290,25 +9511,29 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               ),
                                             );
                                           }
+                                          return const SizedBox();
                                         },
                                       ),
                                     ),
 
-                                    NumberPaginator(
-                                      config: NumberPaginatorUIConfig(
-                                        buttonSelectedBackgroundColor: Constants()
-                                            .primaryAppColor,
-                                        buttonSelectedForegroundColor: Colors
-                                            .white,
+                                    SizedBox(
+                                      width:width/1.7075,
+                                      child: NumberPaginator(
+                                        config: NumberPaginatorUIConfig(
+                                          buttonSelectedBackgroundColor: Constants()
+                                              .primaryAppColor,
+                                          buttonSelectedForegroundColor: Colors
+                                              .white,
+                                        ),
+                                        numberPages: pagecount,
+                                        onPageChange: (int index) {
+                                          documentList.addAll(
+                                              snapshot.data!.docs);
+                                          setState(() {
+                                            temp = index + 1;
+                                          });
+                                        },
                                       ),
-                                      numberPages: pagecount,
-                                      onPageChange: (int index) {
-                                        documentList.addAll(
-                                            snapshot.data!.docs);
-                                        setState(() {
-                                          temp = index + 1;
-                                        });
-                                      },
                                     )
                                   ],
                                 );
@@ -9908,6 +10133,105 @@ class _Users_ScreenState extends State<Users_Screen> {
                     children: [
                       SizedBox(height: height / 24.6333),
                       KText(text: "Please Select the Age Correctly ", style:
+                      SafeGoogleFont(
+                          'Nunito',
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black,
+                          fontSize: 18
+
+                      )),
+
+                      SizedBox(height: height / 36.95),
+
+                      SizedBox(
+                          height: height / 4.10555,
+                          width: width / 8.53333,
+                          child: Icon(Icons.error_outline, color: Colors.red,
+                            size: width / 10.5076,)
+                      ),
+
+                      SizedBox(height: height / 36.95),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+
+                          InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              height: height / 18.475,
+                              width: width / 8.53333,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  color: const Color(0xff5D5FEF)
+                              ),
+                              child: Center(
+                                child: KText(text: "Okay",
+                                  style:
+                                  SafeGoogleFont(
+                                      'Nunito',
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white,
+                                      fontSize: 16
+
+                                  ),),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    },);
+  }
+
+
+  userNotValidYearOfPassedPopup() {
+    double height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
+
+    showDialog(
+      barrierColor: Colors.transparent,
+      context: context, builder: (context) {
+      return ZoomIn(
+        duration: const Duration(milliseconds: 300),
+        child: Padding(
+          padding: const EdgeInsets.only(
+              top: 160.0, bottom: 160, left: 400, right: 400),
+          child: Material(
+            color: Colors.white,
+            shadowColor: const Color(0xff245BCA),
+            borderRadius: BorderRadius.circular(8),
+            elevation: 10,
+            child: Container(
+
+              decoration: BoxDecoration(
+                color: const Color(0xffFFFFFF),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Scaffold(
+                backgroundColor: const Color(0xffFFFFFF),
+                body: Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: height / 24.6333),
+                      KText(text: "Please Select the Pass Year Correctly ", style:
                       SafeGoogleFont(
                           'Nunito',
                           fontWeight: FontWeight.w700,

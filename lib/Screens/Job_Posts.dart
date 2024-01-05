@@ -116,6 +116,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin{
   @override
   void initState() {
     setDateTime();
+    exportdataListFromStream.clear();
     tabController=TabController(length: 2, vsync: this)  ;
     lottieController = AnimationController(vsync: this);
     lottieController.addStatusListener((status) {
@@ -170,7 +171,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin{
                           ],
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: 8),
+                          padding: EdgeInsets.only(top: height/81.375),
                           child: Row(
                             children: [
                               InkWell(
@@ -904,7 +905,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin{
                                                 date: dateController.text,
                                                 positions: positionsController.text,
                                                 quvalification: quvalificationController.text,
-                                                verify: false,
+                                                verify: true,
                                                 userName: "Admin",
                                                 UserOccupation: "Admin",
                                                 Batch: "Admin"
@@ -1362,7 +1363,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin{
                               return Container();
                             } else if (snapshot.hasData) {
                               List<JobPostModel> jobPost = snapshot.data!;
-                              exportdataListFromStream = snapshot.data!;
+                              exportdataListFromStream = jobPost;
                               List<GlobalKey<State<StatefulWidget>>>popMenuKeys = List.generate(jobPost.length, (index) => GlobalKey(),);
                               return ListView.builder(
                                 shrinkWrap: true,
@@ -1514,6 +1515,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin{
                       ),
                     ],
                   )
+
                       : SizedBox(
                     height: height/1.23166,
 
@@ -1528,12 +1530,14 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin{
                                 return const Center(child:CircularProgressIndicator());
                               }
                               if(!snapshot.hasData){
+
                                 return const Center(child:CircularProgressIndicator());
                               }
-
+                              List<JobPostModel> jobPost = snapshot.data!;
+                              exportdataListFromStream = jobPost;
                             List<JobPostModel> verifyed=[];
                             List<JobPostModel> Notverifyed=[];
-                              exportdataListFromStream = snapshot.data!;
+
                             snapshot.data!.forEach((element){
                               if(element.verify==true){
                                 verifyed.add(element);
@@ -1542,7 +1546,6 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin{
                                 Notverifyed.add(element);
                               }
                             });
-
 
                               return Column(
                                 children: [
@@ -1924,7 +1927,6 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin{
                                           ),
                                         ],
                                       )),
-
                                   SizedBox(
                                     height:height/1.302,
                                     child: TabBarView(
@@ -2409,12 +2411,6 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin{
                                       ],
                                     ),
                                   ),
-
-
-
-
-
-
                                 ],
                                                 );
                             }
@@ -2644,7 +2640,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin{
                                       SizedBox(
                                         width: size.width * 0.15,
                                         child: KText(
-                                          text: "User Name",
+                                          text: "Posted By",
                                           style: SafeGoogleFont('Poppins',
                                               fontWeight: FontWeight.w600,
                                               fontSize: width / 95.375),
@@ -3669,17 +3665,21 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin{
     List<List<dynamic>> rows = [];
     List<dynamic> row = [];
     row.add("No.");
+    row.add("Post Name");
+    row.add("Posted By");
     row.add("Date");
     row.add("Time");
-    //row.add("Location");
+    row.add("Location");
     row.add("Description");
     rows.add(row);
     for (int i = 0; i < jobPost.length; i++) {
       List<dynamic> row = [];
       row.add(i + 1);
+      row.add(jobPost[i].title!);
+      row.add(jobPost[i].userName!);
       row.add(jobPost[i].date!);
       row.add(jobPost[i].time!);
-     // row.add(jobPost[i].location!);
+      row.add(jobPost[i].location!);
       row.add(jobPost[i].description!);
       rows.add(row);
     }
@@ -3691,17 +3691,21 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin{
     List<List<dynamic>> rows = [];
     List<dynamic> row = [];
     row.add("No.");
+    row.add("Post Name");
+    row.add("Posted By");
     row.add("Date");
     row.add("Time");
-    //row.add("Location");
+    row.add("Location");
     row.add("Description");
     rows.add(row);
     for (int i = 0; i < jobPost.length; i++) {
       List<dynamic> row = [];
       row.add(i + 1);
+      row.add(jobPost[i].title!);
+      row.add(jobPost[i].userName!);
       row.add(jobPost[i].date!);
       row.add(jobPost[i].time!);
-     // row.add(jobPost[i].location!);
+      row.add(jobPost[i].location!);
       row.add(jobPost[i].description!);
       rows.add(row);
     }
@@ -3715,7 +3719,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin{
     final blob = Blob([Uint8List.fromList(csvString.codeUnits)]);
     final url = Url.createObjectUrlFromBlob(blob);
     final anchor = AnchorElement(href: url)
-      ..setAttribute("download", "data.csv")
+      ..setAttribute("download", "JobPost.csv")
       ..click();
     Url.revokeObjectUrl(url);
   }
@@ -3734,11 +3738,15 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin{
     List<dynamic> row = [];
     row.add("No.");
     row.add("    ");
+    row.add("Post Name");
+    row.add("    ");
+    row.add("Posted By");
+    row.add("    ");
     row.add("Date");
     row.add("    ");
     row.add("Time");
     row.add("    ");
-   // row.add("Location");
+    row.add("Location");
     row.add("    ");
     row.add("Description");
     rows.add(row);
@@ -3746,11 +3754,15 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin{
       List<dynamic> row = [];
       row.add(i + 1);
       row.add("       ");
+      row.add(jobPost[i].title);
+      row.add("       ");
+      row.add(jobPost[i].userName);
+      row.add("       ");
       row.add(jobPost[i].date);
       row.add("       ");
       row.add(jobPost[i].time);
       row.add("       ");
-     // row.add(jobPost[i].location);
+      row.add(jobPost[i].location);
       row.add("       ");
       row.add(jobPost[i].description);
       rows.add(row);
@@ -4190,6 +4202,11 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin{
   }
 
   menuItemExportData(BuildContext context, jobPost, key, size) async {
+
+
+
+
+
     print("Popupmenu open-----------------------------------------------------------");
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
@@ -4208,10 +4225,11 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin{
         enabled: true,
         onTap: () async {
           if (item == "Print") {
-            print(exportdataListFromStream.length);
-            print(jobPost.length);
+
+            print(jobPost.first.title);
             print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");
             var data = await generateJobPostPdf(PdfPageFormat.letter, jobPost, false);
+
           } else if (item == "Copy") {
             print(exportdataListFromStream.length);
             print(jobPost.length);

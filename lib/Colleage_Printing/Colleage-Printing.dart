@@ -45,7 +45,7 @@ class JobPosttModelforPdf{
       'Si.NO',
       'Date',
       'Time',
-      'Location',
+      //'Location',
       'Description'
     ];
 
@@ -63,7 +63,7 @@ class JobPosttModelforPdf{
         1: pw.Alignment.center,
         2: pw.Alignment.center,
         3: pw.Alignment.center,
-        4: pw.Alignment.center,
+        //4: pw.Alignment.center,
       },
       headerStyle: pw.TextStyle(
         color: PdfColors.amber,

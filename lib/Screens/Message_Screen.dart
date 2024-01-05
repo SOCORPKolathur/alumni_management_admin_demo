@@ -130,6 +130,14 @@ class _Message_ScreenState extends State<Message_Screen>
                         decoration: InputDecoration(
                           prefixIcon:
                               Icon(Icons.search, color: Color(0xff8B8395)),
+                          suffixIcon: InkWell(
+                              onTap: (){
+                                setState(() {
+                                  SerachValue="";
+                                  _searchController.clear();
+                                });
+                              },
+                              child: Icon(Icons.clear, color: Color(0xff8B8395))),
                           border: InputBorder.none,
                           hintText: "Search",
                           hintStyle: SafeGoogleFont(
@@ -145,8 +153,9 @@ class _Message_ScreenState extends State<Message_Screen>
                           setState(() {
                             SerachValue = value;
                           });
-                          print(SerachValue);
-                          print("Serach___________________________");
+                          print("Seracdh valuesssssssssssssssssssssssssssssssssssssssssss");
+                          print(SerachValue.toString());
+
                         },
                       ),
                     ),
@@ -234,7 +243,6 @@ class _Message_ScreenState extends State<Message_Screen>
                       child: TabBarView(
                         controller: tabController,
                         children: [
-
                            StreamBuilder<QuerySnapshot>(
                             stream: FirebaseFirestore.instance.collection("Users").
                             orderBy('timestamp',descending: true).snapshots(),
@@ -260,154 +268,165 @@ class _Message_ScreenState extends State<Message_Screen>
 
                               return
                                 ListView.builder(
+                                  shrinkWrap: true,
                                   itemCount: snapshot.data!.docs.length,
                                   itemBuilder: (context, index) {
-                                    if(SerachValue!=""){
+                                    if(selectTabIndex==0){
+                                      if(SerachValue!=""){
 
-                                     if(snapshot.data!.docs[index]['Name'].toString().toLowerCase().
-                                     contains(SerachValue.toLowerCase().toString())||
-                                         snapshot.data!.docs[index]['Phone'].toString().toLowerCase().
-                                         contains(SerachValue.toLowerCase().toString())
+                                        if(snapshot.data!.docs[index]['Name'].toString().toLowerCase().
+                                        contains(SerachValue.toLowerCase().toString())||
+                                            snapshot.data!.docs[index]['Phone'].toString().toLowerCase().
+                                            contains(SerachValue.toLowerCase().toString())
 
-                                     ){
-                                       return
-                                         Padding(
-                                           padding:  EdgeInsets.only(
+                                        ){
+                                          return
+                                            Padding(
+                                              padding:  EdgeInsets.only(
 
-                                               left:width/653 ,
-                                               right:width/653 ,
-                                               top:height/328.5 ,
-                                               bottom:height/328.5
-                                           ),
-                                           child: Container(
-                                             margin: EdgeInsets.only(left:  width/273.2,right: width/273.2),
-                                             decoration: BoxDecoration(
-                                                 color: select==index?Color(0xffF7F7FF):Colors.transparent,
-                                                 border: Border(
-                                                     bottom: BorderSide(color: Colors.grey.shade300)
-                                                 )
-                                             ),
-                                             child: ListTile(
-                                               onTap: (){
-                                                 ischatfuntion(snapshot.data!.docs[index].id);
-                                                 setState(() {
-                                                   select=index;
-                                                   expand= snapshot.data!.docs[index].id;
-                                                   name=snapshot.data!.docs[index]['Name'];
-                                                   usertoken=snapshot.data!.docs[index]['Token'];
-                                                   UserImg=snapshot.data!.docs[index]['UserImg'];
-                                                   activeStatus=snapshot.data!.docs[index]['Active'];
-                                                 });
-                                               },
-                                               leading:
-                                               Container(
-                                                 height: height/20.9,
-                                                 width: width/44.5333,
-                                                 decoration: BoxDecoration(
-                                                     color: Color(0xffDFDEFF),
-                                                     borderRadius: BorderRadius.circular(100),
-                                                     image: DecorationImage(
-                                                         fit: BoxFit.cover,
-                                                         image: NetworkImage(snapshot.data!.docs[index]["UserImg"])
-                                                     )
-                                                 ),
-                                               ),
-                                               title: KText(text:snapshot.data!.docs[index]['Name'].toString(),style:
-                                               SafeGoogleFont (
-                                                 'Nunito',
-                                                 fontSize: width/113.833,
-                                                 fontWeight: FontWeight.w700,
-                                                 color: Color(0xff030229),
-                                               ),),
-                                               subtitle:
-                                               KText(text:"${snapshot.data!.docs[index]['class'].toString()} ${snapshot.data!.docs[index]['subjectStream'].toString()} Batch",
-                                                 style: SafeGoogleFont (
-                                                   'Nunito',
-                                                   fontSize: width/113.833,
-                                                   fontWeight: FontWeight.w700,
-                                                   color: Color(0xff68677F),
-                                                 ),) ,
-                                               // trailing:  KText(text:"1 min ago",
-                                               //   style: SafeGoogleFont (
-                                               //     'Nunito',
-                                               //     fontSize: width/113.833,
-                                               //     fontWeight: FontWeight.w700,
-                                               //     color: Color(0xff68677F),
-                                               //   ),) ,
-                                             ),
-                                           ),
-                                         );
-                                     }
-                                    }
-                                    else if(SerachValue==""){
-                                      return
-                                        Padding(
-                                          padding:  EdgeInsets.only(
-
-                                              left:width/653 ,
-                                              right:width/653 ,
-                                              top:height/328.5 ,
-                                              bottom:height/328.5
-                                          ),
-                                          child: Container(
-                                            margin: EdgeInsets.only(left:  width/273.2,right: width/273.2),
-                                            decoration: BoxDecoration(
-                                                color: select==index?Color(0xffF7F7FF):Colors.transparent,
-                                                border: Border(
-                                                    bottom: BorderSide(color: Colors.grey.shade300)
-                                                )
-                                            ),
-                                            child: ListTile(
-                                              onTap: (){
-                                                ischatfuntion(snapshot.data!.docs[index].id);
-                                                setState(() {
-                                                  select=index;
-                                                  expand= snapshot.data!.docs[index].id;
-                                                  name=snapshot.data!.docs[index]['Name'];
-                                                  usertoken=snapshot.data!.docs[index]['Token'];
-                                                  UserImg=snapshot.data!.docs[index]['UserImg'];
-                                                  activeStatus=snapshot.data!.docs[index]['Active'];
-                                                });
-                                              },
-                                              leading:
-                                              Container(
-                                                height: height/20.9,
-                                                width: width/44.5333,
+                                                  left:width/653 ,
+                                                  right:width/653 ,
+                                                  top:height/328.5 ,
+                                                  bottom:height/328.5
+                                              ),
+                                              child: Container(
+                                                margin: EdgeInsets.only(left:  width/273.2,right: width/273.2),
                                                 decoration: BoxDecoration(
-                                                    color: Color(0xffDFDEFF),
-                                                    borderRadius: BorderRadius.circular(100),
-                                                  image: DecorationImage(
-                                                    fit: BoxFit.cover,
-                                                    image: NetworkImage(snapshot.data!.docs[index]["UserImg"])
-                                                  )
+                                                    color: select==index?Color(0xffF7F7FF):Colors.transparent,
+                                                    border: Border(
+                                                        bottom: BorderSide(color: Colors.grey.shade300)
+                                                    )
+                                                ),
+                                                child: ListTile(
+                                                  onTap: (){
+                                                    ischatfuntion(snapshot.data!.docs[index].id);
+                                                    setState(() {
+                                                      select=index;
+                                                      expand= snapshot.data!.docs[index].id;
+                                                      name=snapshot.data!.docs[index]['Name'];
+                                                      usertoken=snapshot.data!.docs[index]['Token'];
+                                                      UserImg=snapshot.data!.docs[index]['UserImg'];
+                                                      activeStatus=snapshot.data!.docs[index]['Active'];
+                                                    });
+                                                  },
+                                                  leading:
+                                                  Container(
+                                                    height: height/20.9,
+                                                    width: width/44.5333,
+                                                    decoration: BoxDecoration(
+                                                        color: Color(0xffDFDEFF),
+                                                        borderRadius: BorderRadius.circular(100),
+                                                        image: DecorationImage(
+                                                            fit: BoxFit.cover,
+                                                            image: NetworkImage(snapshot.data!.docs[index]["UserImg"])
+                                                        )
+                                                    ),
+
+                                                    child:Center(
+                                                      child: snapshot.data!.docs[index]["UserImg"]==""?Icon(Icons.person):Text(""),
+                                                    )
+                                                  ),
+                                                  title: KText(text:snapshot.data!.docs[index]['Name'].toString(),style:
+                                                  SafeGoogleFont (
+                                                    'Nunito',
+                                                    fontSize: width/113.833,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Color(0xff030229),
+                                                  ),),
+                                                  subtitle:
+                                                  KText(text:"${snapshot.data!.docs[index]['class'].toString()} ${snapshot.data!.docs[index]['subjectStream'].toString()} Batch",
+                                                    style: SafeGoogleFont (
+                                                      'Nunito',
+                                                      fontSize: width/113.833,
+                                                      fontWeight: FontWeight.w700,
+                                                      color: Color(0xff68677F),
+                                                    ),) ,
+                                                  // trailing:  KText(text:"1 min ago",
+                                                  //   style: SafeGoogleFont (
+                                                  //     'Nunito',
+                                                  //     fontSize: width/113.833,
+                                                  //     fontWeight: FontWeight.w700,
+                                                  //     color: Color(0xff68677F),
+                                                  //   ),) ,
                                                 ),
                                               ),
-                                              title: KText(text:snapshot.data!.docs[index]['Name'].toString(),style:
-                                              SafeGoogleFont (
-                                                'Nunito',
-                                                fontSize: width/113.833,
-                                                fontWeight: FontWeight.w700,
-                                                color: Color(0xff030229),
-                                              ),),
-                                              subtitle:
-                                              KText(text:"${snapshot.data!.docs[index]['class'].toString()} ${snapshot.data!.docs[index]['subjectStream'].toString()} Batch",
-                                                style: SafeGoogleFont (
+                                            );
+                                        }
+                                      }
+                                      else if(SerachValue=="") {
+                                        return
+                                          Padding(
+                                            padding:  EdgeInsets.only(
+
+                                                left:width/653 ,
+                                                right:width/653 ,
+                                                top:height/328.5 ,
+                                                bottom:height/328.5
+                                            ),
+                                            child: Container(
+                                              margin: EdgeInsets.only(left:  width/273.2,right: width/273.2),
+                                              decoration: BoxDecoration(
+                                                  color: select==index?Color(0xffF7F7FF):Colors.transparent,
+                                                  border: Border(
+                                                      bottom: BorderSide(color: Colors.grey.shade300)
+                                                  )
+                                              ),
+                                              child: ListTile(
+                                                onTap: (){
+                                                  ischatfuntion(snapshot.data!.docs[index].id);
+                                                  setState(() {
+                                                    select=index;
+                                                    expand= snapshot.data!.docs[index].id;
+                                                    name=snapshot.data!.docs[index]['Name'];
+                                                    usertoken=snapshot.data!.docs[index]['Token'];
+                                                    UserImg=snapshot.data!.docs[index]['UserImg'];
+                                                    activeStatus=snapshot.data!.docs[index]['Active'];
+                                                  });
+                                                },
+                                                leading:
+                                                Container(
+                                                  height: height/20.9,
+                                                  width: width/44.5333,
+                                                  decoration: BoxDecoration(
+                                                      color: Color(0xffDFDEFF),
+                                                      borderRadius: BorderRadius.circular(100),
+                                                      image: DecorationImage(
+                                                          fit: BoxFit.cover,
+                                                          image: NetworkImage(snapshot.data!.docs[index]["UserImg"])
+                                                      )
+                                                  ),
+                                                    child:Center(
+                                                      child: snapshot.data!.docs[index]["UserImg"]==""?Icon(Icons.person):Text(""),
+                                                    )
+                                                ),
+                                                title: KText(text:snapshot.data!.docs[index]['Name'].toString(),style:
+                                                SafeGoogleFont (
                                                   'Nunito',
                                                   fontSize: width/113.833,
                                                   fontWeight: FontWeight.w700,
-                                                  color: Color(0xff68677F),
-                                                ),) ,
-                                              // trailing:  KText(text:"1 min ago",
-                                              //   style: SafeGoogleFont (
-                                              //     'Nunito',
-                                              //     fontSize: width/113.833,
-                                              //     fontWeight: FontWeight.w700,
-                                              //     color: Color(0xff68677F),
-                                              //   ),) ,
+                                                  color: Color(0xff030229),
+                                                ),),
+                                                subtitle:
+                                                KText(text:"${snapshot.data!.docs[index]['class'].toString()} ${snapshot.data!.docs[index]['subjectStream'].toString()} Batch",
+                                                  style: SafeGoogleFont (
+                                                    'Nunito',
+                                                    fontSize: width/113.833,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Color(0xff68677F),
+                                                  ),) ,
+                                                // trailing:  KText(text:"1 min ago",
+                                                //   style: SafeGoogleFont (
+                                                //     'Nunito',
+                                                //     fontSize: width/113.833,
+                                                //     fontWeight: FontWeight.w700,
+                                                //     color: Color(0xff68677F),
+                                                //   ),) ,
+                                              ),
                                             ),
-                                          ),
-                                        );
+                                          );
+                                      }
                                     }
+                                    return const SizedBox();
 
                                   },);
 
@@ -438,80 +457,171 @@ class _Message_ScreenState extends State<Message_Screen>
                               return ListView.builder(
                                 itemCount: snapshot.data!.docs.length,
                                 itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: EdgeInsets.only(
-                                        left: width / 653,
-                                        right: width / 653,
-                                        top: height / 328.5,
-                                        bottom: height / 328.5),
-                                    child: Container(
-                                      margin: EdgeInsets.only(
-                                          left: width / 273.2,
-                                          right: width / 273.2),
-                                      decoration: BoxDecoration(
-                                          color: select == index
-                                              ? Color(0xffF7F7FF)
-                                              : Colors.transparent,
-                                          border: Border(
-                                              bottom: BorderSide(
-                                                  color: Colors.grey.shade300))),
-                                      child: ListTile(
-                                        onTap: () {
-                                          setState(() {
-                                            expand2 = snapshot.data!.docs[index].id;
-                                            colorValue=int.parse(snapshot.data!.docs[index]['color'].toString());
-                                            departmentName="${snapshot.data!.docs[index]['Department']}";
-                                               acadamicYear= "${snapshot.data!.docs[index]['AccademicYear']}";
-                                          });
-                                        },
-                                        leading:
-                                        Container(
-                                          height: height / 20.9,
-                                          width: width / 44.5333,
+                                  if(selectTabIndex==1){
+                                    if(SerachValue!=""){
+                                      if(snapshot.data!.docs[index]['Department'].toString().toLowerCase().
+                                      contains(SerachValue.toLowerCase().toString())||
+                                          snapshot.data!.docs[index]['AccademicYear'].toString().toLowerCase().
+                                          contains(SerachValue.toLowerCase().toString())
+
+                                      ){
+
+
+                                        return Padding(
+                                          padding: EdgeInsets.only(
+                                              left: width / 653,
+                                              right: width / 653,
+                                              top: height / 328.5,
+                                              bottom: height / 328.5),
+                                          child: Container(
+                                            margin: EdgeInsets.only(
+                                                left: width / 273.2,
+                                                right: width / 273.2),
+                                            decoration: BoxDecoration(
+                                                color: select == index
+                                                    ? Color(0xffF7F7FF)
+                                                    : Colors.transparent,
+                                                border: Border(
+                                                    bottom: BorderSide(
+                                                        color: Colors.grey.shade300))),
+                                            child: ListTile(
+                                              onTap: () {
+                                                setState(() {
+                                                  expand2 = snapshot.data!.docs[index].id;
+                                                  colorValue=int.parse(snapshot.data!.docs[index]['color'].toString());
+                                                  departmentName="${snapshot.data!.docs[index]['Department']}";
+                                                  acadamicYear= "${snapshot.data!.docs[index]['AccademicYear']}";
+                                                });
+                                              },
+                                              leading:
+                                              Container(
+                                                height: height / 20.9,
+                                                width: width / 44.5333,
+                                                decoration: BoxDecoration(
+                                                    color: Color(int.parse(snapshot.data!.docs[index]["color"].toString())),
+                                                    borderRadius:
+                                                    BorderRadius.circular(100),
+                                                    image: DecorationImage(
+                                                        fit: BoxFit.cover,
+                                                        image: NetworkImage(snapshot.data!.docs[index]["Img"]))),
+                                                child:
+                                                Center(
+                                                  child: Text(
+                                                    snapshot.data!.docs[index]["Img"]==""?
+                                                    groupNameTextfunc(snapshot.data!.docs[index]['Department'].toString()).toString():"",
+                                                    style: SafeGoogleFont(
+                                                      'Nunito',
+                                                      fontSize: width / 113.833,
+                                                      fontWeight: FontWeight.w700,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              title: KText(
+                                                text:
+                                                snapshot.data!.docs[index]['Department'].toString(),
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  fontSize: width / 113.833,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Color(0xff030229),
+                                                ),
+                                              ),
+                                              subtitle: KText(
+                                                text:
+                                                "${snapshot.data!.docs[index]['AccademicYear'].toString()}",
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  fontSize: width / 113.833,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Color(0xff68677F),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }
+
+                                    }
+                                    else if(SerachValue==""){
+                                      return Padding(
+                                        padding: EdgeInsets.only(
+                                            left: width / 653,
+                                            right: width / 653,
+                                            top: height / 328.5,
+                                            bottom: height / 328.5),
+                                        child: Container(
+                                          margin: EdgeInsets.only(
+                                              left: width / 273.2,
+                                              right: width / 273.2),
                                           decoration: BoxDecoration(
-                                              color: Color(int.parse(snapshot.data!.docs[index]["color"].toString())),
-                                              borderRadius:
-                                              BorderRadius.circular(100),
-                                              image: DecorationImage(
-                                                  fit: BoxFit.cover,
-                                                  image: NetworkImage(snapshot.data!.docs[index]["Img"]))),
-                                          child:
-                                          Center(
-                                            child: Text(
-                                                snapshot.data!.docs[index]["Img"]==""?
-                                                groupNameTextfunc(snapshot.data!.docs[index]['Department'].toString()).toString():"",
+                                              color: select == index
+                                                  ? Color(0xffF7F7FF)
+                                                  : Colors.transparent,
+                                              border: Border(
+                                                  bottom: BorderSide(
+                                                      color: Colors.grey.shade300))),
+                                          child: ListTile(
+                                            onTap: () {
+                                              setState(() {
+                                                expand2 = snapshot.data!.docs[index].id;
+                                                colorValue=int.parse(snapshot.data!.docs[index]['color'].toString());
+                                                departmentName="${snapshot.data!.docs[index]['Department']}";
+                                                acadamicYear= "${snapshot.data!.docs[index]['AccademicYear']}";
+                                              });
+                                            },
+                                            leading:
+                                            Container(
+                                              height: height / 20.9,
+                                              width: width / 44.5333,
+                                              decoration: BoxDecoration(
+                                                  color: Color(int.parse(snapshot.data!.docs[index]["color"].toString())),
+                                                  borderRadius:
+                                                  BorderRadius.circular(100),
+                                                  image: DecorationImage(
+                                                      fit: BoxFit.cover,
+                                                      image: NetworkImage(snapshot.data!.docs[index]["Img"]))),
+                                              child:
+                                              Center(
+                                                child: Text(
+                                                  snapshot.data!.docs[index]["Img"]==""?
+                                                  groupNameTextfunc(snapshot.data!.docs[index]['Department'].toString()).toString():"",
+                                                  style: SafeGoogleFont(
+                                                    'Nunito',
+                                                    fontSize: width / 113.833,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            title: KText(
+                                              text:
+                                              snapshot.data!.docs[index]['Department'].toString(),
                                               style: SafeGoogleFont(
                                                 'Nunito',
                                                 fontSize: width / 113.833,
                                                 fontWeight: FontWeight.w700,
-                                                color: Colors.white,
+                                                color: Color(0xff030229),
+                                              ),
+                                            ),
+                                            subtitle: KText(
+                                              text:
+                                              "${snapshot.data!.docs[index]['AccademicYear'].toString()}",
+                                              style: SafeGoogleFont(
+                                                'Nunito',
+                                                fontSize: width / 113.833,
+                                                fontWeight: FontWeight.w700,
+                                                color: Color(0xff68677F),
                                               ),
                                             ),
                                           ),
                                         ),
-                                        title: KText(
-                                          text:
-                                          snapshot.data!.docs[index]['Department'].toString(),
-                                          style: SafeGoogleFont(
-                                            'Nunito',
-                                            fontSize: width / 113.833,
-                                            fontWeight: FontWeight.w700,
-                                            color: Color(0xff030229),
-                                          ),
-                                        ),
-                                        subtitle: KText(
-                                          text:
-                                          "${snapshot.data!.docs[index]['AccademicYear'].toString()}",
-                                          style: SafeGoogleFont(
-                                            'Nunito',
-                                            fontSize: width / 113.833,
-                                            fontWeight: FontWeight.w700,
-                                            color: Color(0xff68677F),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
+                                      );
+                                    }
+                                    return const SizedBox();
+                                  }
                                 },
                               );
                             },
