@@ -50,10 +50,24 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
       reader.onLoadEnd.listen((event) async {
         var snapshot = await fs.ref().child('Photo').child("${file.name}").putBlob(file);
         String downloadUrl = await snapshot.ref.getDownloadURL();
-        FirebaseFirestore.instance.collection("SliderImages").doc().set({
-          "imgUrl":downloadUrl,
-          "timestamp":DateTime.now().millisecondsSinceEpoch
-        });
+
+        if(collection=="Photo"){
+          FirebaseFirestore.instance.collection("Photos").doc(addphotoDocummentValue.toString()).
+          collection(addphotoDocummentValue.toString()).doc().set({
+            "imgUrl":downloadUrl,
+            "timestamp":DateTime.now().millisecondsSinceEpoch
+          });
+        }
+
+        if(collection=="SliderImages"){
+          FirebaseFirestore.instance.collection("SliderImages").doc().set({
+            "imgUrl":downloadUrl,
+            "timestamp":DateTime.now().millisecondsSinceEpoch
+          });
+        }
+
+
+
         CoolAlert.show(
             context: context,
             type: CoolAlertType.success,
@@ -581,7 +595,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                             children: [
                               InkWell(
                                 onTap: () {
-                                  addImage(addphotoDocummentValue,size);
+                                  addImage("Photo",size);
                                 },
                                 child: KText(
                                   text: "ADD",

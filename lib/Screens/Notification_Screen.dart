@@ -458,7 +458,7 @@ class _Notification_ScreenState extends State<Notification_Screen> with SingleTi
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
+                      SizedBox(
                         height: height/7.39,
                         width: size.width * 0.5,
                         child: Column(
@@ -466,7 +466,7 @@ class _Notification_ScreenState extends State<Notification_Screen> with SingleTi
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Text(
-                              "Profile Edit Request from ${requests[i].get("firstName")}",
+                              "Profile Edit Request from ${requests[i].get("Name")}",
                               style:  SafeGoogleFont(
                                 "Nunito",
                                 fontSize: width/75.888  ,
@@ -583,7 +583,8 @@ class _Notification_ScreenState extends State<Notification_Screen> with SingleTi
                           ),
                         ),
                         InkWell(
-                          onTap: () {
+                          onTap: () async{
+
                             Navigator.pop(context);
                           },
                           child: Container(
@@ -619,363 +620,307 @@ class _Notification_ScreenState extends State<Notification_Screen> with SingleTi
                     ),
                   ),
                 ),
-                Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                    ),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Container(
-                            width: size.width * 0.3,
-                            height: size.height * 0.4,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              image: DecorationImage(
-                                fit: BoxFit.fill,
-                                image: NetworkImage(user.get("UserImg")),
-                              ),
+                Container(
+                  height:height/1.56,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Container(
+                          width: size.width * 0.3,
+                          height: size.height * 0.4,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            image:
+                            user.get("UserImg")==""?
+                            DecorationImage(
+                              fit: BoxFit.fill,
+                              image:
+
+                              AssetImage(""),
+                            ):DecorationImage(
+                              fit: BoxFit.fill,
+                              image:
+
+                              NetworkImage(user.get("UserImg")),
                             ),
                           ),
-                          SizedBox(
-                            width: double.infinity,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: width/136.6, vertical: height/43.4),
-                              child: Column(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  SizedBox(height: height / 32.55),
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: size.width * 0.15,
-                                        child: KText(
-                                          text: "Name",
-                                          style: SafeGoogleFont(
-                                              "Nunito",
-                                              fontWeight: FontWeight.w800,
-                                              fontSize:width/85.375),
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: width/136.6, vertical: height/43.4),
+                            child: Column(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceEvenly,
+                              children: [
+                                SizedBox(height: height / 32.55),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: size.width * 0.15,
+                                      child: KText(
+                                        text: "Name",
+                                        style: SafeGoogleFont(
+                                            "Nunito",
+                                            fontWeight: FontWeight.w800,
+                                            fontSize:width/85.375),
+                                      ),
+                                    ),
+                                    Text(":"),
+                                    SizedBox(width: width / 68.3),
+                                    KText(
+                                      text:
+                                      "${user.get("Name")} ${user.get("lastName")}",
+                                      style: SafeGoogleFont(
+                                          "Nunito",fontSize: width/97.571),
+                                    ),
+                                    SizedBox(width: width / 68.3),
+                                    Visibility(
+                                      visible:
+                                          isDifferent(extUser.get("Name"),user.get("Name"))||
+                                              isDifferent(extUser.get("lastName"),user.get("lastName")),
+                                      child: Text(
+                                        "Edited",
+                                        style: SafeGoogleFont(
+                                            "Nunito",
+                                            color: Constants().primaryAppColor,
+                                            fontSize: width/97.571
                                         ),
                                       ),
-                                      Text(":"),
-                                      SizedBox(width: width / 68.3),
-                                      KText(
-                                        text:
-                                        "${user.get("Name")} ${user.get("lastName")}",
+                                    )
+                                  ],
+                                ),
+                                SizedBox(height: height / 32.55),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: size.width * 0.15,
+                                      child: KText(
+                                        text: "Phone",
+                                        style: SafeGoogleFont(
+                                            "Nunito",
+                                            fontWeight: FontWeight.w800,
+                                            fontSize:width/85.375),
+                                      ),
+                                    ),
+                                    Text(":"),
+                                    SizedBox(width: width / 68.3),
+                                    KText(
+                                      text: user.get("Phone"),
+                                      style: SafeGoogleFont(
+                                          "Nunito",fontSize: width/97.571),
+                                    ),
+                                    SizedBox(width: width / 68.3),
+                                    Visibility(
+                                      visible: isDifferent(extUser.get("Phone"),user.get("Phone")),
+                                      child: Text(
+                                        "Edited",
+                                        style: SafeGoogleFont(
+                                            "Nunito",
+                                            color: Constants().primaryAppColor,
+                                            fontSize: width/97.571
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                SizedBox(height: height / 32.55),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: size.width * 0.15,
+                                      child: KText(
+                                        text: "Email",
+                                        style: SafeGoogleFont(
+                                            "Nunito",
+                                            fontWeight: FontWeight.w800,
+                                            fontSize:width/85.375),
+                                      ),
+                                    ),
+                                    Text(":"),
+                                    SizedBox(width: width / 68.3),
+                                    KText(
+                                      text: user.get("email"),
+                                      style: SafeGoogleFont(
+                                          "Nunito",fontSize: width/97.571),
+                                    ),
+                                    SizedBox(width: width / 68.3),
+                                    Visibility(
+                                      visible: isDifferent(extUser.get("email"),user.get("email")),
+                                      child: Text(
+                                        "Edited",
+                                        style: SafeGoogleFont(
+                                            "Nunito",
+                                            color: Constants().primaryAppColor,
+                                            fontSize: width/97.571
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                SizedBox(height: height / 32.55),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: size.width * 0.15,
+                                      child: KText(
+                                        text: "Profession",
+                                        style:SafeGoogleFont(
+                                            "Nunito",
+                                            fontWeight: FontWeight.w800,
+                                            fontSize:width/85.375),
+                                      ),
+                                    ),
+                                    Text(":"),
+                                    SizedBox(width: width / 68.3),
+                                    KText(
+                                      text: user.get("Occupation"),
+                                      style: SafeGoogleFont(
+                                          "Nunito",fontSize: width/97.571),
+                                    ),
+                                    SizedBox(width: width / 68.3),
+                                    Visibility(
+                                      visible: isDifferent(extUser.get("Occupation"),user.get("Occupation")),
+                                      child: Text(
+                                        "Edited",
+                                        style: SafeGoogleFont(
+                                            "Nunito",
+                                            color: Constants().primaryAppColor,
+                                            fontSize: width/97.571
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                SizedBox(height: height / 32.55),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: size.width * 0.15,
+                                      child: KText(
+                                        text: "Marital Status",
+                                        style: SafeGoogleFont(
+                                            "Nunito",
+                                            fontWeight: FontWeight.w800,
+                                            fontSize:width/85.375),
+                                      ),
+                                    ),
+                                    Text(":"),
+                                    SizedBox(width: width / 68.3),
+                                    KText(
+                                      text: user.get("maritalStatus"),
+                                      style: SafeGoogleFont(
+                                          "Nunito",fontSize: width/97.571),
+                                    ),
+                                    SizedBox(width: width / 68.3),
+                                    Visibility(
+                                      visible: isDifferent(extUser.get("maritalStatus"),user.get("maritalStatus")),
+                                      child: Text(
+                                        "Edited",
+                                        style: SafeGoogleFont(
+                                            "Nunito",
+                                            color: Constants().primaryAppColor,
+                                            fontSize: width/97.571
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                SizedBox(height: height / 32.55),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: size.width * 0.15,
+                                      child: KText(
+                                        text: "Anniversary Date",
+                                        style: SafeGoogleFont(
+                                            "Nunito",
+                                            fontWeight: FontWeight.w800,
+                                            fontSize:width/85.375),
+                                      ),
+                                    ),
+                                    Text(":"),
+                                    SizedBox(width: width / 68.3),
+                                    KText(
+                                      text: user.get("anniversaryDate"),
+                                      style: SafeGoogleFont(
+                                          "Nunito",fontSize: width/97.571),
+                                    ),
+                                    SizedBox(width: width / 68.3),
+                                    Visibility(
+                                      visible: isDifferent(extUser.get("anniversaryDate"),user.get("anniversaryDate")),
+                                      child: Text(
+                                        "Edited",
+                                        style: SafeGoogleFont(
+                                            "Nunito",
+                                            color: Constants().primaryAppColor,
+                                            fontSize: width/97.571
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+
+                                SizedBox(height: height / 32.55),
+                                Row(
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      width: size.width * 0.15,
+                                      child: KText(
+                                        text: "Address",
+                                        style: SafeGoogleFont(
+                                            "Nunito",
+                                            fontWeight: FontWeight.w800,
+                                            fontSize:width/85.375),
+                                      ),
+                                    ),
+                                    Text(":"),
+                                    SizedBox(width: width / 68.3),
+                                    SizedBox(
+                                      width: size.width * 0.25,
+                                      child: Text(
+                                        user.get("Address"),
                                         style: SafeGoogleFont(
                                             "Nunito",fontSize: width/97.571),
                                       ),
-                                      SizedBox(width: width / 68.3),
-                                      Visibility(
-                                        visible: isDifferent(extUser.get("Name"),user.get("firstName")) ||
-                                            isDifferent(extUser.get("lastName"),user.get("lastName")),
-                                        child: Text(
-                                          "Edited",
-                                          style: SafeGoogleFont(
-                                              "Nunito",
-                                              color: Constants().primaryAppColor,
-                                              fontSize: width/97.571
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(height: height / 32.55),
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: size.width * 0.15,
-                                        child: KText(
-                                          text: "Phone",
-                                          style: SafeGoogleFont(
-                                              "Nunito",
-                                              fontWeight: FontWeight.w800,
-                                              fontSize:width/85.375),
-                                        ),
-                                      ),
-                                      Text(":"),
-                                      SizedBox(width: width / 68.3),
-                                      KText(
-                                        text: user.get("phone"),
+                                    ),
+                                    SizedBox(width: width / 68.3),
+                                    Visibility(
+                                      visible: isDifferent(extUser.get("Address"),user.get("Address")),
+                                      child: Text(
+                                        "Edited",
                                         style: SafeGoogleFont(
-                                            "Nunito",fontSize: width/97.571),
-                                      ),
-                                      SizedBox(width: width / 68.3),
-                                      Visibility(
-                                        visible: isDifferent(extUser.get("Phone"),user.get("Phone")),
-                                        child: Text(
-                                          "Edited",
-                                          style: SafeGoogleFont(
-                                              "Nunito",
-                                              color: Constants().primaryAppColor,
-                                              fontSize: width/97.571
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(height: height / 32.55),
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: size.width * 0.15,
-                                        child: KText(
-                                          text: "Email",
-                                          style: SafeGoogleFont(
-                                              "Nunito",
-                                              fontWeight: FontWeight.w800,
-                                              fontSize:width/85.375),
+                                            "Nunito",
+                                            color: Constants().primaryAppColor,
+                                            fontSize: width/97.571
                                         ),
                                       ),
-                                      Text(":"),
-                                      SizedBox(width: width / 68.3),
-                                      KText(
-                                        text: user.get("email"),
-                                        style: SafeGoogleFont(
-                                            "Nunito",fontSize: width/97.571),
-                                      ),
-                                      SizedBox(width: width / 68.3),
-                                      Visibility(
-                                        visible: isDifferent(extUser.get("Email"),user.get("Email")),
-                                        child: Text(
-                                          "Edited",
-                                          style: SafeGoogleFont(
-                                              "Nunito",
-                                              color: Constants().primaryAppColor,
-                                              fontSize: width/97.571
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(height: height / 32.55),
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: size.width * 0.15,
-                                        child: KText(
-                                          text: "Profession",
-                                          style:SafeGoogleFont(
-                                              "Nunito",
-                                              fontWeight: FontWeight.w800,
-                                              fontSize:width/85.375),
-                                        ),
-                                      ),
-                                      Text(":"),
-                                      SizedBox(width: width / 68.3),
-                                      KText(
-                                        text: user.get("profession"),
-                                        style: SafeGoogleFont(
-                                            "Nunito",fontSize: width/97.571),
-                                      ),
-                                      SizedBox(width: width / 68.3),
-                                      Visibility(
-                                        visible: isDifferent(extUser.get("Occupation"),user.get("Occupation")),
-                                        child: Text(
-                                          "Edited",
-                                          style: SafeGoogleFont(
-                                              "Nunito",
-                                              color: Constants().primaryAppColor,
-                                              fontSize: width/97.571
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(height: height / 32.55),
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: size.width * 0.15,
-                                        child: KText(
-                                          text: "Marital Status",
-                                          style: SafeGoogleFont(
-                                              "Nunito",
-                                              fontWeight: FontWeight.w800,
-                                              fontSize:width/85.375),
-                                        ),
-                                      ),
-                                      Text(":"),
-                                      SizedBox(width: width / 68.3),
-                                      KText(
-                                        text: user.get("maritalStatus"),
-                                        style: SafeGoogleFont(
-                                            "Nunito",fontSize: width/97.571),
-                                      ),
-                                      SizedBox(width: width / 68.3),
-                                      Visibility(
-                                        visible: isDifferent(extUser.get("maritalStatus"),user.get("maritalStatus")),
-                                        child: Text(
-                                          "Edited",
-                                          style: SafeGoogleFont(
-                                              "Nunito",
-                                              color: Constants().primaryAppColor,
-                                              fontSize: width/97.571
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(height: height / 32.55),
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: size.width * 0.15,
-                                        child: KText(
-                                          text: "Anniversary Date",
-                                          style: SafeGoogleFont(
-                                              "Nunito",
-                                              fontWeight: FontWeight.w800,
-                                              fontSize:width/85.375),
-                                        ),
-                                      ),
-                                      Text(":"),
-                                      SizedBox(width: width / 68.3),
-                                      KText(
-                                        text: user.get("anniversaryDate"),
-                                        style: SafeGoogleFont(
-                                            "Nunito",fontSize: width/97.571),
-                                      ),
-                                      SizedBox(width: width / 68.3),
-                                      Visibility(
-                                        visible: isDifferent(extUser.get("anniversaryDate"),user.get("anniversaryDate")),
-                                        child: Text(
-                                          "Edited",
-                                          style: SafeGoogleFont(
-                                              "Nunito",
-                                              color: Constants().primaryAppColor,
-                                              fontSize: width/97.571
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  // SizedBox(height: height / 32.55),
-                                  // Row(
-                                  //   crossAxisAlignment:
-                                  //   CrossAxisAlignment.start,
-                                  //   children: [
-                                  //     SizedBox(
-                                  //       width: size.width * 0.15,
-                                  //       child: KText(
-                                  //         text: "Locality",
-                                  //         style:SafeGoogleFont(
-                                  //                                                           "Nunito",
-                                  //             fontWeight: FontWeight.w800,
-                                  //             fontSize:width/85.375),
-                                  //       ),
-                                  //     ),
-                                  //     Text(":"),
-                                  //     SizedBox(width: width / 68.3),
-                                  //     KText(
-                                  //       text: user.get("locality"),
-                                  //       style: SafeGoogleFont(
-                                  //                                                           "Nunito",fontSize: width/97.571),
-                                  //     ),
-                                  //     SizedBox(width: width / 68.3),
-                                  //     Visibility(
-                                  //       visible: isDifferent(extUser.get("locality"),user.get("locality")),
-                                  //       child: Text(
-                                  //         "Edited",
-                                  //         style: TextStyle(
-                                  //             color: Constants().primaryAppColor,
-                                  //             fontSize: width/97.571
-                                  //         ),
-                                  //       ),
-                                  //     )
-                                  //   ],
-                                  // ),
-                                  // SizedBox(height: height / 32.55),
-                                  // Row(
-                                  //   crossAxisAlignment:
-                                  //   CrossAxisAlignment.start,
-                                  //   children: [
-                                  //     SizedBox(
-                                  //       width: size.width * 0.15,
-                                  //       child: KText(
-                                  //         text: "About",
-                                  //         style: TextStyle(
-                                  //             fontWeight: FontWeight.w800,
-                                  //             fontSize:width/85.375),
-                                  //       ),
-                                  //     ),
-                                  //     Text(":"),
-                                  //     SizedBox(width: width / 68.3),
-                                  //     SizedBox(
-                                  //       width: size.width*0.25,
-                                  //       child: Text(
-                                  //         user.get("about"),
-                                  //         style: TextStyle(fontSize: width/97.571),
-                                  //       ),
-                                  //     ),
-                                  //     SizedBox(width: width / 68.3),
-                                  //     Visibility(
-                                  //       visible: isDifferent(extUser.get("about"),user.get("about")),
-                                  //       child: Text(
-                                  //         "Edited",
-                                  //         style: TextStyle(
-                                  //             color: Constants().primaryAppColor,
-                                  //             fontSize: width/97.571
-                                  //         ),
-                                  //       ),
-                                  //     )
-                                  //   ],
-                                  // ),
-                                  SizedBox(height: height / 32.55),
-                                  Row(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width: size.width * 0.15,
-                                        child: KText(
-                                          text: "Address",
-                                          style: SafeGoogleFont(
-                                              "Nunito",
-                                              fontWeight: FontWeight.w800,
-                                              fontSize:width/85.375),
-                                        ),
-                                      ),
-                                      Text(":"),
-                                      SizedBox(width: width / 68.3),
-                                      SizedBox(
-                                        width: size.width * 0.25,
-                                        child: Text(
-                                          user.get("address"),
-                                          style: SafeGoogleFont(
-                                              "Nunito",fontSize: width/97.571),
-                                        ),
-                                      ),
-                                      SizedBox(width: width / 68.3),
-                                      Visibility(
-                                        visible: isDifferent(extUser.get("Address"),user.get("Address")),
-                                        child: Text(
-                                          "Edited",
-                                          style: SafeGoogleFont(
-                                              "Nunito",
-                                              color: Constants().primaryAppColor,
-                                              fontSize: width/97.571
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(height: height / 32.55),
-                                ],
-                              ),
+                                    )
+                                  ],
+                                ),
+                                SizedBox(height: height / 32.55),
+                              ],
                             ),
-                          )
-                        ],
-                      ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
                 ),
                 Material(
                   elevation: 4,
+                  borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(10),
+                    bottomLeft: Radius.circular(10),
+                  ),
                   color: Colors.grey.shade100,
                   child: Container(
                     width: double.infinity,
@@ -993,7 +938,18 @@ class _Notification_ScreenState extends State<Notification_Screen> with SingleTi
                         children: [
                           InkWell(
                             onTap: () async {
-                              // await updateProfile(user.get("userDocId"),user);
+
+
+                              var getUserdata=await FirebaseFirestore.instance.collection('Users').where("userDocId",isEqualTo: user.get("userDocId")).get();
+
+                              if(getUserdata.docs.length>0){
+                                FirebaseFirestore.instance.collection('Users').doc(getUserdata.docs[0].id).update({
+                                  "Editted": true,
+                                });
+                                FirebaseFirestore.instance.collection('ProfileEditRequest').doc(getUserdata.docs[0].id).update({
+                                  "Editted": true,
+                                });
+                              }
                               await CoolAlert.show(
                                 context: context,
                                 type: CoolAlertType.success,
@@ -1020,7 +976,7 @@ class _Notification_ScreenState extends State<Notification_Screen> with SingleTi
                                       "Approve",
                                       style: GoogleFonts.poppins(
                                         fontWeight: FontWeight.w700,
-                                        color: Colors.black,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
@@ -1031,6 +987,20 @@ class _Notification_ScreenState extends State<Notification_Screen> with SingleTi
                           SizedBox(width: 10),
                           InkWell(
                             onTap: () async {
+
+                             var getUserdata=await FirebaseFirestore.instance.collection('Users').where("userDocId",isEqualTo: user.get("userDocId")).get();
+
+                             if(getUserdata.docs.length>0){
+
+                               FirebaseFirestore.instance.collection('Users').doc(getUserdata.docs[0].id).update({
+                                 "Editted": false,
+                               });
+                               FirebaseFirestore.instance.collection('ProfileEditRequest').doc(getUserdata.docs[0].id).update({
+                                 "Editted": false,
+                               });
+
+
+                             }
                               //await denyRequest(user.id,user.get("userDocId"));
                               await CoolAlert.show(
                                   context: context,
@@ -1057,7 +1027,7 @@ class _Notification_ScreenState extends State<Notification_Screen> with SingleTi
                                       "Deny",
                                       style: GoogleFonts.poppins(
                                         fontWeight: FontWeight.w700,
-                                        color: Colors.black,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
