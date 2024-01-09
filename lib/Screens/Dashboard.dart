@@ -26,6 +26,8 @@ class DashBoard extends StatefulWidget {
 class _DashBoardState extends State<DashBoard> {
   int dawer = 0;
   var pages;
+  bool filtervalue = false;
+  String filterChageValue = "Name";
 
 
 
@@ -42,15 +44,16 @@ class _DashBoardState extends State<DashBoard> {
 
   int TotalUsers=0;
   int verifyedUsers=0;
+  int UnverifyedUsers=0;
   int totalEvents=0;
   int jobPost=0;
-  int totalStudnets=0;
   String viewDocid="";
   bool viewUser_details=false;
 
   totalalumnifunc()async{
     var document=await FirebaseFirestore.instance.collection("Users").get();
     var verifyedusers=await FirebaseFirestore.instance.collection("Users").where("verifyed",isEqualTo:true).get();
+    var Unverifyedusers=await FirebaseFirestore.instance.collection("Users").where("verifyed",isEqualTo:false).get();
     var eventsCount=await FirebaseFirestore.instance.collection("Batch_events").get();
 
     var jobpostCount=await FirebaseFirestore.instance.collection("JobPosts").get();
@@ -58,6 +61,7 @@ class _DashBoardState extends State<DashBoard> {
     setState(() {
       TotalUsers=document.docs.length;
       verifyedUsers=verifyedusers.docs.length;
+      UnverifyedUsers=Unverifyedusers.docs.length;
       totalEvents=eventsCount.docs.length;
       jobPost=jobpostCount.docs.length;
     });
@@ -673,7 +677,7 @@ class _DashBoardState extends State<DashBoard> {
                                           margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 8*fem),
                                           child: KText(
                                             text:
-                                            totalStudnets.toString(),
+                                            UnverifyedUsers.toString(),
                                             style: SafeGoogleFont (
                                               'Poppins',
                                               fontSize: 24*ffem,
@@ -686,7 +690,7 @@ class _DashBoardState extends State<DashBoard> {
                                         KText(
                                           text:
                                           // totaleventsspV (6:1159)
-                                          'Total Students ',
+                                          'Unverified Alumni',
                                           style: SafeGoogleFont (
                                             'Poppins',
                                             fontSize: 16*ffem,
@@ -1628,6 +1632,623 @@ class _DashBoardState extends State<DashBoard> {
                       ),
                     ),
 
+                    ///stream titles text
+                    Padding(
+                      padding: EdgeInsets.only(left: width / 170.75),
+                      child: Container(
+                        width: width / 1.21,
+                        height: 78.22 * fem,
+                        decoration: BoxDecoration(
+                          color: const Color(0xffffffff),
+                          borderRadius:
+                          BorderRadius.circular(10 * fem),),
+                        child: Row(
+                          crossAxisAlignment:
+                          CrossAxisAlignment.center,
+                          children: [
+                            /* SizedBox(
+                                                width: width / 6.5,
+                                                height: double.infinity,
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Container(
+                                                      // namekWM (8:2306)
+                                                      margin: EdgeInsets.fromLTRB(
+                                                          0 * fem,
+                                                          0 * fem,
+                                                          14.75 * fem,
+                                                          0 * fem),
+                                                      child: KText(
+                                                        text: 'Name',
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: 15 * ffem,
+                                                          fontWeight: FontWeight.w400,
+                                                          height: 1.3625 * ffem / fem,
+                                                          color: const Color(0xff030229),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          filtervalue = !filtervalue;
+                                                        });
+                                                      },
+                                                      child: Transform.rotate(
+                                                        angle: filtervalue ? 200 : 0,
+                                                        child: Opacity(
+                                                          // arrowdown2TvZ (8:2307)
+                                                          opacity: 0.7,
+                                                          child: Container(
+                                                            margin:
+                                                                EdgeInsets.fromLTRB(
+                                                                    0 * fem,
+                                                                    1.6 * fem,
+                                                                    0 * fem,
+                                                                    0 * fem),
+                                                            width: 7.82 * fem,
+                                                            height: 6.52 * fem,
+                                                            child: Image.asset(
+                                                              'assets/images/arrow-down-2.png',
+                                                              width: 7.82 * fem,
+                                                              height: 6.52 * fem,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: width / 6.5,
+                                                height: double.infinity,
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Container(
+                                                      // emailfv9 (8:2312)
+                                                      margin: EdgeInsets.fromLTRB(
+                                                          0 * fem,
+                                                          0 * fem,
+                                                          14.15 * fem,
+                                                          0 * fem),
+                                                      child: KText(
+                                                        text: 'Email',
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: 15 * ffem,
+                                                          fontWeight: FontWeight.w400,
+                                                          height: 1.3625 * ffem / fem,
+                                                          color: const Color(0xff030229),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          filtervalue = !filtervalue;
+                                                        });
+                                                      },
+                                                      child: Transform.rotate(
+                                                        angle: filtervalue ? 200 : 0,
+                                                        child: Opacity(
+                                                          // arrowdown2TvZ (8:2307)
+                                                          opacity: 0.7,
+                                                          child: Container(
+                                                            margin:
+                                                                EdgeInsets.fromLTRB(
+                                                                    0 * fem,
+                                                                    1.6 * fem,
+                                                                    0 * fem,
+                                                                    0 * fem),
+                                                            width: 7.82 * fem,
+                                                            height: 6.52 * fem,
+                                                            child: Image.asset(
+                                                              'assets/images/arrow-down-2.png',
+                                                              width: 7.82 * fem,
+                                                              height: 6.52 * fem,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: width / 10.1066,
+                                                height: double.infinity,
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Container(
+                                                      // phonenumberntH (8:2316)
+                                                      margin: EdgeInsets.fromLTRB(
+                                                          0 * fem,
+                                                          0 * fem,
+                                                          18.33 * fem,
+                                                          0 * fem),
+                                                      child: KText(
+                                                        text: 'Phone number',
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: 15 * ffem,
+                                                          fontWeight: FontWeight.w400,
+                                                          height: 1.3625 * ffem / fem,
+                                                          color: const Color(0xff030229),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          filtervalue = !filtervalue;
+                                                        });
+                                                      },
+                                                      child: Transform.rotate(
+                                                        angle: filtervalue ? 200 : 0,
+                                                        child: Opacity(
+                                                          // arrowdown2TvZ (8:2307)
+                                                          opacity: 0.7,
+                                                          child: Container(
+                                                            margin:
+                                                                EdgeInsets.fromLTRB(
+                                                                    0 * fem,
+                                                                    1.6 * fem,
+                                                                    0 * fem,
+                                                                    0 * fem),
+                                                            width: 7.82 * fem,
+                                                            height: 6.52 * fem,
+                                                            child: Image.asset(
+                                                              'assets/images/arrow-down-2.png',
+                                                              width: 7.82 * fem,
+                                                              height: 6.52 * fem,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: width / 10.2,
+                                                height: double.infinity,
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    SizedBox(width: width / 54.64),
+                                                    Container(
+                                                      // gender8qf (8:2320)
+                                                      margin: EdgeInsets.fromLTRB(
+                                                          0 * fem,
+                                                          0 * fem,
+                                                          15.18 * fem,
+                                                          0 * fem),
+                                                      child: KText(
+                                                        text: 'Gender',
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: 15 * ffem,
+                                                          fontWeight: FontWeight.w400,
+                                                          height: 1.3625 * ffem / fem,
+                                                          color: const Color(0xff030229),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          filtervalue = !filtervalue;
+                                                        });
+                                                      },
+                                                      child: Transform.rotate(
+                                                        angle: filtervalue ? 200 : 0,
+                                                        child: Opacity(
+                                                          // arrowdown2TvZ (8:2307)
+                                                          opacity: 0.7,
+                                                          child: Container(
+                                                            margin:
+                                                                EdgeInsets.fromLTRB(
+                                                                    0 * fem,
+                                                                    1.6 * fem,
+                                                                    0 * fem,
+                                                                    0 * fem),
+                                                            width: 7.82 * fem,
+                                                            height: 6.52 * fem,
+                                                            child: Image.asset(
+                                                              'assets/images/arrow-down-2.png',
+                                                              width: 7.82 * fem,
+                                                              height: 6.52 * fem,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: width / 10.8,
+                                                height: double.infinity,
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    SizedBox(width: width / 54.64),
+                                                    Container(
+                                                      // gender8qf (8:2320)
+                                                      margin: EdgeInsets.fromLTRB(
+                                                          0 * fem,
+                                                          0 * fem,
+                                                          15.18 * fem,
+                                                          0 * fem),
+                                                      child: KText(
+                                                        text: 'Status',
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: 15 * ffem,
+                                                          fontWeight: FontWeight.w400,
+                                                          height: 1.3625 * ffem / fem,
+                                                          color: const Color(0xff030229),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Opacity(
+                                                      // arrowdown5rFs (8:2318)
+                                                      opacity: 0.0,
+                                                      child: Container(
+                                                        margin: EdgeInsets.fromLTRB(
+                                                            0 * fem,
+                                                            1.6 * fem,
+                                                            0 * fem,
+                                                            0 * fem),
+                                                        width: 7.82 * fem,
+                                                        height: 6.52 * fem,
+                                                        child: Image.asset(
+                                                          'assets/images/arrow-down-5.png',
+                                                          width: 7.82 * fem,
+                                                          height: 6.52 * fem,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: width / 10.8,
+                                                height: double.infinity,
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    KText(
+                                                      text: 'Create On',
+                                                      style: SafeGoogleFont(
+                                                        'Nunito',
+
+                                                        color: const Color(0xff030229),
+                                                      ),
+                                                    ),
+
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: width / 14.8,
+                                                height: double.infinity,
+                                                child: Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                    KText(
+                                                      text: 'Actions',
+                                                      style: SafeGoogleFont(
+                                                        'Nunito',
+                                                        color: const Color(0xff030229),
+                                                      ),
+                                                    ),
+                                                    Opacity(
+                                                      // arrowdown5rFs (8:2318)
+                                                      opacity: 0.0,
+                                                      child: Container(
+                                                        margin: EdgeInsets.fromLTRB(
+                                                            0 * fem,
+                                                            1.6 * fem,
+                                                            0 * fem,
+                                                            0 * fem),
+                                                        width: 7.82 * fem,
+                                                        height: 6.52 * fem,
+                                                        child: Image.asset(
+                                                          'assets/images/arrow-down-5.png',
+                                                          width: 7.82 * fem,
+                                                          height: 6.52 * fem,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),*/
+
+                            ///NAme
+                            Container(
+                              color: Colors.white,
+                              width: width / 5.5,
+                              height: height / 14.78,
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.only(
+                                  left: width / 78.3),
+                              child: Row(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.center,
+                                children: [
+                                  KText(
+                                    text: "Name",
+                                    style: SafeGoogleFont(
+                                      'Nunito',
+                                      color: const Color(0xff030229),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        left: width / 170.75),
+                                    child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          filtervalue = !filtervalue;
+                                          filterChageValue = "Name";
+                                        });
+                                      },
+                                      child: Transform.rotate(
+                                        angle: filtervalue &&
+                                            filterChageValue == "Name"
+                                            ? 200
+                                            : 0,
+                                        child: Opacity(
+                                          // arrowdown2TvZ (8:2307)
+                                          opacity: 0.7,
+                                          child: Container(
+                                            width: width / 153.6,
+                                            height: height / 73.9,
+                                            child: Image.asset(
+                                              'assets/images/arrow-down-2.png',
+                                              width: width / 153.6,
+                                              height: height / 73.9,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            Container(
+                              color: Colors.white,
+                              width: width / 5.5,
+                              height: height / 14.78,
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.only(
+                                  left: width / 100.15),
+                              child: Row(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.center,
+                                children: [
+                                  KText(
+                                    text: "Email",
+                                    style: SafeGoogleFont(
+                                      'Nunito',
+                                      color: const Color(0xff030229),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        left: width / 170.75),
+                                    child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          filtervalue = !filtervalue;
+                                          filterChageValue = "email";
+                                        });
+                                      },
+                                      child: Transform.rotate(
+                                        angle: filterChageValue ==
+                                            "email" && filtervalue
+                                            ? 200
+                                            : 0,
+                                        child: Opacity(
+                                          // arrowdown2TvZ (8:2307)
+                                          opacity: 0.7,
+                                          child: Container(
+                                            width: width / 153.6,
+                                            height: height / 73.9,
+                                            child: Image.asset(
+                                              'assets/images/arrow-down-2.png',
+                                              width: width / 153.6,
+                                              height: height / 73.9,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            Container(
+                              color: Colors.white,
+                              width: width / 6.2,
+                              height: height / 14.78,
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.only(
+                                  left: width / 100.533),
+                              child: Row(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.center,
+                                children: [
+                                  KText(
+                                    text: "Phone Number",
+                                    style: SafeGoogleFont(
+                                      'Nunito',
+                                      color: const Color(0xff030229),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        left: width / 170.75),
+                                    child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          filtervalue = !filtervalue;
+                                          filterChageValue = "Phone";
+                                        });
+                                      },
+                                      child: Transform.rotate(
+                                        angle: filtervalue &&
+                                            filterChageValue == "Phone"
+                                            ? 200
+                                            : 0,
+                                        child: Opacity(
+                                          // arrowdown2TvZ (8:2307)
+                                          opacity: 0.7,
+                                          child: Container(
+                                            width: width / 153.6,
+                                            height: height / 73.9,
+                                            child: Image.asset(
+                                              'assets/images/arrow-down-2.png',
+                                              width: width / 153.6,
+                                              height: height / 73.9,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            Container(
+                              color: Colors.white,
+                              width: width / 12,
+                              height: height / 14.78,
+                              alignment: Alignment.center,
+                              child: Row(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment
+                                    .end,
+                                children: [
+                                  KText(
+                                    text: "Gender",
+                                    style: SafeGoogleFont(
+                                      'Nunito',
+                                      color: const Color(0xff030229),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        left: width / 170.75,
+                                        right: width / 54.64),
+                                    child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          filtervalue = !filtervalue;
+                                          filterChageValue = "Gender";
+                                        });
+                                      },
+                                      child: Transform.rotate(
+                                        angle: filtervalue &&
+                                            filterChageValue == "Gender"
+                                            ? 200
+                                            : 0,
+                                        child: Opacity(
+                                          // arrowdown2TvZ (8:2307)
+                                          opacity: 0.7,
+                                          child: Container(
+                                            width: width / 153.6,
+                                            height: height / 73.9,
+                                            child: Image.asset(
+                                              'assets/images/arrow-down-2.png',
+                                              width: width / 153.6,
+                                              height: height / 73.9,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            Container(
+                              color: Colors.white,
+                              width: width / 6.98,
+                              height: height / 14.78,
+                              alignment: Alignment.center,
+                              child: Row(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment
+                                    .end,
+                                children: [
+                                  KText(
+                                    text: "Actions",
+                                    style: SafeGoogleFont(
+                                      'Nunito',
+                                      color: const Color(0xff030229),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        left: width / 170.75,
+                                        right: width / 54.64),
+                                    child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          filtervalue = !filtervalue;
+                                          filterChageValue = "Gender";
+                                        });
+                                      },
+                                      child: Transform.rotate(
+                                        angle: filtervalue &&
+                                            filterChageValue == "Gender"
+                                            ? 200
+                                            : 0,
+                                        child: Opacity(
+                                          // arrowdown2TvZ (8:2307)
+                                          opacity: 0.7,
+                                          child: Container(
+                                            width: width / 153.6,
+                                            height: height / 73.9,
+                                            child: Image.asset(
+                                              'assets/images/arrow-down-2.png',
+                                              width: width / 153.6,
+                                              height: height / 73.9,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: height / 65.1),
                     StreamBuilder(
                       stream: FirebaseFirestore.instance.collection("Users").orderBy("timestamp",descending: false).snapshots(),
                       builder: (context, snapshot) {

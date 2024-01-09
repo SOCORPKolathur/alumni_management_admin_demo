@@ -399,6 +399,7 @@ class _Users_ScreenState extends State<Users_Screen> {
   bool dropdownValidator = false;
   bool dropdownValidator2 = false;
   bool dropdownValidator3 = false;
+  bool dropdownDepartmentValidator = false;
 
   ///Text Controller validator boolean Value
   bool firstNameValidator = false;
@@ -1389,7 +1390,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   children: [
                                                     KText(
                                                       text:
-                                                      'Phone Number',
+                                                      'Phone Number *',
                                                       style:
                                                       SafeGoogleFont(
                                                         'Nunito',
@@ -1421,8 +1422,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 3)),
                                                         child:
                                                         TextFormField(
-                                                          autovalidateMode: AutovalidateMode
-                                                              .onUserInteraction,
+                                                          autovalidateMode: AutovalidateMode.onUserInteraction,
                                                           controller:
                                                           phoneNumbercon,
                                                           maxLength:
@@ -1446,12 +1446,12 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   10),
                                                               counterText:
                                                               ""),
-                                                          validator:
-                                                              (value) {
-                                                            if (value!
-                                                                .isNotEmpty) {
-                                                              if (value
-                                                                  .length !=
+                                                          validator: (value) {
+                                                            if(value!.isEmpty){
+                                                              return 'Field is required';
+                                                            }
+                                                            else if (value!.isNotEmpty) {
+                                                              if (value.length !=
                                                                   10) {
                                                                 return 'Enter the Phone no correctly';
                                                               }
@@ -1473,7 +1473,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   children: [
                                                     KText(
                                                       text:
-                                                      'Mobile Number',
+                                                      'Alternate Mobile Number',
                                                       style:
                                                       SafeGoogleFont(
                                                         'Nunito',
@@ -2436,7 +2436,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 ),
                                               ),
                                               SizedBox(
-                                                height: height / 9.369,
+                                                height: height / 7.5,
                                                 child: Column(
                                                   crossAxisAlignment:
                                                   CrossAxisAlignment
@@ -2444,7 +2444,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   children: [
                                                     KText(
                                                       text:
-                                                      'Department',
+                                                      'Department *',
                                                       style:
                                                       SafeGoogleFont(
                                                         'Nunito',
@@ -2507,14 +2507,35 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                               )).toList(),
                                                           value:
                                                           subjectStremdcon.text,
-                                                          onChanged:
-                                                              (String? value) {
-                                                            setState(() {
-                                                              subjectStremdcon
-                                                                  .text =
-                                                              value!;
-                                                            });
+                                                          validator: (value) {
+                                                            if (value ==
+                                                                'Select Department') {
+                                                              setState(() {
+                                                                dropdownDepartmentValidator =
+                                                                true;
+                                                              });
+                                                            }
+                                                            return null;
                                                           },
+                                                          onChanged: (String?
+                                                          value) {
+                                                            if (value ==
+                                                                'Select Department') {
+                                                              setState(() {
+                                                                dropdownDepartmentValidator =
+                                                                true;
+                                                              });
+                                                            }
+                                                            else {
+                                                              setState(() {
+                                                                subjectStremdcon.text =
+                                                                value!;
+                                                                dropdownDepartmentValidator =
+                                                                false;
+                                                              });
+                                                            }
+                                                          },
+
                                                           buttonStyleData:
                                                           const ButtonStyleData(
 
@@ -2531,30 +2552,16 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   .none),
                                                         ),
                                                       ),
-                                                      /*TextFormField(
-                                                                controller:
-                                                                subjectStremdcon,
-                                                                inputFormatters: [
-                                                                  FilteringTextInputFormatter
-                                                                      .allow(
-                                                                      RegExp("[a-zA-Z ]")),
-                                                                ],
-                                                                decoration:
-                                                                const InputDecoration(
-                                                                  border: InputBorder
-                                                                      .none,
-                                                                  contentPadding: EdgeInsets.only(
-                                                                      bottom:
-                                                                      10,
-                                                                      top:
-                                                                      2,
-                                                                      left:
-                                                                      10),
-                                                                ),
-                                                                // validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                              )*/
 
-                                                    )
+                                                    ),
+                                                    dropdownDepartmentValidator == true &&
+                                                        subjectStremdcon.text ==
+                                                            "Select Department"
+                                                        ? Text("Field is required",
+                                                        style: TextStyle(
+                                                            color: Colors.red,
+                                                            fontSize: 13))
+                                                        : const SizedBox()
                                                   ],
                                                 ),
                                               ),
@@ -3963,6 +3970,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             dropdownValidator3 = true;
                                           });
                                         }
+                                        if (subjectStremdcon.text == "Select Department") {
+                                          setState(() {
+                                            dropdownDepartmentValidator = true;
+                                          });
 
                                         if (_formkey.currentState!.validate()) {
                                           if (citycon.text == "Select City") {
@@ -3983,6 +3994,11 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               dropdownValidator3 = true;
                                             });
                                           }
+    if (subjectStremdcon.text == "Select Department") {
+    setState(() {
+    dropdownDepartmentValidator = true;
+    });}
+
                                           if (dropdownValidator == false &&
                                               dropdownValidator2 == false &&
                                               dropdownValidator3 == false) {
@@ -3994,7 +4010,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             print(
                                                 "errorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
                                           }
-                                        }
+                                        
                                       },
                                       child: Container(
                                           height: height / 18.475,
@@ -5059,7 +5075,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     children: [
                                                       KText(
                                                         text:
-                                                        'Phone Number',
+                                                        'Phone Number *',
                                                         style:
                                                         SafeGoogleFont(
                                                           'Nunito',
@@ -5119,14 +5135,15 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 ""),
                                                             validator:
                                                                 (value) {
-                                                              if (value!
-                                                                  .isNotEmpty) {
-                                                                if (value
-                                                                    .length !=
-                                                                    10) {
-                                                                  return 'Enter the Phone no correctly';
-                                                                }
-                                                              }
+                                                                  if(value!.isEmpty){
+                                                                    return 'Field is required';
+                                                                  }
+                                                                  else if (value!.isNotEmpty) {
+                                                                    if (value.length !=
+                                                                        10) {
+                                                                      return 'Enter the Phone no correctly';
+                                                                    }
+                                                                  }
                                                               return null;
                                                             },
                                                           ))
@@ -5144,7 +5161,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     children: [
                                                       KText(
                                                         text:
-                                                        'Mobile Number',
+                                                        ' Alternate Mobile Number',
                                                         style:
                                                         SafeGoogleFont(
                                                           'Nunito',
@@ -6119,7 +6136,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                     children: [
                                                       KText(
                                                         text:
-                                                        'Department',
+                                                        'Department *',
                                                         style:
                                                         SafeGoogleFont(
                                                           'Nunito',
@@ -7620,10 +7637,14 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             });
                                           }
 
-                                          if (countrycon.text ==
-                                              "Select Country") {
+                                          if (countrycon.text == "Select Country") {
                                             setState(() {
                                               dropdownValidator3 = true;
+                                            });
+                                          }
+                                          if (subjectStremdcon.text == "Select Department") {
+                                            setState(() {
+                                              dropdownDepartmentValidator = true;
                                             });
                                           }
 
@@ -7648,9 +7669,15 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 dropdownValidator3 = true;
                                               });
                                             }
+                                            if (subjectStremdcon.text == "Select Department") {
+                                              setState(() {
+                                                dropdownDepartmentValidator = true;
+                                              });
+                                            }
                                             if (dropdownValidator == false &&
                                                 dropdownValidator2 == false &&
-                                                dropdownValidator3 == false) {
+                                                dropdownValidator3 == false&&dropdownDepartmentValidator==false
+                                            ) {
                                               print(
                                                   "Finalaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
                                               userdatecreatefunc();
