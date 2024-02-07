@@ -13,8 +13,8 @@ final CollectionReference EventCollection = firestore.collection('JobPosts');
 final FirebaseStorage fs = FirebaseStorage.instance;
 
 class JobPostFireCrud {
-  static Stream<List<JobPostModel>> fetchJobPost() =>
-      EventCollection.orderBy("timestamp", descending: false).snapshots().
+  static Stream<List<JobPostModel>> fetchJobPost({filterValue,filter}) =>
+      EventCollection.orderBy(filterValue, descending: filter).snapshots().
   map((snapshot) => snapshot.docs.map((doc) => JobPostModel.fromJson(doc.data() as Map<String,dynamic>)).toList());
 
   static Stream<List<JobPostModel>> fetchJobPostWithFilter(DateTime start, DateTime end) =>
@@ -34,6 +34,7 @@ class JobPostFireCrud {
     required String description,
     required String quvalification,
     required String positions,
+    required String openings,
     required bool verify,
     required String date,
     required String userName,
@@ -64,6 +65,8 @@ class JobPostFireCrud {
       Batch: Batch,
       views: [],
       registeredUsers: [],
+      openings: int.parse(openings.toString()),
+
     );
     event.id = documentReferencer.id;
     var json = event.toJson();

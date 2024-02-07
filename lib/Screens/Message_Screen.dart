@@ -14,6 +14,7 @@ import "package:http/http.dart" as http;
 import '../Constant_.dart';
 import '../Models/Language_Model.dart';
 import '../app/modules/home/controllers/home_controller.dart';
+import '../common_widgets/developer_card_widget.dart';
 import '../utils.dart';
 
 class Message_Screen extends StatefulWidget {
@@ -743,7 +744,7 @@ class _Message_ScreenState extends State<Message_Screen>
                                                         ? GestureDetector(
                                                             onTap: () {
 
-                                                                 showdialog(snapshot.data!.docs[index].id,expand);
+                                                                 showdialog(snapshot.data!.docs[index].id,expand,name.toString());
 
                                                             },
                                                             child: Align(
@@ -832,7 +833,7 @@ class _Message_ScreenState extends State<Message_Screen>
                                                         : GestureDetector(
 
                                                          onTap: (){
-                                                           showdialog(snapshot.data!.docs[index].id,expand);
+                                                           showdialog(snapshot.data!.docs[index].id,expand,snapshot.data!.docs[index]['Name']);
 
                                                          },
                                                           child: Align(
@@ -1436,19 +1437,17 @@ class _Message_ScreenState extends State<Message_Screen>
                               bottomRight: Radius.circular(8))),
                     ),
             ],
-          )
+          ),
+          SizedBox(height: height / 65.1),
+          DeveloperCardWidget(),
+          SizedBox(height: height / 65.1),
         ],
       ),
     );
   }
 
   chatfuntion() {
-    FirebaseFirestore.instance
-        .collection("Users")
-        .doc(expand)
-        .collection("Messages")
-        .doc()
-        .set({
+    FirebaseFirestore.instance.collection("Users").doc(expand).collection("Messages").doc().set({
       "Message": message.text,
       "time": DateFormat('hh:mm a').format(DateTime.now()),
       "timestamp": DateTime.now().millisecondsSinceEpoch,
@@ -1461,8 +1460,7 @@ class _Message_ScreenState extends State<Message_Screen>
 
   groupChatfuntion() async {
 
-    FirebaseFirestore.instance.collection("Groups").doc(expand2).collection("Messages").doc()
-        .set({
+    FirebaseFirestore.instance.collection("Groups").doc(expand2).collection("Messages").doc().set({
       "Message": message.text,
       "time": DateFormat('hh:mm a').format(DateTime.now()),
       "timestamp": DateTime.now().millisecondsSinceEpoch,
@@ -1514,7 +1512,7 @@ class _Message_ScreenState extends State<Message_Screen>
   }
 
   //delete chats
-  Future showdialog(id, expand) {
+  Future showdialog(id, expand, name) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return showDialog(
@@ -1536,7 +1534,7 @@ class _Message_ScreenState extends State<Message_Screen>
             child: Column(
               children: [
                 KText(
-                  text: "Are you sure want to delete",
+                  text: "  want to delete $name  ",
                   style: SafeGoogleFont(
                     'Nunito',
                     fontSize: width / 68.3,
@@ -1632,7 +1630,7 @@ class _Message_ScreenState extends State<Message_Screen>
             child: Column(
               children: [
                 KText(
-                  text: "Are you sure want to delete",
+                  text: "Are you sure want to delete ?",
                   style: SafeGoogleFont(
                     'Nunito',
                     fontSize: width / 68.3,

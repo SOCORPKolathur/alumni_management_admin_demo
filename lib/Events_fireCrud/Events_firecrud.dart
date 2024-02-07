@@ -11,8 +11,8 @@ final CollectionReference EventCollection = firestore.collection('Batch_events')
 final FirebaseStorage fs = FirebaseStorage.instance;
 
 class EventsFireCrud {
-  static Stream<List<EventsModel>> fetchEvents() =>
-      EventCollection.orderBy("timestamp", descending: false).snapshots().map((snapshot) => snapshot.docs.map((doc) => EventsModel.fromJson(doc.data() as Map<String,dynamic>)).toList());
+  static Stream<List<EventsModel>> fetchEvents({filterValue,filter}) =>
+      EventCollection.orderBy(filterValue, descending: filter).snapshots().map((snapshot) => snapshot.docs.map((doc) => EventsModel.fromJson(doc.data() as Map<String,dynamic>)).toList());
 
   static Stream<List<EventsModel>> fetchEventsWithFilter(DateTime start, DateTime end) =>
       EventCollection

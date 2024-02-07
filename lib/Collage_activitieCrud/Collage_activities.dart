@@ -13,9 +13,9 @@ final CollectionReference activtyCollection = firestore.collection('ColleageActi
 final FirebaseStorage fs = FirebaseStorage.instance;
 
 class ActivityFireCrud {
-  static Stream<List<ColleageActivityModel>> fetchActivityPost() =>
+  static Stream<List<ColleageActivityModel>> fetchActivityPost({filterValue,filter}) =>
       activtyCollection
-          .orderBy("timestamp", descending: false)
+          .orderBy(filterValue, descending: filter)
           .snapshots().map((snapshot) => snapshot.docs
           .map((doc) => ColleageActivityModel.fromJson(doc.data() as Map<String,dynamic>))
           .toList());

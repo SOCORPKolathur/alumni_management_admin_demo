@@ -1,20 +1,17 @@
 import 'dart:convert';
-import 'dart:html';
 import 'dart:html' as html;
 
+import 'package:alumni_management_admin/common_widgets/developer_card_widget.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:http/http.dart' as http;
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../Constant_.dart';
 import '../Gallery_FireCrud/Gallery_firecurd.dart';
-import '../Models/Gallery_Image_Model.dart';
 import '../Models/Language_Model.dart';
-import '../Models/Response_Model.dart';
 import '../utils.dart';
 
 
@@ -37,50 +34,68 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
   List filterDataList = [
     'Filter by Date',
   ];
+  bool isLoading = false;
 
-  addImage(String collection,Size size) {
-    InputElement input = FileUploadInputElement() as InputElement
-      ..accept = 'image/*';
+  Future<void> addImage(String collection, Size size) async {
+    final html.FileUploadInputElement input = html.FileUploadInputElement()..accept = 'image/*';
     input.click();
+
+    bool fileSelected = false;
+
     input.onChange.listen((event) {
-      final file = input.files!.first;
-      final reader = FileReader();
-      reader.readAsDataUrl(file);
-
-      reader.onLoadEnd.listen((event) async {
-        var snapshot = await fs.ref().child('Photo').child("${file.name}").putBlob(file);
-        String downloadUrl = await snapshot.ref.getDownloadURL();
-
-        if(collection=="Photo"){
-          FirebaseFirestore.instance.collection("Photos").doc(addphotoDocummentValue.toString()).
-          collection(addphotoDocummentValue.toString()).doc().set({
-            "imgUrl":downloadUrl,
-            "timestamp":DateTime.now().millisecondsSinceEpoch
-          });
-        }
-
-        if(collection=="SliderImages"){
-          FirebaseFirestore.instance.collection("SliderImages").doc().set({
-            "imgUrl":downloadUrl,
-            "timestamp":DateTime.now().millisecondsSinceEpoch
-          });
-        }
-
-
-
-        CoolAlert.show(
-            context: context,
-            type: CoolAlertType.success,
-            text: "successfully!",
-            width: size.width * 0.4,
-            backgroundColor: Constants().primaryAppColor.withOpacity(0.8)
-        );
+      setState(() {
+        fileSelected = input.files!.isNotEmpty;
       });
+
+      if (fileSelected) {
+        _uploadFile(input.files!.first, collection, size);
+      }
+    });
+  }
+
+  Future<void> _uploadFile(html.File file, String collection, Size size) async {
+    setState(() {
+      isLoading = true; // Show loader when file upload begins
+    });
+
+    var snapshot = await fs.ref().child('Photo').child("${file.name}").putBlob(file);
+    String downloadUrl = await snapshot.ref.getDownloadURL();
+
+    if (collection == "Photo") {
+      FirebaseFirestore.instance
+          .collection("Photos")
+          .doc(addphotoDocummentValue.toString())
+          .collection(addphotoDocummentValue.toString())
+          .doc()
+          .set({
+        "imgUrl": downloadUrl,
+        "timestamp": DateTime.now().millisecondsSinceEpoch
+      });
+    }
+
+    if (collection == "SliderImages") {
+      FirebaseFirestore.instance.collection("SliderImages").doc().set({
+        "imgUrl": downloadUrl,
+        "timestamp": DateTime.now().millisecondsSinceEpoch
+      });
+    }
+
+    CoolAlert.show(
+      context: context,
+      type: CoolAlertType.success,
+      text: "Image Added Successfully",
+      width: size.width * 0.4,
+      backgroundColor: Colors.blue,
+    );
+
+    setState(() {
+      isLoading = false; // Hide loader after file upload is complete
     });
   }
 
   @override
   void initState() {
+    doclength();
     lottieController = AnimationController(vsync: this);
     lottieController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -92,13 +107,58 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
   }
 
   TextEditingController pictureNameController=TextEditingController();
-
+  TextEditingController Date1Controller = TextEditingController();
+  TextEditingController Date2Controller = TextEditingController();
+  DateTime? dateRangeStart;
+  DateTime? dateRangeEnd;
   bool filtervalue=false;
-
   bool addPhoto=false;
   bool SliderImg=false;
   String addphotoDocummentValue='';
+  String filterChageValue = "name";
+  List<String> mydate=[];
+  bool isFiltered=false;
+  final DateFormat formatter = DateFormat('d-M-yyyy');
 
+  int pagecount = 0;
+  int temp = 1;
+  List list = new List<int>.generate(1000, (i) => i + 1);
+  List <DocumentSnapshot>documentList = [];
+  int documentlength =0 ;
+  doclength() async {
+    try {
+      final QuerySnapshot result = await FirebaseFirestore.instance.collection("Photos").get();
+      final List<DocumentSnapshot> documents = result.docs;
+
+      setState(() {
+        documentlength = documents.length;
+        pagecount = ((documentlength - 1) ~/ 10) + 1;
+      });
+
+      print(pagecount);
+    } catch (error) {
+      print("Error fetching data: $error");
+      // Handle the error as needed
+    }
+  }
+  // doclength() async {
+  //   try {
+  //     final QuerySnapshot result = await FirebaseFirestore.instance.collection("Photos").get();
+  //     final List<DocumentSnapshot> documents = result.docs;
+  //
+  //     setState(() {
+  //       documentlength = documents.length;
+  //       // Ensure pagecount is at least 1
+  //       pagecount = ((documentlength - 1) ~/ 10) + 1;
+  //       pagecount = pagecount < 1 ? 1 : pagecount;
+  //     });
+  //
+  //     print(pagecount);
+  //   } catch (error) {
+  //     print("Error fetching data: $error");
+  //     // Handle the error as needed
+  //   }
+  // }
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -138,7 +198,8 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                   padding: EdgeInsets.only(top: height/81.375,),
                   child: Row(
                     children: [
-                      addPhoto==false&&SliderImg==false?InkWell(
+                      addPhoto==false&&SliderImg==false
+                      ?InkWell(
                           onTap: () {
                               addItemPopUp();
                           },
@@ -240,7 +301,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                         height: height / 18.6,
                         width: width/10.6,
                         ),
-                      addPhoto==true||SliderImg==true?const SizedBox():
+                     /* addPhoto==true||SliderImg==true?const SizedBox():
                       Padding(
                         padding:  EdgeInsets.only(left: width/1.905,),
                         child: InkWell(
@@ -281,7 +342,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                             ),
                           ),
                         ),
-                      )
+                      )*/
                     ],
                   ),
                 ),
@@ -322,7 +383,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                                   });
                                 },
                                 child: Transform.rotate(
-                                  angle: filtervalue ? 200 : 0,
+                                  angle: 0,
                                   child: Opacity(
                                     // arrowdown2TvZ (8:2307)
                                     opacity: 0.7,
@@ -343,7 +404,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                         ),
                       ),
                     ),
-            
+
                     Container(
                       color: Colors.white,
                       width: width/4.38857,
@@ -368,6 +429,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                                 onTap: () {
                                   setState(() {
                                     filtervalue = !filtervalue;
+                                    filterChageValue="name";
                                   });
                                 },
                                 child: Transform.rotate(
@@ -392,105 +454,6 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                         ),
                       ),
                     ),
-            
-                    Container(
-                      color: Colors.white,
-                      width: width/7.6,
-                      height: height/14.78,
-                      alignment: Alignment.center,
-                      child: Center(
-                        child: Row(
-                          crossAxisAlignment:
-                          CrossAxisAlignment.center,
-                          children: [
-                            KText(
-                              text: "Date",
-                              style: SafeGoogleFont(
-                                'Nunito',
-                                color: Color(0xff030229),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 8),
-                              child: InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    filtervalue = !filtervalue;
-                                  });
-                                },
-                                child: Transform.rotate(
-                                  angle: filtervalue ? 200 : 0,
-                                  child: Opacity(
-                                    // arrowdown2TvZ (8:2307)
-                                    opacity: 0.7,
-                                    child: Container(
-                                      width: width/153.6,
-                                      height: height/73.9,
-                                      child: Image.asset(
-                                        'assets/images/arrow-down-2.png',
-                                        width: width/153.6,
-                                        height: height/73.9,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-            
-                    Container(
-                      color: Colors.white,
-                      width: width/7.6,
-                      height: height/14.78,
-                      alignment: Alignment.center,
-                      child: Center(
-                        child: Row(
-                          crossAxisAlignment:
-                          CrossAxisAlignment.center,
-                          children: [
-                            KText(
-                              text: "Time",
-                              style: SafeGoogleFont(
-                                'Nunito',
-                                color: Color(0xff030229),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 8),
-                              child: InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    filtervalue = !filtervalue;
-                                  });
-                                },
-                                child: Transform.rotate(
-                                  angle: filtervalue ? 200 : 0,
-                                  child: Opacity(
-                                    // arrowdown2TvZ (8:2307)
-                                    opacity: 0.7,
-                                    child: Container(
-                                      width: width/153.6,
-                                      height: height/73.9,
-                                      child: Image.asset(
-                                        'assets/images/arrow-down-2.png',
-                                        width: width/153.6,
-                                        height: height/73.9,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-            
                     SizedBox(
                       width: width/7.6,
                       height: height/14.78,
@@ -511,23 +474,17 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                                   left: 8),
                               child: InkWell(
                                 onTap: () {
-                                  setState(() {
-                                    filtervalue = !filtervalue;
-                                  });
+
                                 },
                                 child: Transform.rotate(
                                   angle: filtervalue ? 200 : 0,
                                   child: Opacity(
                                     // arrowdown2TvZ (8:2307)
                                     opacity: 0.7,
-                                    child: Container(
+                                    child: SizedBox(
                                       width: width/153.6,
                                       height: height/73.9,
-                                      child: Image.asset(
-                                        'assets/images/arrow-down-2.png',
-                                        width: width/153.6,
-                                        height: height/73.9,
-                                      ),
+
                                     ),
                                   ),
                                 ),
@@ -564,7 +521,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-            
+
                           Row(
                             children: [
                               InkWell(
@@ -683,9 +640,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                         if(!snapshot.hasData){
                           return const Center(child:CircularProgressIndicator());
                         }
-                        if(snapshot.hasData==null){
-                          return const Center(child:CircularProgressIndicator());
-                        }
+
                         return ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: snapshot.data!.docs.length,
@@ -732,7 +687,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                                       ),
                                     ),
                                   ),
-            
+
                                 ],
                               )
                                   : Container(
@@ -813,21 +768,36 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                           ),
                           Row(
                             children: [
-                              InkWell(
-                                onTap: () {
-                                  addImage("SliderImages",size);
-                                },
-                                child: KText(
-                                  text: "ADD",
-                                  style: SafeGoogleFont (
-                                    'Poppins',
-                                    fontSize: 20*ffem,
-                                    fontWeight: FontWeight.w500,
-                                    height: 1.6*ffem/fem,
-                                    color: Colors.white,
+                              Row(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      addImage("SliderImages", size);
+                                    },
+                                    child: KText(
+                                      text: "ADD",
+                                      style: SafeGoogleFont(
+                                        'Poppins',
+                                        fontSize: 20 * ffem,
+                                        fontWeight: FontWeight.w500,
+                                        height: 1.6 * ffem / fem,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                  if (isLoading)
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 8.0), // Adjust the padding as needed
+                                      child: Container(
+                                        color: Colors.black.withOpacity(0.5),
+                                        padding: EdgeInsets.all(8.0),
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    ),
+                                ],
                               ),
+
+
                               SizedBox(width:width/307.2),
                               Icon(
                                 Icons.add_circle,
@@ -901,9 +871,6 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                       stream: FirebaseFirestore.instance.collection("SliderImages").orderBy("timestamp").snapshots(),
                       builder: (context, snapshot) {
                         if(!snapshot.hasData){
-                          return const Center(child:CircularProgressIndicator());
-                        }
-                        if(snapshot.hasData==null){
                           return const Center(child:CircularProgressIndicator());
                         }
                         return ListView.builder(
@@ -980,124 +947,224 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
             SizedBox(
               height: height/1.34363,
               width: width/1.2418,
-              child: StreamBuilder(
-                stream: FirebaseFirestore.instance.collection("Photos").snapshots(),
-                builder: (context, snapshot) {
-            
-                  if(snapshot.hasData==null){
-                    return const Center(child: CircularProgressIndicator(),);
-                  }
-                  if(!snapshot.hasData){
-                    return const Center(child: CircularProgressIndicator(),);
-                  }
-                  return ListView.builder(
-                    physics: const ScrollPhysics(),
-                    itemCount: snapshot.data!.docs.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-            
-                      var Value=snapshot.data!.docs[index];
-            
-                      return SizedBox(
-            
-                          width: width / 1.2418,
-                          height: height/13.4363,
-                          child: Row(
+              child: SingleChildScrollView(
+                physics: ScrollPhysics(),
+                child: Column(
+                  children: [
+                    StreamBuilder(
+                      stream: FirebaseFirestore.instance.collection("Photos").orderBy(filterChageValue, descending: filtervalue).snapshots(),
+                      builder: (context, snapshot) {
+
+                        if (!snapshot.hasData) {
+                          return const Center(child: CircularProgressIndicator());
+                        }
+                        return SingleChildScrollView(
+                          physics: const NeverScrollableScrollPhysics(),
+                          child: Column(
                             children: [
-                              Container(
-                                color: Colors.transparent,
-                                width: width/7.2,
-                                height: height/14.78,
-                                alignment: Alignment.centerLeft,
-                                child: Padding(
-                                  padding:  EdgeInsets.only(left:width/102.4),
-                                  child: KText(
-                                    text: (index+1).toString(),
-                                    style: SafeGoogleFont(
-                                      'Nunito',
-                                      color: Color(0xff030229),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                color: Colors.transparent,
-                                width: width/4.38857,
-                                height: height/14.78,
-                                alignment: Alignment.centerLeft,
-                                child: KText(
-                                  text: Value['name'].toString(),
-                                  style: SafeGoogleFont(
-                                    'Nunito',
-                                    color: Color(0xff030229),
-                                  ),
-                                ),
-                              ),
-            
-                              Container(
-                                color: Colors.transparent,
-                                width: width/7.6,
-                                height: height/14.78,
-                                alignment: Alignment.centerLeft,
-                                child: KText(
-                                  text: Value['date'].toString(),
-                                  style: SafeGoogleFont(
-                                    'Nunito',
-                                    color: Color(0xff030229),
-                                  ),
-                                ),
-                              ),
-            
-                              Container(
-                                color: Colors.transparent,
-                                width: width/7.6,
-                                height: height/14.78,
-                                alignment: Alignment.centerLeft,
-                                child: KText(
-                                  text: Value['time'].toString(),
-                                  style: SafeGoogleFont(
-                                    'Nunito',
-                                    color: Color(0xff030229),
-                                  ),
-                                ),
-                              ),
-            
                               SizedBox(
-                                width: width/7.6,
-                                height: height/14.78,
-                                child: InkWell(
-                                  onTap: (){
-                                    setState(() {
-                                      addPhoto=true;
-                                      addphotoDocummentValue=Value.id;
-                                    });
-                                    print(addphotoDocummentValue);
-                                    print("00000000000000000000000000000000000000000000000000000000000000");
+                                height: height / 1.35625,
+                                child: ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: pagecount == temp ? snapshot.data!.docs.length.remainder(10) == 0 ? 10 : snapshot.data!.docs.length.remainder(10) : 10 ,
+                                  shrinkWrap: true,
+                                  itemBuilder: (context, index) {
+                                    var Value = snapshot.data!.docs[(temp * 10) - 10 + index];
+
+                                    return ((temp * 10) - 10 + index >= documentlength)
+                                        ? SizedBox()
+                                        : SizedBox(
+                                      width: width / 1.2418,
+                                      height: height / 13.4363,
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            color: Colors.transparent,
+                                            width: width / 7.2,
+                                            height: height / 14.78,
+                                            alignment: Alignment.centerLeft,
+                                            child: Padding(
+                                              padding: EdgeInsets.only(left: width / 102.4),
+                                              child: KText(
+                                                text: (index + 1).toString(),
+                                                style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  color: Color(0xff030229),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            color: Colors.transparent,
+                                            width: width / 4.38857,
+                                            height: height / 14.78,
+                                            alignment: Alignment.centerLeft,
+                                            child: KText(
+                                              text: Value['name'].toString(),
+                                              style: SafeGoogleFont(
+                                                'Nunito',
+                                                color: Color(0xff030229),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: width / 7.6,
+                                            height: height / 14.78,
+                                            child: InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  addPhoto = true;
+                                                  addphotoDocummentValue = Value.id;
+                                                });
+                                                print(addphotoDocummentValue);
+                                                print("00000000000000000000000000000000000000000000000000000000000000");
+                                              },
+                                              child: Container(
+                                                margin: EdgeInsets.only(right: width / 15.8, top: height / 73.9, bottom: height / 73.9),
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(5),
+                                                  color: Constants().primaryAppColor,
+                                                ),
+                                                child: Center(
+                                                  child: KText(
+                                                    text: "View Album",
+                                                    style: SafeGoogleFont(
+                                                      'Nunito',
+                                                      color: Color(0xffFFFFFF),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
                                   },
-                                  child: Container(
-                                    margin: EdgeInsets.only(right:width/15.8,top:height/73.9,bottom: height/73.9),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color: Constants().primaryAppColor,
+                                ),
+                              ),
+                              Stack(
+                                alignment: Alignment.centerRight,
+                                children: [
+                                  SizedBox(
+                                    width: double.infinity,
+                                    height: height / 13.02,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: pagecount,
+                                      itemBuilder: (context, index) {
+                                        if (index >= 0 && index < list.length) {
+                                          return InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                temp = list[index];
+                                              });
+                                              print(temp);
+                                            },
+                                            child: Container(
+                                              height: 30,
+                                              width: 30,
+                                              margin: EdgeInsets.only(left: 8, right: 8, top: 10, bottom: 10),
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(100),
+                                                color: temp == list[index] ? Constants().primaryAppColor : Colors.transparent,
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  list[index].toString(),
+                                                  style: SafeGoogleFont(
+                                                    'Nunito',
+                                                    fontWeight: FontWeight.w700,
+                                                    color: temp == list[index] ? Colors.white : Colors.black,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        } else {
+                                          // Handle the case when index is out of range
+                                          return Container();
+                                        }
+                                      },
                                     ),
-                                    child: Center(
-                                      child: KText(
-                                        text: "View Album",
-                                        style: SafeGoogleFont(
-                                          'Nunito',
-                                          color: Color(0xffFFFFFF),
+                                  ),
+                                  temp > 1
+                                      ? Padding(
+                                    padding: const EdgeInsets.only(right: 150.0),
+                                    child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          temp = temp > 1 ? temp - 1 : 1;
+                                        });
+                                      },
+                                      child: Container(
+                                        height: height / 16.275,
+                                        width: width / 11.3833,
+                                        decoration: BoxDecoration(
+                                          color: Constants().primaryAppColor,
+                                          borderRadius: BorderRadius.circular(80),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            "Previous Page",
+                                            style: SafeGoogleFont(
+                                              'Nunito',
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.white,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
+                                  )
+                                      : Container(),
+                                  Container(
+                                    child: temp < pagecount
+                                        ? Padding(
+                                      padding: const EdgeInsets.only(right: 20.0),
+                                      child: InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            temp = temp < pagecount ? temp + 1 : pagecount;
+                                          });
+                                        },
+                                        child: Container(
+                                          height: height / 16.275,
+                                          width: width / 11.3833,
+                                          decoration: BoxDecoration(
+                                            color: Constants().primaryAppColor,
+                                            borderRadius: BorderRadius.circular(80),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              "Next Page ",
+                                              style: SafeGoogleFont(
+                                                'Nunito',
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                        : Container(),
                                   ),
-                                ),
+                                ],
                               ),
                             ],
-                          ));
-                    },);
-                },),
-            )
-        
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+            ),),
+            SizedBox(height: height / 65.1),
+            DeveloperCardWidget(),
+            SizedBox(height: height / 65.1),
+
           ],
         ),
       ),
@@ -1502,70 +1569,82 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
 
 
 
-  filterDataMenuItem(BuildContext context,  key, size) async {
+  filterDataMenuItem(BuildContext context, key, size) async {
     print(
         "Popupmenu open-----------------------------------------------------------");
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
+    double height = MediaQuery
+        .of(context)
+        .size
+        .height;
     final render = key.currentContext!.findRenderObject() as RenderBox;
     await showMenu(
       color: Colors.grey.shade200,
       elevation: 0,
       context: context,
       position: RelativeRect.fromLTRB(
-          render.localToGlobal(Offset.zero).dx,
-          render.localToGlobal(Offset.zero).dy + 50,
+          render
+              .localToGlobal(Offset.zero)
+              .dx,
+          render
+              .localToGlobal(Offset.zero)
+              .dy + 50,
           double.infinity,
           double.infinity),
       items: filterDataList
-          .map((item) => PopupMenuItem<String>(
-        enabled: true,
-        onTap: () async {
-          // if (item == "Filter by Date") {
-          //   var result = await filterPopUp();
-          //   if (result) {
-          //     setState(() {
-          //       isFiltered = true;
-          //     });
-          //   }
-          // }
-        },
-        value: item,
-        child: Container(
-          height: height / 18.475,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(5)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              item == "Filter by Date"
-                  ? Icon(
-                Icons.print,
-                color: Color(0xff5B93FF),
-                size: 18,
-              ) : Icon(
-                Icons.circle,
-                color: Colors.transparent,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 5),
-                child: Text(
-                  item,
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                    color: item == "Filter by Date"
-                        ? Color(0xff5B93FF)
-                        : Colors.white,
+          .map((item) =>
+          PopupMenuItem<String>(
+            enabled: true,
+            onTap: () async {
+              if (item == "Filter by Date") {
+                var result = await filterPopUp();
+                if (result) {
+                  setState(() {
+                    isFiltered = true;
+                  });
+                }
+              }
+
+            },
+            value: item,
+            child: Container(
+              height: height / 18.475,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(5)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  item == "Filter by Date"
+                      ? const Icon(
+                    Icons.print,
+                    color: Color(0xff5B93FF),
+                    size: 18,
+                  ) : const Icon(
+                    Icons.circle,
+                    color: Colors.transparent,
                   ),
-                  overflow: TextOverflow.ellipsis,
-                ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 5),
+                    child: Text(
+                      item,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: item == "Filter by Date"
+                            ? const Color(0xff5B93FF)
+                            : Colors.white,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-      ))
+            ),
+          ))
           .toList(),
     );
   }
@@ -1722,6 +1801,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                           child:
                           TextFormField(
                             controller:pictureNameController,
+
                             decoration: InputDecoration(
                               border:
                               InputBorder
@@ -1735,6 +1815,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                               counterText:
                               "",
                             ),
+
                           )),
 
 
@@ -1837,5 +1918,287 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
     );
   }
 
+  filterPopUp() {
+    Size size = MediaQuery.of(context).size;
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    return showDialog(
+      context: context,
+      builder: (ctx) {
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            backgroundColor: Colors.transparent,
+            content: Container(
+              height: size.height * 0.4,
+              width: size.width * 0.3,
+              decoration: BoxDecoration(
+                color: Constants().primaryAppColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: size.height * 0.07,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding:
+                          EdgeInsets.symmetric(horizontal: width / 68.3),
+                          child: KText(
+                            text: "Filter",
+                            style: SafeGoogleFont(
+                              'Nunito',
+                              fontSize: width / 95.375,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(10),
+                            bottomLeft: Radius.circular(10),
+                          )),
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: width / 68.3, vertical: height / 32.55),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: width / 15.177,
+                                child: KText(
+                                  text: "Start Date",
+                                  style: SafeGoogleFont(
+                                    'Nunito',
+                                    fontSize: width / 105.571,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: width / 85.375),
+                              Container(
+                                height: height / 16.275,
+                                width: width / 15.177,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(7),
+                                  boxShadow: [
+                                    const BoxShadow(
+                                      color: Colors.black26,
+                                      blurRadius: 3,
+                                      offset: Offset(2, 3),
+                                    )
+                                  ],
+                                ),
+                                child: TextField(
+                                  readOnly: true,
+                                  controller:Date1Controller,
+                                  decoration: InputDecoration(
+                                    hintStyle: SafeGoogleFont('Nunito',
+                                        color: const Color(0xff00A99D)),
+                                    border: InputBorder.none,
+                                  ),
+                                  onTap: () async {
+                                    DateTime? pickedDate = await showDatePicker(
+                                        context: context,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime(2000),
+                                        lastDate: DateTime(3000));
+                                    if (pickedDate != null) {
+                                      setState(() {
+                                        dateRangeStart = pickedDate;
+                                        Date1Controller.text=DateFormat('d/M/yyyy').format(pickedDate);
+                                      });
+                                    }
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: width / 15.177,
+                                child: KText(
+                                  text: "End Date",
+                                  style: SafeGoogleFont(
+                                    'Nunito',
+                                    fontSize: width / 105.571,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: width / 85.375),
+                              Container(
+                                height: height / 16.275,
+                                width: width / 15.177,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(7),
+                                  boxShadow: [
+                                    const BoxShadow(
+                                      color: Colors.black26,
+                                      blurRadius: 3,
+                                      offset: Offset(2, 3),
+                                    )
+                                  ],
+                                ),
+                                child: TextField(
+                                    readOnly: true,
+                                    controller:Date2Controller,
+                                    decoration: InputDecoration(
+                                      hintStyle: SafeGoogleFont('Nunito',
+                                          color: const Color(0xff00A99D)),
+
+                                      border: InputBorder.none,
+                                    ),
+                                    onTap: () async {
+                                      DateTime? pickedDate =
+                                      await showDatePicker(
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime(2000),
+                                          lastDate: DateTime(3000));
+                                      if (pickedDate != null) {
+                                        setState(() {
+                                          Date2Controller.text=DateFormat('d/M/yyyy').format(pickedDate);
+                                          dateRangeEnd = pickedDate;
+                                        });
+                                        DateTime startDate = DateTime.utc(dateRangeStart!.year, dateRangeStart!.month, dateRangeStart!.day);
+                                        DateTime endDate = DateTime.utc(dateRangeEnd!.year, dateRangeEnd!.month, dateRangeEnd!.day);
+                                        print(startDate);
+                                        print(endDate);
+                                        print("+++++++=================");
+                                        getDaysInBetween() {
+                                          final int difference = endDate.difference(startDate).inDays;
+                                          return difference + 1;
+                                        }
+
+
+                                        final items = List<DateTime>.generate(
+                                            getDaysInBetween(), (i) {
+                                          DateTime date = startDate;
+                                          return date.add(Duration(days: i));
+                                        });
+                                        setState(() {
+                                          mydate.clear();
+                                        });
+                                        print(items.length);
+                                        for (int i = 0; i < items.length; i++) {
+                                          setState(() {
+                                            mydate.add(formatter.format(items[i])
+                                                .toString());
+                                          });
+                                          print(mydate);
+                                          print("+++++++++++++000000000+++++++++++");
+                                        }
+                                      }
+                                    }),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  setState((){
+                                    Date1Controller.clear();
+                                    Date2Controller.clear();
+                                  });
+                                  Navigator.pop(context, false);
+                                },
+                                child: Container(
+                                  height: height / 16.275,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8),
+                                    boxShadow: [
+                                      const BoxShadow(
+                                        color: Colors.black26,
+                                        offset: Offset(1, 2),
+                                        blurRadius: 3,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: width / 227.66),
+                                    child: Center(
+                                      child: KText(
+                                        text: "Cancel",
+                                        style: SafeGoogleFont(
+                                          'Nunito',
+                                          fontSize: width / 105.375,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: width / 273.2),
+                              InkWell(
+                                onTap: () {
+                                  setState((){
+                                    Date1Controller.clear();
+                                    Date2Controller.clear();
+                                  });
+                                  Navigator.pop(context, true);
+                                },
+                                child: Container(
+                                  height: height / 16.275,
+                                  decoration: BoxDecoration(
+                                    color: Constants().primaryAppColor,
+                                    borderRadius: BorderRadius.circular(8),
+                                    boxShadow: [
+                                      const BoxShadow(
+                                        color: Colors.black26,
+                                        offset: Offset(1, 2),
+                                        blurRadius: 3,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: width / 227.66),
+                                    child: Center(
+                                      child: KText(
+                                        text: "Apply",
+                                        style: SafeGoogleFont(
+                                          'Nunito',
+                                          fontSize: width / 105.375,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+      },
+    );
+  }
 
 }

@@ -1,3 +1,4 @@
+import 'package:alumni_management_admin/Constant_.dart';
 import 'package:alumni_management_admin/Screens/demo.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -79,12 +80,7 @@ class _SigninPageState extends State<SigninPage> {
                         margin: EdgeInsets.fromLTRB(150.86*fem, 0*fem, 150.08*fem, 17.97*fem),
                         width: double.infinity,
                         decoration: BoxDecoration (
-                          image: DecorationImage (
-                            fit: BoxFit.cover,
-                            image: AssetImage (
-                              'assets/images/subtract-TqK.png',
-                            ),
-                          ),
+
                         ),
                         child: Center(
                           // subtractT3o (10:943)
@@ -92,7 +88,7 @@ class _SigninPageState extends State<SigninPage> {
                             width: 107.43*fem,
                             height: 107.43*fem,
                             child: Image.asset(
-                              'assets/images/subtract.png',
+                              'assets/logocl.png',
                               width: 107.43*fem,
                               height: 107.43*fem,
                             ),
@@ -106,7 +102,7 @@ class _SigninPageState extends State<SigninPage> {
                           maxWidth: 332*fem,
                         ),
                         child: Text(
-                          'Alumni  Management System',
+                          'IKIA College \nAlumni  Management',
                           textAlign: TextAlign.center,
                           style: SafeGoogleFont (
                             'Poppins',
@@ -274,7 +270,7 @@ class _SigninPageState extends State<SigninPage> {
                             Container(
                               // bgrBj (10:884)
                               padding: EdgeInsets.fromLTRB(17.52*fem, 18.68*fem, 17.52*fem, 17.7*fem),
-                              width: width/5.6888,
+                              width: 406.37*fem,
                               height: height/18.475,
                               decoration: BoxDecoration (
                                 color: Color(0xfff7f7f8),
@@ -323,7 +319,7 @@ class _SigninPageState extends State<SigninPage> {
                             Container(
                               // bgrBj (10:884)
                               padding: EdgeInsets.fromLTRB(17.52*fem, 18.68*fem, 17.52*fem, 17.7*fem),
-                              width: width/5.68888,
+                              width: 406.37*fem,
                               height: height/18.475,
                               decoration: BoxDecoration (
                                 color: Color(0xfff7f7f8),
@@ -360,7 +356,7 @@ class _SigninPageState extends State<SigninPage> {
                           ],
                         ),
                       ),
-                      Container(
+                     /* Container(
                         // checkboxtext1RK (10:858)
                         margin: EdgeInsets.fromLTRB(2*fem, 0*fem, 1.17*fem, 35.03*fem),
                         padding: EdgeInsets.fromLTRB(0*fem, 0*fem, 1.01*fem, 0*fem),
@@ -426,8 +422,8 @@ class _SigninPageState extends State<SigninPage> {
                                         fontWeight: FontWeight.w400,
                                         height: 1.3625*ffem/fem,
                                         decoration: TextDecoration.underline,
-                                        color: Color(0xff605bff),
-                                        decorationColor: Color(0xff605bff),
+                                        color: Constants().primaryAppColor,
+                                        decorationColor: Constants().primaryAppColor,
                                       ),
                                     ),
                                     TextSpan(
@@ -458,8 +454,8 @@ class _SigninPageState extends State<SigninPage> {
                                         fontWeight: FontWeight.w400,
                                         height: 1.3625*ffem/fem,
                                         decoration: TextDecoration.underline,
-                                        color: Color(0xff605bff),
-                                        decorationColor: Color(0xff605bff),
+                                        color: Constants().primaryAppColor,
+                                        decorationColor: Constants().primaryAppColor,
                                       ),
                                     ),
                                   ],
@@ -468,7 +464,7 @@ class _SigninPageState extends State<SigninPage> {
                             ),
                           ],
                         ),
-                      ),
+                      ),*/
                       Container(
                         // button5Wy (10:855)
                         margin: EdgeInsets.fromLTRB(2*fem, 0*fem, 0*fem, 35.03*fem),
@@ -484,7 +480,7 @@ class _SigninPageState extends State<SigninPage> {
                             width: 406.37*fem,
                             height: 58.39*fem,
                             decoration: BoxDecoration (
-                              color: Color(0xff605bff),
+                              color: Constants().primaryAppColor,
                               borderRadius: BorderRadius.circular(10*fem),
                             ),
                             child: Center(
@@ -525,7 +521,7 @@ class _SigninPageState extends State<SigninPage> {
                                   fontSize: 16*ffem,
                                   fontWeight: FontWeight.w400,
                                   height: 1.3625*ffem/fem,
-                                  color: Color(0xff605bff),
+                                  color: Constants().primaryAppColor,
                                 ),
                               ),
                             ],

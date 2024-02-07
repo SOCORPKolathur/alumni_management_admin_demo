@@ -86,27 +86,27 @@ class _MaoppppState extends State<Maopppp> {
   Widget build(BuildContext context) {
     return SimpleMap(
       // String of instructions to draw the map.
-      instructions: SMapWorld.instructions,
+      instructions: SMapIndia.instructions,
 
       // Default color for all countries.
-      defaultColor: Colors.grey,
+
       countryBorder: CountryBorder(color: Colors.black,width: 1),
 
       // Matching class to specify custom colors for each area.
-      colors: SMapWorldColors(
-        uS: Colors.green,
-        cN: Colors.pink,
-        aD: Colors.red,
-        iD:Colors.orange ,
-        aE: Colors.indigo,
-        aF: Colors.yellow,
-        aG: Colors.redAccent,
-        aI: Colors.pinkAccent,
-        aL: Colors.grey,
-        aM: Colors.yellowAccent,
-        aN: Colors.amber,
-        aO: Colors.lightBlue,
-        aQ: Colors.teal
+      colors: SMapIndiaColors(
+        inAN: Colors.green,
+        inAP: Colors.pink,
+        inAR: Colors.red,
+        inAS:Colors.orange ,
+        inBR: Colors.indigo,
+        inHR: Colors.yellow,
+        inCH: Colors.redAccent,
+        inKA: Colors.pinkAccent,
+        inGJ: Colors.grey,
+        inTN: Colors.yellowAccent,
+        inCT: Colors.amber,
+        inDD: Colors.lightBlue,
+        inDL: Colors.teal
 
       ).toMap(),
 

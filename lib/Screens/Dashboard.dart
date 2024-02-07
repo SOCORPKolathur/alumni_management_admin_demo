@@ -1,19 +1,31 @@
+import 'package:alumni_management_admin/Screens/Setting_Screen.dart';
+import 'package:alumni_management_admin/Screens/audio_podcasts.dart';
+import 'package:alumni_management_admin/Screens/donations_tab.dart';
+import 'package:alumni_management_admin/common_widgets/about_us_tab.dart';
+import 'package:alumni_management_admin/common_widgets/dashboardgraph.dart';
+import 'package:alumni_management_admin/common_widgets/developer_card_widget.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:country_flags/country_flags.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:intl/intl.dart';
 
 import '../Constant_.dart';
+import '../DashBoard(Unverifed User Model)/UnVeriyedModel.dart';
 import '../Demo_Page.dart';
-import '../Line_Graph.dart';
 import '../Models/Language_Model.dart';
+import '../PieChart_all_department.dart';
 import '../utils.dart';
 import 'Notification_Screen.dart';
+import 'Signin.dart';
+import 'Users_Screen.dart';
+import 'demo.dart';
 
 class DashBoard extends StatefulWidget {
   String?usermail;
@@ -31,12 +43,30 @@ class _DashBoardState extends State<DashBoard> {
 
 
 
+  int documentlength =0 ;
+  int pagecount =0 ;
+  int temp = 1;
+  List list = new List<int>.generate(1000, (i) => i + 1);
+  doclength() async {
 
+    final QuerySnapshot result = await FirebaseFirestore.instance.collection('Users').where("verifyed",isEqualTo:false).get();
+    final List < DocumentSnapshot > documents = result.docs;
+    setState(() {
+      documentlength = documents.length;
+      pagecount= ((documentlength~/4) +1) as int;
 
+    });
+    print(pagecount);
+  }
 
   @override
   void initState() {
+    UnVeriFyedUserData();
     totalalumnifunc();
+    doclength();
+    setState(() {
+      UserViewed=false;
+    });
     // TODO: implement initState
     super.initState();
   }
@@ -46,6 +76,7 @@ class _DashBoardState extends State<DashBoard> {
   int verifyedUsers=0;
   int UnverifyedUsers=0;
   int totalEvents=0;
+  int unVerifiedJobs =0;
   int jobPost=0;
   String viewDocid="";
   bool viewUser_details=false;
@@ -57,17 +88,43 @@ class _DashBoardState extends State<DashBoard> {
     var eventsCount=await FirebaseFirestore.instance.collection("Batch_events").get();
 
     var jobpostCount=await FirebaseFirestore.instance.collection("JobPosts").get();
-
+    var unverifiedJobsCount = await FirebaseFirestore.instance.collection("JobPosts").where("verify",isEqualTo: false).get();
     setState(() {
       TotalUsers=document.docs.length;
       verifyedUsers=verifyedusers.docs.length;
       UnverifyedUsers=Unverifyedusers.docs.length;
       totalEvents=eventsCount.docs.length;
+      unVerifiedJobs = unverifiedJobsCount.docs.length;
       jobPost=jobpostCount.docs.length;
     });
 
-
   }
+
+
+  UnVeriFyedUserData()async{
+    var Unverifyedusersdata=await FirebaseFirestore.instance.collection("Users").orderBy("Name").get();
+    for(int x=0;x<Unverifyedusersdata.docs.length;x++){
+      if(Unverifyedusersdata.docs[x]['verifyed']==false){
+        setState(() {
+          unVerifyedUserData.add(
+              UnVerfiyedUser(
+                  UserBatch: Unverifyedusersdata.docs[x]['yearofpassed'].toString(),
+                  UserDocId: Unverifyedusersdata.docs[x].id.toString(),
+                  UserEmail: Unverifyedusersdata.docs[x]['email'].toString(),
+                  UserFirstName: Unverifyedusersdata.docs[x]['Name'].toString(),
+                  UserGender: Unverifyedusersdata.docs[x]['Gender'].toString(),
+                  UserImg: Unverifyedusersdata.docs[x]['UserImg'].toString(),
+                  UserLastName: Unverifyedusersdata.docs[x]['lastName'].toString(),
+                  UserPhoneNumber: Unverifyedusersdata.docs[x]['Phone'].toString()
+              )
+          );
+        });
+      }
+    }
+    print(unVerifyedUserData.length);
+    print("User Unverifyed Data List+++++++++++++++++++++++++++");
+  }
+
   String imgUrl="";
 
   TextEditingController firstNamecon = TextEditingController();
@@ -105,6 +162,10 @@ class _DashBoardState extends State<DashBoard> {
   TextEditingController alumniEmployedController = TextEditingController(text: "No");
   TextEditingController requestedLanguageController = TextEditingController();
 
+  bool UserViewed=false;
+
+  List <UnVerfiyedUser> unVerifyedUserData=[];
+
   @override
   Widget build(BuildContext context) {
     final double width=MediaQuery.of(context).size.width;
@@ -112,7 +173,8 @@ class _DashBoardState extends State<DashBoard> {
     double baseWidth = 1920;
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
-    return  FadeInRight(
+    return UserViewed==false?
+      FadeInRight(
       duration: const Duration(milliseconds: 600),
 
       child: SizedBox(
@@ -126,7 +188,7 @@ class _DashBoardState extends State<DashBoard> {
 
               Container(
                 // topbar7QD (6:110)
-                padding: EdgeInsets.fromLTRB(39*fem, 30*fem, 65*fem, 30*fem),
+                padding: EdgeInsets.fromLTRB(39*fem, 30*fem, 40*fem, 30*fem),
                 width: double.infinity,
                 height: 120*fem,
                 decoration: const BoxDecoration (
@@ -134,6 +196,7 @@ class _DashBoardState extends State<DashBoard> {
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
+                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
                       // alumnimanagment1kV (6:153)
@@ -141,7 +204,7 @@ class _DashBoardState extends State<DashBoard> {
                       margin: EdgeInsets.fromLTRB(0*fem, 1*fem, 10*fem, 0*fem),
                       child: KText(
                         text:
-                        'Alumni Management',
+                        'IKIA COLLEGE ADMIN',
                         style: SafeGoogleFont (
                           'Poppins',
                           fontSize: 36*ffem,
@@ -191,150 +254,100 @@ class _DashBoardState extends State<DashBoard> {
                     // ),
 
                    // SizedBox(width:  580*fem,),
-                    InkWell(
-                      onTap:(){
-                        _showPopupMenu(context);
-                      },
-                      child: Container(
-                        width:width/7.58888,
-                        margin: EdgeInsets.fromLTRB(0*fem, 16.5*fem, 58*fem, 16.5*fem),
-                        padding: EdgeInsets.fromLTRB(0*fem, 0*fem, 7.06*fem, 0*fem),
-                        height: double.infinity,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              // textnHP (6:113)
-                              margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 23*fem, 0*fem),
-                              padding: EdgeInsets.fromLTRB(0.75*fem, 0*fem, 0*fem, 0*fem),
-                              height: double.infinity,
-
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    // unitedTPX (6:114)
-                                    margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 14.75*fem, 0*fem),
-                                    width: 32.5*fem,
-                                    height: 42.5*fem,
-                                    child:
-                                    CountryFlag.fromLanguageCode(
-                                      Constants.flagvalue.toString(),
-                                      borderRadius: 20,
-                                      // width: 9.94*fem,
-                                      // height: 6*fem,
-                                    ),
-                                  ),
-                                  KText(
-                                    text:
-                                    // engusYQy (6:130)
-                                     Constants.langvalue.toString(),
-                                    style: SafeGoogleFont (
-                                      'Poppins',
-                                      fontSize: 18*ffem,
-                                      fontWeight: FontWeight.w600,
-                                      height: 1.5*ffem/fem,
-                                      color: const Color(0xff374557),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const Icon(Icons.arrow_drop_down)
-                          ],
-                        ),
-                      ),
-                    ),
                     SizedBox(
                       // menuaMf (6:133)
                       height: double.infinity,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-
                           InkWell(
                             onTap:(){
-
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const Notification_Screen(),));
+                              _showPopupMenu(context);
                             },
                             child: Container(
-                              // notifications8PB (6:142)
-                              margin: EdgeInsets.fromLTRB(0*fem, 2*fem, 24*fem, 0*fem),
-                              width: 48*fem,
-                              height: 48*fem,
-                              child: Image.asset(
-                                'assets/images/notifications-C9F.png',
-                                width: 48*fem,
-                                height: 48*fem,
+                              width:width/12,
+                              // margin: EdgeInsets.fromLTRB(0*fem, 16.5*fem, 58*fem, 16.5*fem),
+                              // padding: EdgeInsets.fromLTRB(0*fem, 0*fem, 7.06*fem, 0*fem),
+                              height: double.infinity,
+
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    // textnHP (6:113)
+
+                                    margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 23*fem, 0*fem),
+                                    padding: EdgeInsets.fromLTRB(0.75*fem, 0*fem, 0*fem, 0*fem),
+                                    height: double.infinity,
+
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          // unitedTPX (6:114)
+
+                                          margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 1.75*fem, 0*fem),
+                                          width: 32.5*fem,
+                                          height: 42.5*fem,
+                                          child:
+                                          CountryFlag.fromLanguageCode(
+                                            Constants.flagvalue.toString(),
+                                            borderRadius: 20,
+                                            // width: 9.94*fem,
+                                            // height: 6*fem,
+                                          ),
+                                        ),
+                                        KText(
+                                          text:
+                                          // engusYQy (6:130)
+                                          Constants.langvalue.toString(),
+                                          style: SafeGoogleFont (
+                                            'Poppins',
+                                            fontSize: 18*ffem,
+                                            fontWeight: FontWeight.w600,
+                                            height: 1.5*ffem/fem,
+                                            color: const Color(0xff374557),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const Icon(Icons.arrow_drop_down)
+                                ],
                               ),
                             ),
                           ),
 
-                          SizedBox(
-                            // group1000002734dqj (6:134)
-                            height: double.infinity,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  // rectangle1393P4D (6:135)
-                                  margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 20*fem, 0*fem),
-                                  width: 60*fem,
-                                  height: 60*fem,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(16*fem),
-                                    child: Image.asset(
-                                      'assets/images/rectangle-1393-SVX.png',
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  // group21862szy (6:136)
-                                  margin: EdgeInsets.fromLTRB(0*fem, 6*fem, 0*fem, 6*fem),
-                                  width: 160*fem,
-                                  height: double.infinity,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        // autogrouplhpfodj (T1hMwtobch7WkBwboSLHpF)
-                                        margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 4*fem),
-                                        width: double.infinity,
-                                        child: Row(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            KText(
-                                              text:
-                                              "Admin",
-                                              style: SafeGoogleFont (
-                                                'Poppins',
-                                                fontSize: 16*ffem,
-                                                fontWeight: FontWeight.w500,
-                                                height: 1.5*ffem/fem,
-                                                color: const Color(0xff151d48),
-                                              ),
-                                            ),
 
-                                          ],
-                                        ),
-                                      ),
-                                      KText(
-                                        text:
-                                        // adminAch (6:140)
-                                        widget.usermail.toString(),
-                                        style: SafeGoogleFont (
-                                          'Poppins',
-                                          fontSize: 14*ffem,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.4285714286*ffem/fem,
-                                          color: const Color(0xff737791),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                          Container(
+                            // group1000002734dqj (6:134)
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                                color: Constants().primaryAppColor.withOpacity(0.20),
+                              borderRadius: BorderRadius.circular(8)
+                            ),
+
+                            child: Center(
+                              child: IconButton(onPressed: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => const Notification_Screen(),));
+                              }, icon: Icon(Icons.notifications_active, color: Constants().primaryAppColor)),
+                            ),
+                          ),
+                          SizedBox(width:10),
+                          Container(
+                            // group1000002734dqj (6:134)
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                                color: Constants().primaryAppColor.withOpacity(0.20),
+                              borderRadius: BorderRadius.circular(8)
+                            ),
+
+                            child: Center(
+                              child: IconButton(onPressed: (){
+                                _showSettingsPopupMenu(context);
+                              }, icon: Icon(Icons.settings, color: Constants().primaryAppColor)),
                             ),
                           ),
 
@@ -414,7 +427,7 @@ class _DashBoardState extends State<DashBoard> {
                                           child:
                                           KText(
                                             text:
-                                            'Alumni Summery',
+                                            'Alumni Summary',
                                             style: SafeGoogleFont (
                                               'Poppins',
                                               fontSize: 16*ffem,
@@ -869,7 +882,7 @@ class _DashBoardState extends State<DashBoard> {
                                           margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 8*fem),
                                           child: KText(
                                             text:
-                                            totalEvents.toString(),
+                                           unVerifiedJobs.toString(),
                                             style: SafeGoogleFont (
                                               'Poppins',
                                               fontSize: 24*ffem,
@@ -882,7 +895,7 @@ class _DashBoardState extends State<DashBoard> {
                                         KText(
                                           text:
                                           // totaleventsspV (6:1159)
-                                          'Total Events ',
+                                          'Unverified Jobs ',
                                           style: SafeGoogleFont (
                                             'Poppins',
                                             fontSize: 16*ffem,
@@ -937,7 +950,7 @@ class _DashBoardState extends State<DashBoard> {
                                         ),
                                       ],
                                     ),
-                                    child:const Maopppp()
+                                    child:const Maopppp(),
                                     // Container(
                                     //   // world15p5 (6:448)
                                     //   width: double.infinity,
@@ -996,7 +1009,7 @@ class _DashBoardState extends State<DashBoard> {
                                 ),
                               ),
                             ),
-                            child: const LineChartMap(isShowingMainData: true,),
+                            child: const LineChartSample2()
                            // LineChartMap(isShowingMainData: true,)
                             // Stack(
                             //   children: [
@@ -2004,6 +2017,10 @@ class _DashBoardState extends State<DashBoard> {
                                           filtervalue = !filtervalue;
                                           filterChageValue = "Name";
                                         });
+                                        // Sort unVerifyedUserData based on User Phone Number
+                                        unVerifyedUserData.sort((a, b) =>
+                                        (filterChageValue == "Name"&&filtervalue) ? b.UserFirstName!.compareTo(a.UserFirstName.toString()) :
+                                        a.UserFirstName!.compareTo(b.UserFirstName.toString()));
                                       },
                                       child: Transform.rotate(
                                         angle: filtervalue &&
@@ -2020,6 +2037,8 @@ class _DashBoardState extends State<DashBoard> {
                                               'assets/images/arrow-down-2.png',
                                               width: width / 153.6,
                                               height: height / 73.9,
+                                                color:filtervalue &&
+                                                    filterChageValue == "Name"?Colors.green:Colors.transparent
                                             ),
                                           ),
                                         ),
@@ -2057,6 +2076,9 @@ class _DashBoardState extends State<DashBoard> {
                                           filtervalue = !filtervalue;
                                           filterChageValue = "email";
                                         });
+                                        unVerifyedUserData.sort((a, b) =>
+                                        (filterChageValue == "email"&&filtervalue) ? b.UserEmail!.compareTo(a.UserEmail.toString()) :
+                                        a.UserEmail!.compareTo(b.UserEmail.toString()));
                                       },
                                       child: Transform.rotate(
                                         angle: filterChageValue ==
@@ -2073,6 +2095,8 @@ class _DashBoardState extends State<DashBoard> {
                                               'assets/images/arrow-down-2.png',
                                               width: width / 153.6,
                                               height: height / 73.9,
+                                                color:filtervalue &&
+                                                    filterChageValue == "email"?Colors.green:Colors.transparent
                                             ),
                                           ),
                                         ),
@@ -2085,7 +2109,7 @@ class _DashBoardState extends State<DashBoard> {
 
                             Container(
                               color: Colors.white,
-                              width: width / 6.2,
+                              width: width / 8.2,
                               height: height / 14.78,
                               alignment: Alignment.center,
                               padding: EdgeInsets.only(
@@ -2110,6 +2134,9 @@ class _DashBoardState extends State<DashBoard> {
                                           filtervalue = !filtervalue;
                                           filterChageValue = "Phone";
                                         });
+                                        unVerifyedUserData.sort((a, b) =>
+                                        (filterChageValue == "Phone"&&filtervalue) ? b.UserPhoneNumber!.compareTo(a.UserPhoneNumber.toString()) :
+                                        a.UserPhoneNumber!.compareTo(b.UserPhoneNumber.toString()));
                                       },
                                       child: Transform.rotate(
                                         angle: filtervalue &&
@@ -2126,6 +2153,8 @@ class _DashBoardState extends State<DashBoard> {
                                               'assets/images/arrow-down-2.png',
                                               width: width / 153.6,
                                               height: height / 73.9,
+                                                color:filtervalue &&
+                                                    filterChageValue == "Phone"?Colors.green:Colors.transparent
                                             ),
                                           ),
                                         ),
@@ -2164,6 +2193,9 @@ class _DashBoardState extends State<DashBoard> {
                                           filtervalue = !filtervalue;
                                           filterChageValue = "Gender";
                                         });
+                                        unVerifyedUserData.sort((a, b) =>
+                                        (filterChageValue == "Gender"&&filtervalue) ? b.UserGender!.compareTo(a.UserGender.toString()) :
+                                        a.UserGender!.compareTo(b.UserGender.toString()));
                                       },
                                       child: Transform.rotate(
                                         angle: filtervalue &&
@@ -2180,6 +2212,8 @@ class _DashBoardState extends State<DashBoard> {
                                               'assets/images/arrow-down-2.png',
                                               width: width / 153.6,
                                               height: height / 73.9,
+                                                color:filtervalue &&
+                                                    filterChageValue == "Gender"?Colors.green:Colors.transparent
                                             ),
                                           ),
                                         ),
@@ -2192,7 +2226,66 @@ class _DashBoardState extends State<DashBoard> {
 
                             Container(
                               color: Colors.white,
-                              width: width / 6.98,
+                              width: width / 15,
+                              height: height / 14.78,
+                              alignment: Alignment.center,
+                              child: Row(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment
+                                    .end,
+                                children: [
+                                  KText(
+                                    text: "Batch",
+                                    style: SafeGoogleFont(
+                                      'Nunito',
+                                      color: const Color(0xff030229),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        left: width / 170.75,
+                                        right: width / 54.64),
+                                    child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          filtervalue = !filtervalue;
+                                          filterChageValue = "yearofpassed";
+                                        });
+                                        unVerifyedUserData.sort((a, b) =>
+                                        (filterChageValue == "yearofpassed"&&filtervalue) ? b.UserBatch!.compareTo(a.UserBatch.toString()) :
+                                        a.UserBatch!.compareTo(b.UserBatch.toString()));
+                                      },
+                                      child: Transform.rotate(
+                                        angle: filtervalue &&
+                                            filterChageValue == "yearofpassed"
+                                            ? 200
+                                            : 0,
+                                        child: Opacity(
+                                          // arrowdown2TvZ (8:2307)
+                                          opacity: 0.7,
+                                          child: Container(
+                                            width: width / 153.6,
+                                            height: height / 73.9,
+                                            child: Image.asset(
+                                                'assets/images/arrow-down-2.png',
+                                                width: width / 153.6,
+                                                height: height / 73.9,
+                                                color:filtervalue &&
+                                                    filterChageValue == "yearofpassed"?Colors.green:Colors.transparent
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            Container(
+                              color: Colors.white,
+                              width: width / 8.98,
                               height: height / 14.78,
                               alignment: Alignment.center,
                               child: Row(
@@ -2212,30 +2305,16 @@ class _DashBoardState extends State<DashBoard> {
                                     padding: EdgeInsets.only(
                                         left: width / 170.75,
                                         right: width / 54.64),
-                                    child: InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          filtervalue = !filtervalue;
-                                          filterChageValue = "Gender";
-                                        });
-                                      },
-                                      child: Transform.rotate(
-                                        angle: filtervalue &&
-                                            filterChageValue == "Gender"
-                                            ? 200
-                                            : 0,
-                                        child: Opacity(
-                                          // arrowdown2TvZ (8:2307)
-                                          opacity: 0.7,
-                                          child: Container(
-                                            width: width / 153.6,
-                                            height: height / 73.9,
-                                            child: Image.asset(
-                                              'assets/images/arrow-down-2.png',
-                                              width: width / 153.6,
-                                              height: height / 73.9,
-                                            ),
-                                          ),
+                                    child: Transform.rotate(
+                                      angle:
+                                           0,
+                                      child: Opacity(
+                                        // arrowdown2TvZ (8:2307)
+                                        opacity: 0.7,
+                                        child: Container(
+                                          width: width / 153.6,
+                                          height: height / 73.9,
+
                                         ),
                                       ),
                                     ),
@@ -2249,8 +2328,8 @@ class _DashBoardState extends State<DashBoard> {
                       ),
                     ),
                     SizedBox(height: height / 65.1),
-                    StreamBuilder(
-                      stream: FirebaseFirestore.instance.collection("Users").orderBy("timestamp",descending: false).snapshots(),
+                    /*StreamBuilder(
+                      stream: FirebaseFirestore.instance.collection("Users").orderBy(filterChageValue,descending: filtervalue).snapshots(),
                       builder: (context, snapshot) {
 
                         if(!snapshot.hasData){
@@ -2260,65 +2339,87 @@ class _DashBoardState extends State<DashBoard> {
                           return const Center(child: CircularProgressIndicator(),);
                         }
 
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          physics:const  NeverScrollableScrollPhysics(),
-                          itemCount: snapshot.data!.docs.length,
-                          itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            SizedBox(
+                              height:height/2.830,
+                              width:width/1.0045,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                physics:const  NeverScrollableScrollPhysics(),
+                                itemCount: snapshot.data!.docs.length,
+                                itemBuilder: (context, index) {
 
-                            var _userdata=snapshot.data!.docs[index];
-
-                          if(_userdata['verifyed']==false){
-                            return   Container(
-                              padding: EdgeInsets.fromLTRB(26.07*fem, 19.56*fem, 39.11*fem, 19.56*fem),
-                              width: 1119.87*fem,
-                              height: 78.22*fem,
-                              decoration: BoxDecoration (
-                                color: const Color(0xffffffff),
-                                borderRadius: BorderRadius.circular(10*fem),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    width:width/5.464,
+                                  var _userdata = snapshot.data!.docs[(temp*4)-4+index];
+                                if(_userdata['verifyed']==false){
+                                    return   (temp*4)-4+index >= documentlength ?SizedBox():
+                                    Container(
+                                    padding: EdgeInsets.fromLTRB(26.07*fem, 19.56*fem, 39.11*fem, 19.56*fem),
+                                    width: 1119.87*fem,
+                                    height: 78.22*fem,
+                                    decoration: BoxDecoration (
+                                      color: const Color(0xffffffff),
+                                      borderRadius: BorderRadius.circular(10*fem),
+                                    ),
                                     child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
-                                        Container(
-                                          margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 14.34*fem, 0*fem),
-                                          width: 39.11*fem,
-                                          height: double.infinity,
-                                          decoration: BoxDecoration (
-                                            color: const Color(0xfff6d0d0),
-                                            borderRadius: BorderRadius.circular(19.5553703308*fem),
-                                          ),
-                                          child: Center(
-                                            // imgFVB (8:2248)
-                                            child: SizedBox(
-                                              width: double.infinity,
-                                              height: 39.11*fem,
-                                              child: Container(
+                                        SizedBox(
+                                          width:width/5.464,
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 14.34*fem, 0*fem),
+                                                width: 39.11*fem,
+                                                height: double.infinity,
                                                 decoration: BoxDecoration (
+                                                  color: const Color(0xfff6d0d0),
                                                   borderRadius: BorderRadius.circular(19.5553703308*fem),
-                                                  image: DecorationImage (
-                                                    fit: BoxFit.cover,
-                                                    image: NetworkImage (
-                                                        _userdata['UserImg'].toString()
+                                                ),
+                                                child: Center(
+                                                  // imgFVB (8:2248)
+                                                  child: SizedBox(
+                                                    width: double.infinity,
+                                                    height: 39.11*fem,
+                                                    child: Container(
+                                                      decoration: BoxDecoration (
+                                                        borderRadius: BorderRadius.circular(19.5553703308*fem),
+                                                        image: DecorationImage (
+                                                          fit: BoxFit.cover,
+                                                          image: NetworkImage (
+                                                              _userdata['UserImg'].toString()
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      child:Center(
+                                                        child: _userdata['UserImg'].toString()==""?Icon(Icons.person):Text(""),
+                                                      )
                                                     ),
                                                   ),
                                                 ),
-                                                child:Center(
-                                                  child: _userdata['UserImg'].toString()==""?Icon(Icons.person):Text(""),
-                                                )
                                               ),
-                                            ),
+                                              Container(
+
+                                                margin: EdgeInsets.fromLTRB(0*fem, 4.14*fem, 129.49*fem, 0*fem),
+                                                child: KText(
+                                                  text:"${_userdata['Name']} ${_userdata['lastName']}",
+                                                  style: SafeGoogleFont (
+                                                    'Nunito',
+                                                    fontSize: 18*ffem,
+                                                    fontWeight: FontWeight.w400,
+                                                    height: 1.3625*ffem/fem,
+                                                    color: const Color(0xff030229),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        Container(
 
-                                          margin: EdgeInsets.fromLTRB(0*fem, 4.14*fem, 129.49*fem, 0*fem),
+                                        SizedBox(
+                                          width:width/5.464,
                                           child: KText(
-                                            text:_userdata['Name'],
+                                            text:_userdata['email'],
                                             style: SafeGoogleFont (
                                               'Nunito',
                                               fontSize: 18*ffem,
@@ -2328,120 +2429,546 @@ class _DashBoardState extends State<DashBoard> {
                                             ),
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  ),
 
-                                  SizedBox(
-                                    width:width/5.464,
-                                    child: KText(
-                                      text:_userdata['email'],
-                                      style: SafeGoogleFont (
-                                        'Nunito',
-                                        fontSize: 18*ffem,
-                                        fontWeight: FontWeight.w400,
-                                        height: 1.3625*ffem/fem,
-                                        color: const Color(0xff030229),
-                                      ),
-                                    ),
-                                  ),
-
-                                  SizedBox(
-                                    width:width/6.83,
-                                    child: KText(
-                                      text:_userdata['Phone'].toString(),
-                                      style: SafeGoogleFont (
-                                        'Nunito',
-                                        fontSize: 18*ffem,
-                                        fontWeight: FontWeight.w400,
-                                        height: 1.3625*ffem/fem,
-                                        color: const Color(0xff030229),
-                                      ),
-                                    ),
-                                  ),
-
-                                  SizedBox(
-                                    width:width/9.1066,
-                                    child: Padding(
-                                      padding:  EdgeInsets.only(left:width/54.64,right: width/54.64),
-                                      child: Container(
-                                        width:width/34.15,
-                                        height: double.infinity,
-                                        decoration: BoxDecoration (
-                                          color:_userdata['Gender']=="Male"?
-                                          const Color(0x195b92ff):
-                                          const Color(0xffFEF3F0),
-                                          borderRadius: BorderRadius.circular(33*fem),
-                                        ),
-                                        child: Center(
+                                        SizedBox(
+                                          width:width/8.2,
                                           child: KText(
-                                            text:_userdata['Gender'],
+                                            text:_userdata['Phone'].toString(),
                                             style: SafeGoogleFont (
                                               'Nunito',
-                                              fontSize: 16*ffem,
+                                              fontSize: 18*ffem,
                                               fontWeight: FontWeight.w400,
                                               height: 1.3625*ffem/fem,
-                                              color: _userdata['Gender']=="Male"?
-                                              const Color(0xff5b92ff):const Color(0xffFE8F6B),
+                                              color: const Color(0xff030229),
+                                            ),
+                                          ),
+                                        ),
+
+                                        SizedBox(
+                                          width:width/12,
+                                          child: Padding(
+                                            padding:  EdgeInsets.only(left:0,right: width/54.64),
+                                            child: Container(
+                                              width:width/34.15,
+                                              height: double.infinity,
+                                              decoration: BoxDecoration (
+                                                color:_userdata['Gender']=="Male"?
+                                                const Color(0x195b92ff):
+                                                const Color(0xffFEF3F0),
+                                                borderRadius: BorderRadius.circular(33*fem),
+                                              ),
+                                              child: Center(
+                                                child: KText(
+                                                  text:_userdata['Gender'],
+                                                  style: SafeGoogleFont (
+                                                    'Nunito',
+                                                    fontSize: 16*ffem,
+                                                    fontWeight: FontWeight.w400,
+                                                    height: 1.3625*ffem/fem,
+                                                    color: _userdata['Gender']=="Male"?
+                                                    const Color(0xff5b92ff):const Color(0xffFE8F6B),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+
+                                        SizedBox(
+                                          width:width/15.83,
+                                          child: KText(
+                                            text:_userdata['yearofpassed'].toString(),
+                                            style: SafeGoogleFont (
+                                              'Nunito',
+                                              fontSize: 18*ffem,
+                                              fontWeight: FontWeight.w400,
+                                              height: 1.3625*ffem/fem,
+                                              color: const Color(0xff030229),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width:width/30.075),
+                                        GestureDetector(
+                                          onTap: (){
+
+                                            if(viewDocid=='') {
+                                              setState(() {
+                                                viewDocid = _userdata.id;
+                                              });
+                                              ViewinUserDetailsPopup();
+                                            }
+                                            else{
+                                              setState(() {
+                                                viewDocid = '';
+                                              });
+                                            }
+                                          },
+                                          child: SizedBox(
+                                            width:width/22.766,
+                                            height:height/26.04,
+                                            child: Container(
+                                                margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 0.65*fem),
+                                                width: 18.25*fem,
+                                                height: 15.56*fem,
+                                                decoration: BoxDecoration(
+                                                    color:Constants().primaryAppColor,
+                                                    borderRadius: BorderRadius.circular(5)
+                                                ),
+                                                child: Center(child: KText(
+                                                  text:viewDocid==_userdata.id?"Close":
+                                                  "View" , style: SafeGoogleFont (
+                                                  'Nunito',
+                                                  fontSize: 16*ffem,
+                                                  fontWeight: FontWeight.w400,
+                                                  height: 1.3625*ffem/fem,
+                                                  color: const Color(0xffFFFFFF),
+                                                ),),)
+                                              // Image.asset(
+                                              //   'assets/images/menu-fRb.png',
+                                              //   width: 18.25*fem,
+                                              //   height: 4.56*fem,
+                                              // ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                                return  const SizedBox();
+                                },),
+                            ),
+                            Stack(
+                              alignment: Alignment.centerRight,
+                              children: [
+                                SizedBox(
+                                  width: double.infinity,
+                                  height:50,
+                                  child: ListView.builder(
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: pagecount,
+                                      itemBuilder: (context,index){
+                                        return InkWell(
+                                          onTap: (){
+                                            setState(() {
+                                              temp=list[index];
+                                            });
+                                            print(temp);
+                                          },
+                                          child: Container(
+                                              height:30,width:30,
+                                              margin: EdgeInsets.only(left:8,right:8,top:10,bottom:10),
+                                              decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(100),
+                                                  color:temp.toString() == list[index].toString() ?  Constants().primaryAppColor : Colors.transparent
+                                              ),
+                                              child: Center(
+                                                child: Text(list[index].toString(),style: SafeGoogleFont(
+                                                    'Nunito',
+                                                    fontWeight: FontWeight.w700,
+                                                    color: temp.toString() == list[index].toString() ?  Colors.white : Colors.black
+
+                                                ),),
+                                              )
+                                          ),
+                                        );
+
+                                      }),
+                                ),
+                                temp > 1 ?
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 150.0),
+                                  child:
+                                  InkWell(
+                                    onTap:(){
+                                      setState(() {
+                                        temp= temp-1;
+                                      });
+                                    },
+                                    child: Container(
+                                        height:height/16.275,
+                                        width:width/11.3833,
+                                        decoration:BoxDecoration(
+                                            color:Constants().primaryAppColor,
+                                            borderRadius: BorderRadius.circular(80)
+                                        ),
+                                        child: Center(
+                                          child: Text("Previous Page",style: SafeGoogleFont(
+                                            'Nunito',
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.white,
+                                          ),),
+                                        )),
+                                  ),
+                                )  : Container(),
+                                Container(
+                                  child: temp < pagecount ?
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 20.0),
+                                    child: InkWell(
+                                      onTap:(){
+                                        setState(() {
+                                          temp= temp+1;
+                                        });
+                                      },
+                                      child:
+                                      Container(
+                                          height:height/16.275,
+                                          width:width/11.3833,
+                                          decoration:BoxDecoration(
+                                              color:Constants().primaryAppColor,
+                                              borderRadius: BorderRadius.circular(80)
+                                          ),
+                                          child: Center(
+                                            child: Text("Next Page",style: SafeGoogleFont(
+                                              'Nunito',
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.white,
+                                            ),),
+                                          )),
+                                    ),
+                                  )  : Container(),
+                                )
+                              ],
+                            ),
+                          ],
+                        );
+                      },),*/
+                    Column(
+                      children: [
+                        SizedBox(
+                          height:height/2.830,
+                          width:width/1.0045,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            physics:const  NeverScrollableScrollPhysics(),
+                            itemCount: unVerifyedUserData.length,
+                            itemBuilder: (context, index) {
+
+                              var _userdata = unVerifyedUserData[(temp*4)-4+index];
+
+                              return   (temp*4)-4+index >= documentlength ?SizedBox():
+                              Container(
+                                padding: EdgeInsets.fromLTRB(26.07*fem, 19.56*fem, 39.11*fem, 19.56*fem),
+                                width: 1119.87*fem,
+                                height: 78.22*fem,
+                                decoration: BoxDecoration (
+                                  color: const Color(0xffffffff),
+                                  borderRadius: BorderRadius.circular(10*fem),
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width:width/5.464,
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 14.34*fem, 0*fem),
+                                            width: 39.11*fem,
+                                            height: double.infinity,
+                                            decoration: BoxDecoration (
+                                              color: const Color(0xfff6d0d0),
+                                              borderRadius: BorderRadius.circular(19.5553703308*fem),
+                                            ),
+                                            child: Center(
+                                              // imgFVB (8:2248)
+                                              child: SizedBox(
+                                                width: double.infinity,
+                                                height: 39.11*fem,
+                                                child: Container(
+                                                    decoration: BoxDecoration (
+                                                      borderRadius: BorderRadius.circular(19.5553703308*fem),
+                                                      image: DecorationImage (
+                                                        fit: BoxFit.cover,
+                                                        image: NetworkImage (
+                                                            _userdata.UserImg.toString()
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    child:Center(
+                                                      child: _userdata.UserImg.toString()==""?Icon(Icons.person):Text(""),
+                                                    )
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+
+                                            margin: EdgeInsets.fromLTRB(0*fem, 4.14*fem, 129.49*fem, 0*fem),
+                                            child: KText(
+                                              text:"${_userdata.UserFirstName.toString()} ${_userdata.UserLastName.toString()}",
+                                              style: SafeGoogleFont (
+                                                'Nunito',
+                                                fontSize: 18*ffem,
+                                                fontWeight: FontWeight.w400,
+                                                height: 1.3625*ffem/fem,
+                                                color: const Color(0xff030229),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+
+                                    SizedBox(
+                                      width:width/5.464,
+                                      child: KText(
+                                        text:_userdata.UserEmail.toString(),
+                                        style: SafeGoogleFont (
+                                          'Nunito',
+                                          fontSize: 18*ffem,
+                                          fontWeight: FontWeight.w400,
+                                          height: 1.3625*ffem/fem,
+                                          color: const Color(0xff030229),
+                                        ),
+                                      ),
+                                    ),
+
+                                    SizedBox(
+                                      width:width/8.2,
+                                      child: KText(
+                                        text:_userdata.UserPhoneNumber.toString(),
+                                        style: SafeGoogleFont (
+                                          'Nunito',
+                                          fontSize: 18*ffem,
+                                          fontWeight: FontWeight.w400,
+                                          height: 1.3625*ffem/fem,
+                                          color: const Color(0xff030229),
+                                        ),
+                                      ),
+                                    ),
+
+                                    SizedBox(
+                                      width:width/12,
+                                      child: Padding(
+                                        padding:  EdgeInsets.only(left:0,right: width/54.64),
+                                        child: Container(
+                                          width:width/34.15,
+                                          height: double.infinity,
+                                          decoration: BoxDecoration (
+                                            color:_userdata.UserGender.toString()=="Male"?
+                                            const Color(0x195b92ff):
+                                            const Color(0xffFEF3F0),
+                                            borderRadius: BorderRadius.circular(33*fem),
+                                          ),
+                                          child: Center(
+                                            child: KText(
+                                              text:_userdata.UserGender.toString(),
+                                              style: SafeGoogleFont (
+                                                'Nunito',
+                                                fontSize: 16*ffem,
+                                                fontWeight: FontWeight.w400,
+                                                height: 1.3625*ffem/fem,
+                                                color: _userdata.UserGender.toString()=="Male"?
+                                                const Color(0xff5b92ff):const Color(0xffFE8F6B),
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
 
-                                  SizedBox(width:width/17.075),
-                                  GestureDetector(
-                                    onTap: (){
-
-                                      if(viewDocid=='') {
-                                        setState(() {
-                                          viewDocid = _userdata.id;
-                                        });
-                                        ViewinUserDetailsPopup();
-                                      }
-                                      else{
-                                        setState(() {
-                                          viewDocid = '';
-                                        });
-                                      }
-                                    },
-                                    child: SizedBox(
-                                      width:width/22.766,
-                                      height:height/26.04,
-                                      child: Container(
-                                          margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 0.65*fem),
-                                          width: 18.25*fem,
-                                          height: 15.56*fem,
-                                          decoration: BoxDecoration(
-                                              color:const Color(0xff605bff),
-                                              borderRadius: BorderRadius.circular(5)
-                                          ),
-                                          child: Center(child: KText(
-                                            text:viewDocid==_userdata.id?"Close":
-                                            "View" , style: SafeGoogleFont (
-                                            'Nunito',
-                                            fontSize: 16*ffem,
-                                            fontWeight: FontWeight.w400,
-                                            height: 1.3625*ffem/fem,
-                                            color: const Color(0xffFFFFFF),
-                                          ),),)
-                                        // Image.asset(
-                                        //   'assets/images/menu-fRb.png',
-                                        //   width: 18.25*fem,
-                                        //   height: 4.56*fem,
-                                        // ),
+                                    SizedBox(
+                                      width:width/15.83,
+                                      child: KText(
+                                        text:_userdata.UserBatch.toString(),
+                                        style: SafeGoogleFont (
+                                          'Nunito',
+                                          fontSize: 18*ffem,
+                                          fontWeight: FontWeight.w400,
+                                          height: 1.3625*ffem/fem,
+                                          color: const Color(0xff030229),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
-                          return  const SizedBox();
-                          },);
-                      },),
+                                    SizedBox(width:width/30.075),
+                                    GestureDetector(
+                                      onTap: (){
 
+                                        if(viewDocid=='') {
+                                          setState(() {
+                                            viewDocid = _userdata.UserDocId!.toString();
+                                          });
+                                          ViewinUserDetailsPopup();
+                                        }
+                                        else{
+                                          setState(() {
+                                            viewDocid = '';
+                                          });
+                                        }
+                                      },
+                                      child: SizedBox(
+                                        width:width/22.766,
+                                        height:height/26.04,
+                                        child: Container(
+                                            margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 0.65*fem),
+                                            width: 18.25*fem,
+                                            height: 15.56*fem,
+                                            decoration: BoxDecoration(
+                                                color:Constants().primaryAppColor,
+                                                borderRadius: BorderRadius.circular(5)
+                                            ),
+                                            child: Center(child: KText(
+                                              text:viewDocid==_userdata.UserDocId?"Close":
+                                              "View" , style: SafeGoogleFont (
+                                              'Nunito',
+                                              fontSize: 16*ffem,
+                                              fontWeight: FontWeight.w400,
+                                              height: 1.3625*ffem/fem,
+                                              color: const Color(0xffFFFFFF),
+                                            ),),)
+                                          // Image.asset(
+                                          //   'assets/images/menu-fRb.png',
+                                          //   width: 18.25*fem,
+                                          //   height: 4.56*fem,
+                                          // ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },),
+                        ),
+                        Stack(
+                          alignment: Alignment.centerRight,
+                          children: [
+                            SizedBox(
+                              width: double.infinity,
+                              height:height/13.02,
+                              child: ListView.builder(
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: pagecount,
+                                  itemBuilder: (context,index){
+                                    return InkWell(
+                                      onTap: (){
+                                        setState(() {
+                                          temp=list[index];
+                                        });
+                                        print(temp);
+                                      },
+                                      child: Container(
+                                          height:30,width:30,
+                                          margin: EdgeInsets.only(left:8,right:8,top:10,bottom:10),
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(100),
+                                              color:temp.toString() == list[index].toString() ?  Constants().primaryAppColor : Colors.transparent
+                                          ),
+                                          child: Center(
+                                            child: Text(list[index].toString(),style: SafeGoogleFont(
+                                                'Nunito',
+                                                fontWeight: FontWeight.w700,
+                                                color: temp.toString() == list[index].toString() ?  Colors.white : Colors.black
+
+                                            ),),
+                                          )
+                                      ),
+                                    );
+
+                                  }),
+                            ),
+                            temp > 1 ?
+                            Padding(
+                              padding: const EdgeInsets.only(right: 20.0),
+                              child:
+                              InkWell(
+                                onTap:(){
+                                  setState(() {
+                                    temp= temp-1;
+                                  });
+                                },
+                                child: Container(
+                                    height:height/16.275,
+                                    width:width/11.3833,
+                                    decoration:BoxDecoration(
+                                        color:Constants().primaryAppColor,
+                                        borderRadius: BorderRadius.circular(80)
+                                    ),
+                                    child: Center(
+                                      child:
+                                      Padding(
+                                        padding: const EdgeInsets.only(left:16.0),
+                                        child: Text("Previous Page",style: SafeGoogleFont(
+                                          'Nunito',
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white,
+                                        ),),
+                                      ),
+                                    )),
+                              ),
+                            )  : Container(),
+                            Container(
+                              child: temp < pagecount ?
+                              Padding(
+                                padding: const EdgeInsets.only(right: 20.0),
+                                child: InkWell(
+                                  onTap:(){
+                                    setState(() {
+                                      temp= temp+1;
+                                    });
+                                  },
+                                  child:
+                                  Container(
+                                      height:height/16.275,
+                                      width:width/11.3833,
+                                      decoration:BoxDecoration(
+                                          color:Constants().primaryAppColor,
+                                          borderRadius: BorderRadius.circular(80)
+                                      ),
+                                      child: Center(
+                                        child: Text("Next Page",style: SafeGoogleFont(
+                                          'Nunito',
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white,
+                                        ),),
+                                      )),
+                                ),
+                              )  : Container(),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: height / 65.1),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          UserViewed = !UserViewed;
+                        });
+                      },
+                      child: Container(
+                        height: 40,
+                        width:120,
+                        decoration: BoxDecoration(
+                          color: Constants().primaryAppColor,
+                          borderRadius:
+                          BorderRadius.circular(
+                              10 * fem),
+                        ),
+                        child: Center(
+                          child: KText(
+                            // addalumniytD (8:2328)
+                            text: UserViewed == false
+                                ? 'View Alumni'
+                                : 'Close Alumni',
+                            style: SafeGoogleFont(
+                              'Nunito',
+                              fontSize: 18 * ffem,
+                              fontWeight: FontWeight.w400,
+                              height: 1.3625 * ffem / fem,
+                              color: const Color(
+                                  0xffffffff),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: height / 65.1),
+                    DeveloperCardWidget(),
+                    SizedBox(height: height / 65.1),
                   ],
                 ),
               ),
@@ -2449,7 +2976,25 @@ class _DashBoardState extends State<DashBoard> {
           ),
         ),
       ),
+    ):
+    Stack(
+      children: [
+        Users_Screen(UserViewed: UserViewed,),
+        Positioned(
+          top: 0,
+          right: 0,
+          child: InkWell(
+            onTap: () {
+              setState(() {
+                UserViewed = false;
+              });
+            },
+            child: Icon(Icons.close),
+          ),
+        ),
+      ],
     );
+
   }
 
 
@@ -2594,7 +3139,48 @@ class _DashBoardState extends State<DashBoard> {
         useRootNavigator: true);
   }
 
+  _showSettingsPopupMenu(cxt) async {
+    double height=MediaQuery.of(cxt).size.height;
+    double width=MediaQuery.of(cxt).size.width;
 
+    await showMenu(
+        context: context,
+        color: const Color(0xffFFFFFF),
+        surfaceTintColor: const Color(0xffFFFFFF),
+        shadowColor: Colors.black12,
+        position:  const RelativeRect.fromLTRB(60, 70, 15, 55),
+        items: [
+
+
+          PopupMenuItem<String>(
+            value: 'st',
+            child:  const Text('Settings'),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) =>  SettingsTabs(),));
+            },
+          ),
+          PopupMenuItem<String>(
+            value: 'about us',
+            child:  const Text('About Us'),
+            onTap: () {
+              setState(() {
+                Navigator.push(context, MaterialPageRoute(builder: (context) =>  AboutUsTab(),));
+              });
+            },
+          ),
+          PopupMenuItem<String>(
+            value: 'logout',
+            child:  const Text('Logout'),
+            onTap: () {
+   _signOut();
+            },
+          ),
+
+
+        ],
+        elevation: 8.0,
+        useRootNavigator: true);
+  }
 
   ViewinUserDetailsPopup() async {
 
@@ -3286,7 +3872,7 @@ class _DashBoardState extends State<DashBoard> {
                                           children: [
                                             KText(
                                               text:
-                                              'Phone Number',
+                                              'Phone Number *',
                                               style:
                                               SafeGoogleFont(
                                                 'Nunito',
@@ -3365,7 +3951,7 @@ class _DashBoardState extends State<DashBoard> {
                                           children: [
                                             KText(
                                               text:
-                                              'Mobile Number',
+                                              'Alternate Mobile Number',
                                               style:
                                               SafeGoogleFont(
                                                 'Nunito',
@@ -3952,7 +4538,7 @@ class _DashBoardState extends State<DashBoard> {
                                           children: [
                                             KText(
                                               text:
-                                              'Department',
+                                              'Department *',
                                               style:
                                               SafeGoogleFont(
                                                 'Nunito',
@@ -5217,12 +5803,15 @@ class _DashBoardState extends State<DashBoard> {
                             ///Verify button
                             GestureDetector(
                               onTap: () {
-
-
                                 FirebaseFirestore.instance.collection("Users").doc(viewDocid).update({
                                   "verifyed": !currentUserVerifyed
                                 });
+                                UnVeriFyedUserData();
                                 Navigator.pop(context);
+                                Navigator.of(context).push(new MaterialPageRoute(
+                                  builder: (BuildContext context) =>MyWidget(email: FirebaseAuth.instance.currentUser!.email)
+                                ));
+
 
 
                               },
@@ -5531,4 +6120,122 @@ requesteLanguagePopup(ctx){
 
 }
 
+  LogoutPopup() {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    showDialog(
+      barrierColor: Colors.transparent,
+      context: context,
+      builder: (context) {
+        return ZoomIn(
+          duration: Duration(milliseconds: 300),
+          child: Padding(
+            padding: EdgeInsets.only(
+                top: height / 4.61875,
+                bottom: height / 4.61875,
+                left: width / 3.84,
+                right: width / 3.84),
+            child: Material(
+              color: Colors.white,
+              shadowColor: Color(0xff245BCA),
+              borderRadius: BorderRadius.circular(8),
+              elevation: 10,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(0xffFFFFFF),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Scaffold(
+                  backgroundColor: Color(0xffFFFFFF),
+                  body: Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(height: height / 9.2375),
+                        KText(
+                            text: "Are You Sure Want to Logout",
+                            style: SafeGoogleFont('Nunito',
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black,
+                                fontSize: width / 85.3333)),
+                        SizedBox(height: height / 36.95),
+                        SizedBox(
+                          height: height / 4.105555,
+                          width: width / 8.53333,
+                          child: SvgPicture.asset(Constants().userLogoutSvg),
+                        ),
+                        SizedBox(height: height / 36.95),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            InkWell(
+                              splashColor: Colors.transparent,
+                              hoverColor: Colors.transparent,
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                height: height / 18.475,
+                                width: width / 8.5333,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Center(
+                                  child: KText(
+                                      text: "Cancel",
+                                      style: SafeGoogleFont('Nunito',
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.black,
+                                          fontSize: width / 96)),
+                                ),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                _signOut();
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                height: height / 18.475,
+                                width: width / 8.5333,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
+                                    color: Constants().primaryAppColor),
+                                child: Center(
+                                  child: KText(
+                                    text: "Okay",
+                                    style: SafeGoogleFont('Nunito',
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white,
+                                        fontSize: width / 96),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  _signOut() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const SigninPage(),
+        ));
+  }
 }
+
+
+

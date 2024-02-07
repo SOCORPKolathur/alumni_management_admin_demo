@@ -9,6 +9,7 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 import '../Constant_.dart';
 import '../Models/Language_Model.dart';
+import '../common_widgets/developer_card_widget.dart';
 import '../utils.dart';
 
 class Notification_Screen extends StatefulWidget {
@@ -398,7 +399,10 @@ class _Notification_ScreenState extends State<Notification_Screen> with SingleTi
                   ),
                 ],
               ),
-            )
+            ),
+            SizedBox(height: height / 65.1),
+            DeveloperCardWidget(),
+            SizedBox(height: height / 65.1),
           ],
         ),
       ),
@@ -932,14 +936,12 @@ class _Notification_ScreenState extends State<Notification_Screen> with SingleTi
                       ),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding:  EdgeInsets.all(4.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           InkWell(
                             onTap: () async {
-
-
                               var getUserdata=await FirebaseFirestore.instance.collection('Users').where("userDocId",isEqualTo: user.get("userDocId")).get();
 
                               if(getUserdata.docs.length>0){

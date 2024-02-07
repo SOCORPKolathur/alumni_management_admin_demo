@@ -1,5 +1,8 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:alumni_management_admin/Screens/usereditform.dart';
+import 'package:alumni_management_admin/Screens/userform.dart';
+import 'package:alumni_management_admin/common_widgets/developer_card_widget.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -8,6 +11,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import '../Constant_.dart';
@@ -20,12 +25,12 @@ import 'package:email_validator/email_validator.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
 class Users_Screen extends StatefulWidget {
-  const Users_Screen({super.key});
+  bool?UserViewed;
+  Users_Screen({this.UserViewed});
 
   @override
   State<Users_Screen> createState() => _Users_ScreenState();
 }
-
 const List<String> StateList = <String>[
   "Select State",
   "Andhra Pradesh",
@@ -291,73 +296,41 @@ class _Users_ScreenState extends State<Users_Screen> {
   String userUpdateDocumentID = "";
   List filterDataList = [
     'Filter by Date',
+    'Filter by Year',
+    'Filter by Department',
   ];
 
-
+  DateTime _selectedYear = DateTime.now();
+  String showYear = 'Select Year';
   GlobalKey filterDataKey = GlobalKey();
 
   //static GlobalKey popMenukey = GlobalKey<PopupMenuButtonState>();
   //List<GlobalKey> popMenukey = List<GlobalKey>.generate(12, (index) => GlobalKey(debugLabel: 'key_$index'),growable: false);
-  TextEditingController firstNamecon = TextEditingController();
-  TextEditingController middleNamecon = TextEditingController();
-  TextEditingController lastNamecon = TextEditingController();
-  TextEditingController dateofBirthcon = TextEditingController();
-  TextEditingController gendercon = TextEditingController(text: "Select");
-  TextEditingController alterEmailIdcon = TextEditingController();
-  TextEditingController aadhaarNumbercon = TextEditingController();
-  TextEditingController phoneNumbercon = TextEditingController();
-  TextEditingController mobileNumbercon = TextEditingController();
-  TextEditingController emailIDcon = TextEditingController();
-  TextEditingController adreesscon = TextEditingController();
-  TextEditingController citycon = TextEditingController(text: "Select City");
-  TextEditingController pinCodecon = TextEditingController();
-  TextEditingController statecon = TextEditingController(text: "Select State");
-  TextEditingController countrycon = TextEditingController(text: "Select Country");
-  TextEditingController yearPassedcon = TextEditingController();
-  TextEditingController subjectStremdcon = TextEditingController(text: "Select Department");
-  TextEditingController classcon = TextEditingController();
-  TextEditingController rollnocon = TextEditingController();
-  TextEditingController lastvisitcon = TextEditingController();
-  TextEditingController housecon = TextEditingController();
-  TextEditingController statusmessagecon = TextEditingController();
-  TextEditingController educationquvalificationcon = TextEditingController();
-  TextEditingController additionalquvalificationcon = TextEditingController();
-  TextEditingController occupationcon = TextEditingController();
-  TextEditingController designationcon = TextEditingController();
-  TextEditingController company_concerncon = TextEditingController();
-  TextEditingController maritalStatuscon = TextEditingController(text: "Marital Status");
-  TextEditingController spouseNamecon = TextEditingController();
-  TextEditingController anniversaryDatecon = TextEditingController();
-  TextEditingController no_of_childreancon = TextEditingController();
-  TextEditingController ownBussinesscon = TextEditingController();
-  TextEditingController alumniEmployedController = TextEditingController(text: "No");
+
 
   TextEditingController SerachController = TextEditingController();
   TextEditingController Date1Controller = TextEditingController();
   TextEditingController Date2Controller = TextEditingController();
 
   String SerachValue = "";
+  bool materialStatusCheck=false;
+  String FilterDataValue="";
 
   int BatchYearValid=0;
   List usereditlist = [
     "Edit",
     "Delete",
-
-    // menuItem(
-    //     Name: "Edit",
-    //   widgets: Icon(Icons.edit)
-    // ),
-    // menuItem(
-    //     Name: "Delete",
-    //     widgets: Icon(Icons.delete)
-    // ),
+    "View"
   ];
 
   int pagecount = 0;
-  int temp = 0;
+  int temp = 1;
+  List list = new List<int>.generate(1000, (i) => i + 1);
   List <DocumentSnapshot>documentList = [];
 
   List<String> departmentDataList = [];
+  List<String> YearDataList = [];
+  List<String> FilterDataList = [];
 
   String? validateEmail(String? value) {
     const pattern = r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'"
@@ -375,9 +348,31 @@ class _Users_ScreenState extends State<Users_Screen> {
   }
   bool isEmail(String input) => EmailValidator.validate(input);
 
+  int documentlength =0 ;
+
+  doclength() async {
+    try {
+      final QuerySnapshot result =
+      await FirebaseFirestore.instance.collection('Users').get();
+      final List<DocumentSnapshot> documents = result.docs;
+
+      setState(() {
+        documentlength = documents.length;
+        pagecount = ((documentlength - 1) ~/ 10) + 1;
+      });
+
+      print(pagecount);
+    } catch (error) {
+      print("Error fetching data: $error");
+      // Handle the error as needed
+    }
+  }
+
+
   @override
   void initState() {
     userCounta();
+    doclength();
     _isMounted = true;
     departmentdataFetchFunc();
     // TODO: implement initState
@@ -395,20 +390,7 @@ class _Users_ScreenState extends State<Users_Screen> {
 
   int billcount = 0;
 
-  ///dropdown validator values
-  bool dropdownValidator = false;
-  bool dropdownValidator2 = false;
-  bool dropdownValidator3 = false;
-  bool dropdownDepartmentValidator = false;
 
-  ///Text Controller validator boolean Value
-  bool firstNameValidator = false;
-  bool lastNameValidator = false;
-  bool dobValidator = false;
-  bool yearPassedValidator = false;
-  bool classValidator = false;
-  bool myStatusValidator = false;
-  bool pincodeValidator = false;
 
 
   userCounta() async {
@@ -416,9 +398,11 @@ class _Users_ScreenState extends State<Users_Screen> {
     setState(() {
       billcount = user.docs.length + 1;
     });
+    print("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
   }
 
   bool Loading = false;
+  String docid = "";
 
   @override
   Widget build(BuildContext context) {
@@ -448,7360 +432,9 @@ class _Users_ScreenState extends State<Users_Screen> {
 
         children: [
           UserEdit == true
-              ? FadeInRight(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 1574 * fem,
-
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: width / 170.75,
-                        vertical: height / 81.375),
-                    child: Form(
-                      key: _formkey,
-                      child: SizedBox(
-                        width: 1550 * fem,
-                        child: Row(
-                          crossAxisAlignment:
-                          CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              mainAxisAlignment:
-                              MainAxisAlignment.start,
-                              crossAxisAlignment:
-                              CrossAxisAlignment.start,
-                              children: [
-
-                                ///Alumni text
-                                SizedBox(height: height / 26.04),
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.start,
-                                  children: [
-                                    SizedBox(width: width / 307.2),
-                                    KText(
-                                      text: 'Add Users Details',
-                                      style: SafeGoogleFont(
-                                        'Nunito',
-                                        fontSize: 24 * ffem,
-                                        fontWeight: FontWeight.w700,
-                                        height: 1.3625 * ffem / fem,
-                                        color: const Color(0xff030229),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: height / 26.04),
-
-                                Row(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      width: width / 3.7463,
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            height: height / 7.39,
-                                            width: width / 15.36,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                BorderRadius
-                                                    .circular(
-                                                    100),
-                                                color:
-                                                const Color(0xffDDDEEE),
-                                                image: Uploaddocument !=
-                                                    null
-                                                    ? DecorationImage(
-                                                  fit: BoxFit
-                                                      .cover,
-                                                  image:
-                                                  MemoryImage(
-                                                    Uint8List
-                                                        .fromList(
-                                                      base64Decode(
-                                                          Uploaddocument!
-                                                              .split(
-                                                              ',')
-                                                              .last),
-                                                    ),
-                                                  ),
-                                                )
-                                                    : imgUrl != null
-                                                    ? DecorationImage(
-                                                    fit: BoxFit
-                                                        .cover,
-                                                    image: NetworkImage(
-                                                        imgUrl))
-                                                    : DecorationImage(
-                                                    fit: BoxFit
-                                                        .cover,
-                                                    image: AssetImage(
-                                                        Constants()
-                                                            .avator))),
-                                          ),
-                                          SizedBox(width: width / 102.4),
-                                          Column(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              KText(
-                                                text:
-                                                "Upload Student Photo (150px X 150px)",
-                                                style: SafeGoogleFont(
-                                                  'Nunito',
-                                                  fontSize: 17 * ffem,
-                                                  fontWeight:
-                                                  FontWeight.w600,
-                                                  height: 1.3625 *
-                                                      ffem /
-                                                      fem,
-                                                  color: const Color(
-                                                      0xff000000),
-                                                ),
-                                              ),
-                                              SizedBox(height: height / 147.8),
-                                              Row(
-                                                children: [
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      addImage(size);
-                                                    },
-                                                    child: Container(
-                                                      height: height / 24.633,
-                                                      width: width / 19.2,
-                                                      decoration: BoxDecoration(
-                                                          color: const Color(
-                                                              0xffDDDEEE),
-                                                          border: Border.all(
-                                                              color: const Color(
-                                                                  0xff000000))),
-                                                      child: Center(
-                                                        child: KText(
-                                                          text:
-                                                          "Choose File",
-                                                          style:
-                                                          SafeGoogleFont(
-                                                            'Nunito',
-                                                            fontSize:
-                                                            17 *
-                                                                ffem,
-                                                            fontWeight:
-                                                            FontWeight
-                                                                .w600,
-                                                            height: 1.3625 *
-                                                                ffem /
-                                                                fem,
-                                                            color: const Color(
-                                                                0xff000000),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                      width: width / 307.2),
-                                                  KText(
-                                                    text: Uploaddocument ==
-                                                        null
-                                                        ? "No file chosen"
-                                                        : "File is Selected",
-                                                    style:
-                                                    SafeGoogleFont(
-                                                      'Nunito',
-                                                      fontSize:
-                                                      17 * ffem,
-                                                      fontWeight:
-                                                      FontWeight
-                                                          .w600,
-                                                      height: 1.3625 *
-                                                          ffem /
-                                                          fem,
-                                                      color: const Color(
-                                                          0xff000000),
-                                                    ),
-                                                  ),
-                                                ],
-                                              )
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: width / 2.2588,
-                                      height: height / 2.8,
-                                      child: Column(
-                                        children: [
-
-                                          ///first name and last name
-                                          Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .spaceAround,
-                                            children: [
-                                              SizedBox(
-                                                height: height / 9.369,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .start,
-                                                  children: [
-                                                    KText(
-                                                      text:
-                                                      'First Name *',
-                                                      style:
-                                                      SafeGoogleFont(
-                                                        'Nunito',
-                                                        fontSize:
-                                                        20 * ffem,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .w700,
-                                                        height:
-                                                        1.3625 *
-                                                            ffem /
-                                                            fem,
-                                                        color: const Color(
-                                                            0xff000000),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        height: height /
-                                                            123.1666),
-                                                    Container(
-                                                      height: height / 15.114,
-                                                      width: width / 8.0842,
-                                                      decoration: BoxDecoration(
-                                                          color: const Color(
-                                                              0xffDDDEEE),
-                                                          borderRadius:
-                                                          BorderRadius.circular(
-                                                              3)),
-                                                      child:
-                                                      TextFormField(
-                                                          autovalidateMode: AutovalidateMode
-                                                              .onUserInteraction,
-                                                          controller: firstNamecon,
-                                                          inputFormatters: [
-                                                            FilteringTextInputFormatter
-                                                                .allow(
-                                                                RegExp(
-                                                                    "[a-zA-Z ]")),
-                                                          ],
-                                                          maxLength: 25,
-                                                          decoration: const InputDecoration(
-                                                            border: InputBorder
-                                                                .none,
-                                                            contentPadding: EdgeInsets
-                                                                .only(
-                                                                bottom:
-                                                                10,
-                                                                top:
-                                                                2,
-                                                                left:
-                                                                10),
-                                                            counterText:
-                                                            "",
-                                                          ),
-                                                          validator: (value) =>
-                                                          value!
-                                                              .isEmpty
-                                                              ? 'Field is required'
-                                                              : null,
-
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              firstNameValidator =
-                                                              false;
-                                                            });
-                                                          }
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: height / 9.369,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .start,
-                                                  children: [
-                                                    KText(
-                                                      text:
-                                                      'Middle Name ',
-                                                      style:
-                                                      SafeGoogleFont(
-                                                        'Nunito',
-                                                        fontSize:
-                                                        20 * ffem,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .w700,
-                                                        height:
-                                                        1.3625 *
-                                                            ffem /
-                                                            fem,
-                                                        color: const Color(
-                                                            0xff000000),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        height: height /
-                                                            123.1666),
-                                                    Container(
-                                                        height: height / 15.114,
-                                                        width: width / 8.0842,
-                                                        decoration: BoxDecoration(
-                                                            color: const Color(
-                                                                0xffDDDEEE),
-                                                            borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                3)),
-                                                        child:
-                                                        TextFormField(
-                                                          maxLength: 25,
-                                                          controller:
-                                                          middleNamecon,
-                                                          inputFormatters: [
-                                                            FilteringTextInputFormatter
-                                                                .allow(
-                                                                RegExp(
-                                                                    "[a-zA-Z ]")),
-                                                          ],
-                                                          decoration:
-                                                          const InputDecoration(
-                                                            counterText: "",
-                                                            border: InputBorder
-                                                                .none,
-                                                            contentPadding: EdgeInsets
-                                                                .only(
-                                                                bottom:
-                                                                10,
-                                                                top:
-                                                                2,
-                                                                left:
-                                                                10),
-                                                          ),
-                                                        ))
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: height / 9.369,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .start,
-                                                  children: [
-                                                    KText(
-                                                      text:
-                                                      'Last Name *',
-                                                      style:
-                                                      SafeGoogleFont(
-                                                        'Nunito',
-                                                        fontSize:
-                                                        20 * ffem,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .w700,
-                                                        height:
-                                                        1.3625 *
-                                                            ffem /
-                                                            fem,
-                                                        color: const Color(
-                                                            0xff000000),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        height: height /
-                                                            123.1666),
-                                                    Container(
-                                                        height: height / 15.114,
-                                                        width: width / 8.0842,
-                                                        decoration: BoxDecoration(
-                                                            color: const Color(
-                                                                0xffDDDEEE),
-                                                            borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                3)),
-                                                        child:
-                                                        TextFormField(
-                                                          autovalidateMode: AutovalidateMode
-                                                              .onUserInteraction,
-                                                          controller:
-                                                          lastNamecon,
-
-                                                          inputFormatters: [
-                                                            FilteringTextInputFormatter
-                                                                .allow(
-                                                                RegExp(
-                                                                    "[a-zA-Z ]")),
-                                                          ],
-                                                          maxLength:
-                                                          25,
-                                                          decoration:
-                                                          const InputDecoration(
-                                                            border: InputBorder
-                                                                .none,
-                                                            counterText:
-                                                            "",
-                                                            contentPadding: EdgeInsets
-                                                                .only(
-                                                                bottom:
-                                                                10,
-                                                                top:
-                                                                2,
-                                                                left:
-                                                                10),
-                                                          ),
-                                                          validator: (value) =>
-                                                          value!
-                                                              .isEmpty
-                                                              ? 'Field is required'
-                                                              : null,
-                                                        ))
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-
-                                          SizedBox(height: height / 73.9),
-
-                                          ///date of birth and
-
-                                          Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .spaceAround,
-                                            children: [
-
-                                              /// date of birth
-                                              SizedBox(
-                                                height: height / 9.369,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .start,
-                                                  children: [
-                                                    KText(
-                                                      text:
-                                                      'Date Of Birth *',
-                                                      style:
-                                                      SafeGoogleFont(
-                                                        'Nunito',
-                                                        fontSize:
-                                                        20 * ffem,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .w700,
-                                                        height:
-                                                        1.3625 *
-                                                            ffem /
-                                                            fem,
-                                                        color: const Color(
-                                                            0xff000000),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        height: height /
-                                                            123.1666),
-                                                    Container(
-                                                      height: height / 15.114,
-                                                      width: width / 5.12,
-                                                      decoration: BoxDecoration(
-                                                          color: const Color(
-                                                              0xffDDDEEE),
-                                                          borderRadius:
-                                                          BorderRadius.circular(
-                                                              3)),
-                                                      child:
-                                                      TextFormField(
-                                                        autovalidateMode: AutovalidateMode
-                                                            .onUserInteraction,
-                                                        controller:
-                                                        dateofBirthcon,
-                                                        decoration:
-                                                        const InputDecoration(
-                                                          border:
-                                                          InputBorder
-                                                              .none,
-                                                          contentPadding: EdgeInsets
-                                                              .only(
-                                                              bottom:
-                                                              10,
-                                                              top: 2,
-                                                              left:
-                                                              10),
-                                                        ),
-                                                        validator: (value) =>
-                                                        value!.isEmpty
-                                                            ? 'Field is required'
-                                                            : null,
-                                                        readOnly:
-                                                        true,
-                                                        onTap: () async {
-                                                          DateTime? pickedDate = await showDatePicker(
-                                                              context: context,
-                                                              initialDate: DateTime
-                                                                  .now(),
-                                                              firstDate: DateTime(
-                                                                  1950),
-                                                              //DateTime.now() - not to allow to choose before today.
-                                                              lastDate: DateTime(
-                                                                  2100));
-
-                                                          if (pickedDate !=
-                                                              null) {
-                                                            BatchYearValid= pickedDate.year;
-                                                            //pickedDate output format => 2021-03-10 00:00:00.000
-                                                            String formattedDate =
-                                                            DateFormat('dd/MM/yyyy').format(pickedDate);
-                                                            //formatted date output using intl package =>  2021-03-16
-
-                                                            // Calculate age difference
-                                                            DateTime currentDate = DateTime
-                                                                .now();
-                                                            Duration difference = currentDate.difference(pickedDate);
-                                                            int age = (difference.inDays / 365).floor();
-                                                            print('Age: $age years');
-
-                                                            if (age >=17) {
-                                                              setState(
-                                                                      () {
-                                                                    dateofBirthcon
-                                                                        .text =
-                                                                        formattedDate; //set output date to TextField value.
-                                                                  });
-                                                            }
-                                                            else {
-                                                              userNotValidAgePopup();
-                                                              print(
-                                                                  "Age Is Lowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
-                                                            }
-                                                          } else {}
-                                                        },
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-
-                                              SizedBox(
-                                                height: height / 9.369,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .start,
-                                                  children: [
-                                                    KText(
-                                                      text: 'Gender ',
-                                                      style:
-                                                      SafeGoogleFont(
-                                                        'Nunito',
-                                                        fontSize:
-                                                        20 * ffem,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .w700,
-                                                        height:
-                                                        1.3625 *
-                                                            ffem /
-                                                            fem,
-                                                        color: const Color(
-                                                            0xff000000),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        height: height /
-                                                            123.1666),
-                                                    Container(
-                                                      height: height / 15.114,
-                                                      width: width / 5.12,
-                                                      decoration: BoxDecoration(
-                                                          color: const Color(
-                                                              0xffDDDEEE),
-                                                          borderRadius:
-                                                          BorderRadius.circular(
-                                                              3)),
-                                                      child:
-                                                      DropdownButtonHideUnderline(
-                                                        child: DropdownButtonFormField2<
-                                                            String>(
-                                                          isExpanded: true,
-                                                          autovalidateMode: AutovalidateMode
-                                                              .onUserInteraction,
-                                                          hint: Padding(
-                                                            padding: const EdgeInsets
-                                                                .only(
-                                                                left: 8.0),
-                                                            child: Text(
-                                                              'Select',
-                                                              style:
-                                                              SafeGoogleFont(
-                                                                'Nunito',
-                                                                fontSize:
-                                                                20 * ffem,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          items: GenderList
-                                                              .map((String
-                                                          item) =>
-                                                              DropdownMenuItem<
-                                                                  String>(
-
-                                                                value:
-                                                                item,
-                                                                child:
-                                                                Text(
-                                                                  item,
-                                                                  style:
-                                                                  SafeGoogleFont(
-                                                                    'Nunito',
-                                                                    fontSize:
-                                                                    20 * ffem,
-                                                                  ),
-                                                                ),
-                                                              )).toList(),
-                                                          value: gendercon.text,
-
-                                                          onChanged: (String?
-                                                          value) {
-                                                            setState(() {
-                                                              gendercon.text =
-                                                              value!;
-                                                            });
-                                                          },
-                                                          buttonStyleData:
-                                                          ButtonStyleData(
-                                                            height: 20,
-                                                            width:
-                                                            width / 2.571,
-                                                          ),
-                                                          menuItemStyleData: const MenuItemStyleData(),
-                                                          decoration:
-                                                          const InputDecoration(
-                                                              contentPadding: EdgeInsets
-                                                                  .only(left: 5,
-                                                                  right: 5),
-                                                              border:
-                                                              InputBorder
-                                                                  .none),
-                                                        ),
-                                                      ),
-                                                      /* TextFormField(
-                                                                      controller:
-                                                                       gendercon,
-                                                                      inputFormatters: [
-                                                                        FilteringTextInputFormatter
-                                                                            .allow(
-                                                                                RegExp("[a-zA-Z]")),
-                                                                      ],
-                                                                      decoration:
-                                                                          const InputDecoration(
-                                                                        border: InputBorder
-                                                                            .none,
-                                                                        contentPadding: EdgeInsets.only(
-                                                                            bottom:
-                                                                                10,
-                                                                            top:
-                                                                                2,
-                                                                            left:
-                                                                                10),
-                                                                      ),
-                                                                    )*/
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-
-                                            ],
-                                          ),
-                                          SizedBox(height: height / 73.9),
-
-                                          ///adhaaar card and emailid
-                                          Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .start,
-                                            children: [
-                                              /* SizedBox(
-                                                      height: height/9.369,
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                        children: [
-                                                          KText(
-                                                            text:
-                                                            'Alternate Email Id',
-                                                            style:
-                                                            SafeGoogleFont(
-                                                              'Nunito',
-                                                              fontSize:
-                                                              20 * ffem,
-                                                              fontWeight:
-                                                              FontWeight
-                                                                  .w700,
-                                                              height:
-                                                              1.3625 *
-                                                                  ffem /
-                                                                  fem,
-                                                              color: const Color(
-                                                                  0xff000000),
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                              height: height/123.1666),
-                                                          Container(
-                                                              height: height/15.114,
-                                                              width: width/5.12,
-                                                              decoration: BoxDecoration(
-                                                                  color: const Color(
-                                                                      0xffDDDEEE),
-                                                                  borderRadius:
-                                                                  BorderRadius.circular(
-                                                                      3)),
-                                                              child:
-                                                              TextFormField(
-                                                                controller:
-                                                                alterEmailIdcon,
-                                                                inputFormatters: [
-                                                                  FilteringTextInputFormatter
-                                                                      .allow(
-                                                                      RegExp("[a-z@0-9.]")),
-                                                                ],
-                                                                decoration:
-                                                                const InputDecoration(
-                                                                  border: InputBorder
-                                                                      .none,
-                                                                  contentPadding: EdgeInsets.only(
-                                                                      bottom:
-                                                                      10,
-                                                                      top:
-                                                                      2,
-                                                                      left:
-                                                                      10),
-                                                                ),
-                                                                validator:
-                                                                    (value) {
-                                                                  if (isEmail(value!)) {
-                                                                      return 'Enter the Correct the Email';
-                                                                    }
-
-                                                                  return null;
-                                                                },
-                                                              )
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),*/
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: width / 71.8947),
-                                                child: SizedBox(
-                                                  height: height / 9.369,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .start,
-                                                    children: [
-                                                      KText(
-                                                        text:
-                                                        'Aadhaar Number ',
-                                                        style:
-                                                        SafeGoogleFont(
-                                                          'Nunito',
-                                                          fontSize:
-                                                          20 * ffem,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w700,
-                                                          height:
-                                                          1.3625 *
-                                                              ffem /
-                                                              fem,
-                                                          color: const Color(
-                                                              0xff000000),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                          height: height /
-                                                              123.1666),
-                                                      Container(
-                                                          height: height /
-                                                              15.114,
-                                                          width: width / 5.12,
-                                                          decoration: BoxDecoration(
-                                                              color: const Color(
-                                                                  0xffDDDEEE),
-                                                              borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                  3)),
-                                                          child:
-                                                          TextFormField(
-                                                            controller:
-                                                            aadhaarNumbercon,
-                                                            maxLength:
-                                                            14,
-                                                            inputFormatters: [
-                                                              FilteringTextInputFormatter
-                                                                  .digitsOnly,
-                                                              TextInputFormatter
-                                                                  .withFunction(
-                                                                      (oldValue,
-                                                                      newValue) {
-                                                                    final newString =
-                                                                        newValue
-                                                                            .text;
-
-                                                                    if (_inputPattern
-                                                                        .hasMatch(
-                                                                        newString)) {
-                                                                      return oldValue;
-                                                                    }
-
-                                                                    var formattedValue = newString
-                                                                        .replaceAllMapped(
-                                                                        RegExp(
-                                                                            r'\d{4}'),
-                                                                            (
-                                                                            match) {
-                                                                          return '${match
-                                                                              .group(
-                                                                              0)} ';
-                                                                        });
-
-                                                                    // Remove any trailing space
-                                                                    if (formattedValue
-                                                                        .endsWith(
-                                                                        ' ')) {
-                                                                      formattedValue =
-                                                                          formattedValue
-                                                                              .substring(
-                                                                              0,
-                                                                              formattedValue
-                                                                                  .length -
-                                                                                  1);
-                                                                    }
-
-                                                                    return TextEditingValue(
-                                                                      text:
-                                                                      formattedValue,
-                                                                      selection:
-                                                                      TextSelection
-                                                                          .collapsed(
-                                                                          offset: formattedValue
-                                                                              .length),
-                                                                    );
-                                                                  }),
-                                                            ],
-                                                            decoration:
-                                                            const InputDecoration(
-                                                              border: InputBorder
-                                                                  .none,
-                                                              counterText:
-                                                              "",
-                                                              contentPadding: EdgeInsets
-                                                                  .only(
-                                                                  bottom:
-                                                                  10,
-                                                                  top:
-                                                                  2,
-                                                                  left:
-                                                                  10),
-                                                            ),
-                                                          ))
-                                                    ],
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-
-                                ///contact info
-                                Row(
-                                  children: [
-                                    SizedBox(width: width / 307.2),
-                                    KText(
-                                      text: 'Contact Details',
-                                      style: SafeGoogleFont(
-                                        'Nunito',
-                                        fontSize: 25 * ffem,
-                                        fontWeight: FontWeight.w700,
-                                        height: 1.3625 * ffem / fem,
-                                        color: const Color(0xff000000),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 4,
-                                      right: 4,
-                                      top: 4,
-                                      bottom: 4),
-                                  child: Container(
-                                    height: 1,
-                                    width: width / 1.4422,
-                                    color: Colors.grey.shade300,
-                                  ),
-                                ),
-                                SizedBox(height: height / 36.95),
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                        width: width / 2.4,
-                                        height: height / 2.8,
-                                        child: Padding(
-                                          padding:
-                                          const EdgeInsets.all(6.0),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .spaceAround,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
-                                            children: [
-
-                                              ///phone number
-                                              SizedBox(
-                                                height: height / 9.369,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .start,
-                                                  children: [
-                                                    KText(
-                                                      text:
-                                                      'Phone Number *',
-                                                      style:
-                                                      SafeGoogleFont(
-                                                        'Nunito',
-                                                        fontSize:
-                                                        20 * ffem,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .w700,
-                                                        height:
-                                                        1.3625 *
-                                                            ffem /
-                                                            fem,
-                                                        color: const Color(
-                                                            0xff000000),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        height: height /
-                                                            123.1666),
-                                                    Container(
-                                                        height: height / 15.114,
-                                                        width: width / 3.84,
-                                                        decoration: BoxDecoration(
-                                                            color: const Color(
-                                                                0xffDDDEEE),
-                                                            borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                3)),
-                                                        child:
-                                                        TextFormField(
-                                                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                                                          controller:
-                                                          phoneNumbercon,
-                                                          maxLength:
-                                                          10,
-                                                          inputFormatters: [
-                                                            FilteringTextInputFormatter
-                                                                .allow(
-                                                                RegExp(
-                                                                    "[0-9]")),
-                                                          ],
-                                                          decoration: const InputDecoration(
-                                                              border: InputBorder
-                                                                  .none,
-                                                              contentPadding: EdgeInsets
-                                                                  .only(
-                                                                  bottom:
-                                                                  10,
-                                                                  top:
-                                                                  2,
-                                                                  left:
-                                                                  10),
-                                                              counterText:
-                                                              ""),
-                                                          validator: (value) {
-                                                            if(value!.isEmpty){
-                                                              return 'Field is required';
-                                                            }
-                                                            else if (value!.isNotEmpty) {
-                                                              if (value.length !=
-                                                                  10) {
-                                                                return 'Enter the Phone no correctly';
-                                                              }
-                                                            }
-                                                            return null;
-                                                          },
-                                                        ))
-                                                  ],
-                                                ),
-                                              ),
-
-                                              /// mobile number
-                                              SizedBox(
-                                                height: height / 9.369,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .start,
-                                                  children: [
-                                                    KText(
-                                                      text:
-                                                      'Alternate Mobile Number',
-                                                      style:
-                                                      SafeGoogleFont(
-                                                        'Nunito',
-                                                        fontSize:
-                                                        20 * ffem,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .w700,
-                                                        height:
-                                                        1.3625 *
-                                                            ffem /
-                                                            fem,
-                                                        color: const Color(
-                                                            0xff000000),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        height: height /
-                                                            123.1666),
-                                                    Container(
-                                                        height: height / 15.114,
-                                                        width: width / 3.84,
-                                                        decoration: BoxDecoration(
-                                                            color: const Color(
-                                                                0xffDDDEEE),
-                                                            borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                3)),
-                                                        child:
-                                                        TextFormField(
-                                                          autovalidateMode: AutovalidateMode
-                                                              .onUserInteraction,
-                                                          controller:
-                                                          mobileNumbercon,
-                                                          maxLength:
-                                                          10,
-                                                          inputFormatters: [
-                                                            FilteringTextInputFormatter
-                                                                .allow(
-                                                                RegExp(
-                                                                    "[0-9]")),
-                                                          ],
-                                                          decoration:
-                                                          const InputDecoration(
-                                                            border: InputBorder
-                                                                .none,
-                                                            counterText: "",
-                                                            contentPadding: EdgeInsets
-                                                                .only(
-                                                                bottom:
-                                                                10,
-                                                                top:
-                                                                2,
-                                                                left:
-                                                                10),
-                                                          ),
-                                                          validator: (value) {
-                                                            if (value!
-                                                                .isNotEmpty) {
-                                                              if (value
-                                                                  .length !=
-                                                                  10) {
-                                                                return 'Enter the Mobile no correctly';
-                                                              }
-                                                            }
-                                                            return null;
-                                                          },
-                                                        ))
-                                                  ],
-                                                ),
-                                              ),
-
-                                              /// Email iD
-                                              SizedBox(
-                                                height: height / 9.369,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .start,
-                                                  children: [
-                                                    KText(
-                                                      text:
-                                                      'Email ID',
-                                                      style:
-                                                      SafeGoogleFont(
-                                                        'Nunito',
-                                                        fontSize:
-                                                        20 * ffem,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .w700,
-                                                        height:
-                                                        1.3625 *
-                                                            ffem /
-                                                            fem,
-                                                        color: const Color(
-                                                            0xff000000),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        height: height /
-                                                            123.1666),
-                                                    Container(
-                                                        height: height / 15.114,
-                                                        width: width / 3.84,
-                                                        decoration: BoxDecoration(
-                                                            color: const Color(
-                                                                0xffDDDEEE),
-                                                            borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                3)),
-                                                        child:
-                                                        TextFormField(
-                                                          controller:
-                                                          emailIDcon,
-                                                          inputFormatters: [
-                                                            FilteringTextInputFormatter
-                                                                .allow(
-                                                                RegExp(
-                                                                    "[a-z@0-9.]")),
-                                                          ],
-                                                          decoration:
-                                                          const InputDecoration(
-                                                            border: InputBorder
-                                                                .none,
-                                                            contentPadding: EdgeInsets
-                                                                .only(
-                                                                bottom:
-                                                                10,
-                                                                top:
-                                                                2,
-                                                                left:
-                                                                10),
-                                                          ),
-                                                          validator:validateEmail
-                                                        ))
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        )),
-                                    SizedBox(
-                                      width: width / 3.49090,
-                                      height: height / 2.8,
-                                      child: Padding(
-                                        padding:
-                                        const EdgeInsets.all(2.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            KText(
-                                              text: 'Address',
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                fontSize: 20 * ffem,
-                                                fontWeight:
-                                                FontWeight.w700,
-                                                height: 1.3625 *
-                                                    ffem /
-                                                    fem,
-                                                color:
-                                                const Color(0xff000000),
-                                              ),
-                                            ),
-                                            SizedBox(height: height / 123.1666),
-                                            Container(
-                                                height: height / 3.3,
-                                                width: width / 3.57209,
-                                                decoration: BoxDecoration(
-                                                    color: const Color(
-                                                        0xffDDDEEE),
-                                                    borderRadius:
-                                                    BorderRadius
-                                                        .circular(
-                                                        3)),
-                                                child: TextFormField(
-                                                  controller:
-                                                  adreesscon,
-                                                  maxLines: null,
-                                                  expands: true,
-                                                  inputFormatters: [
-                                                    FilteringTextInputFormatter
-                                                        .allow(RegExp(
-                                                        "[a-zA-Z0-9 ,]")),
-                                                  ],
-                                                  decoration:
-                                                  const InputDecoration(
-                                                    border:
-                                                    InputBorder
-                                                        .none,
-                                                    contentPadding:
-                                                    EdgeInsets.only(
-                                                        bottom:
-                                                        10,
-                                                        top: 10,
-                                                        left: 10),
-                                                  ),
-                                                ))
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                Padding(
-                                  padding:  EdgeInsets.only(left: width/273.2),
-                                  child: Row(
-                                    children: [
-
-                                      ///State Dropdown
-                                      SizedBox(
-                                        height: height / 7.5,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            KText(
-                                              text: 'State *',
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                fontSize: 20 * ffem,
-                                                fontWeight:
-                                                FontWeight.w700,
-                                                height: 1.3625 *
-                                                    ffem /
-                                                    fem,
-                                                color:
-                                                const Color(0xff000000),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                                height: height / 123.1666),
-                                            Container(
-                                              height: height / 15.114,
-                                              width: width / 6.4,
-                                              decoration: BoxDecoration(
-                                                  color: const Color(
-                                                      0xffDDDEEE),
-                                                  borderRadius:
-                                                  BorderRadius
-                                                      .circular(
-                                                      3)),
-                                              padding:  EdgeInsets.only(
-                                                  left: width/273.2),
-                                              child:
-                                              DropdownSearch <String>(
-                                                autoValidateMode: AutovalidateMode.onUserInteraction,
-                                                selectedItem: statecon.text,
-                                                popupProps: PopupProps.menu(
-                                                  showSearchBox: true,
-                                                ),
-                                                dropdownDecoratorProps: DropDownDecoratorProps(
-                                                  baseStyle:SafeGoogleFont( 'Nunito', fontSize:  20 * ffem,),
-                                                  textAlignVertical: TextAlignVertical.center,
-                                                  dropdownSearchDecoration: InputDecoration(
-                                                      border: InputBorder.none),
-                                                ),
-                                                items: StateList,
-                                                validator: (value) {
-                                                  if (value=='Select State') {
-                                                    setState((){
-                                                      dropdownValidator=true;
-                                                    });
-                                                  }
-                                                  return null;
-                                                },
-                                                onChanged: (String? value) {
-                                                  getCity(value.toString());
-                                                  if (value=='Select State') {
-                                                    setState((){
-                                                      dropdownValidator=true;
-                                                    });
-                                                  }else{
-
-                                                    setState(() {
-                                                      statecon.text =
-                                                      value!;
-                                                      dropdownValidator=false;
-                                                    });
-                                                  }
-                                                },
-                                              ),
-
-                                              /*  DropdownButtonHideUnderline(
-                                                                  child: DropdownButtonFormField2<String>(
-                                                                  value:statecon.text,
-                                                                    isExpanded:true,
-                                                                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                                                              hint: Padding(
-                                                                padding:  EdgeInsets.only(left:width/170.75),
-                                                                child: Text(
-                                                                  'Select State',
-                                                                  style:
-                                                                  SafeGoogleFont('Nunito',
-                                                                    fontSize:
-                                                                       20 * ffem,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              items: StateList
-                                                                  .map((String
-                                                                          item) =>
-                                                                      DropdownMenuItem<
-                                                                          String>(
-
-                                                                        value:
-                                                                            item,
-                                                                        child:
-                                                                            Text(
-                                                                              item,
-                                                                              style:
-                                                                              SafeGoogleFont(
-                                                                            'Nunito',
-                                                                            fontSize:
-                                                                                20 * ffem,
-                                                                                                                                                      ),
-                                                                                                                                                    ),
-                                                                      )).toList(),
-                                                                  validator: (value) {
-                                                                    if (value=='Select State') {
-                                                                     setState((){
-                                                                       dropdownValidator=true;
-                                                                     });
-                                                                    }
-                                                                    return null;
-                                                                  },
-                                                              onChanged: (String?
-                                                                  value) {
-                                                                getCity(value.toString());
-                                                                if (value=='Select State') {
-                                                                  setState((){
-                                                                    dropdownValidator=true;
-                                                                  });
-                                                                }else{
-
-                                                                  setState(() {
-                                                                    statecon.text =
-                                                                    value!;
-                                                                    dropdownValidator=false;
-                                                                  });
-                                                                }
-                                                              },
-                                                              buttonStyleData:
-                                                              ButtonStyleData(height:20,
-                                                                width:
-                                                                width / 2.571,
-                                                              ),
-                                                              menuItemStyleData: const MenuItemStyleData(),
-                                                              decoration:
-                                                              const InputDecoration(
-                                                                      border:
-                                                                          InputBorder
-                                                                              .none),
-                                                                     ),
-                                                                    ),*/
-
-                                            ),
-                                            dropdownValidator == true &&
-                                                statecon.text ==
-                                                    "Select State"
-                                                ? Text("Field is required",
-                                                style: TextStyle(
-                                                    color: Colors.red,
-                                                    fontSize: 13))
-                                                : const SizedBox()
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(width: width / 46.5454),
-
-                                      ///city
-                                      SizedBox(
-                                        height: height / 7.5,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            KText(
-                                              text: 'City *',
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                fontSize: 20 * ffem,
-                                                fontWeight:
-                                                FontWeight.w700,
-                                                height: 1.3625 *
-                                                    ffem /
-                                                    fem,
-                                                color:
-                                                const Color(0xff000000),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                                height: height / 123.1666),
-                                            Container(
-                                              height: height / 15.114,
-                                              width: width / 6.4,
-                                              decoration: BoxDecoration(
-                                                  color: const Color(
-                                                      0xffDDDEEE),
-                                                  borderRadius:
-                                                  BorderRadius
-                                                      .circular(
-                                                      3)),
-                                              padding:  EdgeInsets.only(
-                                                  left: width/273.2),
-                                              child:
-                                              DropdownSearch <String>(
-                                                autoValidateMode: AutovalidateMode.onUserInteraction,
-                                                selectedItem: citycon.text,
-                                                popupProps: PopupProps.menu(
-                                                  showSearchBox: true,
-                                                ),
-
-                                                dropdownDecoratorProps: DropDownDecoratorProps(
-                                                  baseStyle:SafeGoogleFont( 'Nunito', fontSize:  20 * ffem,),
-                                                  textAlignVertical: TextAlignVertical.center,
-                                                  dropdownSearchDecoration: InputDecoration(
-                                                      border: InputBorder.none),
-                                                ),
-                                                items: _cities,
-                                                validator: (value) {
-                                                  if (value ==
-                                                      'Select City') {
-                                                    setState(() {
-                                                      dropdownValidator2 =
-                                                      true;
-                                                    });
-                                                  }
-                                                  return null;
-                                                },
-                                                onChanged: (String?
-                                                value) {
-                                                  if (value ==
-                                                      'Select City') {
-                                                    setState(() {
-                                                      dropdownValidator2 =
-                                                      true;
-                                                    });
-                                                  }
-                                                  else {
-                                                    setState(() {
-                                                      citycon.text =
-                                                      value!;
-                                                      dropdownValidator2 =
-                                                      false;
-                                                    });
-                                                  }
-                                                },
-                                              ),
-
-                                              /*  DropdownButtonHideUnderline(
-                                                  child:
-                                                  DropdownButtonFormField2<
-                                                      String>(
-                                                    isExpanded: true,
-                                                    autovalidateMode: AutovalidateMode
-                                                        .onUserInteraction,
-                                                    hint: Text(
-                                                      'Select City',
-                                                      style:
-                                                      SafeGoogleFont(
-                                                        'Nunito',
-                                                        fontSize:
-                                                        20 * ffem,
-                                                      ),
-                                                    ),
-                                                    items: _cities
-                                                        .map((String
-                                                    item) =>
-                                                        DropdownMenuItem<
-                                                            String>(
-                                                          value:
-                                                          item,
-                                                          child:
-                                                          Text(
-                                                            item,
-                                                            style:
-                                                            SafeGoogleFont(
-                                                              'Nunito',
-                                                              fontSize:
-                                                              20 * ffem,
-                                                            ),
-                                                          ),
-                                                        ))
-                                                        .toList(),
-                                                    value: citycon.text,
-                                                    validator: (value) {
-                                                      if (value ==
-                                                          'Select City') {
-                                                        setState(() {
-                                                          dropdownValidator2 =
-                                                          true;
-                                                        });
-                                                      }
-                                                      return null;
-                                                    },
-                                                    onChanged: (String?
-                                                    value) {
-                                                      if (value ==
-                                                          'Select City') {
-                                                        setState(() {
-                                                          dropdownValidator2 =
-                                                          true;
-                                                        });
-                                                      }
-                                                      else {
-                                                        setState(() {
-                                                          citycon.text =
-                                                          value!;
-                                                          dropdownValidator2 =
-                                                          false;
-                                                        });
-                                                      }
-                                                    },
-                                                    buttonStyleData:
-                                                    const ButtonStyleData(
-
-
-                                                    ),
-                                                    menuItemStyleData:
-                                                    const MenuItemStyleData(
-
-                                                    ),
-                                                    decoration:
-                                                    const InputDecoration(
-                                                        border:
-                                                        InputBorder
-                                                            .none),
-                                                  ),
-                                                ),*/
-                                            ),
-                                            dropdownValidator2 == true &&
-                                                citycon.text == "Select City"
-                                                ? Text("Field is required",
-                                                style: TextStyle(
-                                                    color: Colors.red,
-                                                    fontSize: 13))
-                                                : const SizedBox()
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(width: width / 43.8857),
-
-                                      ///Pin Code
-                                      SizedBox(
-                                        height: height / 7.5,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            KText(
-                                              text: 'Pin Code *',
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                fontSize: 20 * ffem,
-                                                fontWeight:
-                                                FontWeight.w700,
-                                                height: 1.3625 *
-                                                    ffem /
-                                                    fem,
-                                                color:
-                                                const Color(0xff000000),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                                height: height / 123.1666),
-                                            Container(
-                                                height: height / 15.114,
-                                                width: width / 6.4,
-                                                decoration: BoxDecoration(
-                                                    color: const Color(
-                                                        0xffDDDEEE),
-                                                    borderRadius:
-                                                    BorderRadius
-                                                        .circular(
-                                                        3)),
-                                                child: TextFormField(
-                                                  controller:
-                                                  pinCodecon,
-                                                  maxLength: 6,
-                                                  autovalidateMode: AutovalidateMode
-                                                      .onUserInteraction,
-                                                  inputFormatters: [
-                                                    FilteringTextInputFormatter
-                                                        .allow(RegExp(
-                                                        "[0-9]")),
-                                                  ],
-                                                  decoration:
-                                                  const InputDecoration(
-                                                    border:
-                                                    InputBorder
-                                                        .none,
-                                                    contentPadding:
-                                                    EdgeInsets.only(
-                                                        bottom:
-                                                        10,
-                                                        top: 2,
-                                                        left: 10),
-                                                    counterText: "",
-                                                  ),
-                                                  validator: (value) {
-                                                    if (value!
-                                                        .isEmpty) {
-                                                      return 'Field is required';
-                                                    } else if (value!
-                                                        .isNotEmpty) {
-                                                      if (value!
-                                                          .length <
-                                                          6) {
-                                                        return 'Please Enter Pin code Correctly';
-                                                      }
-                                                    }
-                                                    return null;
-                                                  },
-                                                ))
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(width: width / 43.8857),
-
-                                      ///Country Dropdown
-                                      SizedBox(
-                                        height: height / 7.5,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            KText(
-                                              text: 'Country *',
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                fontSize: 20 * ffem,
-                                                fontWeight:
-                                                FontWeight.w700,
-                                                height: 1.3625 *
-                                                    ffem /
-                                                    fem,
-                                                color:
-                                                const Color(0xff000000),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                                height: height / 123.1666),
-                                            Container(
-                                              height: height / 15.114,
-                                              width: width / 6.4,
-                                              decoration: BoxDecoration(
-                                                  color: const Color(
-                                                      0xffDDDEEE),
-                                                  borderRadius:
-                                                  BorderRadius
-                                                      .circular(
-                                                      3)),
-                                              padding:  EdgeInsets.only(
-                                                  left: width/273.2),
-                                              child:
-                                              DropdownSearch <String>(
-                                                autoValidateMode: AutovalidateMode.onUserInteraction,
-                                                selectedItem: countrycon.text,
-                                                popupProps: PopupProps.menu(
-                                                  showSearchBox: true,
-                                                ),
-                                                dropdownDecoratorProps: DropDownDecoratorProps(
-                                                  baseStyle:SafeGoogleFont( 'Nunito', fontSize:  20 * ffem,),
-                                                  textAlignVertical: TextAlignVertical.center,
-                                                  dropdownSearchDecoration: InputDecoration(
-                                                      border: InputBorder.none),
-                                                ),
-                                                items: coutryList,
-                                                validator: (value) {
-                                                  if (value ==
-                                                      "Select Country") {
-                                                    setState(() {
-                                                      dropdownValidator3 =
-                                                      true;
-                                                    });
-                                                  }
-                                                  return null;
-                                                },
-                                                onChanged: (String?
-                                                value) {
-                                                  if (value ==
-                                                      'Select Country') {
-                                                    setState(() {
-                                                      dropdownValidator3 =
-                                                      true;
-                                                    });
-                                                  }
-                                                  else {
-                                                    setState(() {
-                                                      countrycon
-                                                          .text =
-                                                      value!;
-                                                      dropdownValidator3 =
-                                                      false;
-                                                    });
-                                                  }
-                                                },
-                                              ),
-                                              /* DropdownButtonHideUnderline(
-
-                                                  child:
-                                                  DropdownButtonFormField2<
-                                                      String>(
-                                                    isExpanded: true,
-                                                    autovalidateMode: AutovalidateMode
-                                                        .onUserInteraction,
-                                                    hint: Text(
-                                                      'Select Country',
-                                                      style:
-                                                      SafeGoogleFont(
-                                                        'Nunito',
-                                                        fontSize:
-                                                        20 * ffem,
-                                                      ),
-                                                    ),
-                                                    items: coutryList
-                                                        .map((String
-                                                    item) =>
-                                                        DropdownMenuItem<
-                                                            String>(
-                                                          value:
-                                                          item,
-                                                          child:
-                                                          Text(
-                                                            item,
-                                                            style:
-                                                            SafeGoogleFont(
-                                                              'Nunito',
-                                                              fontSize:
-                                                              20 * ffem,
-                                                            ),
-                                                          ),
-                                                        ))
-                                                        .toList(),
-                                                    value:
-                                                    countrycon.text,
-                                                    validator: (value) {
-                                                      if (value ==
-                                                          "Select Country") {
-                                                        setState(() {
-                                                          dropdownValidator3 =
-                                                          true;
-                                                        });
-                                                      }
-                                                      return null;
-                                                    },
-                                                    onChanged: (String?
-                                                    value) {
-                                                      if (value ==
-                                                          'Select Country') {
-                                                        setState(() {
-                                                          dropdownValidator3 =
-                                                          true;
-                                                        });
-                                                      }
-                                                      else {
-                                                        setState(() {
-                                                          countrycon
-                                                              .text =
-                                                          value!;
-                                                          dropdownValidator3 =
-                                                          false;
-                                                        });
-                                                      }
-                                                    },
-                                                    buttonStyleData:
-                                                    const ButtonStyleData(
-
-                                                    ),
-                                                    menuItemStyleData:
-                                                    const MenuItemStyleData(
-
-                                                    ),
-                                                    decoration:
-                                                    const InputDecoration(
-                                                        border:
-                                                        InputBorder
-                                                            .none),
-                                                  ),
-                                                ),*/
-                                            ),
-                                            dropdownValidator3 == true &&
-                                                countrycon.text ==
-                                                    "Select Country"
-                                                ? Text("Field is required",
-                                                style: TextStyle(
-                                                    color: Colors.red,
-                                                    fontSize: 13))
-                                                : const SizedBox()
-
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-
-
-                                ///alumni details
-                                SizedBox(height: height / 36.95),
-                                Row(
-                                  children: [
-                                    SizedBox(width: width / 307.2),
-                                    KText(
-                                      text: 'Alumni Details',
-                                      style: SafeGoogleFont(
-                                        'Nunito',
-                                        fontSize: 25 * ffem,
-                                        fontWeight: FontWeight.w700,
-                                        height: 1.3625 * ffem / fem,
-                                        color: const Color(0xff000000),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 4,
-                                      right: 4,
-                                      top: 4,
-                                      bottom: 4),
-                                  child: Container(
-                                    height: 1,
-                                    width: width / 1.4422,
-                                    color: Colors.grey.shade300,
-                                  ),
-                                ),
-                                SizedBox(height: height / 36.95),
-
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      height: height / 2.8,
-                                      width: width / 2.19428,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .spaceAround,
-                                        children: [
-
-                                          ///subject stream and containers
-                                          Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .spaceBetween,
-                                            children: [
-                                              SizedBox(
-                                                height: height / 9.369,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .start,
-                                                  children: [
-                                                    KText(
-                                                      text:
-                                                      'Year Passed *',
-                                                      style:
-                                                      SafeGoogleFont(
-                                                        'Nunito',
-                                                        fontSize:
-                                                        20 * ffem,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .w700,
-                                                        height:
-                                                        1.3625 *
-                                                            ffem /
-                                                            fem,
-                                                        color: const Color(
-                                                            0xff000000),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        height: height /
-                                                            123.1666),
-                                                    Container(
-                                                        height: height / 15.114,
-                                                        width: width / 4.6545,
-                                                        decoration: BoxDecoration(
-                                                            color: const Color(
-                                                                0xffDDDEEE),
-                                                            borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                3)),
-                                                        child:
-                                                        TextFormField(
-                                                          readOnly: true,
-                                                          autovalidateMode: AutovalidateMode
-                                                              .onUserInteraction,
-                                                          controller: yearPassedcon,
-                                                          inputFormatters: [
-                                                            FilteringTextInputFormatter
-                                                                .allow(
-                                                                RegExp(
-                                                                    "[0-9]")),
-                                                          ],
-                                                          onTap: () async {
-                                                            final DateTime? picked = await showDatePicker(
-                                                              context: context,
-                                                              initialDate: DateTime
-                                                                  .now(),
-                                                              firstDate: DateTime(
-                                                                  1900),
-                                                              lastDate: DateTime
-                                                                  .now(),
-                                                              initialDatePickerMode: DatePickerMode
-                                                                  .year,
-                                                            );
-
-                                                            if(picked!.year<(BatchYearValid+17)){
-                                                              userNotValidYearOfPassedPopup();
-                                                            }
-                                                            if (picked !=
-                                                                null &&
-                                                                picked !=
-                                                                    DateTime
-                                                                        .now()) {
-                                                              print(
-                                                                  'Selected year: ${picked
-                                                                      .year}');
-                                                              setState(() {
-                                                                yearPassedcon
-                                                                    .text =
-                                                                    picked.year
-                                                                        .toString();
-                                                              });
-                                                            }
-                                                          },
-                                                          decoration:
-                                                          const InputDecoration(
-                                                            border: InputBorder
-                                                                .none,
-                                                            contentPadding: EdgeInsets
-                                                                .only(
-                                                                bottom:
-                                                                10,
-                                                                top:
-                                                                2,
-                                                                left:
-                                                                10),
-                                                          ),
-                                                          validator: (value) =>
-                                                          value!
-                                                              .isEmpty
-                                                              ? 'Field is required'
-                                                              : null,
-                                                        ))
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: height / 7.5,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .start,
-                                                  children: [
-                                                    KText(
-                                                      text:
-                                                      'Department *',
-                                                      style:
-                                                      SafeGoogleFont(
-                                                        'Nunito',
-                                                        fontSize:
-                                                        20 * ffem,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .w700,
-                                                        height:
-                                                        1.3625 *
-                                                            ffem /
-                                                            fem,
-                                                        color: const Color(
-                                                            0xff000000),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        height: height /
-                                                            123.1666),
-                                                    Container(
-                                                      height: height / 15.114,
-                                                      width: width / 4.6545,
-                                                      decoration: BoxDecoration(
-                                                          color: const Color(
-                                                              0xffDDDEEE),
-                                                          borderRadius:
-                                                          BorderRadius.circular(
-                                                              3)),
-                                                      child:
-                                                      DropdownButtonHideUnderline(
-                                                        child:
-                                                        DropdownButtonFormField2<
-                                                            String>(
-                                                          isExpanded: true,
-                                                          hint: Text(
-                                                            'Select Department',
-                                                            style:
-                                                            SafeGoogleFont(
-                                                              'Nunito',
-                                                              fontSize:
-                                                              20 * ffem,
-                                                            ),
-                                                          ),
-                                                          items: departmentDataList
-                                                              .map((String
-                                                          item) =>
-                                                              DropdownMenuItem<
-                                                                  String>(
-                                                                value: item,
-                                                                child: Text(
-                                                                  item,
-                                                                  style:
-                                                                  SafeGoogleFont(
-                                                                    'Nunito',
-                                                                    fontSize:
-                                                                    20 *
-                                                                        ffem,
-                                                                  ),
-                                                                ),
-                                                              )).toList(),
-                                                          value:
-                                                          subjectStremdcon.text,
-                                                          validator: (value) {
-                                                            if (value ==
-                                                                'Select Department') {
-                                                              setState(() {
-                                                                dropdownDepartmentValidator =
-                                                                true;
-                                                              });
-                                                            }
-                                                            return null;
-                                                          },
-                                                          onChanged: (String?
-                                                          value) {
-                                                            if (value ==
-                                                                'Select Department') {
-                                                              setState(() {
-                                                                dropdownDepartmentValidator =
-                                                                true;
-                                                              });
-                                                            }
-                                                            else {
-                                                              setState(() {
-                                                                subjectStremdcon.text =
-                                                                value!;
-                                                                dropdownDepartmentValidator =
-                                                                false;
-                                                              });
-                                                            }
-                                                          },
-
-                                                          buttonStyleData:
-                                                          const ButtonStyleData(
-
-
-                                                          ),
-                                                          menuItemStyleData:
-                                                          const MenuItemStyleData(
-
-                                                          ),
-                                                          decoration:
-                                                          const InputDecoration(
-                                                              border:
-                                                              InputBorder
-                                                                  .none),
-                                                        ),
-                                                      ),
-
-                                                    ),
-                                                    dropdownDepartmentValidator == true &&
-                                                        subjectStremdcon.text ==
-                                                            "Select Department"
-                                                        ? Text("Field is required",
-                                                        style: TextStyle(
-                                                            color: Colors.red,
-                                                            fontSize: 13))
-                                                        : const SizedBox()
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-
-                                          ///class anb roll no container
-
-                                          Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .spaceBetween,
-                                            children: [
-                                              SizedBox(
-                                                height: height / 9.369,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .start,
-                                                  children: [
-                                                    KText(
-                                                      text: 'Class *',
-                                                      style:
-                                                      SafeGoogleFont(
-                                                        'Nunito',
-                                                        fontSize:
-                                                        20 * ffem,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .w700,
-                                                        height:
-                                                        1.3625 *
-                                                            ffem /
-                                                            fem,
-                                                        color: const Color(
-                                                            0xff000000),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        height: height /
-                                                            123.1666),
-                                                    Container(
-                                                        height: height / 15.114,
-                                                        width: width / 4.6545,
-                                                        decoration: BoxDecoration(
-                                                            color: const Color(
-                                                                0xffDDDEEE),
-                                                            borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                3)),
-                                                        child:
-                                                        TextFormField(
-                                                          autovalidateMode: AutovalidateMode
-                                                              .onUserInteraction,
-                                                          controller:
-                                                          classcon,
-                                                          inputFormatters: [
-                                                            FilteringTextInputFormatter
-                                                                .allow(
-                                                                RegExp(
-                                                                    "[a-zA-Z ]")),
-                                                          ],
-                                                          decoration:
-                                                          const InputDecoration(
-                                                            border: InputBorder
-                                                                .none,
-                                                            contentPadding: EdgeInsets
-                                                                .only(
-                                                                bottom:
-                                                                10,
-                                                                top:
-                                                                2,
-                                                                left:
-                                                                10),
-                                                          ),
-                                                          validator: (value) =>
-                                                          value!
-                                                              .isEmpty
-                                                              ? 'Field is required'
-                                                              : null,
-                                                        ))
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: height / 9.369,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .start,
-                                                  children: [
-                                                    KText(
-                                                      text: 'Roll No',
-                                                      style:
-                                                      SafeGoogleFont(
-                                                        'Nunito',
-                                                        fontSize:
-                                                        20 * ffem,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .w700,
-                                                        height:
-                                                        1.3625 *
-                                                            ffem /
-                                                            fem,
-                                                        color: const Color(
-                                                            0xff000000),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        height: height /
-                                                            123.1666),
-                                                    Container(
-                                                        height: height / 15.114,
-                                                        width: width / 4.6545,
-                                                        decoration: BoxDecoration(
-                                                            color: const Color(
-                                                                0xffDDDEEE),
-                                                            borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                3)),
-                                                        child:
-                                                        TextFormField(
-                                                          controller:
-                                                          rollnocon,
-                                                          inputFormatters: [
-                                                            FilteringTextInputFormatter
-                                                                .allow(
-                                                                RegExp(
-                                                                    "[a-zA-Z0-9 ]")),
-                                                          ],
-                                                          decoration:
-                                                          const InputDecoration(
-                                                            border: InputBorder
-                                                                .none,
-                                                            contentPadding: EdgeInsets
-                                                                .only(
-                                                                bottom:
-                                                                10,
-                                                                top:
-                                                                2,
-                                                                left:
-                                                                10),
-                                                          ),
-                                                          //validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                        ))
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-
-                                          ///house and last visit container
-                                          Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .spaceBetween,
-                                            children: [
-                                              SizedBox(
-                                                height: height / 9.369,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .start,
-                                                  children: [
-                                                    KText(
-                                                      text: 'House',
-                                                      style:
-                                                      SafeGoogleFont(
-                                                        'Nunito',
-                                                        fontSize:
-                                                        20 * ffem,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .w700,
-                                                        height:
-                                                        1.3625 *
-                                                            ffem /
-                                                            fem,
-                                                        color: const Color(
-                                                            0xff000000),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        height: height /
-                                                            123.1666),
-                                                    Container(
-                                                        height: height / 15.114,
-                                                        width: width / 4.6545,
-                                                        decoration: BoxDecoration(
-                                                            color: const Color(
-                                                                0xffDDDEEE),
-                                                            borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                3)),
-                                                        child:
-                                                        TextFormField(
-                                                          controller:
-                                                          housecon,
-                                                          inputFormatters: [
-                                                            FilteringTextInputFormatter
-                                                                .allow(
-                                                                RegExp(
-                                                                    "[a-zA-Z0-9 ]")),
-                                                          ],
-                                                          decoration:
-                                                          const InputDecoration(
-                                                            border: InputBorder
-                                                                .none,
-                                                            contentPadding: EdgeInsets
-                                                                .only(
-                                                                bottom:
-                                                                10,
-                                                                top:
-                                                                2,
-                                                                left:
-                                                                10),
-                                                          ),
-                                                          //  validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                        ))
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: height / 9.369,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .start,
-                                                  children: [
-                                                    KText(
-                                                      text:
-                                                      'Your Last Visit',
-                                                      style:
-                                                      SafeGoogleFont(
-                                                        'Nunito',
-                                                        fontSize:
-                                                        20 * ffem,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .w700,
-                                                        height:
-                                                        1.3625 *
-                                                            ffem /
-                                                            fem,
-                                                        color: const Color(
-                                                            0xff000000),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        height: height /
-                                                            123.1666),
-                                                    Container(
-                                                        height: height / 15.114,
-                                                        width: width / 4.6545,
-                                                        decoration: BoxDecoration(
-                                                            color: const Color(
-                                                                0xffDDDEEE),
-                                                            borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                3)),
-                                                        child:
-                                                        TextFormField(
-                                                          controller:
-                                                          lastvisitcon,
-                                                          inputFormatters: [
-                                                            FilteringTextInputFormatter
-                                                                .allow(
-                                                                RegExp(
-                                                                    "[a-zA-Z0-9 ]")),
-                                                          ],
-                                                          decoration:
-                                                          const InputDecoration(
-                                                            border: InputBorder
-                                                                .none,
-                                                            contentPadding: EdgeInsets
-                                                                .only(
-                                                                bottom:
-                                                                10,
-                                                                top:
-                                                                2,
-                                                                left:
-                                                                10),
-                                                          ),
-                                                          // validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                        ))
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                      const EdgeInsets.only(left: 25),
-                                      child: SizedBox(
-                                        height: height / 2.8,
-                                        width: width / 4.1513,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            KText(
-                                              text:
-                                              'My Status Message *',
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                fontSize: 20 * ffem,
-                                                fontWeight:
-                                                FontWeight.w700,
-                                                height: 1.3625 *
-                                                    ffem /
-                                                    fem,
-                                                color:
-                                                const Color(0xff000000),
-                                              ),
-                                            ),
-                                            SizedBox(height: height / 123.1666),
-                                            Container(
-                                                height: height / 3.15,
-                                                width: width / 4.45217,
-                                                decoration: BoxDecoration(
-                                                    color: const Color(
-                                                        0xffDDDEEE),
-                                                    borderRadius:
-                                                    BorderRadius
-                                                        .circular(
-                                                        3)),
-                                                child: TextFormField(
-                                                  controller:
-                                                  statusmessagecon,
-                                                  autovalidateMode: AutovalidateMode
-                                                      .onUserInteraction,
-                                                  maxLines: null,
-                                                  expands: true,
-                                                  decoration:
-                                                  const InputDecoration(
-                                                    border:
-                                                    InputBorder
-                                                        .none,
-                                                    contentPadding:
-                                                    EdgeInsets.only(
-                                                        bottom:
-                                                        10,
-                                                        top: 10,
-                                                        left: 10),
-                                                  ),
-                                                  validator: (value) =>
-                                                  value!.isEmpty
-                                                      ? 'Field is required'
-                                                      : null,
-                                                ))
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-
-                                ///alumni education Qualifications
-                                SizedBox(height: height / 36.95),
-                                Row(
-                                  children: [
-                                    SizedBox(width: width / 307.2),
-                                    KText(
-                                      text: 'Alumni Qualifications',
-                                      style: SafeGoogleFont(
-                                        'Nunito',
-                                        fontSize: 25 * ffem,
-                                        fontWeight: FontWeight.w700,
-                                        height: 1.3625 * ffem / fem,
-                                        color: const Color(0xff000000),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 4,
-                                      right: 4,
-                                      top: 4,
-                                      bottom: 4),
-                                  child: Container(
-                                    height: 1,
-                                    width: width / 1.4422,
-                                    color: Colors.grey.shade300,
-                                  ),
-                                ),
-                                SizedBox(height: height / 36.95),
-
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        KText(
-                                          text:
-                                          'Educational Qualification',
-                                          style: SafeGoogleFont(
-                                            'Nunito',
-                                            fontSize: 20 * ffem,
-                                            fontWeight:
-                                            FontWeight.w700,
-                                            height:
-                                            1.3625 * ffem / fem,
-                                            color: const Color(0xff000000),
-                                          ),
-                                        ),
-                                        SizedBox(height: height / 123.1666),
-                                        Container(
-                                            height: height / 10.5571,
-                                            width: width / 3.01176,
-                                            decoration: BoxDecoration(
-                                                color: const Color(
-                                                    0xffDDDEEE),
-                                                borderRadius:
-                                                BorderRadius
-                                                    .circular(3)),
-                                            child: TextFormField(
-                                              controller:
-                                              educationquvalificationcon,
-                                              inputFormatters: [
-                                                FilteringTextInputFormatter
-                                                    .allow(RegExp(
-                                                    "[a-zA-Z ]")),
-                                              ],
-                                              decoration:
-                                              const InputDecoration(
-                                                border:
-                                                InputBorder.none,
-                                                contentPadding:
-                                                EdgeInsets.only(
-                                                    bottom: 10,
-                                                    top: 2,
-                                                    left: 10),
-                                              ),
-                                            ))
-                                      ],
-                                    ),
-                                    SizedBox(width: width / 30.72),
-                                    Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        KText(
-                                          text:
-                                          'Additional Qualification',
-                                          style: SafeGoogleFont(
-                                            'Nunito',
-                                            fontSize: 20 * ffem,
-                                            fontWeight:
-                                            FontWeight.w700,
-                                            height:
-                                            1.3625 * ffem / fem,
-                                            color: const Color(0xff000000),
-                                          ),
-                                        ),
-                                        SizedBox(height: height / 123.1666),
-                                        Container(
-                                            height: height / 10.5571,
-                                            width: width / 3.01176,
-                                            decoration: BoxDecoration(
-                                                color: const Color(
-                                                    0xffDDDEEE),
-                                                borderRadius:
-                                                BorderRadius
-                                                    .circular(3)),
-                                            child: TextFormField(
-                                              controller:
-                                              additionalquvalificationcon,
-                                              inputFormatters: [
-                                                FilteringTextInputFormatter
-                                                    .allow(RegExp(
-                                                    "[a-zA-Z ]")),
-                                              ],
-                                              decoration:
-                                              const InputDecoration(
-                                                border:
-                                                InputBorder.none,
-                                                contentPadding:
-                                                EdgeInsets.only(
-                                                    bottom: 10,
-                                                    top: 2,
-                                                    left: 10),
-                                              ),
-                                            ))
-                                      ],
-                                    ),
-                                  ],
-                                ),
-
-                                SizedBox(height: height / 36.95),
-                                Row(
-                                  children: [
-                                    SizedBox(width: width / 307.2),
-                                    KText(
-                                      text: 'Professional Details',
-                                      style: SafeGoogleFont(
-                                        'Nunito',
-                                        fontSize: 25 * ffem,
-                                        fontWeight: FontWeight.w700,
-                                        height: 1.3625 * ffem / fem,
-                                        color: const Color(0xff000000),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 4,
-                                      right: 4,
-                                      top: 4,
-                                      bottom: 4),
-                                  child: Container(
-                                    height: 1,
-                                    width: width / 1.4422,
-                                    color: Colors.grey.shade300,
-                                  ),
-                                ),
-                                SizedBox(height: height / 36.95),
-
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      height: height / 9.369,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          KText(
-                                            text: 'Are You Working',
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              fontSize: 20 * ffem,
-                                              fontWeight:
-                                              FontWeight.w700,
-                                              height:
-                                              1.3625 * ffem / fem,
-                                              color:
-                                              const Color(0xff000000),
-                                            ),
-                                          ),
-                                          SizedBox(height: height / 123.1666),
-                                          Container(
-                                            height: height / 15.114,
-                                            width: width / 6.6782,
-                                            decoration: BoxDecoration(
-                                                color: const Color(
-                                                    0xffDDDEEE),
-                                                borderRadius:
-                                                BorderRadius
-                                                    .circular(3)),
-                                            child:
-                                            DropdownButtonHideUnderline(
-                                              child:
-                                              DropdownButtonFormField2<
-                                                  String>(
-                                                isExpanded: true,
-                                                hint: Text(
-                                                  'Working',
-                                                  style:
-                                                  SafeGoogleFont(
-                                                    'Nunito',
-                                                    fontSize:
-                                                    20 * ffem,
-                                                  ),
-                                                ),
-                                                items: WorkingEmpList
-                                                    .map((String
-                                                item) =>
-                                                    DropdownMenuItem<
-                                                        String>(
-                                                      value: item,
-                                                      child: Text(
-                                                        item,
-                                                        style:
-                                                        SafeGoogleFont(
-                                                          'Nunito',
-                                                          fontSize:
-                                                          20 *
-                                                              ffem,
-                                                        ),
-                                                      ),
-                                                    )).toList(),
-                                                value:
-                                                alumniEmployedController
-                                                    .text,
-                                                onChanged:
-                                                    (String? value) {
-                                                  setState(() {
-                                                    alumniEmployedController
-                                                        .text =
-                                                    value!;
-                                                  });
-                                                },
-                                                buttonStyleData:
-                                                const ButtonStyleData(
-
-
-                                                ),
-                                                menuItemStyleData:
-                                                const MenuItemStyleData(
-
-                                                ),
-                                                decoration:
-                                                const InputDecoration(
-                                                    border:
-                                                    InputBorder
-                                                        .none),
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    /*    ///ownBussinesscon
-
-                                                    Padding(
-                                                    padding:EdgeInsets.only(left:width/68.0666),
-                                                child:
-                                                SizedBox(
-                                                  height: height/9.369,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                    children: [
-                                                      KText(
-                                                        text: 'Own Business',
-                                                        style: SafeGoogleFont(
-                                                          'Nunito',
-                                                          fontSize: 20 * ffem,
-                                                          fontWeight: FontWeight.w700,
-                                                          height: 1.3625 * ffem / fem,
-                                                          color: const Color(0xff000000),
-                                                        ),
-                                                      ),
-                                                      SizedBox(height: height/123.1666),
-                                                      Container(
-                                                          height: height/15.114,
-                                                          width: width/4.6545,
-                                                          decoration: BoxDecoration(
-                                                              color: const Color(
-                                                                  0xffDDDEEE),
-                                                              borderRadius:
-                                                              BorderRadius
-                                                                  .circular(3)),
-                                                          child: TextFormField(
-                                                            controller: ownBussinesscon,
-                                                            inputFormatters: [
-                                                              FilteringTextInputFormatter
-                                                                  .allow(RegExp(
-                                                                  "[a-zA-Z]")),
-                                                            ],
-                                                            decoration:
-                                                            const InputDecoration(
-                                                              border:
-                                                              InputBorder.none,
-                                                              contentPadding:
-                                                              EdgeInsets.only(
-                                                                  bottom: 10,
-                                                                  top: 2,
-                                                                  left: 10),
-                                                            ),
-                                                            // validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                          ))
-                                                    ],
-                                                  ),
-                                                )),*/
-
-                                  ],
-                                ),
-                                SizedBox(height: height / 36.95),
-                                alumniEmployedController.text == "Yes" ?
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      height: height / 9.369,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          KText(
-                                            text: 'Occupations',
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              fontSize: 20 * ffem,
-                                              fontWeight:
-                                              FontWeight.w700,
-                                              height:
-                                              1.3625 * ffem / fem,
-                                              color:
-                                              const Color(0xff000000),
-                                            ),
-                                          ),
-                                          SizedBox(height: height / 123.1666),
-                                          Container(
-                                              height: height / 15.114,
-                                              width: width / 4.6545,
-                                              decoration: BoxDecoration(
-                                                  color: const Color(
-                                                      0xffDDDEEE),
-                                                  borderRadius:
-                                                  BorderRadius
-                                                      .circular(
-                                                      3)),
-                                              child: TextFormField(
-                                                controller:
-                                                occupationcon,
-                                                inputFormatters: [
-                                                  FilteringTextInputFormatter
-                                                      .allow(RegExp(
-                                                      "[a-zA-Z ]")),
-                                                ],
-                                                decoration:
-                                                const InputDecoration(
-                                                  border: InputBorder
-                                                      .none,
-                                                  contentPadding:
-                                                  EdgeInsets.only(
-                                                      bottom: 10,
-                                                      top: 2,
-                                                      left: 10),
-                                                ),
-                                                // validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                              ))
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(width: width / 38.4),
-                                    SizedBox(
-                                      height: height / 9.369,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          KText(
-                                            text: 'Designation',
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              fontSize: 20 * ffem,
-                                              fontWeight:
-                                              FontWeight.w700,
-                                              height:
-                                              1.3625 * ffem / fem,
-                                              color:
-                                              const Color(0xff000000),
-                                            ),
-                                          ),
-                                          SizedBox(height: height / 123.1666),
-                                          Container(
-                                              height: height / 15.114,
-                                              width: width / 4.6545,
-                                              decoration: BoxDecoration(
-                                                  color: const Color(
-                                                      0xffDDDEEE),
-                                                  borderRadius:
-                                                  BorderRadius
-                                                      .circular(
-                                                      3)),
-                                              child: TextFormField(
-                                                controller:
-                                                designationcon,
-                                                inputFormatters: [
-                                                  FilteringTextInputFormatter
-                                                      .allow(RegExp(
-                                                      "[a-zA-Z ]")),
-                                                ],
-                                                decoration:
-                                                const InputDecoration(
-                                                  border: InputBorder
-                                                      .none,
-                                                  contentPadding:
-                                                  EdgeInsets.only(
-                                                      bottom: 10,
-                                                      top: 2,
-                                                      left: 10),
-                                                ),
-                                                //validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                              ))
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(width: width / 38.4),
-                                    SizedBox(
-                                      height: height / 9.369,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          KText(
-                                            text:
-                                            "Company/Concern's Name",
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              fontSize: 20 * ffem,
-                                              fontWeight:
-                                              FontWeight.w700,
-                                              height:
-                                              1.3625 * ffem / fem,
-                                              color:
-                                              const Color(0xff000000),
-                                            ),
-                                          ),
-                                          SizedBox(height: height / 123.1666),
-                                          Container(
-                                              height: height / 15.114,
-                                              width: width / 4.6545,
-                                              decoration: BoxDecoration(
-                                                  color: const Color(
-                                                      0xffDDDEEE),
-                                                  borderRadius:
-                                                  BorderRadius
-                                                      .circular(
-                                                      3)),
-                                              child: TextFormField(
-                                                controller:
-                                                company_concerncon,
-                                                inputFormatters: [
-                                                  FilteringTextInputFormatter
-                                                      .allow(RegExp(
-                                                      "[a-zA-Z ]")),
-                                                ],
-                                                decoration:
-                                                const InputDecoration(
-                                                  border: InputBorder
-                                                      .none,
-                                                  contentPadding:
-                                                  EdgeInsets.only(
-                                                      bottom: 10,
-                                                      top: 2,
-                                                      left: 10),
-                                                ),
-                                                // validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                              ))
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ) :
-                                alumniEmployedController.text == "Own Business"
-                                    ?
-                                Row(
-                                  children: [
-
-                                    /* SizedBox(width: width/38.4),
-                                                SizedBox(
-                                                  height: height/9.369,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                    children: [
-                                                      KText(
-                                                        text: 'Designation',
-                                                        style: SafeGoogleFont(
-                                                          'Nunito',
-                                                          fontSize: 20 * ffem,
-                                                          fontWeight:
-                                                          FontWeight.w700,
-                                                          height:
-                                                          1.3625 * ffem / fem,
-                                                          color:
-                                                          const Color(0xff000000),
-                                                        ),
-                                                      ),
-                                                      SizedBox(height: height/123.1666),
-                                                      Container(
-                                                          height: height/15.114,
-                                                          width: width/4.6545,
-                                                          decoration: BoxDecoration(
-                                                              color: const Color(
-                                                                  0xffDDDEEE),
-                                                              borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                  3)),
-                                                          child: TextFormField(
-                                                            controller:
-                                                            designationcon,
-                                                            inputFormatters: [
-                                                              FilteringTextInputFormatter
-                                                                  .allow(RegExp(
-                                                                  "[a-zA-Z]")),
-                                                            ],
-                                                            decoration:
-                                                            const InputDecoration(
-                                                              border: InputBorder
-                                                                  .none,
-                                                              contentPadding:
-                                                              EdgeInsets.only(
-                                                                  bottom: 10,
-                                                                  top: 2,
-                                                                  left: 10),
-                                                            ),
-                                                            //validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                          ))
-                                                    ],
-                                                  ),
-                                                ),*/
-
-                                    SizedBox(
-                                      height: height / 9.369,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          KText(
-                                            text:
-                                            "Company Name",
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              fontSize: 20 * ffem,
-                                              fontWeight:
-                                              FontWeight.w700,
-                                              height:
-                                              1.3625 * ffem / fem,
-                                              color:
-                                              const Color(0xff000000),
-                                            ),
-                                          ),
-                                          SizedBox(height: height / 123.1666),
-                                          Container(
-                                              height: height / 15.114,
-                                              width: width / 4.6545,
-                                              decoration: BoxDecoration(
-                                                  color: const Color(
-                                                      0xffDDDEEE),
-                                                  borderRadius:
-                                                  BorderRadius
-                                                      .circular(
-                                                      3)),
-                                              child: TextFormField(
-                                                controller:
-                                                company_concerncon,
-                                                inputFormatters: [
-                                                  FilteringTextInputFormatter
-                                                      .allow(RegExp(
-                                                      "[a-zA-Z ]")),
-                                                ],
-                                                decoration:
-                                                const InputDecoration(
-                                                  border: InputBorder
-                                                      .none,
-                                                  contentPadding:
-                                                  EdgeInsets.only(
-                                                      bottom: 10,
-                                                      top: 2,
-                                                      left: 10),
-                                                ),
-                                                // validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                              ))
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(width: width / 38.4),
-                                    SizedBox(
-                                      height: height / 9.369,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          KText(
-                                            text: 'Type',
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              fontSize: 20 * ffem,
-                                              fontWeight:
-                                              FontWeight.w700,
-                                              height:
-                                              1.3625 * ffem / fem,
-                                              color:
-                                              const Color(0xff000000),
-                                            ),
-                                          ),
-                                          SizedBox(height: height / 123.1666),
-                                          Container(
-                                              height: height / 15.114,
-                                              width: width / 4.6545,
-                                              decoration: BoxDecoration(
-                                                  color: const Color(
-                                                      0xffDDDEEE),
-                                                  borderRadius:
-                                                  BorderRadius
-                                                      .circular(
-                                                      3)),
-                                              child: TextFormField(
-                                                controller:
-                                                occupationcon,
-                                                inputFormatters: [
-                                                  FilteringTextInputFormatter
-                                                      .allow(RegExp(
-                                                      "[a-zA-Z ]")),
-                                                ],
-                                                decoration:
-                                                const InputDecoration(
-                                                  border: InputBorder
-                                                      .none,
-                                                  contentPadding:
-                                                  EdgeInsets.only(
-                                                      bottom: 10,
-                                                      top: 2,
-                                                      left: 10),
-                                                ),
-                                                // validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                              ))
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                )
-                                    :
-                                const SizedBox(),
-
-                                ///Material Status
-                                SizedBox(height: height / 36.95),
-                                Row(
-                                  children: [
-                                    SizedBox(width: width / 307.2),
-                                    KText(
-                                      text: 'Marital Information',
-                                      style: SafeGoogleFont(
-                                        'Nunito',
-                                        fontSize: 25 * ffem,
-                                        fontWeight: FontWeight.w700,
-                                        height: 1.3625 * ffem / fem,
-                                        color: const Color(0xff000000),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 4,
-                                      right: 4,
-                                      top: 4,
-                                      bottom: 4),
-                                  child: Container(
-                                    height: 1,
-                                    width: width / 1.4422,
-                                    color: Colors.grey.shade300,
-                                  ),
-                                ),
-                                SizedBox(height: height / 36.95),
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      height: height / 9.369,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          KText(
-                                            text: 'Are You Married',
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              fontSize: 20 * ffem,
-                                              fontWeight:
-                                              FontWeight.w700,
-                                              height:
-                                              1.3625 * ffem / fem,
-                                              color:
-                                              const Color(0xff000000),
-                                            ),
-                                          ),
-                                          SizedBox(height: height / 123.1666),
-                                          Container(
-                                            height: height / 15.114,
-                                            width: width / 6.6782,
-                                            decoration: BoxDecoration(
-                                                color: const Color(
-                                                    0xffDDDEEE),
-                                                borderRadius:
-                                                BorderRadius
-                                                    .circular(3)),
-                                            child:
-                                            DropdownButtonHideUnderline(
-
-                                              child:
-                                              DropdownButtonFormField2<
-                                                  String>(
-                                                isExpanded: true,
-                                                hint: Text(
-                                                  'Marital Status',
-                                                  style:
-                                                  SafeGoogleFont(
-                                                    'Nunito',
-                                                    fontSize:
-                                                    20 * ffem,
-                                                  ),
-                                                ),
-                                                items: MaritalStatusList
-                                                    .map((String
-                                                item) =>
-                                                    DropdownMenuItem<
-                                                        String>(
-                                                      value: item,
-                                                      child: Text(
-                                                        item,
-                                                        style:
-                                                        SafeGoogleFont(
-                                                          'Nunito',
-                                                          fontSize:
-                                                          20 *
-                                                              ffem,
-                                                        ),
-                                                      ),
-                                                    )).toList(),
-                                                value:
-                                                maritalStatuscon
-                                                    .text,
-                                                onChanged:
-                                                    (String? value) {
-                                                  setState(() {
-                                                    maritalStatuscon
-                                                        .text =
-                                                    value!;
-                                                  });
-                                                },
-                                                buttonStyleData:
-                                                const ButtonStyleData(
-
-
-                                                ),
-                                                menuItemStyleData:
-                                                const MenuItemStyleData(
-
-                                                ),
-                                                decoration:
-                                                const InputDecoration(
-                                                    border:
-                                                    InputBorder
-                                                        .none),
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(width: width / 38.4),
-                                    maritalStatuscon.text == "Yes"
-                                        ? SizedBox(
-                                        child: Row(children: [
-                                          SizedBox(
-                                            height: height / 9.369,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              children: [
-                                                KText(
-                                                  text:
-                                                  'Spouse Name',
-                                                  style:
-                                                  SafeGoogleFont(
-                                                    'Nunito',
-                                                    fontSize:
-                                                    20 * ffem,
-                                                    fontWeight:
-                                                    FontWeight
-                                                        .w700,
-                                                    height: 1.3625 *
-                                                        ffem /
-                                                        fem,
-                                                    color: const Color(
-                                                        0xff000000),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                    height: height / 123.1666),
-                                                Container(
-                                                    height: height / 15.114,
-                                                    width: width / 6.4,
-                                                    decoration: BoxDecoration(
-                                                        color: const Color(
-                                                            0xffDDDEEE),
-                                                        borderRadius:
-                                                        BorderRadius.circular(
-                                                            3)),
-                                                    child:
-                                                    TextFormField(
-                                                      controller:
-                                                      spouseNamecon,
-                                                      inputFormatters: [
-                                                        FilteringTextInputFormatter
-                                                            .allow(RegExp(
-                                                            "[a-zA-Z ]")),
-                                                      ],
-                                                      decoration:
-                                                      const InputDecoration(
-                                                        border:
-                                                        InputBorder
-                                                            .none,
-                                                        contentPadding: EdgeInsets
-                                                            .only(
-                                                            bottom:
-                                                            10,
-                                                            top: 2,
-                                                            left:
-                                                            10),
-                                                      ),
-                                                      //validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                    ))
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(width: width / 38.4),
-                                          SizedBox(
-                                            height: height / 9.369,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              children: [
-                                                KText(
-                                                  text:
-                                                  "Anniversary Date ",
-                                                  style:
-                                                  SafeGoogleFont(
-                                                    'Nunito',
-                                                    fontSize:
-                                                    20 * ffem,
-                                                    fontWeight:
-                                                    FontWeight
-                                                        .w700,
-                                                    height: 1.3625 *
-                                                        ffem /
-                                                        fem,
-                                                    color: const Color(
-                                                        0xff000000),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                    height: height / 123.1666),
-                                                Container(
-                                                    height: height / 15.114,
-                                                    width: width / 6.4,
-                                                    decoration: BoxDecoration(
-                                                        color: const Color(
-                                                            0xffDDDEEE),
-                                                        borderRadius:
-                                                        BorderRadius.circular(
-                                                            3)),
-                                                    child:
-                                                    TextFormField(
-                                                      readOnly:
-                                                      true,
-                                                      controller:
-                                                      anniversaryDatecon,
-                                                      decoration:
-                                                      const InputDecoration(
-                                                        border:
-                                                        InputBorder
-                                                            .none,
-                                                        contentPadding: EdgeInsets
-                                                            .only(
-                                                            bottom:
-                                                            10,
-                                                            top: 2,
-                                                            left:
-                                                            10),
-                                                      ),
-                                                      onTap:
-                                                          () async {
-                                                        DateTime? pickedDate = await showDatePicker(
-                                                            context: context,
-                                                            initialDate: DateTime
-                                                                .now(),
-                                                            firstDate: DateTime(
-                                                                1950),
-                                                            //DateTime.now() - not to allow to choose before today.
-                                                            lastDate: DateTime(
-                                                                2100));
-
-                                                        if (pickedDate !=
-                                                            null) {
-                                                          //pickedDate output format => 2021-03-10 00:00:00.000
-                                                          String
-                                                          formattedDate =
-                                                          DateFormat(
-                                                              'dd/MM/yyyy')
-                                                              .format(
-                                                              pickedDate);
-                                                          //formatted date output using intl package =>  2021-03-16
-                                                          setState(
-                                                                  () {
-                                                                anniversaryDatecon
-                                                                    .text =
-                                                                    formattedDate; //set output date to TextField value.
-                                                              });
-                                                        } else {}
-                                                      },
-                                                      // validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                    ))
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(width: width / 38.4),
-                                          SizedBox(
-                                            height: height / 9.369,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              children: [
-                                                KText(
-                                                  text:
-                                                  "No. Of Children",
-                                                  style:
-                                                  SafeGoogleFont(
-                                                    'Nunito',
-                                                    fontSize:
-                                                    20 * ffem,
-                                                    fontWeight:
-                                                    FontWeight
-                                                        .w700,
-                                                    height: 1.3625 *
-                                                        ffem /
-                                                        fem,
-                                                    color: const Color(
-                                                        0xff000000),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                    height: height / 123.1666),
-                                                Container(
-                                                    height: height / 15.114,
-                                                    width: width / 6.4,
-                                                    decoration: BoxDecoration(
-                                                        color: const Color(
-                                                            0xffDDDEEE),
-                                                        borderRadius:
-                                                        BorderRadius.circular(
-                                                            3)),
-                                                    child:
-                                                    TextFormField(
-                                                      controller:
-                                                      no_of_childreancon,
-                                                      maxLength: 2,
-                                                      inputFormatters: [
-                                                        FilteringTextInputFormatter
-                                                            .allow(RegExp(
-                                                            "[0-9]")),
-                                                      ],
-                                                      decoration:
-                                                      const InputDecoration(
-                                                        border:
-                                                        InputBorder
-                                                            .none,
-                                                        contentPadding: EdgeInsets
-                                                            .only(
-                                                            bottom:
-                                                            10,
-                                                            top: 2,
-                                                            left:
-                                                            10),
-                                                        counterText:
-                                                        "",
-                                                      ),
-                                                    ))
-                                              ],
-                                            ),
-                                          ),
-                                        ]))
-                                        : const SizedBox(),
-                                  ],
-                                ),
-                                SizedBox(height: height / 24.633),
-
-                                ///buttons Save reset and back
-
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.end,
-                                  children: [
-                                    SizedBox(
-                                      width: width / 2.2925,
-                                    ),
-
-                                    ///save button
-                                    GestureDetector(
-                                      onTap: () {
-                                        if (citycon.text == "Select City") {
-                                          setState(() {
-                                            dropdownValidator2 = true;
-                                          });
-                                        }
-
-                                        if (statecon.text == "Select State") {
-                                          setState(() {
-                                            dropdownValidator = true;
-                                          });
-                                        }
-
-                                        if (countrycon.text ==
-                                            "Select Country") {
-                                          setState(() {
-                                            dropdownValidator3 = true;
-                                          });
-                                        }
-                                        if (subjectStremdcon.text == "Select Department") {
-                                          setState(() {
-                                            dropdownDepartmentValidator = true;
-                                          });
-
-                                        if (_formkey.currentState!.validate()) {
-                                          if (citycon.text == "Select City") {
-                                            setState(() {
-                                              dropdownValidator2 = true;
-                                            });
-                                          }
-
-                                          if (statecon.text == "Select State") {
-                                            setState(() {
-                                              dropdownValidator = true;
-                                            });
-                                          }
-
-                                          if (countrycon.text ==
-                                              "Select Country") {
-                                            setState(() {
-                                              dropdownValidator3 = true;
-                                            });
-                                          }
-    if (subjectStremdcon.text == "Select Department") {
-    setState(() {
-    dropdownDepartmentValidator = true;
-    });}
-
-                                          if (dropdownValidator == false &&
-                                              dropdownValidator2 == false &&
-                                              dropdownValidator3 == false) {
-                                            print(
-                                                "Finalaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-                                            userDataUpdatefuntio();
-                                          }
-                                          else {
-                                            print(
-                                                "errorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
-                                          }
-                                        
-                                      },
-                                      child: Container(
-                                          height: height / 18.475,
-                                          width: width / 12.8,
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xffD60A0B),
-                                            borderRadius:
-                                            BorderRadius.circular(
-                                                4),
-                                          ),
-                                          child: Center(
-                                            child: KText(
-                                              text: 'Update',
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                fontSize: 19 * ffem,
-                                                fontWeight:
-                                                FontWeight.w400,
-                                                height: 1.3625 *
-                                                    ffem /
-                                                    fem,
-                                                color:
-                                                const Color(0xffFFFFFF),
-                                              ),
-                                            ),
-                                          )),
-                                    ),
-                                    SizedBox(
-                                      width: width / 76.8,
-                                    ),
-
-                                    ///Reset Button
-                                    GestureDetector(
-                                      onTap: () {
-                                        controllersclearfunc();
-                                      },
-                                      child: Container(
-                                          height: height / 18.475,
-                                          width: width / 12.8,
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xff00A0E3),
-                                            borderRadius:
-                                            BorderRadius.circular(
-                                                4),
-                                          ),
-                                          child: Center(
-                                            child: KText(
-                                              text: 'Reset',
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                fontSize: 19 * ffem,
-                                                fontWeight:
-                                                FontWeight.w400,
-                                                height: 1.3625 *
-                                                    ffem /
-                                                    fem,
-                                                color:
-                                                const Color(0xffFFFFFF),
-                                              ),
-                                            ),
-                                          )),
-                                    ),
-                                    SizedBox(
-                                      width: width / 76.8,
-                                    ),
-
-                                    ///back Button
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          UserEdit = false;
-                                        });
-                                      },
-                                      child: Container(
-                                          height: height / 18.475,
-                                          width: width / 12.8,
-                                          decoration: BoxDecoration(
-                                            color: Colors.green,
-                                            borderRadius:
-                                            BorderRadius.circular(
-                                                4),
-                                          ),
-                                          child: Center(
-                                            child: KText(
-                                              text: 'Back',
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                fontSize: 19 * ffem,
-                                                fontWeight:
-                                                FontWeight.w400,
-                                                height: 1.3625 *
-                                                    ffem /
-                                                    fem,
-                                                color:
-                                                const Color(0xffFFFFFF),
-                                              ),
-                                            ),
-                                          )),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: height / 24.633),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
+              ? UserEditForm(docid)
               : Useradd == true
-              ? FadeInRight(
-            child: SingleChildScrollView(
-              physics: const ScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 1574 * fem,
-
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: width / 170.75,
-                          vertical: height / 81.375),
-                      child: Form(
-                        key: _formkey,
-                        child: SizedBox(
-                          width: 1550 * fem,
-                          child: Row(
-                            crossAxisAlignment:
-                            CrossAxisAlignment.start,
-                            children: [
-                              Column(
-                                mainAxisAlignment:
-                                MainAxisAlignment.start,
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
-                                children: [
-
-                                  ///Alumni text
-                                  SizedBox(height: height / 26.04),
-                                  Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.start,
-                                    children: [
-                                      SizedBox(width: width / 307.2),
-                                      KText(
-                                        text: 'Add Users Details',
-                                        style: SafeGoogleFont(
-                                          'Nunito',
-                                          fontSize: 24 * ffem,
-                                          fontWeight: FontWeight.w700,
-                                          height: 1.3625 * ffem / fem,
-                                          color: const Color(0xff030229),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: height / 26.04),
-
-                                  Row(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width: width / 3.7463,
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              height: height / 7.39,
-                                              width: width / 15.36,
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                  BorderRadius
-                                                      .circular(
-                                                      100),
-                                                  color:
-                                                  const Color(0xffDDDEEE),
-                                                  image: Uploaddocument !=
-                                                      null
-                                                      ? DecorationImage(
-                                                    fit: BoxFit
-                                                        .cover,
-                                                    image:
-                                                    MemoryImage(
-                                                      Uint8List
-                                                          .fromList(
-                                                        base64Decode(
-                                                            Uploaddocument!
-                                                                .split(
-                                                                ',')
-                                                                .last),
-                                                      ),
-                                                    ),
-                                                  )
-                                                      : imgUrl != null
-                                                      ? DecorationImage(
-                                                      fit: BoxFit
-                                                          .cover,
-                                                      image: NetworkImage(
-                                                          imgUrl))
-                                                      : DecorationImage(
-                                                      fit: BoxFit
-                                                          .cover,
-                                                      image: AssetImage(
-                                                          Constants()
-                                                              .avator))),
-                                            ),
-                                            SizedBox(width: width / 102.4),
-                                            Column(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              children: [
-                                                KText(
-                                                  text:
-                                                  "Upload Student Photo (150px X 150px)",
-                                                  style: SafeGoogleFont(
-                                                    'Nunito',
-                                                    fontSize: 17 * ffem,
-                                                    fontWeight:
-                                                    FontWeight.w600,
-                                                    height: 1.3625 *
-                                                        ffem /
-                                                        fem,
-                                                    color: const Color(
-                                                        0xff000000),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                    height: height / 147.8),
-                                                Row(
-                                                  children: [
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        addImage(size);
-                                                      },
-                                                      child: Container(
-                                                        height: height / 24.633,
-                                                        width: width / 19.2,
-                                                        decoration: BoxDecoration(
-                                                            color: const Color(
-                                                                0xffDDDEEE),
-                                                            border: Border.all(
-                                                                color: const Color(
-                                                                    0xff000000))),
-                                                        child: Center(
-                                                          child: KText(
-                                                            text:
-                                                            "Choose File",
-                                                            style:
-                                                            SafeGoogleFont(
-                                                              'Nunito',
-                                                              fontSize:
-                                                              17 *
-                                                                  ffem,
-                                                              fontWeight:
-                                                              FontWeight
-                                                                  .w600,
-                                                              height: 1.3625 *
-                                                                  ffem /
-                                                                  fem,
-                                                              color: const Color(
-                                                                  0xff000000),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        width: width / 307.2),
-                                                    KText(
-                                                      text: Uploaddocument ==
-                                                          null
-                                                          ? "No file chosen"
-                                                          : "File is Selected",
-                                                      style:
-                                                      SafeGoogleFont(
-                                                        'Nunito',
-                                                        fontSize:
-                                                        17 * ffem,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .w600,
-                                                        height: 1.3625 *
-                                                            ffem /
-                                                            fem,
-                                                        color: const Color(
-                                                            0xff000000),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                )
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: width / 2.2588,
-                                        height: height / 2.8,
-                                        child: Column(
-                                          children: [
-
-                                            ///first name and last name
-                                            Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceAround,
-                                              children: [
-                                                SizedBox(
-                                                  height: height / 9.369,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .start,
-                                                    children: [
-                                                      KText(
-                                                        text:
-                                                        'First Name *',
-                                                        style:
-                                                        SafeGoogleFont(
-                                                          'Nunito',
-                                                          fontSize:
-                                                          20 * ffem,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w700,
-                                                          height:
-                                                          1.3625 *
-                                                              ffem /
-                                                              fem,
-                                                          color: const Color(
-                                                              0xff000000),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                          height: height /
-                                                              123.1666),
-                                                      Container(
-                                                        height: height / 15.114,
-                                                        width: width / 8.0842,
-                                                        decoration: BoxDecoration(
-                                                            color: const Color(
-                                                                0xffDDDEEE),
-                                                            borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                3)),
-                                                        child:
-                                                        TextFormField(
-                                                            autovalidateMode: AutovalidateMode
-                                                                .onUserInteraction,
-                                                            controller: firstNamecon,
-                                                            inputFormatters: [
-                                                              FilteringTextInputFormatter
-                                                                  .allow(
-                                                                  RegExp(
-                                                                      "[a-zA-Z ]")),
-                                                            ],
-                                                            maxLength: 25,
-                                                            decoration: const InputDecoration(
-                                                              border: InputBorder
-                                                                  .none,
-                                                              contentPadding: EdgeInsets
-                                                                  .only(
-                                                                  bottom:
-                                                                  10,
-                                                                  top:
-                                                                  2,
-                                                                  left:
-                                                                  10),
-                                                              counterText:
-                                                              "",
-                                                            ),
-                                                            validator: (
-                                                                value) =>
-                                                            value!
-                                                                .isEmpty
-                                                                ? 'Field is required'
-                                                                : null,
-
-                                                            onChanged: (value) {
-                                                              setState(() {
-                                                                firstNameValidator =
-                                                                false;
-                                                              });
-                                                            }
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: height / 9.369,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .start,
-                                                    children: [
-                                                      KText(
-                                                        text:
-                                                        'Middle Name ',
-                                                        style:
-                                                        SafeGoogleFont(
-                                                          'Nunito',
-                                                          fontSize:
-                                                          20 * ffem,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w700,
-                                                          height:
-                                                          1.3625 *
-                                                              ffem /
-                                                              fem,
-                                                          color: const Color(
-                                                              0xff000000),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                          height: height /
-                                                              123.1666),
-                                                      Container(
-                                                          height: height /
-                                                              15.114,
-                                                          width: width / 8.0842,
-                                                          decoration: BoxDecoration(
-                                                              color: const Color(
-                                                                  0xffDDDEEE),
-                                                              borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                  3)),
-                                                          child:
-                                                          TextFormField(
-                                                            maxLength: 25,
-                                                            controller:
-                                                            middleNamecon,
-                                                            inputFormatters: [
-                                                              FilteringTextInputFormatter
-                                                                  .allow(
-                                                                  RegExp(
-                                                                      "[a-zA-Z ]")),
-                                                            ],
-                                                            decoration:
-                                                            const InputDecoration(
-                                                              counterText: "",
-                                                              border: InputBorder
-                                                                  .none,
-                                                              contentPadding: EdgeInsets
-                                                                  .only(
-                                                                  bottom:
-                                                                  10,
-                                                                  top:
-                                                                  2,
-                                                                  left:
-                                                                  10),
-                                                            ),
-                                                          ))
-                                                    ],
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: height / 9.369,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .start,
-                                                    children: [
-                                                      KText(
-                                                        text:
-                                                        'Last Name *',
-                                                        style:
-                                                        SafeGoogleFont(
-                                                          'Nunito',
-                                                          fontSize:
-                                                          20 * ffem,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w700,
-                                                          height:
-                                                          1.3625 *
-                                                              ffem /
-                                                              fem,
-                                                          color: const Color(
-                                                              0xff000000),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                          height: height /
-                                                              123.1666),
-                                                      Container(
-                                                          height: height /
-                                                              15.114,
-                                                          width: width / 8.0842,
-                                                          decoration: BoxDecoration(
-                                                              color: const Color(
-                                                                  0xffDDDEEE),
-                                                              borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                  3)),
-                                                          child:
-                                                          TextFormField(
-                                                            autovalidateMode: AutovalidateMode
-                                                                .onUserInteraction,
-                                                            controller:
-                                                            lastNamecon,
-
-                                                            inputFormatters: [
-                                                              FilteringTextInputFormatter
-                                                                  .allow(
-                                                                  RegExp(
-                                                                      "[a-zA-Z ]")),
-                                                            ],
-                                                            maxLength:
-                                                            25,
-                                                            decoration:
-                                                            const InputDecoration(
-                                                              border: InputBorder
-                                                                  .none,
-                                                              counterText:
-                                                              "",
-                                                              contentPadding: EdgeInsets
-                                                                  .only(
-                                                                  bottom:
-                                                                  10,
-                                                                  top:
-                                                                  2,
-                                                                  left:
-                                                                  10),
-                                                            ),
-                                                            validator: (
-                                                                value) =>
-                                                            value!
-                                                                .isEmpty
-                                                                ? 'Field is required'
-                                                                : null,
-                                                          ))
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-
-                                            SizedBox(height: height / 73.9),
-
-                                            ///date of birth and
-
-                                            Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceAround,
-                                              children: [
-
-                                                /// date of birth
-                                                SizedBox(
-                                                  height: height / 9.369,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .start,
-                                                    children: [
-                                                      KText(
-                                                        text:
-                                                        'Date Of Birth *',
-                                                        style:
-                                                        SafeGoogleFont(
-                                                          'Nunito',
-                                                          fontSize:
-                                                          20 * ffem,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w700,
-                                                          height:
-                                                          1.3625 *
-                                                              ffem /
-                                                              fem,
-                                                          color: const Color(
-                                                              0xff000000),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                          height: height /
-                                                              123.1666),
-                                                      Container(
-                                                        height: height / 15.114,
-                                                        width: width / 5.12,
-                                                        decoration: BoxDecoration(
-                                                            color: const Color(
-                                                                0xffDDDEEE),
-                                                            borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                3)),
-                                                        child:
-                                                        TextFormField(
-                                                          autovalidateMode: AutovalidateMode
-                                                              .onUserInteraction,
-                                                          controller:
-                                                          dateofBirthcon,
-                                                          decoration:
-                                                          const InputDecoration(
-                                                            border:
-                                                            InputBorder
-                                                                .none,
-                                                            contentPadding: EdgeInsets
-                                                                .only(
-                                                                bottom:
-                                                                10,
-                                                                top: 2,
-                                                                left:
-                                                                10),
-                                                          ),
-                                                          validator: (value) =>
-                                                          value!.isEmpty
-                                                              ? 'Field is required'
-                                                              : null,
-                                                          readOnly:
-                                                          true,
-                                                          onTap:
-                                                              () async {
-                                                            DateTime? pickedDate = await showDatePicker(
-                                                                context: context,
-                                                                initialDate: DateTime
-                                                                    .now(),
-                                                                firstDate: DateTime(
-                                                                    1950),
-                                                                //DateTime.now() - not to allow to choose before today.
-                                                                lastDate: DateTime(
-                                                                    2100));
-
-                                                            if (pickedDate != null) {
-                                                              BatchYearValid= pickedDate.year;
-                                                              //pickedDate output format => 2021-03-10 00:00:00.000
-                                                              String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
-                                                              //formatted date output using intl package =>  2021-03-16
-
-                                                              // Calculate age difference
-                                                              DateTime currentDate = DateTime.now();
-                                                              Duration difference = currentDate.difference(pickedDate);
-                                                              int age = (difference.inDays / 365).floor();
-                                                              print('Age: $age years');
-                                                              if (age >=17) {
-                                                                setState(() {
-                                                                  dateofBirthcon.text = formattedDate; //set output date to TextField value.
-                                                                    });
-                                                              }
-                                                              else {
-                                                                userNotValidAgePopup();
-                                                                print(
-                                                                    "Age Is Lowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
-                                                              }
-                                                            } else {}
-                                                          },
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-
-                                                SizedBox(
-                                                  height: height / 9.369,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .start,
-                                                    children: [
-                                                      KText(
-                                                        text: 'Gender ',
-                                                        style:
-                                                        SafeGoogleFont(
-                                                          'Nunito',
-                                                          fontSize:
-                                                          20 * ffem,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w700,
-                                                          height:
-                                                          1.3625 *
-                                                              ffem /
-                                                              fem,
-                                                          color: const Color(
-                                                              0xff000000),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                          height: height /
-                                                              123.1666),
-                                                      Container(
-                                                        height: height / 15.114,
-                                                        width: width / 5.12,
-                                                        decoration: BoxDecoration(
-                                                            color: const Color(
-                                                                0xffDDDEEE),
-                                                            borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                3)),
-                                                        child:
-                                                        DropdownButtonHideUnderline(
-                                                          child: DropdownButtonFormField2<
-                                                              String>(
-                                                            isExpanded: true,
-                                                            autovalidateMode: AutovalidateMode
-                                                                .onUserInteraction,
-                                                            hint: Padding(
-                                                              padding: const EdgeInsets
-                                                                  .only(
-                                                                  left: 8.0),
-                                                              child: Text(
-                                                                'Select',
-                                                                style:
-                                                                SafeGoogleFont(
-                                                                  'Nunito',
-                                                                  fontSize:
-                                                                  20 * ffem,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            items: GenderList
-                                                                .map((String
-                                                            item) =>
-                                                                DropdownMenuItem<
-                                                                    String>(
-
-                                                                  value:
-                                                                  item,
-                                                                  child:
-                                                                  Text(
-                                                                    item,
-                                                                    style:
-                                                                    SafeGoogleFont(
-                                                                      'Nunito',
-                                                                      fontSize:
-                                                                      20 * ffem,
-                                                                    ),
-                                                                  ),
-                                                                )).toList(),
-                                                            value: gendercon
-                                                                .text,
-
-                                                            onChanged: (String?
-                                                            value) {
-                                                              setState(() {
-                                                                gendercon.text =
-                                                                value!;
-                                                              });
-                                                            },
-                                                            buttonStyleData:
-                                                            ButtonStyleData(
-                                                              height: 20,
-                                                              width:
-                                                              width / 2.571,
-                                                            ),
-                                                            menuItemStyleData: const MenuItemStyleData(),
-                                                            decoration:
-                                                            const InputDecoration(
-                                                                contentPadding: EdgeInsets
-                                                                    .only(
-                                                                    left: 5,
-                                                                    right: 5),
-                                                                border:
-                                                                InputBorder
-                                                                    .none),
-                                                          ),
-                                                        ),
-                                                        /* TextFormField(
-                                                                      controller:
-                                                                       gendercon,
-                                                                      inputFormatters: [
-                                                                        FilteringTextInputFormatter
-                                                                            .allow(
-                                                                                RegExp("[a-zA-Z]")),
-                                                                      ],
-                                                                      decoration:
-                                                                          const InputDecoration(
-                                                                        border: InputBorder
-                                                                            .none,
-                                                                        contentPadding: EdgeInsets.only(
-                                                                            bottom:
-                                                                                10,
-                                                                            top:
-                                                                                2,
-                                                                            left:
-                                                                                10),
-                                                                      ),
-                                                                    )*/
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-
-                                              ],
-                                            ),
-                                            SizedBox(height: height / 73.9),
-
-                                            ///adhaaar card and emailid
-                                            Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .start,
-                                              children: [
-                                                /*  SizedBox(
-                                                             height: height/9.369,
-                                                            child: Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                KText(
-                                                                  text:
-                                                                      'Alternate Email Id ',
-                                                                  style:
-                                                                      SafeGoogleFont(
-                                                                    'Nunito',
-                                                                    fontSize:
-                                                                        20 * ffem,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w700,
-                                                                    height:
-                                                                        1.3625 *
-                                                                            ffem /
-                                                                            fem,
-                                                                    color: const Color(
-                                                                        0xff000000),
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                    height: height/123.1666),
-                                                                Container(
-                                                                    height: height/15.114,
-                                                                    width: width/5.12,
-                                                                    decoration: BoxDecoration(
-                                                                        color: const Color(
-                                                                            0xffDDDEEE),
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(
-                                                                                3)),
-                                                                    child:
-                                                                        TextFormField(
-                                                                      controller:
-                                                                          alterEmailIdcon,
-                                                                      inputFormatters: [
-                                                                        FilteringTextInputFormatter
-                                                                            .allow(
-                                                                                RegExp("[a-z@0-9.]")),
-                                                                      ],
-                                                                      decoration:
-                                                                          const InputDecoration(
-                                                                        border: InputBorder
-                                                                            .none,
-                                                                        contentPadding: EdgeInsets.only(
-                                                                            bottom:
-                                                                                10,
-                                                                            top:
-                                                                                2,
-                                                                            left:
-                                                                                10),
-                                                                      ),
-                                                                          validator:
-                                                                              (value) {
-                                                                            if (isEmail(value!)) {
-                                                                                return 'Enter the Correct the Email';
-                                                                              }
-
-                                                                            return null;
-                                                                          },
-                                                                    )
-                                                                            )
-                                                              ],
-                                                            ),
-                                                          ),*/
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: width / 71.8947),
-                                                  child: SizedBox(
-                                                    height: height / 9.369,
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                      CrossAxisAlignment
-                                                          .start,
-                                                      children: [
-                                                        KText(
-                                                          text:
-                                                          'Aadhaar Number ',
-                                                          style:
-                                                          SafeGoogleFont(
-                                                            'Nunito',
-                                                            fontSize:
-                                                            20 * ffem,
-                                                            fontWeight:
-                                                            FontWeight
-                                                                .w700,
-                                                            height:
-                                                            1.3625 *
-                                                                ffem /
-                                                                fem,
-                                                            color: const Color(
-                                                                0xff000000),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                            height: height /
-                                                                123.1666),
-                                                        Container(
-                                                            height: height /
-                                                                15.114,
-                                                            width: width / 5.12,
-                                                            decoration: BoxDecoration(
-                                                                color: const Color(
-                                                                    0xffDDDEEE),
-                                                                borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                    3)),
-                                                            child:
-                                                            TextFormField(
-                                                              controller:
-                                                              aadhaarNumbercon,
-                                                              maxLength:
-                                                              14,
-                                                              inputFormatters: [
-                                                                FilteringTextInputFormatter
-                                                                    .digitsOnly,
-                                                                TextInputFormatter
-                                                                    .withFunction(
-                                                                        (
-                                                                        oldValue,
-                                                                        newValue) {
-                                                                      final newString =
-                                                                          newValue
-                                                                              .text;
-
-                                                                      if (_inputPattern
-                                                                          .hasMatch(
-                                                                          newString)) {
-                                                                        return oldValue;
-                                                                      }
-
-                                                                      var formattedValue = newString
-                                                                          .replaceAllMapped(
-                                                                          RegExp(
-                                                                              r'\d{4}'),
-                                                                              (
-                                                                              match) {
-                                                                            return '${match
-                                                                                .group(
-                                                                                0)} ';
-                                                                          });
-
-                                                                      // Remove any trailing space
-                                                                      if (formattedValue
-                                                                          .endsWith(
-                                                                          ' ')) {
-                                                                        formattedValue =
-                                                                            formattedValue
-                                                                                .substring(
-                                                                                0,
-                                                                                formattedValue
-                                                                                    .length -
-                                                                                    1);
-                                                                      }
-
-                                                                      return TextEditingValue(
-                                                                        text:
-                                                                        formattedValue,
-                                                                        selection:
-                                                                        TextSelection
-                                                                            .collapsed(
-                                                                            offset: formattedValue
-                                                                                .length),
-                                                                      );
-                                                                    }),
-                                                              ],
-                                                              decoration:
-                                                              const InputDecoration(
-                                                                border: InputBorder
-                                                                    .none,
-                                                                counterText:
-                                                                "",
-                                                                contentPadding: EdgeInsets
-                                                                    .only(
-                                                                    bottom:
-                                                                    10,
-                                                                    top:
-                                                                    2,
-                                                                    left:
-                                                                    10),
-                                                              ),
-                                                            ))
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-
-                                  ///contact info
-                                  Row(
-                                    children: [
-                                      SizedBox(width: width / 307.2),
-                                      KText(
-                                        text: 'Contact Details',
-                                        style: SafeGoogleFont(
-                                          'Nunito',
-                                          fontSize: 25 * ffem,
-                                          fontWeight: FontWeight.w700,
-                                          height: 1.3625 * ffem / fem,
-                                          color: const Color(0xff000000),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 4,
-                                        right: 4,
-                                        top: 4,
-                                        bottom: 4),
-                                    child: Container(
-                                      height: 1,
-                                      width: width / 1.4422,
-                                      color: Colors.grey.shade300,
-                                    ),
-                                  ),
-                                  SizedBox(height: height / 36.95),
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                          width: width / 2.4,
-                                          height: height / 2.8,
-                                          child: Padding(
-                                            padding:
-                                            const EdgeInsets.all(6.0),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceAround,
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              children: [
-
-                                                ///phone number
-                                                SizedBox(
-                                                  height: height / 9.369,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .start,
-                                                    children: [
-                                                      KText(
-                                                        text:
-                                                        'Phone Number *',
-                                                        style:
-                                                        SafeGoogleFont(
-                                                          'Nunito',
-                                                          fontSize:
-                                                          20 * ffem,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w700,
-                                                          height:
-                                                          1.3625 *
-                                                              ffem /
-                                                              fem,
-                                                          color: const Color(
-                                                              0xff000000),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                          height: height /
-                                                              123.1666),
-                                                      Container(
-                                                          height: height /
-                                                              15.114,
-                                                          width: width / 3.84,
-                                                          decoration: BoxDecoration(
-                                                              color: const Color(
-                                                                  0xffDDDEEE),
-                                                              borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                  3)),
-                                                          child:
-                                                          TextFormField(
-                                                            autovalidateMode: AutovalidateMode
-                                                                .onUserInteraction,
-                                                            controller:
-                                                            phoneNumbercon,
-                                                            maxLength:
-                                                            10,
-                                                            inputFormatters: [
-                                                              FilteringTextInputFormatter
-                                                                  .allow(
-                                                                  RegExp(
-                                                                      "[0-9]")),
-                                                            ],
-                                                            decoration: const InputDecoration(
-                                                                border: InputBorder
-                                                                    .none,
-                                                                contentPadding: EdgeInsets
-                                                                    .only(
-                                                                    bottom:
-                                                                    10,
-                                                                    top:
-                                                                    2,
-                                                                    left:
-                                                                    10),
-                                                                counterText:
-                                                                ""),
-                                                            validator:
-                                                                (value) {
-                                                                  if(value!.isEmpty){
-                                                                    return 'Field is required';
-                                                                  }
-                                                                  else if (value!.isNotEmpty) {
-                                                                    if (value.length !=
-                                                                        10) {
-                                                                      return 'Enter the Phone no correctly';
-                                                                    }
-                                                                  }
-                                                              return null;
-                                                            },
-                                                          ))
-                                                    ],
-                                                  ),
-                                                ),
-
-                                                /// mobile number
-                                                SizedBox(
-                                                  height: height / 9.369,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .start,
-                                                    children: [
-                                                      KText(
-                                                        text:
-                                                        ' Alternate Mobile Number',
-                                                        style:
-                                                        SafeGoogleFont(
-                                                          'Nunito',
-                                                          fontSize:
-                                                          20 * ffem,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w700,
-                                                          height:
-                                                          1.3625 *
-                                                              ffem /
-                                                              fem,
-                                                          color: const Color(
-                                                              0xff000000),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                          height: height /
-                                                              123.1666),
-                                                      Container(
-                                                          height: height /
-                                                              15.114,
-                                                          width: width / 3.84,
-                                                          decoration: BoxDecoration(
-                                                              color: const Color(
-                                                                  0xffDDDEEE),
-                                                              borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                  3)),
-                                                          child:
-                                                          TextFormField(
-                                                            autovalidateMode: AutovalidateMode
-                                                                .onUserInteraction,
-                                                            controller:
-                                                            mobileNumbercon,
-                                                            maxLength:
-                                                            10,
-                                                            inputFormatters: [
-                                                              FilteringTextInputFormatter
-                                                                  .allow(
-                                                                  RegExp(
-                                                                      "[0-9]")),
-                                                            ],
-                                                            decoration:
-                                                            const InputDecoration(
-                                                              border: InputBorder
-                                                                  .none,
-                                                              counterText: "",
-                                                              contentPadding: EdgeInsets
-                                                                  .only(
-                                                                  bottom:
-                                                                  10,
-                                                                  top:
-                                                                  2,
-                                                                  left:
-                                                                  10),
-                                                            ),
-                                                            validator: (value) {
-                                                              if (value!
-                                                                  .isNotEmpty) {
-                                                                if (value
-                                                                    .length !=
-                                                                    10) {
-                                                                  return 'Enter the Mobile no correctly';
-                                                                }
-                                                              }
-                                                              return null;
-                                                            },
-                                                          ))
-                                                    ],
-                                                  ),
-                                                ),
-
-                                                /// Email iD
-                                                SizedBox(
-                                                  height: height / 9.369,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .start,
-                                                    children: [
-                                                      KText(
-                                                        text:
-                                                        'Email ID',
-                                                        style:
-                                                        SafeGoogleFont(
-                                                          'Nunito',
-                                                          fontSize:
-                                                          20 * ffem,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w700,
-                                                          height:
-                                                          1.3625 *
-                                                              ffem /
-                                                              fem,
-                                                          color: const Color(
-                                                              0xff000000),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                          height: height /
-                                                              123.1666),
-                                                      Container(
-                                                          height: height /
-                                                              15.114,
-                                                          width: width / 3.84,
-                                                          decoration: BoxDecoration(
-                                                              color: const Color(
-                                                                  0xffDDDEEE),
-                                                              borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                  3)),
-                                                          child:
-                                                          TextFormField(
-                                                            controller:
-                                                            emailIDcon,
-                                                            inputFormatters: [
-                                                              FilteringTextInputFormatter
-                                                                  .allow(
-                                                                  RegExp(
-                                                                      "[a-z@0-9.]")),
-                                                            ],
-                                                            decoration:
-                                                            const InputDecoration(
-                                                              border: InputBorder
-                                                                  .none,
-                                                              contentPadding: EdgeInsets
-                                                                  .only(
-                                                                  bottom:
-                                                                  10,
-                                                                  top:
-                                                                  2,
-                                                                  left:
-                                                                  10),
-                                                            ),
-                                                            validator:validateEmail
-                                                          ))
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          )),
-                                      SizedBox(
-                                        width: width / 3.49090,
-                                        height: height / 2.8,
-                                        child: Padding(
-                                          padding:
-                                          const EdgeInsets.all(2.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              KText(
-                                                text: 'Address',
-                                                style: SafeGoogleFont(
-                                                  'Nunito',
-                                                  fontSize: 20 * ffem,
-                                                  fontWeight:
-                                                  FontWeight.w700,
-                                                  height: 1.3625 *
-                                                      ffem /
-                                                      fem,
-                                                  color:
-                                                  const Color(0xff000000),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                  height: height / 123.1666),
-                                              Container(
-                                                  height: height / 3.3,
-                                                  width: width / 3.57209,
-                                                  decoration: BoxDecoration(
-                                                      color: const Color(
-                                                          0xffDDDEEE),
-                                                      borderRadius:
-                                                      BorderRadius
-                                                          .circular(
-                                                          3)),
-                                                  child: TextFormField(
-                                                    controller:
-                                                    adreesscon,
-                                                    maxLines: null,
-                                                    expands: true,
-                                                    inputFormatters: [
-                                                      FilteringTextInputFormatter
-                                                          .allow(RegExp(
-                                                          "[a-zA-Z0-9 ,]")),
-                                                    ],
-                                                    decoration:
-                                                    const InputDecoration(
-                                                      border:
-                                                      InputBorder
-                                                          .none,
-                                                      contentPadding:
-                                                      EdgeInsets.only(
-                                                          bottom:
-                                                          10,
-                                                          top: 10,
-                                                          left: 10),
-                                                    ),
-                                                  ))
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-
-                                  Padding(
-                                    padding:  EdgeInsets.only(left: width/273.2),
-                                    child: Row(
-                                      children: [
-
-                                        ///State Dropdown
-                                        SizedBox(
-                                          height: height / 7.5,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              KText(
-                                                text: 'State *',
-                                                style: SafeGoogleFont(
-                                                  'Nunito',
-                                                  fontSize: 20 * ffem,
-                                                  fontWeight:
-                                                  FontWeight.w700,
-                                                  height: 1.3625 *
-                                                      ffem /
-                                                      fem,
-                                                  color:
-                                                  const Color(0xff000000),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                  height: height / 123.1666),
-                                              Container(
-                                                height: height / 15.114,
-                                                width: width / 6.4,
-                                                decoration: BoxDecoration(
-                                                    color: const Color(
-                                                        0xffDDDEEE),
-                                                    borderRadius:
-                                                    BorderRadius
-                                                        .circular(
-                                                        3)),
-                                                padding:  EdgeInsets.only(
-                                                    left: width/273.2),
-                                                child:
-                                                DropdownSearch <String>(
-                                                  autoValidateMode: AutovalidateMode.onUserInteraction,
-                                                  selectedItem: statecon.text,
-                                                  popupProps: PopupProps.menu(
-                                                    showSearchBox: true,
-                                                  ),
-                                                  dropdownDecoratorProps: DropDownDecoratorProps(
-                                                      baseStyle:SafeGoogleFont( 'Nunito', fontSize:  20 * ffem,),
-                                                    textAlignVertical: TextAlignVertical.center,
-                                                    dropdownSearchDecoration: InputDecoration(
-                                                        border: InputBorder.none),
-                                                  ),
-                                                  items: StateList,
-                                                  validator: (value) {
-                                                    if (value=='Select State') {
-                                                      setState((){
-                                                        dropdownValidator=true;
-                                                      });
-                                                    }
-                                                    return null;
-                                                  },
-                                                  onChanged: (String? value) {
-                                                    getCity(value.toString());
-                                                    if (value=='Select State') {
-                                                      setState((){
-                                                        dropdownValidator=true;
-                                                      });
-                                                    }else{
-
-                                                      setState(() {
-                                                        statecon.text =
-                                                        value!;
-                                                        dropdownValidator=false;
-                                                      });
-                                                    }
-                                                  },
-                                                ),
-                                            
-                                              /*  DropdownButtonHideUnderline(
-                                                                  child: DropdownButtonFormField2<String>(
-                                                                  value:statecon.text,
-                                                                    isExpanded:true,
-                                                                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                                                              hint: Padding(
-                                                                padding:  EdgeInsets.only(left:width/170.75),
-                                                                child: Text(
-                                                                  'Select State',
-                                                                  style:
-                                                                  SafeGoogleFont('Nunito',
-                                                                    fontSize:
-                                                                       20 * ffem,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              items: StateList
-                                                                  .map((String
-                                                                          item) =>
-                                                                      DropdownMenuItem<
-                                                                          String>(
-
-                                                                        value:
-                                                                            item,
-                                                                        child:
-                                                                            Text(
-                                                                              item,
-                                                                              style:
-                                                                              SafeGoogleFont(
-                                                                            'Nunito',
-                                                                            fontSize:
-                                                                                20 * ffem,
-                                                                                                                                                      ),
-                                                                                                                                                    ),
-                                                                      )).toList(),
-                                                                  validator: (value) {
-                                                                    if (value=='Select State') {
-                                                                     setState((){
-                                                                       dropdownValidator=true;
-                                                                     });
-                                                                    }
-                                                                    return null;
-                                                                  },
-                                                              onChanged: (String?
-                                                                  value) {
-                                                                getCity(value.toString());
-                                                                if (value=='Select State') {
-                                                                  setState((){
-                                                                    dropdownValidator=true;
-                                                                  });
-                                                                }else{
-
-                                                                  setState(() {
-                                                                    statecon.text =
-                                                                    value!;
-                                                                    dropdownValidator=false;
-                                                                  });
-                                                                }
-                                                              },
-                                                              buttonStyleData:
-                                                              ButtonStyleData(height:20,
-                                                                width:
-                                                                width / 2.571,
-                                                              ),
-                                                              menuItemStyleData: const MenuItemStyleData(),
-                                                              decoration:
-                                                              const InputDecoration(
-                                                                      border:
-                                                                          InputBorder
-                                                                              .none),
-                                                                     ),
-                                                                    ),*/
-                                                
-                                              ),
-                                              dropdownValidator == true &&
-                                                  statecon.text ==
-                                                      "Select State"
-                                                  ? Text("Field is required",
-                                                  style: TextStyle(
-                                                      color: Colors.red,
-                                                      fontSize: 13))
-                                                  : const SizedBox()
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(width: width / 46.5454),
-
-                                        ///city
-                                        SizedBox(
-                                          height: height / 7.5,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              KText(
-                                                text: 'City *',
-                                                style: SafeGoogleFont(
-                                                  'Nunito',
-                                                  fontSize: 20 * ffem,
-                                                  fontWeight:
-                                                  FontWeight.w700,
-                                                  height: 1.3625 *
-                                                      ffem /
-                                                      fem,
-                                                  color:
-                                                  const Color(0xff000000),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                  height: height / 123.1666),
-                                              Container(
-                                                height: height / 15.114,
-                                                width: width / 6.4,
-                                                decoration: BoxDecoration(
-                                                    color: const Color(
-                                                        0xffDDDEEE),
-                                                    borderRadius:
-                                                    BorderRadius
-                                                        .circular(
-                                                        3)),
-                                                padding:  EdgeInsets.only(
-                                                    left: width/273.2),
-                                                child:
-                                                DropdownSearch <String>(
-                                                  autoValidateMode: AutovalidateMode.onUserInteraction,
-                                                  selectedItem: citycon.text,
-                                                  popupProps: PopupProps.menu(
-                                                    showSearchBox: true,
-                                                  ),
-
-                                                  dropdownDecoratorProps: DropDownDecoratorProps(
-                                                      baseStyle:SafeGoogleFont( 'Nunito', fontSize:  20 * ffem,),
-                                                    textAlignVertical: TextAlignVertical.center,
-                                                    dropdownSearchDecoration: InputDecoration(
-                                                        border: InputBorder.none),
-                                                  ),
-                                                  items: _cities,
-                                                  validator: (value) {
-                                                    if (value ==
-                                                        'Select City') {
-                                                      setState(() {
-                                                        dropdownValidator2 =
-                                                        true;
-                                                      });
-                                                    }
-                                                    return null;
-                                                  },
-                                                  onChanged: (String?
-                                                  value) {
-                                                    if (value ==
-                                                        'Select City') {
-                                                      setState(() {
-                                                        dropdownValidator2 =
-                                                        true;
-                                                      });
-                                                    }
-                                                    else {
-                                                      setState(() {
-                                                        citycon.text =
-                                                        value!;
-                                                        dropdownValidator2 =
-                                                        false;
-                                                      });
-                                                    }
-                                                  },
-                                                ),
-
-                                              /*  DropdownButtonHideUnderline(
-                                                  child:
-                                                  DropdownButtonFormField2<
-                                                      String>(
-                                                    isExpanded: true,
-                                                    autovalidateMode: AutovalidateMode
-                                                        .onUserInteraction,
-                                                    hint: Text(
-                                                      'Select City',
-                                                      style:
-                                                      SafeGoogleFont(
-                                                        'Nunito',
-                                                        fontSize:
-                                                        20 * ffem,
-                                                      ),
-                                                    ),
-                                                    items: _cities
-                                                        .map((String
-                                                    item) =>
-                                                        DropdownMenuItem<
-                                                            String>(
-                                                          value:
-                                                          item,
-                                                          child:
-                                                          Text(
-                                                            item,
-                                                            style:
-                                                            SafeGoogleFont(
-                                                              'Nunito',
-                                                              fontSize:
-                                                              20 * ffem,
-                                                            ),
-                                                          ),
-                                                        ))
-                                                        .toList(),
-                                                    value: citycon.text,
-                                                    validator: (value) {
-                                                      if (value ==
-                                                          'Select City') {
-                                                        setState(() {
-                                                          dropdownValidator2 =
-                                                          true;
-                                                        });
-                                                      }
-                                                      return null;
-                                                    },
-                                                    onChanged: (String?
-                                                    value) {
-                                                      if (value ==
-                                                          'Select City') {
-                                                        setState(() {
-                                                          dropdownValidator2 =
-                                                          true;
-                                                        });
-                                                      }
-                                                      else {
-                                                        setState(() {
-                                                          citycon.text =
-                                                          value!;
-                                                          dropdownValidator2 =
-                                                          false;
-                                                        });
-                                                      }
-                                                    },
-                                                    buttonStyleData:
-                                                    const ButtonStyleData(
-
-
-                                                    ),
-                                                    menuItemStyleData:
-                                                    const MenuItemStyleData(
-
-                                                    ),
-                                                    decoration:
-                                                    const InputDecoration(
-                                                        border:
-                                                        InputBorder
-                                                            .none),
-                                                  ),
-                                                ),*/
-                                              ),
-                                              dropdownValidator2 == true &&
-                                                  citycon.text == "Select City"
-                                                  ? Text("Field is required",
-                                                  style: TextStyle(
-                                                      color: Colors.red,
-                                                      fontSize: 13))
-                                                  : const SizedBox()
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(width: width / 43.8857),
-
-                                        ///Pin Code
-                                        SizedBox(
-                                          height: height / 7.5,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              KText(
-                                                text: 'Pin Code *',
-                                                style: SafeGoogleFont(
-                                                  'Nunito',
-                                                  fontSize: 20 * ffem,
-                                                  fontWeight:
-                                                  FontWeight.w700,
-                                                  height: 1.3625 *
-                                                      ffem /
-                                                      fem,
-                                                  color:
-                                                  const Color(0xff000000),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                  height: height / 123.1666),
-                                              Container(
-                                                  height: height / 15.114,
-                                                  width: width / 6.4,
-                                                  decoration: BoxDecoration(
-                                                      color: const Color(
-                                                          0xffDDDEEE),
-                                                      borderRadius:
-                                                      BorderRadius
-                                                          .circular(
-                                                          3)),
-                                                  child: TextFormField(
-                                                    controller:
-                                                    pinCodecon,
-                                                    maxLength: 6,
-                                                    autovalidateMode: AutovalidateMode
-                                                        .onUserInteraction,
-                                                    inputFormatters: [
-                                                      FilteringTextInputFormatter
-                                                          .allow(RegExp(
-                                                          "[0-9]")),
-                                                    ],
-                                                    decoration:
-                                                    const InputDecoration(
-                                                      border:
-                                                      InputBorder
-                                                          .none,
-                                                      contentPadding:
-                                                      EdgeInsets.only(
-                                                          bottom:
-                                                          10,
-                                                          top: 2,
-                                                          left: 10),
-                                                      counterText: "",
-                                                    ),
-                                                    validator: (value) {
-                                                      if (value!
-                                                          .isEmpty) {
-                                                        return 'Field is required';
-                                                      } else if (value!
-                                                          .isNotEmpty) {
-                                                        if (value!
-                                                            .length <
-                                                            6) {
-                                                          return 'Please Enter Pin code Correctly';
-                                                        }
-                                                      }
-                                                      return null;
-                                                    },
-                                                  ))
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(width: width / 43.8857),
-
-                                        ///Country Dropdown
-                                        SizedBox(
-                                          height: height / 7.5,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              KText(
-                                                text: 'Country *',
-                                                style: SafeGoogleFont(
-                                                  'Nunito',
-                                                  fontSize: 20 * ffem,
-                                                  fontWeight:
-                                                  FontWeight.w700,
-                                                  height: 1.3625 *
-                                                      ffem /
-                                                      fem,
-                                                  color:
-                                                  const Color(0xff000000),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                  height: height / 123.1666),
-                                              Container(
-                                                height: height / 15.114,
-                                                width: width / 6.4,
-                                                decoration: BoxDecoration(
-                                                    color: const Color(
-                                                        0xffDDDEEE),
-                                                    borderRadius:
-                                                    BorderRadius
-                                                        .circular(
-                                                        3)),
-                                                padding:  EdgeInsets.only(
-                                                    left: width/273.2),
-                                                child:
-                                                DropdownSearch <String>(
-                                                  autoValidateMode: AutovalidateMode.onUserInteraction,
-                                                  selectedItem: countrycon.text,
-                                                  popupProps: PopupProps.menu(
-                                                    showSearchBox: true,
-                                                  ),
-                                                  dropdownDecoratorProps: DropDownDecoratorProps(
-                                                    baseStyle:SafeGoogleFont( 'Nunito', fontSize:  20 * ffem,),
-                                                    textAlignVertical: TextAlignVertical.center,
-                                                    dropdownSearchDecoration: InputDecoration(
-                                                        border: InputBorder.none),
-                                                  ),
-                                                  items: coutryList,
-                                                  validator: (value) {
-                                                    if (value ==
-                                                        "Select Country") {
-                                                      setState(() {
-                                                        dropdownValidator3 =
-                                                        true;
-                                                      });
-                                                    }
-                                                    return null;
-                                                  },
-                                                  onChanged: (String?
-                                                  value) {
-                                                    if (value ==
-                                                        'Select Country') {
-                                                      setState(() {
-                                                        dropdownValidator3 =
-                                                        true;
-                                                      });
-                                                    }
-                                                    else {
-                                                      setState(() {
-                                                        countrycon
-                                                            .text =
-                                                        value!;
-                                                        dropdownValidator3 =
-                                                        false;
-                                                      });
-                                                    }
-                                                  },
-                                                ),
-                                               /* DropdownButtonHideUnderline(
-
-                                                  child:
-                                                  DropdownButtonFormField2<
-                                                      String>(
-                                                    isExpanded: true,
-                                                    autovalidateMode: AutovalidateMode
-                                                        .onUserInteraction,
-                                                    hint: Text(
-                                                      'Select Country',
-                                                      style:
-                                                      SafeGoogleFont(
-                                                        'Nunito',
-                                                        fontSize:
-                                                        20 * ffem,
-                                                      ),
-                                                    ),
-                                                    items: coutryList
-                                                        .map((String
-                                                    item) =>
-                                                        DropdownMenuItem<
-                                                            String>(
-                                                          value:
-                                                          item,
-                                                          child:
-                                                          Text(
-                                                            item,
-                                                            style:
-                                                            SafeGoogleFont(
-                                                              'Nunito',
-                                                              fontSize:
-                                                              20 * ffem,
-                                                            ),
-                                                          ),
-                                                        ))
-                                                        .toList(),
-                                                    value:
-                                                    countrycon.text,
-                                                    validator: (value) {
-                                                      if (value ==
-                                                          "Select Country") {
-                                                        setState(() {
-                                                          dropdownValidator3 =
-                                                          true;
-                                                        });
-                                                      }
-                                                      return null;
-                                                    },
-                                                    onChanged: (String?
-                                                    value) {
-                                                      if (value ==
-                                                          'Select Country') {
-                                                        setState(() {
-                                                          dropdownValidator3 =
-                                                          true;
-                                                        });
-                                                      }
-                                                      else {
-                                                        setState(() {
-                                                          countrycon
-                                                              .text =
-                                                          value!;
-                                                          dropdownValidator3 =
-                                                          false;
-                                                        });
-                                                      }
-                                                    },
-                                                    buttonStyleData:
-                                                    const ButtonStyleData(
-
-                                                    ),
-                                                    menuItemStyleData:
-                                                    const MenuItemStyleData(
-
-                                                    ),
-                                                    decoration:
-                                                    const InputDecoration(
-                                                        border:
-                                                        InputBorder
-                                                            .none),
-                                                  ),
-                                                ),*/
-                                              ),
-                                              dropdownValidator3 == true &&
-                                                  countrycon.text ==
-                                                      "Select Country"
-                                                  ? Text("Field is required",
-                                                  style: TextStyle(
-                                                      color: Colors.red,
-                                                      fontSize: 13))
-                                                  : const SizedBox()
-
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                                  ///alumni details
-                                  SizedBox(height: height / 36.95),
-                                  Row(
-                                    children: [
-                                      SizedBox(width: width / 307.2),
-                                      KText(
-                                        text: 'Alumni Details',
-                                        style: SafeGoogleFont(
-                                          'Nunito',
-                                          fontSize: 25 * ffem,
-                                          fontWeight: FontWeight.w700,
-                                          height: 1.3625 * ffem / fem,
-                                          color: const Color(0xff000000),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 4,
-                                        right: 4,
-                                        top: 4,
-                                        bottom: 4),
-                                    child: Container(
-                                      height: 1,
-                                      width: width / 1.4422,
-                                      color: Colors.grey.shade300,
-                                    ),
-                                  ),
-                                  SizedBox(height: height / 36.95),
-
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        height: height / 2.8,
-                                        width: width / 2.19428,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment
-                                              .spaceAround,
-                                          children: [
-
-                                            ///subject stream and containers
-                                            Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
-                                              children: [
-                                                SizedBox(
-                                                  height: height / 9.369,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .start,
-                                                    children: [
-                                                      KText(
-                                                        text:
-                                                        'Year Passed *',
-                                                        style:
-                                                        SafeGoogleFont(
-                                                          'Nunito',
-                                                          fontSize:
-                                                          20 * ffem,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w700,
-                                                          height:
-                                                          1.3625 *
-                                                              ffem /
-                                                              fem,
-                                                          color: const Color(
-                                                              0xff000000),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                          height: height /
-                                                              123.1666),
-                                                      Container(
-                                                          height: height /
-                                                              15.114,
-                                                          width: width / 4.6545,
-                                                          decoration: BoxDecoration(
-                                                              color: const Color(
-                                                                  0xffDDDEEE),
-                                                              borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                  3)),
-                                                          child:
-                                                          TextFormField(
-                                                            readOnly: true,
-                                                            autovalidateMode: AutovalidateMode
-                                                                .onUserInteraction,
-                                                            controller: yearPassedcon,
-                                                            inputFormatters: [
-                                                              FilteringTextInputFormatter
-                                                                  .allow(
-                                                                  RegExp(
-                                                                      "[0-9]")),
-                                                            ],
-                                                            onTap: () async {
-                                                              final DateTime? picked = await showDatePicker(
-                                                                context: context,
-                                                                initialDate: DateTime
-                                                                    .now(),
-                                                                firstDate: DateTime(
-                                                                    1900),
-                                                                lastDate: DateTime
-                                                                    .now(),
-                                                                initialDatePickerMode: DatePickerMode
-                                                                    .year,
-                                                              );
-
-                                                              if(picked!.year<(BatchYearValid+17)){
-                                                                userNotValidYearOfPassedPopup();
-                                                              }
-
-
-                                                              if (picked != null && picked != DateTime.now()) {
-                                                                print(
-                                                                    'Selected year: ${picked
-                                                                        .year}');
-                                                                setState(() {
-                                                                  yearPassedcon
-                                                                      .text =
-                                                                      picked
-                                                                          .year
-                                                                          .toString();
-                                                                });
-                                                              }
-                                                            },
-                                                            decoration:
-                                                            const InputDecoration(
-                                                              border: InputBorder
-                                                                  .none,
-                                                              contentPadding: EdgeInsets
-                                                                  .only(
-                                                                  bottom:
-                                                                  10,
-                                                                  top:
-                                                                  2,
-                                                                  left:
-                                                                  10),
-                                                            ),
-                                                            validator: (
-                                                                value) =>
-                                                            value!
-                                                                .isEmpty
-                                                                ? 'Field is required'
-                                                                : null,
-                                                          ))
-                                                    ],
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: height / 9.369,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .start,
-                                                    children: [
-                                                      KText(
-                                                        text:
-                                                        'Department *',
-                                                        style:
-                                                        SafeGoogleFont(
-                                                          'Nunito',
-                                                          fontSize:
-                                                          20 * ffem,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w700,
-                                                          height:
-                                                          1.3625 *
-                                                              ffem /
-                                                              fem,
-                                                          color: const Color(
-                                                              0xff000000),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                          height: height /
-                                                              123.1666),
-                                                      Container(
-                                                        height: height / 15.114,
-                                                        width: width / 4.6545,
-                                                        decoration: BoxDecoration(
-                                                            color: const Color(
-                                                                0xffDDDEEE),
-                                                            borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                3)),
-                                                        child:
-                                                        
-                                                        
-                                                        DropdownButtonHideUnderline(
-                                                          child:
-                                                          DropdownButtonFormField2<
-                                                              String>(
-                                                            isExpanded: true,
-                                                            hint: Text(
-                                                              'Select Department',
-                                                              style:
-                                                              SafeGoogleFont(
-                                                                'Nunito',
-                                                                fontSize:
-                                                                20 * ffem,
-                                                              ),
-                                                            ),
-                                                            items: departmentDataList
-                                                                .map((String
-                                                            item) =>
-                                                                DropdownMenuItem<
-                                                                    String>(
-                                                                  value: item,
-                                                                  child: Text(
-                                                                    item,
-                                                                    style:
-                                                                    SafeGoogleFont(
-                                                                      'Nunito',
-                                                                      fontSize:
-                                                                      20 *
-                                                                          ffem,
-                                                                    ),
-                                                                  ),
-                                                                )).toList(),
-                                                            value:
-                                                            subjectStremdcon
-                                                                .text,
-                                                            onChanged:
-                                                                (
-                                                                String? value) {
-                                                              setState(() {
-                                                                subjectStremdcon
-                                                                    .text =
-                                                                value!;
-                                                              });
-                                                            },
-                                                            buttonStyleData:
-                                                            const ButtonStyleData(
-
-
-                                                            ),
-                                                            menuItemStyleData:
-                                                            const MenuItemStyleData(
-
-                                                            ),
-                                                            decoration:
-                                                            const InputDecoration(
-                                                                border:
-                                                                InputBorder
-                                                                    .none),
-                                                          ),
-                                                        ),
-                                                   
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-
-                                            ///class anb roll no container
-
-                                            Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
-                                              children: [
-                                                SizedBox(
-                                                  height: height / 9.369,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .start,
-                                                    children: [
-                                                      KText(
-                                                        text: 'Class *',
-                                                        style:
-                                                        SafeGoogleFont(
-                                                          'Nunito',
-                                                          fontSize:
-                                                          20 * ffem,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w700,
-                                                          height:
-                                                          1.3625 *
-                                                              ffem /
-                                                              fem,
-                                                          color: const Color(
-                                                              0xff000000),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                          height: height /
-                                                              123.1666),
-                                                      Container(
-                                                          height: height /
-                                                              15.114,
-                                                          width: width / 4.6545,
-                                                          decoration: BoxDecoration(
-                                                              color: const Color(
-                                                                  0xffDDDEEE),
-                                                              borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                  3)),
-                                                          child:
-                                                          TextFormField(
-                                                            autovalidateMode: AutovalidateMode
-                                                                .onUserInteraction,
-                                                            controller:
-                                                            classcon,
-                                                            inputFormatters: [
-                                                              FilteringTextInputFormatter
-                                                                  .allow(
-                                                                  RegExp(
-                                                                      "[a-zA-Z ]")),
-                                                            ],
-                                                            decoration:
-                                                            const InputDecoration(
-                                                              border: InputBorder
-                                                                  .none,
-                                                              contentPadding: EdgeInsets
-                                                                  .only(
-                                                                  bottom:
-                                                                  10,
-                                                                  top:
-                                                                  2,
-                                                                  left:
-                                                                  10),
-                                                            ),
-                                                            validator: (
-                                                                value) =>
-                                                            value!
-                                                                .isEmpty
-                                                                ? 'Field is required'
-                                                                : null,
-                                                          ))
-                                                    ],
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: height / 9.369,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .start,
-                                                    children: [
-                                                      KText(
-                                                        text: 'Roll No',
-                                                        style:
-                                                        SafeGoogleFont(
-                                                          'Nunito',
-                                                          fontSize:
-                                                          20 * ffem,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w700,
-                                                          height:
-                                                          1.3625 *
-                                                              ffem /
-                                                              fem,
-                                                          color: const Color(
-                                                              0xff000000),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                          height: height /
-                                                              123.1666),
-                                                      Container(
-                                                          height: height /
-                                                              15.114,
-                                                          width: width / 4.6545,
-                                                          decoration: BoxDecoration(
-                                                              color: const Color(
-                                                                  0xffDDDEEE),
-                                                              borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                  3)),
-                                                          child:
-                                                          TextFormField(
-                                                            controller:
-                                                            rollnocon,
-                                                            inputFormatters: [
-                                                              FilteringTextInputFormatter
-                                                                  .allow(
-                                                                  RegExp(
-                                                                      "[a-zA-Z0-9 ]")),
-                                                            ],
-                                                            decoration:
-                                                            const InputDecoration(
-                                                              border: InputBorder
-                                                                  .none,
-                                                              contentPadding: EdgeInsets
-                                                                  .only(
-                                                                  bottom:
-                                                                  10,
-                                                                  top:
-                                                                  2,
-                                                                  left:
-                                                                  10),
-                                                            ),
-                                                            //validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                          ))
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-
-                                            ///house and last visit container
-                                            Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
-                                              children: [
-                                                SizedBox(
-                                                  height: height / 9.369,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .start,
-                                                    children: [
-                                                      KText(
-                                                        text: 'House',
-                                                        style:
-                                                        SafeGoogleFont(
-                                                          'Nunito',
-                                                          fontSize:
-                                                          20 * ffem,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w700,
-                                                          height:
-                                                          1.3625 *
-                                                              ffem /
-                                                              fem,
-                                                          color: const Color(
-                                                              0xff000000),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                          height: height /
-                                                              123.1666),
-                                                      Container(
-                                                          height: height /
-                                                              15.114,
-                                                          width: width / 4.6545,
-                                                          decoration: BoxDecoration(
-                                                              color: const Color(
-                                                                  0xffDDDEEE),
-                                                              borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                  3)),
-                                                          child:
-                                                          TextFormField(
-                                                            controller:
-                                                            housecon,
-                                                            inputFormatters: [
-                                                              FilteringTextInputFormatter
-                                                                  .allow(
-                                                                  RegExp(
-                                                                      "[a-zA-Z0-9 ]")),
-                                                            ],
-                                                            decoration:
-                                                            const InputDecoration(
-                                                              border: InputBorder
-                                                                  .none,
-                                                              contentPadding: EdgeInsets
-                                                                  .only(
-                                                                  bottom:
-                                                                  10,
-                                                                  top:
-                                                                  2,
-                                                                  left:
-                                                                  10),
-                                                            ),
-                                                            //  validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                          ))
-                                                    ],
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: height / 9.369,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .start,
-                                                    children: [
-                                                      KText(
-                                                        text:
-                                                        'Your Last Visit',
-                                                        style:
-                                                        SafeGoogleFont(
-                                                          'Nunito',
-                                                          fontSize:
-                                                          20 * ffem,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w700,
-                                                          height:
-                                                          1.3625 *
-                                                              ffem /
-                                                              fem,
-                                                          color: const Color(
-                                                              0xff000000),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                          height: height /
-                                                              123.1666),
-                                                      Container(
-                                                          height: height /
-                                                              15.114,
-                                                          width: width / 4.6545,
-                                                          decoration: BoxDecoration(
-                                                              color: const Color(
-                                                                  0xffDDDEEE),
-                                                              borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                  3)),
-                                                          child:
-                                                          TextFormField(
-                                                            controller:
-                                                            lastvisitcon,
-                                                            inputFormatters: [
-                                                              FilteringTextInputFormatter
-                                                                  .allow(
-                                                                  RegExp(
-                                                                      "[a-zA-Z0-9 ]")),
-                                                            ],
-                                                            decoration:
-                                                            const InputDecoration(
-                                                              border: InputBorder
-                                                                  .none,
-                                                              contentPadding: EdgeInsets
-                                                                  .only(
-                                                                  bottom:
-                                                                  10,
-                                                                  top:
-                                                                  2,
-                                                                  left:
-                                                                  10),
-                                                            ),
-                                                            // validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                          ))
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding:
-                                        const EdgeInsets.only(left: 25),
-                                        child: SizedBox(
-                                          height: height / 2.8,
-                                          width: width / 4.1513,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              KText(
-                                                text:
-                                                'My Status Message *',
-                                                style: SafeGoogleFont(
-                                                  'Nunito',
-                                                  fontSize: 20 * ffem,
-                                                  fontWeight:
-                                                  FontWeight.w700,
-                                                  height: 1.3625 *
-                                                      ffem /
-                                                      fem,
-                                                  color:
-                                                  const Color(0xff000000),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                  height: height / 123.1666),
-                                              Container(
-                                                  height: height / 3.15,
-                                                  width: width / 4.45217,
-                                                  decoration: BoxDecoration(
-                                                      color: const Color(
-                                                          0xffDDDEEE),
-                                                      borderRadius:
-                                                      BorderRadius
-                                                          .circular(
-                                                          3)),
-                                                  child: TextFormField(
-                                                    controller:
-                                                    statusmessagecon,
-                                                    autovalidateMode: AutovalidateMode
-                                                        .onUserInteraction,
-                                                    maxLines: null,
-                                                    expands: true,
-                                                    decoration:
-                                                    const InputDecoration(
-                                                      border:
-                                                      InputBorder
-                                                          .none,
-                                                      contentPadding:
-                                                      EdgeInsets.only(
-                                                          bottom:
-                                                          10,
-                                                          top: 10,
-                                                          left: 10),
-                                                    ),
-                                                    validator: (value) =>
-                                                    value!.isEmpty
-                                                        ? 'Field is required'
-                                                        : null,
-                                                  ))
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-
-                                  ///alumni education Qualifications
-                                  SizedBox(height: height / 36.95),
-                                  Row(
-                                    children: [
-                                      SizedBox(width: width / 307.2),
-                                      KText(
-                                        text: 'Alumni Qualifications',
-                                        style: SafeGoogleFont(
-                                          'Nunito',
-                                          fontSize: 25 * ffem,
-                                          fontWeight: FontWeight.w700,
-                                          height: 1.3625 * ffem / fem,
-                                          color: const Color(0xff000000),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 4,
-                                        right: 4,
-                                        top: 4,
-                                        bottom: 4),
-                                    child: Container(
-                                      height: 1,
-                                      width: width / 1.4422,
-                                      color: Colors.grey.shade300,
-                                    ),
-                                  ),
-                                  SizedBox(height: height / 36.95),
-
-                                  Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          KText(
-                                            text:
-                                            'Educational Qualification',
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              fontSize: 20 * ffem,
-                                              fontWeight:
-                                              FontWeight.w700,
-                                              height:
-                                              1.3625 * ffem / fem,
-                                              color: const Color(0xff000000),
-                                            ),
-                                          ),
-                                          SizedBox(height: height / 123.1666),
-                                          Container(
-                                              height: height / 10.5571,
-                                              width: width / 3.01176,
-                                              decoration: BoxDecoration(
-                                                  color: const Color(
-                                                      0xffDDDEEE),
-                                                  borderRadius:
-                                                  BorderRadius
-                                                      .circular(3)),
-                                              child: TextFormField(
-                                                controller:
-                                                educationquvalificationcon,
-                                                inputFormatters: [
-                                                  FilteringTextInputFormatter
-                                                      .allow(RegExp(
-                                                      "[a-zA-Z ]")),
-                                                ],
-                                                decoration:
-                                                const InputDecoration(
-                                                  border:
-                                                  InputBorder.none,
-                                                  contentPadding:
-                                                  EdgeInsets.only(
-                                                      bottom: 10,
-                                                      top: 2,
-                                                      left: 10),
-                                                ),
-                                              ))
-                                        ],
-                                      ),
-                                      SizedBox(width: width / 30.72),
-                                      Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          KText(
-                                            text:
-                                            'Additional Qualification',
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              fontSize: 20 * ffem,
-                                              fontWeight:
-                                              FontWeight.w700,
-                                              height:
-                                              1.3625 * ffem / fem,
-                                              color: const Color(0xff000000),
-                                            ),
-                                          ),
-                                          SizedBox(height: height / 123.1666),
-                                          Container(
-                                              height: height / 10.5571,
-                                              width: width / 3.01176,
-                                              decoration: BoxDecoration(
-                                                  color: const Color(
-                                                      0xffDDDEEE),
-                                                  borderRadius:
-                                                  BorderRadius
-                                                      .circular(3)),
-                                              child: TextFormField(
-                                                controller:
-                                                additionalquvalificationcon,
-                                                inputFormatters: [
-                                                  FilteringTextInputFormatter
-                                                      .allow(RegExp(
-                                                      "[a-zA-Z ]")),
-                                                ],
-                                                decoration:
-                                                const InputDecoration(
-                                                  border:
-                                                  InputBorder.none,
-                                                  contentPadding:
-                                                  EdgeInsets.only(
-                                                      bottom: 10,
-                                                      top: 2,
-                                                      left: 10),
-                                                ),
-                                              ))
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-
-                                  SizedBox(height: height / 36.95),
-                                  Row(
-                                    children: [
-                                      SizedBox(width: width / 307.2),
-                                      KText(
-                                        text: 'Professional Details',
-                                        style: SafeGoogleFont(
-                                          'Nunito',
-                                          fontSize: 25 * ffem,
-                                          fontWeight: FontWeight.w700,
-                                          height: 1.3625 * ffem / fem,
-                                          color: const Color(0xff000000),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 4,
-                                        right: 4,
-                                        top: 4,
-                                        bottom: 4),
-                                    child: Container(
-                                      height: 1,
-                                      width: width / 1.4422,
-                                      color: Colors.grey.shade300,
-                                    ),
-                                  ),
-                                  SizedBox(height: height / 36.95),
-
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        height: height / 9.369,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            KText(
-                                              text: 'Are You Working',
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                fontSize: 20 * ffem,
-                                                fontWeight:
-                                                FontWeight.w700,
-                                                height:
-                                                1.3625 * ffem / fem,
-                                                color:
-                                                const Color(0xff000000),
-                                              ),
-                                            ),
-                                            SizedBox(height: height / 123.1666),
-                                            Container(
-                                              height: height / 15.114,
-                                              width: width / 6.6782,
-                                              decoration: BoxDecoration(
-                                                  color: const Color(
-                                                      0xffDDDEEE),
-                                                  borderRadius:
-                                                  BorderRadius
-                                                      .circular(3)),
-                                              child:
-                                              DropdownButtonHideUnderline(
-                                                child:
-                                                DropdownButtonFormField2<
-                                                    String>(
-                                                  isExpanded: true,
-                                                  hint: Text(
-                                                    'Working',
-                                                    style:
-                                                    SafeGoogleFont(
-                                                      'Nunito',
-                                                      fontSize:
-                                                      20 * ffem,
-                                                    ),
-                                                  ),
-                                                  items: WorkingEmpList
-                                                      .map((String
-                                                  item) =>
-                                                      DropdownMenuItem<
-                                                          String>(
-                                                        value: item,
-                                                        child: Text(
-                                                          item,
-                                                          style:
-                                                          SafeGoogleFont(
-                                                            'Nunito',
-                                                            fontSize:
-                                                            20 *
-                                                                ffem,
-                                                          ),
-                                                        ),
-                                                      )).toList(),
-                                                  value:
-                                                  alumniEmployedController
-                                                      .text,
-                                                  onChanged:
-                                                      (String? value) {
-                                                    setState(() {
-                                                      alumniEmployedController
-                                                          .text =
-                                                      value!;
-                                                    });
-                                                  },
-                                                  buttonStyleData:
-                                                  const ButtonStyleData(
-
-
-                                                  ),
-                                                  menuItemStyleData:
-                                                  const MenuItemStyleData(
-
-                                                  ),
-                                                  decoration:
-                                                  const InputDecoration(
-                                                      border:
-                                                      InputBorder
-                                                          .none),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      /*    ///ownBussinesscon
-
-                                                    Padding(
-                                                    padding:EdgeInsets.only(left:width/68.0666),
-                                                child:
-                                                SizedBox(
-                                                  height: height/9.369,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                    children: [
-                                                      KText(
-                                                        text: 'Own Business',
-                                                        style: SafeGoogleFont(
-                                                          'Nunito',
-                                                          fontSize: 20 * ffem,
-                                                          fontWeight: FontWeight.w700,
-                                                          height: 1.3625 * ffem / fem,
-                                                          color: const Color(0xff000000),
-                                                        ),
-                                                      ),
-                                                      SizedBox(height: height/123.1666),
-                                                      Container(
-                                                          height: height/15.114,
-                                                          width: width/4.6545,
-                                                          decoration: BoxDecoration(
-                                                              color: const Color(
-                                                                  0xffDDDEEE),
-                                                              borderRadius:
-                                                              BorderRadius
-                                                                  .circular(3)),
-                                                          child: TextFormField(
-                                                            controller: ownBussinesscon,
-                                                            inputFormatters: [
-                                                              FilteringTextInputFormatter
-                                                                  .allow(RegExp(
-                                                                  "[a-zA-Z]")),
-                                                            ],
-                                                            decoration:
-                                                            const InputDecoration(
-                                                              border:
-                                                              InputBorder.none,
-                                                              contentPadding:
-                                                              EdgeInsets.only(
-                                                                  bottom: 10,
-                                                                  top: 2,
-                                                                  left: 10),
-                                                            ),
-                                                            // validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                          ))
-                                                    ],
-                                                  ),
-                                                )),*/
-
-                                    ],
-                                  ),
-                                  SizedBox(height: height / 36.95),
-                                  alumniEmployedController.text == "Yes" ?
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        height: height / 9.369,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            KText(
-                                              text: 'Occupations',
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                fontSize: 20 * ffem,
-                                                fontWeight:
-                                                FontWeight.w700,
-                                                height:
-                                                1.3625 * ffem / fem,
-                                                color:
-                                                const Color(0xff000000),
-                                              ),
-                                            ),
-                                            SizedBox(height: height / 123.1666),
-                                            Container(
-                                                height: height / 15.114,
-                                                width: width / 4.6545,
-                                                decoration: BoxDecoration(
-                                                    color: const Color(
-                                                        0xffDDDEEE),
-                                                    borderRadius:
-                                                    BorderRadius
-                                                        .circular(
-                                                        3)),
-                                                child: TextFormField(
-                                                  controller:
-                                                  occupationcon,
-                                                  inputFormatters: [
-                                                    FilteringTextInputFormatter
-                                                        .allow(RegExp(
-                                                        "[a-zA-Z ]")),
-                                                  ],
-                                                  decoration:
-                                                  const InputDecoration(
-                                                    border: InputBorder
-                                                        .none,
-                                                    contentPadding:
-                                                    EdgeInsets.only(
-                                                        bottom: 10,
-                                                        top: 2,
-                                                        left: 10),
-                                                  ),
-                                                  // validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                ))
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(width: width / 38.4),
-                                      SizedBox(
-                                        height: height / 9.369,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            KText(
-                                              text: 'Designation',
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                fontSize: 20 * ffem,
-                                                fontWeight:
-                                                FontWeight.w700,
-                                                height:
-                                                1.3625 * ffem / fem,
-                                                color:
-                                                const Color(0xff000000),
-                                              ),
-                                            ),
-                                            SizedBox(height: height / 123.1666),
-                                            Container(
-                                                height: height / 15.114,
-                                                width: width / 4.6545,
-                                                decoration: BoxDecoration(
-                                                    color: const Color(
-                                                        0xffDDDEEE),
-                                                    borderRadius:
-                                                    BorderRadius
-                                                        .circular(
-                                                        3)),
-                                                child: TextFormField(
-                                                  controller:
-                                                  designationcon,
-                                                  inputFormatters: [
-                                                    FilteringTextInputFormatter
-                                                        .allow(RegExp(
-                                                        "[a-zA-Z ]")),
-                                                  ],
-                                                  decoration:
-                                                  const InputDecoration(
-                                                    border: InputBorder
-                                                        .none,
-                                                    contentPadding:
-                                                    EdgeInsets.only(
-                                                        bottom: 10,
-                                                        top: 2,
-                                                        left: 10),
-                                                  ),
-                                                  //validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                ))
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(width: width / 38.4),
-                                      SizedBox(
-                                        height: height / 9.369,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            KText(
-                                              text:
-                                              "Company/Concern's Name",
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                fontSize: 20 * ffem,
-                                                fontWeight:
-                                                FontWeight.w700,
-                                                height:
-                                                1.3625 * ffem / fem,
-                                                color:
-                                                const Color(0xff000000),
-                                              ),
-                                            ),
-                                            SizedBox(height: height / 123.1666),
-                                            Container(
-                                                height: height / 15.114,
-                                                width: width / 4.6545,
-                                                decoration: BoxDecoration(
-                                                    color: const Color(
-                                                        0xffDDDEEE),
-                                                    borderRadius:
-                                                    BorderRadius
-                                                        .circular(
-                                                        3)),
-                                                child: TextFormField(
-                                                  controller:
-                                                  company_concerncon,
-                                                  inputFormatters: [
-                                                    FilteringTextInputFormatter
-                                                        .allow(RegExp(
-                                                        "[a-zA-Z ]")),
-                                                  ],
-                                                  decoration:
-                                                  const InputDecoration(
-                                                    border: InputBorder
-                                                        .none,
-                                                    contentPadding:
-                                                    EdgeInsets.only(
-                                                        bottom: 10,
-                                                        top: 2,
-                                                        left: 10),
-                                                  ),
-                                                  // validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                ))
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ) :
-                                  alumniEmployedController.text ==
-                                      "Own Business" ?
-                                  Row(
-                                    children: [
-
-                                      /* SizedBox(width: width/38.4),
-                                                SizedBox(
-                                                  height: height/9.369,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                    children: [
-                                                      KText(
-                                                        text: 'Designation',
-                                                        style: SafeGoogleFont(
-                                                          'Nunito',
-                                                          fontSize: 20 * ffem,
-                                                          fontWeight:
-                                                          FontWeight.w700,
-                                                          height:
-                                                          1.3625 * ffem / fem,
-                                                          color:
-                                                          const Color(0xff000000),
-                                                        ),
-                                                      ),
-                                                      SizedBox(height: height/123.1666),
-                                                      Container(
-                                                          height: height/15.114,
-                                                          width: width/4.6545,
-                                                          decoration: BoxDecoration(
-                                                              color: const Color(
-                                                                  0xffDDDEEE),
-                                                              borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                  3)),
-                                                          child: TextFormField(
-                                                            controller:
-                                                            designationcon,
-                                                            inputFormatters: [
-                                                              FilteringTextInputFormatter
-                                                                  .allow(RegExp(
-                                                                  "[a-zA-Z]")),
-                                                            ],
-                                                            decoration:
-                                                            const InputDecoration(
-                                                              border: InputBorder
-                                                                  .none,
-                                                              contentPadding:
-                                                              EdgeInsets.only(
-                                                                  bottom: 10,
-                                                                  top: 2,
-                                                                  left: 10),
-                                                            ),
-                                                            //validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                          ))
-                                                    ],
-                                                  ),
-                                                ),*/
-
-                                      SizedBox(
-                                        height: height / 9.369,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            KText(
-                                              text:
-                                              "Company Name",
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                fontSize: 20 * ffem,
-                                                fontWeight:
-                                                FontWeight.w700,
-                                                height:
-                                                1.3625 * ffem / fem,
-                                                color:
-                                                const Color(0xff000000),
-                                              ),
-                                            ),
-                                            SizedBox(height: height / 123.1666),
-                                            Container(
-                                                height: height / 15.114,
-                                                width: width / 4.6545,
-                                                decoration: BoxDecoration(
-                                                    color: const Color(
-                                                        0xffDDDEEE),
-                                                    borderRadius:
-                                                    BorderRadius
-                                                        .circular(
-                                                        3)),
-                                                child: TextFormField(
-                                                  controller:
-                                                  company_concerncon,
-                                                  inputFormatters: [
-                                                    FilteringTextInputFormatter
-                                                        .allow(RegExp(
-                                                        "[a-zA-Z ]")),
-                                                  ],
-                                                  decoration:
-                                                  const InputDecoration(
-                                                    border: InputBorder
-                                                        .none,
-                                                    contentPadding:
-                                                    EdgeInsets.only(
-                                                        bottom: 10,
-                                                        top: 2,
-                                                        left: 10),
-                                                  ),
-                                                  // validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                ))
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(width: width / 38.4),
-                                      SizedBox(
-                                        height: height / 9.369,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            KText(
-                                              text: 'Type',
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                fontSize: 20 * ffem,
-                                                fontWeight:
-                                                FontWeight.w700,
-                                                height:
-                                                1.3625 * ffem / fem,
-                                                color:
-                                                const Color(0xff000000),
-                                              ),
-                                            ),
-                                            SizedBox(height: height / 123.1666),
-                                            Container(
-                                                height: height / 15.114,
-                                                width: width / 4.6545,
-                                                decoration: BoxDecoration(
-                                                    color: const Color(
-                                                        0xffDDDEEE),
-                                                    borderRadius:
-                                                    BorderRadius
-                                                        .circular(
-                                                        3)),
-                                                child: TextFormField(
-                                                  controller:
-                                                  occupationcon,
-                                                  inputFormatters: [
-                                                    FilteringTextInputFormatter
-                                                        .allow(RegExp(
-                                                        "[a-zA-Z ]")),
-                                                  ],
-                                                  decoration:
-                                                  const InputDecoration(
-                                                    border: InputBorder
-                                                        .none,
-                                                    contentPadding:
-                                                    EdgeInsets.only(
-                                                        bottom: 10,
-                                                        top: 2,
-                                                        left: 10),
-                                                  ),
-                                                  // validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                ))
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ) :
-                                  const SizedBox(),
-
-                                  ///Material Status
-                                  SizedBox(height: height / 36.95),
-                                  Row(
-                                    children: [
-                                      SizedBox(width: width / 307.2),
-                                      KText(
-                                        text: 'Marital Information',
-                                        style: SafeGoogleFont(
-                                          'Nunito',
-                                          fontSize: 25 * ffem,
-                                          fontWeight: FontWeight.w700,
-                                          height: 1.3625 * ffem / fem,
-                                          color: const Color(0xff000000),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 4,
-                                        right: 4,
-                                        top: 4,
-                                        bottom: 4),
-                                    child: Container(
-                                      height: 1,
-                                      width: width / 1.4422,
-                                      color: Colors.grey.shade300,
-                                    ),
-                                  ),
-                                  SizedBox(height: height / 36.95),
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        height: height / 9.369,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            KText(
-                                              text: 'Are You Married',
-                                              style: SafeGoogleFont(
-                                                'Nunito',
-                                                fontSize: 20 * ffem,
-                                                fontWeight:
-                                                FontWeight.w700,
-                                                height:
-                                                1.3625 * ffem / fem,
-                                                color:
-                                                const Color(0xff000000),
-                                              ),
-                                            ),
-                                            SizedBox(height: height / 123.1666),
-                                            Container(
-                                              height: height / 15.114,
-                                              width: width / 6.6782,
-                                              decoration: BoxDecoration(
-                                                  color: const Color(
-                                                      0xffDDDEEE),
-                                                  borderRadius:
-                                                  BorderRadius
-                                                      .circular(3)),
-                                              child:
-                                              DropdownButtonHideUnderline(
-
-                                                child:
-                                                DropdownButtonFormField2<
-                                                    String>(
-                                                  isExpanded: true,
-                                                  hint: Text(
-                                                    'Marital Status',
-                                                    style:
-                                                    SafeGoogleFont(
-                                                      'Nunito',
-                                                      fontSize:
-                                                      20 * ffem,
-                                                    ),
-                                                  ),
-                                                  items: MaritalStatusList
-                                                      .map((String
-                                                  item) =>
-                                                      DropdownMenuItem<
-                                                          String>(
-                                                        value: item,
-                                                        child: Text(
-                                                          item,
-                                                          style:
-                                                          SafeGoogleFont(
-                                                            'Nunito',
-                                                            fontSize:
-                                                            20 *
-                                                                ffem,
-                                                          ),
-                                                        ),
-                                                      )).toList(),
-                                                  value:
-                                                  maritalStatuscon
-                                                      .text,
-                                                  onChanged:
-                                                      (String? value) {
-                                                    setState(() {
-                                                      maritalStatuscon
-                                                          .text =
-                                                      value!;
-                                                    });
-                                                  },
-                                                  buttonStyleData:
-                                                  const ButtonStyleData(
-
-
-                                                  ),
-                                                  menuItemStyleData:
-                                                  const MenuItemStyleData(
-
-                                                  ),
-                                                  decoration:
-                                                  const InputDecoration(
-                                                      border:
-                                                      InputBorder
-                                                          .none),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(width: width / 38.4),
-                                      maritalStatuscon.text == "Yes"
-                                          ? SizedBox(
-                                          child: Row(children: [
-                                            SizedBox(
-                                              height: height / 9.369,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment
-                                                    .start,
-                                                children: [
-                                                  KText(
-                                                    text:
-                                                    'Spouse Name',
-                                                    style:
-                                                    SafeGoogleFont(
-                                                      'Nunito',
-                                                      fontSize:
-                                                      20 * ffem,
-                                                      fontWeight:
-                                                      FontWeight
-                                                          .w700,
-                                                      height: 1.3625 *
-                                                          ffem /
-                                                          fem,
-                                                      color: const Color(
-                                                          0xff000000),
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: height /
-                                                      123.1666),
-                                                  Container(
-                                                      height: height / 15.114,
-                                                      width: width / 6.4,
-                                                      decoration: BoxDecoration(
-                                                          color: const Color(
-                                                              0xffDDDEEE),
-                                                          borderRadius:
-                                                          BorderRadius.circular(
-                                                              3)),
-                                                      child:
-                                                      TextFormField(
-                                                        controller:
-                                                        spouseNamecon,
-                                                        inputFormatters: [
-                                                          FilteringTextInputFormatter
-                                                              .allow(RegExp(
-                                                              "[a-zA-Z ]")),
-                                                        ],
-                                                        decoration:
-                                                        const InputDecoration(
-                                                          border:
-                                                          InputBorder
-                                                              .none,
-                                                          contentPadding: EdgeInsets
-                                                              .only(
-                                                              bottom:
-                                                              10,
-                                                              top: 2,
-                                                              left:
-                                                              10),
-                                                        ),
-                                                        //validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                      ))
-                                                ],
-                                              ),
-                                            ),
-                                            SizedBox(width: width / 38.4),
-                                            SizedBox(
-                                              height: height / 9.369,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment
-                                                    .start,
-                                                children: [
-                                                  KText(
-                                                    text:
-                                                    "Anniversary Date ",
-                                                    style:
-                                                    SafeGoogleFont(
-                                                      'Nunito',
-                                                      fontSize:
-                                                      20 * ffem,
-                                                      fontWeight:
-                                                      FontWeight
-                                                          .w700,
-                                                      height: 1.3625 *
-                                                          ffem /
-                                                          fem,
-                                                      color: const Color(
-                                                          0xff000000),
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: height /
-                                                      123.1666),
-                                                  Container(
-                                                      height: height / 15.114,
-                                                      width: width / 6.4,
-                                                      decoration: BoxDecoration(
-                                                          color: const Color(
-                                                              0xffDDDEEE),
-                                                          borderRadius:
-                                                          BorderRadius.circular(
-                                                              3)),
-                                                      child:
-                                                      TextFormField(
-                                                        readOnly:
-                                                        true,
-                                                        controller:
-                                                        anniversaryDatecon,
-                                                        decoration:
-                                                        const InputDecoration(
-                                                          border:
-                                                          InputBorder
-                                                              .none,
-                                                          contentPadding: EdgeInsets
-                                                              .only(
-                                                              bottom:
-                                                              10,
-                                                              top: 2,
-                                                              left:
-                                                              10),
-                                                        ),
-                                                        onTap:
-                                                            () async {
-                                                          DateTime? pickedDate = await showDatePicker(
-                                                              context: context,
-                                                              initialDate: DateTime
-                                                                  .now(),
-                                                              firstDate: DateTime(
-                                                                  1950),
-                                                              //DateTime.now() - not to allow to choose before today.
-                                                              lastDate: DateTime(
-                                                                  2100));
-
-                                                          if (pickedDate !=
-                                                              null) {
-                                                            //pickedDate output format => 2021-03-10 00:00:00.000
-                                                            String
-                                                            formattedDate =
-                                                            DateFormat(
-                                                                'dd/MM/yyyy')
-                                                                .format(
-                                                                pickedDate);
-                                                            //formatted date output using intl package =>  2021-03-16
-                                                            setState(
-                                                                    () {
-                                                                  anniversaryDatecon
-                                                                      .text =
-                                                                      formattedDate; //set output date to TextField value.
-                                                                });
-                                                          } else {}
-                                                        },
-                                                        // validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                                      ))
-                                                ],
-                                              ),
-                                            ),
-                                            SizedBox(width: width / 38.4),
-                                            SizedBox(
-                                              height: height / 9.369,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment
-                                                    .start,
-                                                children: [
-                                                  KText(
-                                                    text:
-                                                    "No. Of Children",
-                                                    style:
-                                                    SafeGoogleFont(
-                                                      'Nunito',
-                                                      fontSize:
-                                                      20 * ffem,
-                                                      fontWeight:
-                                                      FontWeight
-                                                          .w700,
-                                                      height: 1.3625 *
-                                                          ffem /
-                                                          fem,
-                                                      color: const Color(
-                                                          0xff000000),
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: height /
-                                                      123.1666),
-                                                  Container(
-                                                      height: height / 15.114,
-                                                      width: width / 6.4,
-                                                      decoration: BoxDecoration(
-                                                          color: const Color(
-                                                              0xffDDDEEE),
-                                                          borderRadius:
-                                                          BorderRadius.circular(
-                                                              3)),
-                                                      child:
-                                                      TextFormField(
-                                                        controller:
-                                                        no_of_childreancon,
-                                                        maxLength: 2,
-                                                        inputFormatters: [
-                                                          FilteringTextInputFormatter
-                                                              .allow(RegExp(
-                                                              "[0-9]")),
-                                                        ],
-                                                        decoration:
-                                                        const InputDecoration(
-                                                          border:
-                                                          InputBorder
-                                                              .none,
-                                                          contentPadding: EdgeInsets
-                                                              .only(
-                                                              bottom:
-                                                              10,
-                                                              top: 2,
-                                                              left:
-                                                              10),
-                                                          counterText:
-                                                          "",
-                                                        ),
-                                                      ))
-                                                ],
-                                              ),
-                                            ),
-                                          ]))
-                                          : const SizedBox(),
-                                    ],
-                                  ),
-                                  SizedBox(height: height / 24.633),
-
-                                  ///buttons Save reset and back
-
-                                  Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.end,
-                                    children: [
-                                      SizedBox(
-                                        width: width / 2.2925,
-                                      ),
-
-                                      ///save button
-                                      GestureDetector(
-                                        onTap: Loading == false ? () {
-                                          if (citycon.text == "Select City") {
-                                            setState(() {
-                                              dropdownValidator2 = true;
-                                            });
-                                          }
-
-                                          if (statecon.text == "Select State") {
-                                            setState(() {
-                                              dropdownValidator = true;
-                                            });
-                                          }
-
-                                          if (countrycon.text == "Select Country") {
-                                            setState(() {
-                                              dropdownValidator3 = true;
-                                            });
-                                          }
-                                          if (subjectStremdcon.text == "Select Department") {
-                                            setState(() {
-                                              dropdownDepartmentValidator = true;
-                                            });
-                                          }
-
-                                          if (_formkey.currentState!
-                                              .validate()) {
-                                            if (citycon.text == "Select City") {
-                                              setState(() {
-                                                dropdownValidator2 = true;
-                                              });
-                                            }
-
-                                            if (statecon.text ==
-                                                "Select State") {
-                                              setState(() {
-                                                dropdownValidator = true;
-                                              });
-                                            }
-
-                                            if (countrycon.text ==
-                                                "Select Country") {
-                                              setState(() {
-                                                dropdownValidator3 = true;
-                                              });
-                                            }
-                                            if (subjectStremdcon.text == "Select Department") {
-                                              setState(() {
-                                                dropdownDepartmentValidator = true;
-                                              });
-                                            }
-                                            if (dropdownValidator == false &&
-                                                dropdownValidator2 == false &&
-                                                dropdownValidator3 == false&&dropdownDepartmentValidator==false
-                                            ) {
-                                              print(
-                                                  "Finalaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-                                              userdatecreatefunc();
-                                            }
-                                            else {
-                                              print(
-                                                  "errorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
-                                            }
-                                          }
-                                        } : () {},
-                                        child: Container(
-                                            height: height / 18.475,
-                                            width: width / 12.8,
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xffD60A0B),
-                                              borderRadius:
-                                              BorderRadius.circular(
-                                                  4),
-                                            ),
-                                            child: Center(
-                                              child: KText(
-                                                text: 'Save',
-                                                style: SafeGoogleFont(
-                                                  'Nunito',
-                                                  fontSize: 19 * ffem,
-                                                  fontWeight:
-                                                  FontWeight.w400,
-                                                  height: 1.3625 *
-                                                      ffem /
-                                                      fem,
-                                                  color:
-                                                  const Color(0xffFFFFFF),
-                                                ),
-                                              ),
-                                            )),
-                                      ),
-                                      SizedBox(
-                                        width: width / 76.8,
-                                      ),
-
-                                      ///Reset Button
-                                      GestureDetector(
-                                        onTap: () {
-                                          controllersclearfunc();
-                                        },
-                                        child: Container(
-                                            height: height / 18.475,
-                                            width: width / 12.8,
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xff00A0E3),
-                                              borderRadius:
-                                              BorderRadius.circular(
-                                                  4),
-                                            ),
-                                            child: Center(
-                                              child: KText(
-                                                text: 'Reset',
-                                                style: SafeGoogleFont(
-                                                  'Nunito',
-                                                  fontSize: 19 * ffem,
-                                                  fontWeight:
-                                                  FontWeight.w400,
-                                                  height: 1.3625 *
-                                                      ffem /
-                                                      fem,
-                                                  color:
-                                                  const Color(0xffFFFFFF),
-                                                ),
-                                              ),
-                                            )),
-                                      ),
-                                      SizedBox(
-                                        width: width / 76.8,
-                                      ),
-
-                                      ///back Button
-                                      GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            Useradd = false;
-                                          });
-                                          controllersclearfunc();
-                                        },
-                                        child: Container(
-                                            height: height / 18.475,
-                                            width: width / 12.8,
-                                            decoration: BoxDecoration(
-                                              color: Colors.green,
-                                              borderRadius:
-                                              BorderRadius.circular(
-                                                  4),
-                                            ),
-                                            child: Center(
-                                              child: KText(
-                                                text: 'Back',
-                                                style: SafeGoogleFont(
-                                                  'Nunito',
-                                                  fontSize: 19 * ffem,
-                                                  fontWeight:
-                                                  FontWeight.w400,
-                                                  height: 1.3625 *
-                                                      ffem /
-                                                      fem,
-                                                  color:
-                                                  const Color(0xffFFFFFF),
-                                                ),
-                                              ),
-                                            )),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: height / 24.633),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
+              ? UserForm()
 
               : FadeInRight(child: SizedBox(
                 width: 1610 * fem,
@@ -7834,6 +467,7 @@ class _Users_ScreenState extends State<Users_Screen> {
 
                             Row(
                               children: [
+                             
 
                                 Container(
                                   width: 1590 * fem,
@@ -7842,6 +476,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                       top: height / 65.1, left: 10),
                                   child: Row(
                                     children: [
+                                     
                                       GestureDetector(
                                         onTap: () {
                                           setState(() {
@@ -7857,7 +492,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                               12.72 * fem),
                                           height: double.infinity,
                                           decoration: BoxDecoration(
-                                            color: const Color(0xff605bff),
+                                            color: Constants().primaryAppColor,
                                             borderRadius:
                                             BorderRadius.circular(
                                                 10 * fem),
@@ -7905,7 +540,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                       ///Search Container
                                       Padding(
                                           padding: EdgeInsets.only(
-                                            left: width / 2.48,),
+                                            left: width / 2,),
                                           child:
                                           Material(
                                             elevation: 3,
@@ -7915,7 +550,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 5),
                                             child: Container(
                                                 height: height / 5.464,
-                                                width: width / 5.464,
+                                                width: width / 5.1,
                                                 decoration: BoxDecoration(
                                                     color: const Color(
                                                         0xffFFFFFF),
@@ -7929,18 +564,28 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                       bottom: height / 61.375,
                                                       top: height / 61.375),
                                                   child: TextField(
-                                                      style: SafeGoogleFont(
-                                                        'Nunito',),
+
+                                                      style: SafeGoogleFont( 'Nunito',),
                                                       controller: SerachController,
-                                                      decoration: InputDecoration(
+                                                      decoration:  InputDecoration(
                                                           hintText: "Search",
                                                           border: InputBorder
-                                                              .none
+                                                              .none,
+                                                        prefixIcon: Icon(Icons.search_rounded,color:Constants().primaryAppColor),
+                                                        suffixIcon: InkWell(
+                                                            onTap:(){
+                                                              setState(() {
+                                                                SerachValue ="";
+                                                                SerachController.clear();
+                                                              });
+                                                            },
+                                                        child: Icon(Icons.clear,color:Constants().primaryAppColor)),
                                                       ),
                                                       onChanged: (value) {
                                                         if(_isMounted){
                                                           setState(() {
                                                             SerachValue = value.toString();
+                                                            FilterDataValue="";
                                                           });
                                                         }
 
@@ -7951,7 +596,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                           )
                                       ),
 
-
+/*
                                       Useradd == true ? const SizedBox() :
                                       Padding(
                                         padding: EdgeInsets.only(
@@ -7966,7 +611,6 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 mydate.clear();
                                                 Date1Controller.clear();
                                                 Date2Controller.clear();
-
                                               });
                                             }
                                            else{
@@ -7994,7 +638,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                   horizontal: width / 227.66),
                                               child: Row(
                                                 children: [
-                                                  Icon(Icons.filter_list_alt,
+                                                  const Icon(Icons.filter_list_alt,
                                                       color: Colors.white),
                                                   KText(
                                                     text: mydate.isNotEmpty?"Clear Date":" Filter by Date",
@@ -8011,7 +655,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             ),
                                           ),
                                         ),
-                                      )
+                                      )*/
 
                                     ],
                                   ),
@@ -8024,20 +668,18 @@ class _Users_ScreenState extends State<Users_Screen> {
                             SizedBox(height: height / 26.04),
 
                             ///stream titles text
-                            Padding(
-                              padding: EdgeInsets.only(left: width / 170.75),
-                              child: Container(
-                                width: width / 1.21,
-                                height: 78.22 * fem,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xffffffff),
-                                  borderRadius:
-                                  BorderRadius.circular(10 * fem),),
-                                child: Row(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.center,
-                                  children: [
-                                    /* SizedBox(
+                            Container(
+                              width: width / 1,
+                              height: 78.22 * fem,
+                              decoration: BoxDecoration(
+                                color: const Color(0xffffffff),
+                                borderRadius:
+                                BorderRadius.circular(10 * fem),),
+                              child: Row(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.center,
+                                children: [
+                                  /* SizedBox(
                                                 width: width / 6.5,
                                                 height: double.infinity,
                                                 child: Row(
@@ -8367,419 +1009,1282 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                 ),
                                               ),*/
 
-                                    ///NAme
-                                    Container(
-                                      color: Colors.white,
-                                      width: width / 7.2,
-                                      height: height / 14.78,
-                                      alignment: Alignment.center,
-                                      padding: EdgeInsets.only(
-                                          left: width / 78.3),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        children: [
-                                          KText(
-                                            text: "Name",
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              color: const Color(0xff030229),
-                                            ),
+                                  ///NAme
+                                  Container(
+                                    color: Colors.white,
+                                    width: width / 7.2,
+                                    height: height / 14.78,
+                                    alignment: Alignment.center,
+                                    padding: EdgeInsets.only(
+                                        left: width / 78.3),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                      children: [
+                                        KText(
+                                          text: "Name",
+                                          style: SafeGoogleFont(
+                                            'Nunito',
+                                            color: const Color(0xff030229),
                                           ),
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                left: width / 170.75),
-                                            child: InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  filtervalue = !filtervalue;
-                                                  filterChageValue = "Name";
-                                                });
-                                              },
-                                              child: Transform.rotate(
-                                                angle: filtervalue &&
-                                                    filterChageValue == "Name"
-                                                    ? 200
-                                                    : 0,
-                                                child: Opacity(
-                                                  // arrowdown2TvZ (8:2307)
-                                                  opacity: 0.7,
-                                                  child: Container(
-                                                    width: width / 153.6,
-                                                    height: height / 73.9,
-                                                    child: Image.asset(
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              left: width / 170.75),
+                                          child: InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                filtervalue = !filtervalue;
+                                                filterChageValue = "Name";
+                                              });
+                                            },
+                                            child: Transform.rotate(
+                                              angle: filtervalue &&
+                                                  filterChageValue == "Name"
+                                                  ? 200
+                                                  : 0,
+                                              child: Opacity(
+                                                // arrowdown2TvZ (8:2307)
+                                                opacity: 0.7,
+                                                child: Container(
+                                                  width: width / 153.6,
+                                                  height: height / 73.9,
+                                                  child: Image.asset(
                                                       'assets/images/arrow-down-2.png',
                                                       width: width / 153.6,
                                                       height: height / 73.9,
-                                                    ),
+                                                      color:filtervalue &&
+                                                          filterChageValue == "Name"?Colors.green:Colors.transparent
                                                   ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
+                                  ),
 
-                                    Container(
-                                      color: Colors.white,
-                                      width: width / 6.2,
-                                      height: height / 14.78,
-                                      alignment: Alignment.center,
-                                      padding: EdgeInsets.only(
-                                          left: width / 100.15),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        children: [
-                                          KText(
-                                            text: "Email",
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              color: const Color(0xff030229),
-                                            ),
+                                  Container(
+                                    color: Colors.white,
+                                    width: width / 6.2,
+                                    height: height / 14.78,
+                                    alignment: Alignment.center,
+                                    padding: EdgeInsets.only(
+                                        left: width / 100.15),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                      children: [
+                                        KText(
+                                          text: "Email",
+                                          style: SafeGoogleFont(
+                                            'Nunito',
+                                            color: const Color(0xff030229),
                                           ),
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                left: width / 170.75),
-                                            child: InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  filtervalue = !filtervalue;
-                                                  filterChageValue = "email";
-                                                });
-                                              },
-                                              child: Transform.rotate(
-                                                angle: filterChageValue ==
-                                                    "email" && filtervalue
-                                                    ? 200
-                                                    : 0,
-                                                child: Opacity(
-                                                  // arrowdown2TvZ (8:2307)
-                                                  opacity: 0.7,
-                                                  child: Container(
-                                                    width: width / 153.6,
-                                                    height: height / 73.9,
-                                                    child: Image.asset(
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              left: width / 170.75),
+                                          child: InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                filtervalue = !filtervalue;
+                                                filterChageValue = "email";
+                                              });
+                                            },
+                                            child: Transform.rotate(
+                                              angle: filterChageValue ==
+                                                  "email" && filtervalue
+                                                  ? 200
+                                                  : 0,
+                                              child: Opacity(
+                                                // arrowdown2TvZ (8:2307)
+                                                opacity: 0.7,
+                                                child: Container(
+                                                  width: width / 153.6,
+                                                  height: height / 73.9,
+                                                  child: Image.asset(
                                                       'assets/images/arrow-down-2.png',
                                                       width: width / 153.6,
                                                       height: height / 73.9,
-                                                    ),
+                                                      color:filtervalue &&
+                                                          filterChageValue == "email"?Colors.green:Colors.transparent
                                                   ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
+                                  ),
 
-                                    Container(
-                                      color: Colors.white,
-                                      width: width / 7.2,
-                                      height: height / 14.78,
-                                      alignment: Alignment.center,
-                                      padding: EdgeInsets.only(
-                                          left: width / 100.533),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        children: [
-                                          KText(
-                                            text: "Phone Number",
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              color: const Color(0xff030229),
-                                            ),
+                                  Container(
+                                    color: Colors.white,
+                                    width: width / 7.2,
+                                    height: height / 14.78,
+                                    alignment: Alignment.center,
+                                    padding: EdgeInsets.only(
+                                        left: width / 100.533),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                      children: [
+                                        KText(
+                                          text: "Phone Number",
+                                          style: SafeGoogleFont(
+                                            'Nunito',
+                                            color: const Color(0xff030229),
                                           ),
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                left: width / 170.75),
-                                            child: InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  filtervalue = !filtervalue;
-                                                  filterChageValue = "Phone";
-                                                });
-                                              },
-                                              child: Transform.rotate(
-                                                angle: filtervalue &&
-                                                    filterChageValue == "Phone"
-                                                    ? 200
-                                                    : 0,
-                                                child: Opacity(
-                                                  // arrowdown2TvZ (8:2307)
-                                                  opacity: 0.7,
-                                                  child: Container(
-                                                    width: width / 153.6,
-                                                    height: height / 73.9,
-                                                    child: Image.asset(
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              left: width / 170.75),
+                                          child: InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                filtervalue = !filtervalue;
+                                                filterChageValue = "Phone";
+                                              });
+                                            },
+                                            child: Transform.rotate(
+                                              angle: filtervalue &&
+                                                  filterChageValue == "Phone"
+                                                  ? 200
+                                                  : 0,
+                                              child: Opacity(
+                                                // arrowdown2TvZ (8:2307)
+                                                opacity: 0.7,
+                                                child: Container(
+                                                  width: width / 153.6,
+                                                  height: height / 73.9,
+                                                  child: Image.asset(
                                                       'assets/images/arrow-down-2.png',
                                                       width: width / 153.6,
                                                       height: height / 73.9,
-                                                    ),
+                                                      color:filtervalue &&
+                                                          filterChageValue == "Phone"?Colors.green:Colors.transparent
                                                   ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
+                                  ),
 
-                                    Container(
-                                      color: Colors.white,
-                                      width: width / 10,
-                                      height: height / 14.78,
-                                      alignment: Alignment.center,
-                                      child: Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment
-                                            .end,
-                                        children: [
-                                          KText(
-                                            text: "Gender",
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              color: const Color(0xff030229),
-                                            ),
+                                  Container(
+                                    color: Colors.white,
+                                    width: width / 10,
+                                    height: height / 14.78,
+                                    alignment: Alignment.center,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment
+                                          .end,
+                                      children: [
+                                        KText(
+                                          text: "Gender",
+                                          style: SafeGoogleFont(
+                                            'Nunito',
+                                            color: const Color(0xff030229),
                                           ),
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                left: width / 170.75,
-                                                right: width / 54.64),
-                                            child: InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  filtervalue = !filtervalue;
-                                                  filterChageValue = "Gender";
-                                                });
-                                              },
-                                              child: Transform.rotate(
-                                                angle: filtervalue &&
-                                                    filterChageValue == "Gender"
-                                                    ? 200
-                                                    : 0,
-                                                child: Opacity(
-                                                  // arrowdown2TvZ (8:2307)
-                                                  opacity: 0.7,
-                                                  child: Container(
-                                                    width: width / 153.6,
-                                                    height: height / 73.9,
-                                                    child: Image.asset(
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              left: width / 170.75,
+                                              right: width / 54.64),
+                                          child: InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                filtervalue = !filtervalue;
+                                                filterChageValue = "Gender";
+                                              });
+                                            },
+                                            child: Transform.rotate(
+                                              angle: filtervalue &&
+                                                  filterChageValue == "Gender"
+                                                  ? 200
+                                                  : 0,
+                                              child: Opacity(
+                                                // arrowdown2TvZ (8:2307)
+                                                opacity: 0.7,
+                                                child: Container(
+                                                  width: width / 153.6,
+                                                  height: height / 73.9,
+                                                  child: Image.asset(
                                                       'assets/images/arrow-down-2.png',
                                                       width: width / 153.6,
                                                       height: height / 73.9,
-                                                    ),
+                                                      color:filtervalue &&
+                                                          filterChageValue == "Gender"?Colors.green:Colors.transparent
                                                   ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
+                                  ),
 
-                                    Container(
-                                      color: Colors.white,
-                                      width: width / 11.5,
-                                      height: height / 14.78,
-                                      alignment: Alignment.center,
+                                  Container(
+                                    color: Colors.white,
+                                    width: width / 11.5,
+                                    height: height / 14.78,
+                                    alignment: Alignment.center,
 
-                                      child: Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment
-                                            .end,
-                                        children: [
-                                          KText(
-                                            text: "Status",
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              color: const Color(0xff030229),
-                                            ),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment
+                                          .end,
+                                      children: [
+                                        KText(
+                                          text: "Status",
+                                          style: SafeGoogleFont(
+                                            'Nunito',
+                                            color: const Color(0xff030229),
                                           ),
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                left: width / 170.75,
-                                                right: 30),
-                                            child: InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  filtervalue = !filtervalue;
-                                                  filterChageValue = "Status";
-                                                });
-                                              },
-                                              child: Transform.rotate(
-                                                angle: filtervalue &&
-                                                    filterChageValue == "Status"
-                                                    ? 200
-                                                    : 0,
-                                                child: Opacity(
-                                                  // arrowdown2TvZ (8:2307)
-                                                  opacity: 0.7,
-                                                  child: Container(
-                                                    width: width / 153.6,
-                                                    height: height / 73.9,
-                                                    child: Image.asset(
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              left: width / 170.75,
+                                              right: 30),
+                                          child: InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                filtervalue = !filtervalue;
+                                                filterChageValue = "verifyed";
+                                              });
+                                            },
+                                            child: Transform.rotate(
+                                              angle: filtervalue &&
+                                                  filterChageValue == "verifyed"
+                                                  ? 200
+                                                  : 0,
+                                              child: Opacity(
+                                                // arrowdown2TvZ (8:2307)
+                                                opacity: 0.7,
+                                                child: Container(
+                                                  width: width / 153.6,
+                                                  height: height / 73.9,
+                                                  child: Image.asset(
                                                       'assets/images/arrow-down-2.png',
                                                       width: width / 153.6,
                                                       height: height / 73.9,
-                                                    ),
+                                                      color:filtervalue &&
+                                                          filterChageValue == "verifyed"?Colors.green:Colors.transparent
                                                   ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
+                                  ),
 
-                                    Container(
-                                      color: Colors.white,
-                                      width: width / 11,
-                                      height: height / 14.78,
-                                      alignment: Alignment.center,
-                                      child: Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment
-                                            .end,
-                                        children: [
-                                          KText(
-                                            text: "Created on",
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              color: const Color(0xff030229),
-                                            ),
+                                  Container(
+                                    color: Colors.white,
+                                    width: width / 11,
+                                    height: height / 14.78,
+                                    alignment: Alignment.center,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment
+                                          .center,
+                                      children: [
+                                        KText(
+                                          text: "Batch",
+                                          style: SafeGoogleFont(
+                                            'Nunendito',
+                                            color: const Color(0xff030229),
                                           ),
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                left: width / 170.75,
-                                                right: width / 91.0666),
-                                            child: InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  filtervalue = !filtervalue;
-                                                  filterChageValue = "date";
-                                                });
-                                              },
-                                              child: Transform.rotate(
-                                                angle: filtervalue &&
-                                                    filterChageValue == "date"
-                                                    ? 200
-                                                    : 0,
-                                                child: Opacity(
-                                                  // arrowdown2TvZ (8:2307)
-                                                  opacity: 0.7,
-                                                  child: Container(
-                                                    width: width / 153.6,
-                                                    height: height / 73.9,
-                                                    child: Image.asset(
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              left: width / 170.75,
+                                              right: width / 91.0666),
+                                          child: InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                filtervalue = !filtervalue;
+                                                filterChageValue = "yearofpassed";
+                                              });
+                                            },
+                                            child: Transform.rotate(
+                                              angle: filtervalue &&
+                                                  filterChageValue == "yearofpassed"
+                                                  ? 200
+                                                  : 0,
+                                              child: Opacity(
+                                                // arrowdown2TvZ (8:2307)
+                                                opacity: 0.7,
+                                                child: SizedBox(
+                                                  width: width / 153.6,
+                                                  height: height / 73.9,
+                                                  child: Image.asset(
                                                       'assets/images/arrow-down-2.png',
                                                       width: width / 153.6,
                                                       height: height / 73.9,
-                                                    ),
+                                                      color:filtervalue &&
+                                                          filterChageValue == "yearofpassed"?Colors.green:Colors.transparent
                                                   ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
+                                  ),
 
-                                    Container(
-                                      color: Colors.white,
-                                      width: width / 9.98,
-                                      height: height / 14.78,
-                                      alignment: Alignment.center,
-                                      child: Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment
-                                            .end,
-                                        children: [
-                                          KText(
-                                            text: "Actions",
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              color: const Color(0xff030229),
-                                            ),
+                                  Container(
+                                    color: Colors.white,
+                                    width: width / 9.98,
+                                    height: height / 14.78,
+                                    alignment: Alignment.center,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment
+                                          .end,
+                                      children: [
+                                        KText(
+                                          text: "Actions",
+                                          style: SafeGoogleFont(
+                                            'Nunito',
+                                            color: const Color(0xff030229),
                                           ),
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                left: width / 170.75,
-                                                right: width / 91.0666),
-                                            child: InkWell(
-                                              onTap: () {
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              left: width / 170.75,
+                                              right: width / 91.0666),
+                                          child: InkWell(
+                                            onTap: () {
 
-                                              },
-                                              child: Transform.rotate(
-                                                angle: 0,
-                                                child: Opacity(
-                                                  // arrowdown2TvZ (8:2307)
-                                                  opacity: 0.7,
-                                                  child: Container(
-                                                    width: width / 153.6,
-                                                    height: height / 73.9,
-                                                    child: Image.asset(
-                                                      'assets/images/arrow-down-2.png',
-                                                      width: width / 153.6,
-                                                      height: height / 73.9,
-                                                    ),
-                                                  ),
+                                            },
+                                            child: Transform.rotate(
+                                              angle: 0,
+                                              child: Opacity(
+                                                // arrowdown2TvZ (8:2307)
+                                                opacity: 0.7,
+                                                child: Container(
+                                                  width: width / 153.6,
+                                                  height: height / 73.9,
+
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                             SizedBox(height: height / 65.1),
-
+                            SerachValue==""?
                             StreamBuilder(
-                              stream: documentList.isNotEmpty ?
-                              FirebaseFirestore.instance.collection("Users")
-                                  .orderBy(
-                                  filterChageValue, descending: filtervalue)
-                                  .startAfterDocument(
-                                  documentList[documentList.length - 1]).limit(10)
-                                  .snapshots() :
-                              filterChageValue == "Name" ? FirebaseFirestore
-                                  .instance.collection("Users").orderBy(
-                                  "Name", descending: filtervalue)
-                                  .limit(10)
-                                  .snapshots() :
-                              filterChageValue == "email" ? FirebaseFirestore
-                                  .instance.collection("Users").orderBy(
-                                  "email", descending: filtervalue)
-                                  .limit(10)
-                                  .snapshots() :
-                              filterChageValue == "Phone" ? FirebaseFirestore
-                                  .instance.collection("Users").orderBy(
-                                  "Phone", descending: filtervalue)
-                                  .limit(10)
-                                  .snapshots() :
-                              filterChageValue == "Gender" ? FirebaseFirestore
-                                  .instance.collection("Users").orderBy(
-                                  "Gender", descending: filtervalue)
-                                  .limit(10)
-                                  .snapshots() :
-                              filterChageValue == "date" ? FirebaseFirestore
-                                  .instance.collection("Users").orderBy(
-                                  "date", descending: filtervalue)
-                                  .limit(10)
-                                  .snapshots() :
-                              FirebaseFirestore.instance.collection("Users")
-                                  .orderBy("Name", descending: filtervalue)
-                                  .limit(10)
-                                  .snapshots(),
+                              stream: 
+                              FirebaseFirestore.instance.collection("Users").orderBy(filterChageValue, descending: filtervalue).snapshots(),
+                              builder: (context, snapshot)  {
+                                if (!snapshot.hasData) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
+                                if (snapshot.hasData == null) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
+
+                               // pagecount = snapshot.data!.docs.length;
+
+                                return Column(
+                                  children: [
+                                    Container(
+                                      color: Colors.transparent,
+                                      height: height / 1.18,
+                                      child: ListView.builder(
+                                        shrinkWrap: true,
+                                        physics:
+                                        const NeverScrollableScrollPhysics(),
+                                        itemCount: pagecount == temp ? snapshot.data!.docs.length.remainder(10) == 0 ? 10 : snapshot.data!.docs.length.remainder(10) : 10 ,
+                                        itemBuilder: (context, index) {
+                                          var _userdata = snapshot.data!.docs[(temp*10)-10+index];
+                                          List<GlobalKey<State<StatefulWidget>>> popMenuKeys = List.generate(
+                                            snapshot.data!.docs.length, (index) => GlobalKey(),);
+                                          if(mydate.isNotEmpty){
+                                            if(mydate.contains(_userdata['date'].toString().toLowerCase())){
+                                              if (_userdata['Name'].toString().toLowerCase().startsWith(SerachValue.toLowerCase())|| _userdata['Phone'].toString().toLowerCase().startsWith(SerachValue.toLowerCase())||
+                                                  _userdata['email'].toString().toLowerCase().startsWith(SerachValue.toLowerCase())
+                                              ) {
+                                                return
+                                                  (temp*10)-10+index >= documentlength ? SizedBox() :
+                                                  Container(
+                                                  padding: EdgeInsets.only(
+                                                      left: width / 136.6),
+                                                  width: width / 1.21,
+                                                  height: 78.22 * fem,
+                                                  decoration: BoxDecoration(
+                                                    color: const Color(
+                                                        0xffffffff),
+                                                    borderRadius:
+                                                    BorderRadius.circular(
+                                                        10 * fem),
+                                                  ),
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                    children: [
+                                                      SizedBox(
+                                                        width: width / 7.2,
+                                                        height: height / 14.78,
+                                                        child: Row(
+                                                          crossAxisAlignment: CrossAxisAlignment
+                                                              .center,
+                                                          children: [
+                                                            Container(
+                                                                height: height /
+                                                                    21.7,
+                                                                width: width /
+                                                                    45.533,
+                                                                margin: EdgeInsets
+                                                                    .fromLTRB(
+                                                                    0 * fem,
+                                                                    0 * fem,
+                                                                    14.34 * fem,
+                                                                    0 * fem),
+                                                                decoration:
+                                                                BoxDecoration(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                  borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                      19.5553703308 *
+                                                                          fem),
+                                                                  image:
+                                                                  DecorationImage(
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    image: NetworkImage(
+                                                                        _userdata[
+                                                                        'UserImg']
+                                                                            .toString()),
+                                                                  ),
+                                                                ),
+                                                                child: Center(
+                                                                    child: _userdata['UserImg']
+                                                                        .toString() ==
+                                                                        ""
+                                                                        ? const Icon(
+                                                                        Icons
+                                                                            .person)
+                                                                        : const Text("")
+                                                                )
+                                                            ),
+                                                            Container(
+                                                              margin: EdgeInsets
+                                                                  .fromLTRB(
+                                                                  0 * fem,
+                                                                  4.14 * fem,
+                                                                  129.49 * fem,
+                                                                  0 * fem),
+                                                              child: KText(
+                                                                text: "${_userdata['Name']} ${_userdata['lastName']}",
+                                                                style: SafeGoogleFont(
+                                                                    'Nunito',
+                                                                    fontSize: 18 *
+                                                                        ffem,
+                                                                    fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                    height:
+                                                                    1.3625 *
+                                                                        ffem /
+                                                                        fem,
+                                                                    color:
+                                                                    const Color(
+                                                                        0xff030229),
+                                                                    textStyle: const TextStyle(
+                                                                        overflow: TextOverflow
+                                                                            .ellipsis
+                                                                    )
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: height / 14.78,
+                                                        width: width / 6.2,
+                                                        child: Row(
+                                                          crossAxisAlignment: CrossAxisAlignment
+                                                              .center,
+                                                          children: [
+                                                            KText(
+                                                              text: _userdata['email'],
+                                                              style: SafeGoogleFont(
+                                                                'Nunito',
+                                                                fontSize: 18 *
+                                                                    ffem,
+                                                                fontWeight: FontWeight
+                                                                    .w400,
+                                                                height: 1.3625 *
+                                                                    ffem / fem,
+                                                                color: const Color(
+                                                                    0xff030229),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: height / 14.78,
+                                                        width: width / 7.2,
+                                                        child: Row(
+                                                          crossAxisAlignment: CrossAxisAlignment
+                                                              .center,
+                                                          children: [
+                                                            KText(
+                                                              text: _userdata['Phone']
+                                                                  .toString(),
+                                                              style: SafeGoogleFont(
+                                                                'Nunito',
+                                                                fontSize: 18 *
+                                                                    ffem,
+                                                                fontWeight: FontWeight
+                                                                    .w400,
+                                                                height: 1.3625 *
+                                                                    ffem / fem,
+                                                                color: const Color(
+                                                                    0xff030229),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: width / 10,
+                                                        height: height / 14.78,
+                                                        child: Padding(
+                                                          padding: EdgeInsets
+                                                              .only(
+                                                              left: width / 54.64,
+                                                              right: width /
+                                                                  54.64),
+                                                          child: Container(
+                                                            width: width / 34.15,
+                                                            height: double
+                                                                .infinity,
+                                                            decoration: BoxDecoration(
+                                                              color:
+                                                              _userdata['Gender'] ==
+                                                                  "Male"
+                                                                  ? const Color(
+                                                                  0x195b92ff)
+                                                                  : const Color(
+                                                                  0xffFEF3F0),
+                                                              borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                  33 * fem),
+                                                            ),
+                                                            child: Center(
+                                                              child: KText(
+                                                                text: _userdata['Gender'],
+                                                                style: SafeGoogleFont(
+                                                                  'Nunito',
+                                                                  fontSize: 16 *
+                                                                      ffem,
+                                                                  fontWeight:
+                                                                  FontWeight.w400,
+                                                                  height:
+                                                                  1.3625 * ffem /
+                                                                      fem,
+                                                                  color: _userdata[
+                                                                  'Gender'] ==
+                                                                      "Male"
+                                                                      ? const Color(
+                                                                      0xff5b92ff)
+                                                                      : const Color(
+                                                                      0xffFE8F6B),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: height / 14.78,
+                                                        width: width / 11.5,
+                                                        child: Row(
+                                                          crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                          children: [
+                                                            SizedBox(
+                                                                width: width /
+                                                                    54.64),
+                                                            Container(
+                                                              // gender8qf (8:2320)
+                                                                margin:
+                                                                EdgeInsets
+                                                                    .fromLTRB(
+                                                                    0 * fem,
+                                                                    0 * fem,
+                                                                    15.18 * fem,
+                                                                    0 * fem),
+                                                                padding: const EdgeInsets
+                                                                    .only(
+                                                                    left: 5),
+                                                                child: _userdata['verifyed'] ==
+                                                                    true
+                                                                    ? const Center(
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .verified,
+                                                                    color:
+                                                                    Colors.green,
+                                                                  ),
+                                                                )
+                                                                    : const Icon(
+                                                                  Icons
+                                                                      .verified_outlined,
+                                                                )
+                                                            ),
+                                                            Opacity(
+                                                              // arrowdown5rFs (8:2318)
+                                                              opacity: 0.0,
+                                                              child: Container(
+                                                                margin:
+                                                                EdgeInsets
+                                                                    .fromLTRB(
+                                                                    0 * fem,
+                                                                    1.6 * fem,
+                                                                    0 * fem,
+                                                                    0 * fem),
+                                                                width: 7.82 * fem,
+                                                                height: 6.52 *
+                                                                    fem,
+                                                                child: Image
+                                                                    .asset(
+                                                                  'assets/images/arrow-down-5.png',
+                                                                  width: 7.82 *
+                                                                      fem,
+                                                                  height: 6.52 *
+                                                                      fem,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: height / 14.78,
+                                                        width: width / 11,
+                                                        child: Row(
+                                                          crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                          children: [
+                                                            SizedBox(
+                                                                width: width /
+                                                                    54.64),
+                                                            Container(
+                                                              // gender8qf (8:2320)
+                                                              margin: EdgeInsets
+                                                                  .fromLTRB(
+                                                                  0 * fem,
+                                                                  0 * fem,
+                                                                  15.18 * fem,
+                                                                  0 * fem),
+                                                              child: Center(
+                                                                child: KText(
+                                                                  text: _userdata['yearofpassed'],
+                                                                  style: SafeGoogleFont(
+                                                                    'Nunito',
+                                                                    fontSize: 16 *
+                                                                        ffem,
+                                                                    fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                    height:
+                                                                    1.3625 *
+                                                                        ffem /
+                                                                        fem,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Opacity(
+                                                              // arrowdown5rFs (8:2318)
+                                                              opacity: 0.0,
+                                                              child: Container(
+                                                                margin:
+                                                                EdgeInsets
+                                                                    .fromLTRB(
+                                                                    0 * fem,
+                                                                    1.6 * fem,
+                                                                    0 * fem,
+                                                                    0 * fem),
+                                                                width: 7.82 * fem,
+                                                                height: 6.52 *
+                                                                    fem,
+                                                                child: Image
+                                                                    .asset(
+                                                                  'assets/images/arrow-down-5.png',
+                                                                  width: 7.82 *
+                                                                      fem,
+                                                                  height: 6.52 *
+                                                                      fem,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          Popupmenu(context,
+                                                              _userdata.id,
+                                                              popMenuKeys[index]);
+                                                          print(viewUser_details);
+                                                        },
+                                                        child: SizedBox(
+
+                                                            key: popMenuKeys[index],
+                                                            width: width / 9.98,
+                                                            height: height /
+                                                                26.04,
+                                                            child: const Icon(
+                                                                Icons
+                                                                    .more_horiz)),
+                                                      ),
+                                                      /*GestureDetector(
+                                                          onTap: () {
+                                                            // setState(() {
+                                                            //   viewDocid=_userdata.id;
+                                                            //   viewUser_details=!viewUser_details;
+                                                            // });
+                                                            Popupmenu(context, _userdata.id);
+                                                            print(viewUser_details);
+                                                          },
+                                                          child: Container(
+                                                              key: popmenukey,
+                                                              color:Colors.red,
+                                                              width: width / 14.0,
+                                                              height: height / 26.04,
+                                                              child: Icon(Icons.more_horiz)),
+                                                        ),*/
+                                                    ],
+                                                  ),
+                                                );
+                                              }
+                                            }
+                                          }
+                                          else if (SerachValue == ""&&FilterDataValue=="") {
+                                            return
+                                              (temp*10)-10+index >= documentlength ? SizedBox() :
+                                              Container(
+                                              padding: EdgeInsets.only(
+                                                  left: width / 136.6),
+                                              width: width / 1.21,
+                                              height: 78.22 * fem,
+                                              decoration: BoxDecoration(
+                                                color: const Color(
+                                                    0xffffffff),
+                                                borderRadius:
+                                                BorderRadius.circular(
+                                                    10 * fem),
+                                              ),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                                children: [
+                                                  SizedBox(
+                                                    width: width / 7.2,
+                                                    height: height / 14.78,
+                                                    child: Row(
+                                                      crossAxisAlignment: CrossAxisAlignment
+                                                          .center,
+                                                      children: [
+                                                        Container(
+                                                            height: height /
+                                                                21.7,
+                                                            width: width /
+                                                                45.533,
+                                                            margin: EdgeInsets
+                                                                .fromLTRB(
+                                                                0 * fem,
+                                                                0 * fem,
+                                                                14.34 * fem,
+                                                                0 * fem),
+                                                            decoration:
+                                                            BoxDecoration(
+                                                              color: Colors
+                                                                  .grey
+                                                                  .shade300,
+                                                              borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                  19.5553703308 *
+                                                                      fem),
+                                                              image:
+                                                              DecorationImage(
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                image: NetworkImage(
+                                                                    _userdata[
+                                                                    'UserImg']
+                                                                        .toString()),
+                                                              ),
+                                                            ),
+                                                            child: Center(
+                                                                child: _userdata['UserImg']
+                                                                    .toString() ==
+                                                                    ""
+                                                                    ? const Icon(
+                                                                    Icons
+                                                                        .person)
+                                                                    : const Text("")
+                                                            )
+                                                        ),
+                                                        Container(
+                                                          margin: EdgeInsets
+                                                              .fromLTRB(
+                                                              0 * fem,
+                                                              4.14 * fem,
+                                                              129.49 * fem,
+                                                              0 * fem),
+                                                          child: KText(
+                                                            text: "${_userdata['Name']} ${_userdata['lastName']}",
+                                                            style: SafeGoogleFont(
+                                                                'Nunito',
+                                                                fontSize: 18 *
+                                                                    ffem,
+                                                                fontWeight:
+                                                                FontWeight
+                                                                    .w400,
+                                                                height:
+                                                                1.3625 *
+                                                                    ffem /
+                                                                    fem,
+                                                                color:
+                                                                const Color(
+                                                                    0xff030229),
+                                                                textStyle: const TextStyle(
+                                                                    overflow: TextOverflow
+                                                                        .ellipsis
+                                                                )
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: height / 14.78,
+                                                    width: width / 6.2,
+                                                    child: Row(
+                                                      crossAxisAlignment: CrossAxisAlignment
+                                                          .center,
+                                                      children: [
+                                                        KText(
+                                                          text: _userdata['email'],
+                                                          style: SafeGoogleFont(
+                                                            'Nunito',
+                                                            fontSize: 18 *
+                                                                ffem,
+                                                            fontWeight: FontWeight
+                                                                .w400,
+                                                            height: 1.3625 *
+                                                                ffem / fem,
+                                                            color: const Color(
+                                                                0xff030229),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: height / 14.78,
+                                                    width: width / 7.2,
+                                                    child: Row(
+                                                      crossAxisAlignment: CrossAxisAlignment
+                                                          .center,
+                                                      children: [
+                                                        KText(
+                                                          text: _userdata['Phone']
+                                                              .toString(),
+                                                          style: SafeGoogleFont(
+                                                            'Nunito',
+                                                            fontSize: 18 *
+                                                                ffem,
+                                                            fontWeight: FontWeight
+                                                                .w400,
+                                                            height: 1.3625 *
+                                                                ffem / fem,
+                                                            color: const Color(
+                                                                0xff030229),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: width / 10,
+                                                    height: height / 14.78,
+                                                    child: Padding(
+                                                      padding: EdgeInsets
+                                                          .only(
+                                                          left: width / 54.64,
+                                                          right: width /
+                                                              54.64),
+                                                      child: Container(
+                                                        width: width / 34.15,
+                                                        height: double
+                                                            .infinity,
+                                                        decoration: BoxDecoration(
+                                                          color:
+                                                          _userdata['Gender'] ==
+                                                              "Male"
+                                                              ? const Color(
+                                                              0x195b92ff)
+                                                              : const Color(
+                                                              0xffFEF3F0),
+                                                          borderRadius:
+                                                          BorderRadius
+                                                              .circular(
+                                                              33 * fem),
+                                                        ),
+                                                        child: Center(
+                                                          child: KText(
+                                                            text: _userdata['Gender'],
+                                                            style: SafeGoogleFont(
+                                                              'Nunito',
+                                                              fontSize: 16 *
+                                                                  ffem,
+                                                              fontWeight:
+                                                              FontWeight.w400,
+                                                              height:
+                                                              1.3625 * ffem /
+                                                                  fem,
+                                                              color: _userdata[
+                                                              'Gender'] ==
+                                                                  "Male"
+                                                                  ? const Color(
+                                                                  0xff5b92ff)
+                                                                  : const Color(
+                                                                  0xffFE8F6B),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: height / 14.78,
+                                                    width: width / 11.5,
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                      CrossAxisAlignment
+                                                          .start,
+                                                      children: [
+                                                        SizedBox(
+                                                            width: width /
+                                                                54.64),
+                                                        Container(
+                                                          // gender8qf (8:2320)
+                                                            margin:
+                                                            EdgeInsets
+                                                                .fromLTRB(
+                                                                0 * fem,
+                                                                0 * fem,
+                                                                15.18 * fem,
+                                                                0 * fem),
+                                                            padding: const EdgeInsets
+                                                                .only(
+                                                                left: 5),
+                                                            child: _userdata['verifyed'] ==
+                                                                true
+                                                                ? const Center(
+                                                              child: Icon(
+                                                                Icons
+                                                                    .verified,
+                                                                color:
+                                                                Colors.green,
+                                                              ),
+                                                            )
+                                                                : const Icon(
+                                                              Icons
+                                                                  .verified_outlined,
+                                                            )
+                                                        ),
+                                                        Opacity(
+                                                          // arrowdown5rFs (8:2318)
+                                                          opacity: 0.0,
+                                                          child: Container(
+                                                            margin:
+                                                            EdgeInsets
+                                                                .fromLTRB(
+                                                                0 * fem,
+                                                                1.6 * fem,
+                                                                0 * fem,
+                                                                0 * fem),
+                                                            width: 7.82 * fem,
+                                                            height: 6.52 *
+                                                                fem,
+                                                            child: Image
+                                                                .asset(
+                                                              'assets/images/arrow-down-5.png',
+                                                              width: 7.82 *
+                                                                  fem,
+                                                              height: 6.52 *
+                                                                  fem,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: height / 14.78,
+                                                    width: width / 11,
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                      CrossAxisAlignment
+                                                          .start,
+                                                      children: [
+                                                        SizedBox(
+                                                            width: width /
+                                                                54.64),
+                                                        Container(
+                                                          // gender8qf (8:2320)
+                                                          margin: EdgeInsets
+                                                              .fromLTRB(
+                                                              0 * fem,
+                                                              0 * fem,
+                                                              15.18 * fem,
+                                                              0 * fem),
+                                                          child: Center(
+                                                            child: KText(
+                                                              text: _userdata['yearofpassed'],
+                                                              style: SafeGoogleFont(
+                                                                'Nunito',
+                                                                fontSize: 16 *
+                                                                    ffem,
+                                                                fontWeight:
+                                                                FontWeight
+                                                                    .w400,
+                                                                height:
+                                                                1.3625 *
+                                                                    ffem /
+                                                                    fem,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Opacity(
+                                                          // arrowdown5rFs (8:2318)
+                                                          opacity: 0.0,
+                                                          child: Container(
+                                                            margin:
+                                                            EdgeInsets
+                                                                .fromLTRB(
+                                                                0 * fem,
+                                                                1.6 * fem,
+                                                                0 * fem,
+                                                                0 * fem),
+                                                            width: 7.82 * fem,
+                                                            height: 6.52 *
+                                                                fem,
+                                                            child: Image
+                                                                .asset(
+                                                              'assets/images/arrow-down-5.png',
+                                                              width: 7.82 *
+                                                                  fem,
+                                                              height: 6.52 *
+                                                                  fem,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      Popupmenu(context,
+                                                          _userdata.id,
+                                                          popMenuKeys[index]);
+                                                      print(viewUser_details);
+                                                    },
+                                                    child: SizedBox(
+
+                                                        key: popMenuKeys[index],
+                                                        width: width / 9.98,
+                                                        height: height /
+                                                            26.04,
+                                                        child: const Icon(
+                                                            Icons
+                                                                .more_horiz)),
+                                                  ),
+                                                  /*GestureDetector(
+                                                          onTap: () {
+                                                            // setState(() {
+                                                            //   viewDocid=_userdata.id;
+                                                            //   viewUser_details=!viewUser_details;
+                                                            // });
+                                                            Popupmenu(context, _userdata.id);
+                                                            print(viewUser_details);
+                                                          },
+                                                          child: Container(
+                                                              key: popmenukey,
+                                                              color:Colors.red,
+                                                              width: width / 14.0,
+                                                              height: height / 26.04,
+                                                              child: Icon(Icons.more_horiz)),
+                                                        ),*/
+                                                ],
+                                              ),
+                                            );
+                                          }
+                                          return const SizedBox();
+                                        },
+                                      ),
+                                    ),
+                                   /* SizedBox(
+                                      width:width/1.7075,
+                                      child: NumberPaginator(
+                                        config: NumberPaginatorUIConfig(
+                                          buttonSelectedBackgroundColor: Constants()
+                                              .primaryAppColor,
+                                          buttonSelectedForegroundColor: Colors
+                                              .white,
+                                        ),
+                                        numberPages: pagecount,
+                                        onPageChange: (int index) async {
+                                          setState(()  {
+                                            documentList.addAll(snapshot.data!.docs);
+                                            temp = index + 1;
+                                          });
+                                          print(documentList.length);
+                                        },
+                                      ),
+                                    )*/
+                                    Stack(
+                                      alignment: Alignment.centerRight,
+                                      children: [
+                                        SizedBox(
+                                          width: double.infinity,
+                                          height:height/13.02,
+                                          child: ListView.builder(
+                                              shrinkWrap: true,
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: pagecount ,
+                                              itemBuilder: (context,index){
+                                                return InkWell(
+                                                  onTap: (){
+                                                    setState(() {
+                                                      temp=list[index];
+                                                    });
+                                                    print(temp);
+                                                  },
+                                                  child: Container(
+                                                    height:30,width:30,
+                                                    margin: EdgeInsets.only(left:8,right:8,top:10,bottom:10),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(100),
+                                                      color:temp.toString() == list[index].toString() ?  Constants().primaryAppColor : Colors.transparent
+                                                    ),
+                                                      child: Center(
+                                                        child: Text(list[index].toString(),style: SafeGoogleFont(
+                                                            'Nunito',
+                                                            fontWeight: FontWeight.w700,
+                                                            color: temp.toString() == list[index].toString() ?  Colors.white : Colors.black
+
+                                                        ),),
+                                                      )
+                                                  ),
+                                                );
+
+                                              }),
+                                        ),
+                                        temp > 1 ?
+                                        Padding(
+                                          padding: const EdgeInsets.only(right: 150.0),
+                                          child:
+                                          InkWell(
+                                            onTap:(){
+                                              setState(() {
+                                                temp= temp-1;
+                                              });
+                                            },
+                                            child: Container(
+                                                height:height/16.275,
+                                                width:width/11.3833,
+                                                decoration:BoxDecoration(
+                                                    color:Constants().primaryAppColor,
+                                                    borderRadius: BorderRadius.circular(80)
+                                                ),
+                                                child: Center(
+                                                  child: Text("Previous Page",style: SafeGoogleFont(
+                                                    'Nunito',
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Colors.white,
+                                                  ),),
+                                                )),
+                                          ),
+                                        )  : Container(),
+                                        Container(
+                                          child: temp < pagecount ?
+                                          Padding(
+                                            padding: const EdgeInsets.only(right: 20.0),
+                                            child: InkWell(
+                                              onTap:(){
+                                                setState(() {
+                                                  temp= temp+1;
+                                                });
+                                              },
+                                              child:
+                                              Container(
+                                                height:height/16.275,
+                                                width:width/11.3833,
+                                               decoration:BoxDecoration(
+                                                 color:Constants().primaryAppColor,
+                                                 borderRadius: BorderRadius.circular(80)
+                                               ),
+                                                   child: Center(
+                                                     child: Text("Next Page",style: SafeGoogleFont(
+                                                                                                     'Nunito',
+                                                                                                     fontWeight: FontWeight.w700,
+                                                                                                     color: Colors.white,
+                                                                                                   ),),
+                                                   )),
+                                            ),
+                                          )  : Container(),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              },
+                            ):
+                            StreamBuilder(
+                              stream:
+                              FirebaseFirestore.instance.collection("Users").snapshots(),
                               builder: (context, snapshot) {
                                 if (!snapshot.hasData) {
                                   return const Center(
@@ -8792,793 +2297,32 @@ class _Users_ScreenState extends State<Users_Screen> {
                                   );
                                 }
 
-                                pagecount = snapshot.data!.docs.length;
+                                return Container(
+                                  color: Colors.transparent,
+                                  height: height / 1.136923,
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                    const NeverScrollableScrollPhysics(),
+                                    itemCount:pagecount == temp ? snapshot.data!.docs.length.remainder(10) == 0 ? 10 : snapshot.data!.docs.length.remainder(10) : 10 ,
+                                    itemBuilder: (context, index) {
+                                      var _userdata = snapshot.data!.docs[index];
+                                      List<GlobalKey<State<StatefulWidget>>> popMenuKeys = List.generate(
+                                        snapshot.data!.docs.length, (index) => GlobalKey(),);
 
-                                return Column(
-                                  children: [
-                                    Container(
-                                      color: Colors.transparent,
-                                      height: height / 1.136923,
-                                      child: ListView.builder(
-                                        shrinkWrap: true,
-                                        physics:
-                                        const NeverScrollableScrollPhysics(),
-                                        itemCount: snapshot.data!.docs.length,
-                                        itemBuilder: (context, index) {
-                                          var _userdata = snapshot.data!
-                                              .docs[index];
-                                          List<GlobalKey<State<
-                                              StatefulWidget>>> popMenuKeys = List
-                                              .generate(
-                                            snapshot.data!.docs.length, (
-                                              index) => GlobalKey(),);
-
-                                          if(mydate.isNotEmpty){
-                                           if(SerachValue==""){
-                                             if(mydate.contains(_userdata['date'].toString().toLowerCase())){
-                                               return Container(
-                                                 padding: EdgeInsets.only(
-                                                     left: width / 136.6),
-                                                 width: width / 1.21,
-                                                 height: 78.22 * fem,
-                                                 decoration: BoxDecoration(
-                                                   color: const Color(
-                                                       0xffffffff),
-                                                   borderRadius:
-                                                   BorderRadius.circular(
-                                                       10 * fem),
-                                                 ),
-                                                 child: Row(
-                                                   crossAxisAlignment:
-                                                   CrossAxisAlignment.center,
-                                                   children: [
-                                                     SizedBox(
-                                                       width: width / 7.2,
-                                                       height: height / 14.78,
-                                                       child: Row(
-                                                         crossAxisAlignment: CrossAxisAlignment
-                                                             .center,
-                                                         children: [
-                                                           Container(
-                                                               height: height /
-                                                                   21.7,
-                                                               width: width /
-                                                                   45.533,
-                                                               margin: EdgeInsets
-                                                                   .fromLTRB(
-                                                                   0 * fem,
-                                                                   0 * fem,
-                                                                   14.34 * fem,
-                                                                   0 * fem),
-                                                               decoration:
-                                                               BoxDecoration(
-                                                                 color: Colors
-                                                                     .grey
-                                                                     .shade300,
-                                                                 borderRadius:
-                                                                 BorderRadius
-                                                                     .circular(
-                                                                     19.5553703308 *
-                                                                         fem),
-                                                                 image:
-                                                                 DecorationImage(
-                                                                   fit: BoxFit
-                                                                       .cover,
-                                                                   image: NetworkImage(
-                                                                       _userdata[
-                                                                       'UserImg']
-                                                                           .toString()),
-                                                                 ),
-                                                               ),
-                                                               child: Center(
-                                                                   child: _userdata['UserImg']
-                                                                       .toString() ==
-                                                                       ""
-                                                                       ? Icon(
-                                                                       Icons
-                                                                           .person)
-                                                                       : Text("")
-                                                               )
-                                                           ),
-                                                           Container(
-                                                             margin: EdgeInsets
-                                                                 .fromLTRB(
-                                                                 0 * fem,
-                                                                 4.14 * fem,
-                                                                 129.49 * fem,
-                                                                 0 * fem),
-                                                             child: KText(
-                                                               text: "${_userdata['Name']} ${_userdata['lastName']}",
-                                                               style: SafeGoogleFont(
-                                                                   'Nunito',
-                                                                   fontSize: 18 *
-                                                                       ffem,
-                                                                   fontWeight:
-                                                                   FontWeight
-                                                                       .w400,
-                                                                   height:
-                                                                   1.3625 *
-                                                                       ffem /
-                                                                       fem,
-                                                                   color:
-                                                                   const Color(
-                                                                       0xff030229),
-                                                                   textStyle: TextStyle(
-                                                                       overflow: TextOverflow
-                                                                           .ellipsis
-                                                                   )
-                                                               ),
-                                                             ),
-                                                           ),
-                                                         ],
-                                                       ),
-                                                     ),
-                                                     SizedBox(
-                                                       height: height / 14.78,
-                                                       width: width / 6.2,
-                                                       child: Row(
-                                                         crossAxisAlignment: CrossAxisAlignment
-                                                             .center,
-                                                         children: [
-                                                           KText(
-                                                             text: _userdata['email'],
-                                                             style: SafeGoogleFont(
-                                                               'Nunito',
-                                                               fontSize: 18 *
-                                                                   ffem,
-                                                               fontWeight: FontWeight
-                                                                   .w400,
-                                                               height: 1.3625 *
-                                                                   ffem / fem,
-                                                               color: const Color(
-                                                                   0xff030229),
-                                                             ),
-                                                           ),
-                                                         ],
-                                                       ),
-                                                     ),
-                                                     SizedBox(
-                                                       height: height / 14.78,
-                                                       width: width / 7.2,
-                                                       child: Row(
-                                                         crossAxisAlignment: CrossAxisAlignment
-                                                             .center,
-                                                         children: [
-                                                           KText(
-                                                             text: _userdata['Phone']
-                                                                 .toString(),
-                                                             style: SafeGoogleFont(
-                                                               'Nunito',
-                                                               fontSize: 18 *
-                                                                   ffem,
-                                                               fontWeight: FontWeight
-                                                                   .w400,
-                                                               height: 1.3625 *
-                                                                   ffem / fem,
-                                                               color: const Color(
-                                                                   0xff030229),
-                                                             ),
-                                                           ),
-                                                         ],
-                                                       ),
-                                                     ),
-                                                     SizedBox(
-                                                       width: width / 10,
-                                                       height: height / 14.78,
-                                                       child: Padding(
-                                                         padding: EdgeInsets
-                                                             .only(
-                                                             left: width / 54.64,
-                                                             right: width /
-                                                                 54.64),
-                                                         child: Container(
-                                                           width: width / 34.15,
-                                                           height: double
-                                                               .infinity,
-                                                           decoration: BoxDecoration(
-                                                             color:
-                                                             _userdata['Gender'] ==
-                                                                 "Male"
-                                                                 ? const Color(
-                                                                 0x195b92ff)
-                                                                 : const Color(
-                                                                 0xffFEF3F0),
-                                                             borderRadius:
-                                                             BorderRadius
-                                                                 .circular(
-                                                                 33 * fem),
-                                                           ),
-                                                           child: Center(
-                                                             child: KText(
-                                                               text: _userdata['Gender'],
-                                                               style: SafeGoogleFont(
-                                                                 'Nunito',
-                                                                 fontSize: 16 *
-                                                                     ffem,
-                                                                 fontWeight:
-                                                                 FontWeight.w400,
-                                                                 height:
-                                                                 1.3625 * ffem /
-                                                                     fem,
-                                                                 color: _userdata[
-                                                                 'Gender'] ==
-                                                                     "Male"
-                                                                     ? const Color(
-                                                                     0xff5b92ff)
-                                                                     : const Color(
-                                                                     0xffFE8F6B),
-                                                               ),
-                                                             ),
-                                                           ),
-                                                         ),
-                                                       ),
-                                                     ),
-                                                     SizedBox(
-                                                       height: height / 14.78,
-                                                       width: width / 11.5,
-                                                       child: Row(
-                                                         crossAxisAlignment:
-                                                         CrossAxisAlignment
-                                                             .start,
-                                                         children: [
-                                                           SizedBox(
-                                                               width: width /
-                                                                   54.64),
-                                                           Container(
-                                                             // gender8qf (8:2320)
-                                                               margin:
-                                                               EdgeInsets
-                                                                   .fromLTRB(
-                                                                   0 * fem,
-                                                                   0 * fem,
-                                                                   15.18 * fem,
-                                                                   0 * fem),
-                                                               padding: const EdgeInsets
-                                                                   .only(
-                                                                   left: 5),
-                                                               child: _userdata['verifyed'] ==
-                                                                   true
-                                                                   ? Center(
-                                                                 child: const Icon(
-                                                                   Icons
-                                                                       .verified,
-                                                                   color:
-                                                                   Colors.green,
-                                                                 ),
-                                                               )
-                                                                   : const Icon(
-                                                                 Icons
-                                                                     .verified_outlined,
-                                                               )
-                                                           ),
-                                                           Opacity(
-                                                             // arrowdown5rFs (8:2318)
-                                                             opacity: 0.0,
-                                                             child: Container(
-                                                               margin:
-                                                               EdgeInsets
-                                                                   .fromLTRB(
-                                                                   0 * fem,
-                                                                   1.6 * fem,
-                                                                   0 * fem,
-                                                                   0 * fem),
-                                                               width: 7.82 * fem,
-                                                               height: 6.52 *
-                                                                   fem,
-                                                               child: Image
-                                                                   .asset(
-                                                                 'assets/images/arrow-down-5.png',
-                                                                 width: 7.82 *
-                                                                     fem,
-                                                                 height: 6.52 *
-                                                                     fem,
-                                                               ),
-                                                             ),
-                                                           ),
-                                                         ],
-                                                       ),
-                                                     ),
-                                                     SizedBox(
-                                                       height: height / 14.78,
-                                                       width: width / 11,
-                                                       child: Row(
-                                                         crossAxisAlignment:
-                                                         CrossAxisAlignment
-                                                             .start,
-                                                         children: [
-                                                           SizedBox(
-                                                               width: width /
-                                                                   54.64),
-                                                           Container(
-                                                             // gender8qf (8:2320)
-                                                             margin: EdgeInsets
-                                                                 .fromLTRB(
-                                                                 0 * fem,
-                                                                 0 * fem,
-                                                                 15.18 * fem,
-                                                                 0 * fem),
-                                                             child: Center(
-                                                               child: KText(
-                                                                 text: _userdata['date'],
-                                                                 style: SafeGoogleFont(
-                                                                   'Nunito',
-                                                                   fontSize: 16 *
-                                                                       ffem,
-                                                                   fontWeight:
-                                                                   FontWeight
-                                                                       .w400,
-                                                                   height:
-                                                                   1.3625 *
-                                                                       ffem /
-                                                                       fem,
-                                                                 ),
-                                                               ),
-                                                             ),
-                                                           ),
-                                                           Opacity(
-                                                             // arrowdown5rFs (8:2318)
-                                                             opacity: 0.0,
-                                                             child: Container(
-                                                               margin:
-                                                               EdgeInsets
-                                                                   .fromLTRB(
-                                                                   0 * fem,
-                                                                   1.6 * fem,
-                                                                   0 * fem,
-                                                                   0 * fem),
-                                                               width: 7.82 * fem,
-                                                               height: 6.52 *
-                                                                   fem,
-                                                               child: Image
-                                                                   .asset(
-                                                                 'assets/images/arrow-down-5.png',
-                                                                 width: 7.82 *
-                                                                     fem,
-                                                                 height: 6.52 *
-                                                                     fem,
-                                                               ),
-                                                             ),
-                                                           ),
-                                                         ],
-                                                       ),
-                                                     ),
-                                                     GestureDetector(
-                                                       onTap: () {
-                                                         Popupmenu(context,
-                                                             _userdata.id,
-                                                             popMenuKeys[index]);
-                                                         print(viewUser_details);
-                                                       },
-                                                       child: SizedBox(
-
-                                                           key: popMenuKeys[index],
-                                                           width: width / 9.98,
-                                                           height: height /
-                                                               26.04,
-                                                           child: const Icon(
-                                                               Icons
-                                                                   .more_horiz)),
-                                                     ),
-                                                     /*GestureDetector(
-                                                          onTap: () {
-                                                            // setState(() {
-                                                            //   viewDocid=_userdata.id;
-                                                            //   viewUser_details=!viewUser_details;
-                                                            // });
-                                                            Popupmenu(context, _userdata.id);
-                                                            print(viewUser_details);
-                                                          },
-                                                          child: Container(
-                                                              key: popmenukey,
-                                                              color:Colors.red,
-                                                              width: width / 14.0,
-                                                              height: height / 26.04,
-                                                              child: Icon(Icons.more_horiz)),
-                                                        ),*/
-                                                   ],
-                                                 ),
-                                               );
-                                             }
-                                           }
-                                            else if (SerachValue != "") {
-                                              if(mydate.contains(_userdata['date'].toString().toLowerCase())){
-                                                if (_userdata['Name']
-                                                    .toString()
-                                                    .toLowerCase()
-                                                    .startsWith(
-                                                    SerachValue.toLowerCase())||
-                                                    _userdata['Phone']
-                                                        .toString()
-                                                        .toLowerCase()
-                                                        .startsWith(
-                                                        SerachValue.toLowerCase())||
-                                                    _userdata['email']
-                                                        .toString()
-                                                        .toLowerCase()
-                                                        .startsWith(
-                                                        SerachValue.toLowerCase())
-                                                ) {
-                                                  return Container(
-                                                    padding: EdgeInsets.only(
-                                                        left: width / 136.6),
-                                                    width: width / 1.21,
-                                                    height: 78.22 * fem,
-                                                    decoration: BoxDecoration(
-                                                      color: const Color(
-                                                          0xffffffff),
-                                                      borderRadius:
-                                                      BorderRadius.circular(
-                                                          10 * fem),
-                                                    ),
-                                                    child: Row(
-                                                      crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                      children: [
-                                                        SizedBox(
-                                                          width: width / 7.2,
-                                                          height: height / 14.78,
-                                                          child: Row(
-                                                            crossAxisAlignment: CrossAxisAlignment
-                                                                .center,
-                                                            children: [
-                                                              Container(
-                                                                  height: height /
-                                                                      21.7,
-                                                                  width: width /
-                                                                      45.533,
-                                                                  margin: EdgeInsets
-                                                                      .fromLTRB(
-                                                                      0 * fem,
-                                                                      0 * fem,
-                                                                      14.34 * fem,
-                                                                      0 * fem),
-                                                                  decoration:
-                                                                  BoxDecoration(
-                                                                    color: Colors
-                                                                        .grey
-                                                                        .shade300,
-                                                                    borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                        19.5553703308 *
-                                                                            fem),
-                                                                    image:
-                                                                    DecorationImage(
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                      image: NetworkImage(
-                                                                          _userdata[
-                                                                          'UserImg']
-                                                                              .toString()),
-                                                                    ),
-                                                                  ),
-                                                                  child: Center(
-                                                                      child: _userdata['UserImg']
-                                                                          .toString() ==
-                                                                          ""
-                                                                          ? Icon(
-                                                                          Icons
-                                                                              .person)
-                                                                          : Text("")
-                                                                  )
-                                                              ),
-                                                              Container(
-                                                                margin: EdgeInsets
-                                                                    .fromLTRB(
-                                                                    0 * fem,
-                                                                    4.14 * fem,
-                                                                    129.49 * fem,
-                                                                    0 * fem),
-                                                                child: KText(
-                                                                  text: "${_userdata['Name']} ${_userdata['lastName']}",
-                                                                  style: SafeGoogleFont(
-                                                                      'Nunito',
-                                                                      fontSize: 18 *
-                                                                          ffem,
-                                                                      fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
-                                                                      height:
-                                                                      1.3625 *
-                                                                          ffem /
-                                                                          fem,
-                                                                      color:
-                                                                      const Color(
-                                                                          0xff030229),
-                                                                      textStyle: TextStyle(
-                                                                          overflow: TextOverflow
-                                                                              .ellipsis
-                                                                      )
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: height / 14.78,
-                                                          width: width / 6.2,
-                                                          child: Row(
-                                                            crossAxisAlignment: CrossAxisAlignment
-                                                                .center,
-                                                            children: [
-                                                              KText(
-                                                                text: _userdata['email'],
-                                                                style: SafeGoogleFont(
-                                                                  'Nunito',
-                                                                  fontSize: 18 *
-                                                                      ffem,
-                                                                  fontWeight: FontWeight
-                                                                      .w400,
-                                                                  height: 1.3625 *
-                                                                      ffem / fem,
-                                                                  color: const Color(
-                                                                      0xff030229),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: height / 14.78,
-                                                          width: width / 7.2,
-                                                          child: Row(
-                                                            crossAxisAlignment: CrossAxisAlignment
-                                                                .center,
-                                                            children: [
-                                                              KText(
-                                                                text: _userdata['Phone']
-                                                                    .toString(),
-                                                                style: SafeGoogleFont(
-                                                                  'Nunito',
-                                                                  fontSize: 18 *
-                                                                      ffem,
-                                                                  fontWeight: FontWeight
-                                                                      .w400,
-                                                                  height: 1.3625 *
-                                                                      ffem / fem,
-                                                                  color: const Color(
-                                                                      0xff030229),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: width / 10,
-                                                          height: height / 14.78,
-                                                          child: Padding(
-                                                            padding: EdgeInsets
-                                                                .only(
-                                                                left: width / 54.64,
-                                                                right: width /
-                                                                    54.64),
-                                                            child: Container(
-                                                              width: width / 34.15,
-                                                              height: double
-                                                                  .infinity,
-                                                              decoration: BoxDecoration(
-                                                                color:
-                                                                _userdata['Gender'] ==
-                                                                    "Male"
-                                                                    ? const Color(
-                                                                    0x195b92ff)
-                                                                    : const Color(
-                                                                    0xffFEF3F0),
-                                                                borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                    33 * fem),
-                                                              ),
-                                                              child: Center(
-                                                                child: KText(
-                                                                  text: _userdata['Gender'],
-                                                                  style: SafeGoogleFont(
-                                                                    'Nunito',
-                                                                    fontSize: 16 *
-                                                                        ffem,
-                                                                    fontWeight:
-                                                                    FontWeight.w400,
-                                                                    height:
-                                                                    1.3625 * ffem /
-                                                                        fem,
-                                                                    color: _userdata[
-                                                                    'Gender'] ==
-                                                                        "Male"
-                                                                        ? const Color(
-                                                                        0xff5b92ff)
-                                                                        : const Color(
-                                                                        0xffFE8F6B),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: height / 14.78,
-                                                          width: width / 11.5,
-                                                          child: Row(
-                                                            crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                            children: [
-                                                              SizedBox(
-                                                                  width: width /
-                                                                      54.64),
-                                                              Container(
-                                                                // gender8qf (8:2320)
-                                                                  margin:
-                                                                  EdgeInsets
-                                                                      .fromLTRB(
-                                                                      0 * fem,
-                                                                      0 * fem,
-                                                                      15.18 * fem,
-                                                                      0 * fem),
-                                                                  padding: const EdgeInsets
-                                                                      .only(
-                                                                      left: 5),
-                                                                  child: _userdata['verifyed'] ==
-                                                                      true
-                                                                      ? Center(
-                                                                    child: const Icon(
-                                                                      Icons
-                                                                          .verified,
-                                                                      color:
-                                                                      Colors.green,
-                                                                    ),
-                                                                  )
-                                                                      : const Icon(
-                                                                    Icons
-                                                                        .verified_outlined,
-                                                                  )
-                                                              ),
-                                                              Opacity(
-                                                                // arrowdown5rFs (8:2318)
-                                                                opacity: 0.0,
-                                                                child: Container(
-                                                                  margin:
-                                                                  EdgeInsets
-                                                                      .fromLTRB(
-                                                                      0 * fem,
-                                                                      1.6 * fem,
-                                                                      0 * fem,
-                                                                      0 * fem),
-                                                                  width: 7.82 * fem,
-                                                                  height: 6.52 *
-                                                                      fem,
-                                                                  child: Image
-                                                                      .asset(
-                                                                    'assets/images/arrow-down-5.png',
-                                                                    width: 7.82 *
-                                                                        fem,
-                                                                    height: 6.52 *
-                                                                        fem,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: height / 14.78,
-                                                          width: width / 11,
-                                                          child: Row(
-                                                            crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                            children: [
-                                                              SizedBox(
-                                                                  width: width /
-                                                                      54.64),
-                                                              Container(
-                                                                // gender8qf (8:2320)
-                                                                margin: EdgeInsets
-                                                                    .fromLTRB(
-                                                                    0 * fem,
-                                                                    0 * fem,
-                                                                    15.18 * fem,
-                                                                    0 * fem),
-                                                                child: Center(
-                                                                  child: KText(
-                                                                    text: _userdata['date'],
-                                                                    style: SafeGoogleFont(
-                                                                      'Nunito',
-                                                                      fontSize: 16 *
-                                                                          ffem,
-                                                                      fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
-                                                                      height:
-                                                                      1.3625 *
-                                                                          ffem /
-                                                                          fem,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              Opacity(
-                                                                // arrowdown5rFs (8:2318)
-                                                                opacity: 0.0,
-                                                                child: Container(
-                                                                  margin:
-                                                                  EdgeInsets
-                                                                      .fromLTRB(
-                                                                      0 * fem,
-                                                                      1.6 * fem,
-                                                                      0 * fem,
-                                                                      0 * fem),
-                                                                  width: 7.82 * fem,
-                                                                  height: 6.52 *
-                                                                      fem,
-                                                                  child: Image
-                                                                      .asset(
-                                                                    'assets/images/arrow-down-5.png',
-                                                                    width: 7.82 *
-                                                                        fem,
-                                                                    height: 6.52 *
-                                                                        fem,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        GestureDetector(
-                                                          onTap: () {
-                                                            Popupmenu(context,
-                                                                _userdata.id,
-                                                                popMenuKeys[index]);
-                                                            print(viewUser_details);
-                                                          },
-                                                          child: SizedBox(
-
-                                                              key: popMenuKeys[index],
-                                                              width: width / 9.98,
-                                                              height: height /
-                                                                  26.04,
-                                                              child: const Icon(
-                                                                  Icons
-                                                                      .more_horiz)),
-                                                        ),
-                                                        /*GestureDetector(
-                                                          onTap: () {
-                                                            // setState(() {
-                                                            //   viewDocid=_userdata.id;
-                                                            //   viewUser_details=!viewUser_details;
-                                                            // });
-                                                            Popupmenu(context, _userdata.id);
-                                                            print(viewUser_details);
-                                                          },
-                                                          child: Container(
-                                                              key: popmenukey,
-                                                              color:Colors.red,
-                                                              width: width / 14.0,
-                                                              height: height / 26.04,
-                                                              child: Icon(Icons.more_horiz)),
-                                                        ),*/
-                                                      ],
-                                                    ),
-                                                  );
-                                                }
-                                              }
-                                            }
-
-
-                                          }
-
-                                          else if (SerachValue != "") {
-
+                                      if(mydate.isNotEmpty){
+                                        if(SerachValue != ""){
+                                          if(mydate.contains(_userdata['date'].toString().toLowerCase())){
                                             if (_userdata['Name']
                                                 .toString()
                                                 .toLowerCase()
                                                 .startsWith(
                                                 SerachValue.toLowerCase())||
                                                 _userdata['Phone']
-                                                .toString()
-                                                .toLowerCase()
-                                                .startsWith(
-                                                SerachValue.toLowerCase())||
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .startsWith(
+                                                    SerachValue.toLowerCase())||
                                                 _userdata['email']
                                                     .toString()
                                                     .toLowerCase()
@@ -9643,10 +2387,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   child: _userdata['UserImg']
                                                                       .toString() ==
                                                                       ""
-                                                                      ? Icon(
+                                                                      ? const Icon(
                                                                       Icons
                                                                           .person)
-                                                                      : Text("")
+                                                                      : const Text("")
                                                               )
                                                           ),
                                                           Container(
@@ -9672,7 +2416,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   color:
                                                                   const Color(
                                                                       0xff030229),
-                                                                  textStyle: TextStyle(
+                                                                  textStyle: const TextStyle(
                                                                       overflow: TextOverflow
                                                                           .ellipsis
                                                                   )
@@ -9807,8 +2551,8 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                   left: 5),
                                                               child: _userdata['verifyed'] ==
                                                                   true
-                                                                  ? Center(
-                                                                child: const Icon(
+                                                                  ? const Center(
+                                                                child: Icon(
                                                                   Icons
                                                                       .verified,
                                                                   color:
@@ -9868,7 +2612,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                                                 0 * fem),
                                                             child: Center(
                                                               child: KText(
-                                                                text: _userdata['date'],
+                                                                text: _userdata['yearofpassed'],
                                                                 style: SafeGoogleFont(
                                                                   'Nunito',
                                                                   fontSize: 16 *
@@ -9950,404 +2694,1120 @@ class _Users_ScreenState extends State<Users_Screen> {
                                             }
                                           }
 
-                                          else if (SerachValue == "") {
-                                            return GestureDetector(
-                                              onTap: () {
-                                                print(height);
-                                                print(width);
-                                              },
-                                              child: Container(
-                                                padding: EdgeInsets.only(
-                                                    left: width / 136.6),
-                                                width: width / 1.21,
-                                                height: 78.22 * fem,
-                                                decoration: BoxDecoration(
-                                                  color: const Color(
-                                                      0xffffffff),
-                                                  borderRadius:
-                                                  BorderRadius.circular(
-                                                      10 * fem),
-                                                ),
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                                  children: [
-                                                    SizedBox(
-                                                      width: width / 7.2,
-                                                      height: height / 14.78,
-                                                      child: Row(
-                                                        crossAxisAlignment: CrossAxisAlignment
-                                                            .center,
-                                                        children: [
-                                                          Container(
-                                                              height: height /
-                                                                  21.7,
-                                                              width: width /
-                                                                  45.533,
-                                                              margin: EdgeInsets
-                                                                  .fromLTRB(
-                                                                  0 * fem,
-                                                                  0 * fem,
-                                                                  14.34 * fem,
-                                                                  0 * fem),
-                                                              decoration:
-                                                              BoxDecoration(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                                borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                    19.5553703308 *
-                                                                        fem),
-                                                                image:
-                                                                DecorationImage(
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                  image: NetworkImage(
-                                                                      _userdata[
-                                                                      'UserImg']
-                                                                          .toString()),
-                                                                ),
-                                                              ),
-                                                              child: Center(
-                                                                  child: _userdata['UserImg']
-                                                                      .toString() ==
-                                                                      ""
-                                                                      ? Icon(
-                                                                      Icons
-                                                                          .person)
-                                                                      : Text("")
-                                                              )
-                                                          ),
-                                                          Container(
+
+                                        }
+                                        else{
+                                          if(mydate.contains(_userdata['date'].toString().toLowerCase())){
+                                            return Container(
+                                              padding: EdgeInsets.only(
+                                                  left: width / 136.6),
+                                              width: width / 1.21,
+                                              height: 78.22 * fem,
+                                              decoration: BoxDecoration(
+                                                color: const Color(
+                                                    0xffffffff),
+                                                borderRadius:
+                                                BorderRadius.circular(
+                                                    10 * fem),
+                                              ),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                                children: [
+                                                  SizedBox(
+                                                    width: width / 7.2,
+                                                    height: height / 14.78,
+                                                    child: Row(
+                                                      crossAxisAlignment: CrossAxisAlignment
+                                                          .center,
+                                                      children: [
+                                                        Container(
+                                                            height: height /
+                                                                21.7,
+                                                            width: width /
+                                                                45.533,
                                                             margin: EdgeInsets
                                                                 .fromLTRB(
                                                                 0 * fem,
-                                                                4.14 * fem,
-                                                                129.49 * fem,
+                                                                0 * fem,
+                                                                14.34 * fem,
                                                                 0 * fem),
-                                                            child: KText(
-                                                              text: "${_userdata['Name']} ${_userdata['lastName']}",
-                                                              style: SafeGoogleFont(
-                                                                  'Nunito',
-                                                                  fontSize: 18 *
-                                                                      ffem,
-                                                                  fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                                  height:
-                                                                  1.3625 *
-                                                                      ffem /
-                                                                      fem,
-                                                                  color:
-                                                                  const Color(
-                                                                      0xff030229),
-                                                                  textStyle: TextStyle(
-                                                                      overflow: TextOverflow
-                                                                          .ellipsis
-                                                                  )
+                                                            decoration:
+                                                            BoxDecoration(
+                                                              color: Colors
+                                                                  .grey
+                                                                  .shade300,
+                                                              borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                  19.5553703308 *
+                                                                      fem),
+                                                              image:
+                                                              DecorationImage(
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                image: NetworkImage(
+                                                                    _userdata[
+                                                                    'UserImg']
+                                                                        .toString()),
                                                               ),
                                                             ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      height: height / 14.78,
-                                                      width: width / 6.2,
-                                                      child: Row(
-                                                        crossAxisAlignment: CrossAxisAlignment
-                                                            .center,
-                                                        children: [
-                                                          KText(
-                                                            text: _userdata['email'],
+                                                            child: Center(
+                                                                child: _userdata['UserImg']
+                                                                    .toString() ==
+                                                                    ""
+                                                                    ? const Icon(
+                                                                    Icons
+                                                                        .person)
+                                                                    : const Text("")
+                                                            )
+                                                        ),
+                                                        Container(
+                                                          margin: EdgeInsets
+                                                              .fromLTRB(
+                                                              0 * fem,
+                                                              4.14 * fem,
+                                                              129.49 * fem,
+                                                              0 * fem),
+                                                          child: KText(
+                                                            text: "${_userdata['Name']} ${_userdata['lastName']}",
                                                             style: SafeGoogleFont(
-                                                              'Nunito',
-                                                              fontSize: 18 *
-                                                                  ffem,
-                                                              fontWeight: FontWeight
-                                                                  .w400,
-                                                              height: 1.3625 *
-                                                                  ffem / fem,
-                                                              color: const Color(
-                                                                  0xff030229),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      height: height / 14.78,
-                                                      width: width / 7.2,
-                                                      child: Row(
-                                                        crossAxisAlignment: CrossAxisAlignment
-                                                            .center,
-                                                        children: [
-                                                          KText(
-                                                            text: _userdata['Phone']
-                                                                .toString(),
-                                                            style: SafeGoogleFont(
-                                                              'Nunito',
-                                                              fontSize: 18 *
-                                                                  ffem,
-                                                              fontWeight: FontWeight
-                                                                  .w400,
-                                                              height: 1.3625 *
-                                                                  ffem / fem,
-                                                              color: const Color(
-                                                                  0xff030229),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: width / 10,
-                                                      height: height / 14.78,
-                                                      child: Padding(
-                                                        padding: EdgeInsets
-                                                            .only(
-                                                            left: width / 54.64,
-                                                            right: width /
-                                                                54.64),
-                                                        child: Container(
-                                                          width: width / 34.15,
-                                                          height: double
-                                                              .infinity,
-                                                          decoration: BoxDecoration(
-                                                            color:
-                                                            _userdata['Gender'] ==
-                                                                "Male"
-                                                                ? const Color(
-                                                                0x195b92ff)
-                                                                : const Color(
-                                                                0xffFEF3F0),
-                                                            borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                33 * fem),
-                                                          ),
-                                                          child: Center(
-                                                            child: KText(
-                                                              text: _userdata['Gender'],
-                                                              style: SafeGoogleFont(
                                                                 'Nunito',
-                                                                fontSize: 16 *
+                                                                fontSize: 18 *
                                                                     ffem,
                                                                 fontWeight:
-                                                                FontWeight.w400,
+                                                                FontWeight
+                                                                    .w400,
                                                                 height:
-                                                                1.3625 * ffem /
+                                                                1.3625 *
+                                                                    ffem /
                                                                     fem,
-                                                                color: _userdata[
-                                                                'Gender'] ==
-                                                                    "Male"
-                                                                    ? const Color(
-                                                                    0xff5b92ff)
-                                                                    : const Color(
-                                                                    0xffFE8F6B),
-                                                              ),
+                                                                color:
+                                                                const Color(
+                                                                    0xff030229),
+                                                                textStyle: const TextStyle(
+                                                                    overflow: TextOverflow
+                                                                        .ellipsis
+                                                                )
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: height / 14.78,
+                                                    width: width / 6.2,
+                                                    child: Row(
+                                                      crossAxisAlignment: CrossAxisAlignment
+                                                          .center,
+                                                      children: [
+                                                        KText(
+                                                          text: _userdata['email'],
+                                                          style: SafeGoogleFont(
+                                                            'Nunito',
+                                                            fontSize: 18 *
+                                                                ffem,
+                                                            fontWeight: FontWeight
+                                                                .w400,
+                                                            height: 1.3625 *
+                                                                ffem / fem,
+                                                            color: const Color(
+                                                                0xff030229),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: height / 14.78,
+                                                    width: width / 7.2,
+                                                    child: Row(
+                                                      crossAxisAlignment: CrossAxisAlignment
+                                                          .center,
+                                                      children: [
+                                                        KText(
+                                                          text: _userdata['Phone']
+                                                              .toString(),
+                                                          style: SafeGoogleFont(
+                                                            'Nunito',
+                                                            fontSize: 18 *
+                                                                ffem,
+                                                            fontWeight: FontWeight
+                                                                .w400,
+                                                            height: 1.3625 *
+                                                                ffem / fem,
+                                                            color: const Color(
+                                                                0xff030229),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: width / 10,
+                                                    height: height / 14.78,
+                                                    child: Padding(
+                                                      padding: EdgeInsets
+                                                          .only(
+                                                          left: width / 54.64,
+                                                          right: width /
+                                                              54.64),
+                                                      child: Container(
+                                                        width: width / 34.15,
+                                                        height: double
+                                                            .infinity,
+                                                        decoration: BoxDecoration(
+                                                          color:
+                                                          _userdata['Gender'] ==
+                                                              "Male"
+                                                              ? const Color(
+                                                              0x195b92ff)
+                                                              : const Color(
+                                                              0xffFEF3F0),
+                                                          borderRadius:
+                                                          BorderRadius
+                                                              .circular(
+                                                              33 * fem),
+                                                        ),
+                                                        child: Center(
+                                                          child: KText(
+                                                            text: _userdata['Gender'],
+                                                            style: SafeGoogleFont(
+                                                              'Nunito',
+                                                              fontSize: 16 *
+                                                                  ffem,
+                                                              fontWeight:
+                                                              FontWeight.w400,
+                                                              height:
+                                                              1.3625 * ffem /
+                                                                  fem,
+                                                              color: _userdata[
+                                                              'Gender'] ==
+                                                                  "Male"
+                                                                  ? const Color(
+                                                                  0xff5b92ff)
+                                                                  : const Color(
+                                                                  0xffFE8F6B),
                                                             ),
                                                           ),
                                                         ),
                                                       ),
                                                     ),
-                                                    SizedBox(
-                                                      height: height / 14.78,
-                                                      width: width / 11.5,
-                                                      child: Row(
-                                                        crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                        children: [
-                                                          SizedBox(
-                                                              width: width /
-                                                                  54.64),
-                                                          Container(
-                                                            // gender8qf (8:2320)
-                                                              margin:
-                                                              EdgeInsets
-                                                                  .fromLTRB(
-                                                                  0 * fem,
-                                                                  0 * fem,
-                                                                  15.18 * fem,
-                                                                  0 * fem),
-                                                              padding: const EdgeInsets
-                                                                  .only(
-                                                                  left: 5),
-                                                              child: _userdata['verifyed'] ==
-                                                                  true
-                                                                  ? Center(
-                                                                child: const Icon(
-                                                                  Icons
-                                                                      .verified,
-                                                                  color:
-                                                                  Colors.green,
-                                                                ),
-                                                              )
-                                                                  : const Icon(
-                                                                Icons
-                                                                    .verified_outlined,
-                                                              )
-                                                          ),
-                                                          Opacity(
-                                                            // arrowdown5rFs (8:2318)
-                                                            opacity: 0.0,
-                                                            child: Container(
-                                                              margin:
-                                                              EdgeInsets
-                                                                  .fromLTRB(
-                                                                  0 * fem,
-                                                                  1.6 * fem,
-                                                                  0 * fem,
-                                                                  0 * fem),
-                                                              width: 7.82 * fem,
-                                                              height: 6.52 *
-                                                                  fem,
-                                                              child: Image
-                                                                  .asset(
-                                                                'assets/images/arrow-down-5.png',
-                                                                width: 7.82 *
-                                                                    fem,
-                                                                height: 6.52 *
-                                                                    fem,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      height: height / 14.78,
-                                                      width: width / 11,
-                                                      child: Row(
-                                                        crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                        children: [
-                                                          SizedBox(
-                                                              width: width /
-                                                                  54.64),
-                                                          Container(
-                                                            // gender8qf (8:2320)
-                                                            margin: EdgeInsets
+                                                  ),
+                                                  SizedBox(
+                                                    height: height / 14.78,
+                                                    width: width / 11.5,
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                      CrossAxisAlignment
+                                                          .start,
+                                                      children: [
+                                                        SizedBox(
+                                                            width: width /
+                                                                54.64),
+                                                        Container(
+                                                          // gender8qf (8:2320)
+                                                            margin:
+                                                            EdgeInsets
                                                                 .fromLTRB(
                                                                 0 * fem,
                                                                 0 * fem,
                                                                 15.18 * fem,
                                                                 0 * fem),
-                                                            child: Center(
-                                                              child: KText(
-                                                                text: _userdata['date'],
-                                                                style: SafeGoogleFont(
-                                                                  'Nunito',
-                                                                  fontSize: 16 *
-                                                                      ffem,
-                                                                  fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                                  height:
-                                                                  1.3625 *
-                                                                      ffem /
-                                                                      fem,
-                                                                ),
+                                                            padding: const EdgeInsets
+                                                                .only(
+                                                                left: 5),
+                                                            child: _userdata['verifyed'] ==
+                                                                true
+                                                                ? const Center(
+                                                              child: Icon(
+                                                                Icons
+                                                                    .verified,
+                                                                color:
+                                                                Colors.green,
                                                               ),
-                                                            ),
-                                                          ),
-                                                          Opacity(
-                                                            // arrowdown5rFs (8:2318)
-                                                            opacity: 0.0,
-                                                            child: Container(
-                                                              margin:
-                                                              EdgeInsets
-                                                                  .fromLTRB(
-                                                                  0 * fem,
-                                                                  1.6 * fem,
-                                                                  0 * fem,
-                                                                  0 * fem),
-                                                              width: 7.82 * fem,
+                                                            )
+                                                                : const Icon(
+                                                              Icons
+                                                                  .verified_outlined,
+                                                            )
+                                                        ),
+                                                        Opacity(
+                                                          // arrowdown5rFs (8:2318)
+                                                          opacity: 0.0,
+                                                          child: Container(
+                                                            margin:
+                                                            EdgeInsets
+                                                                .fromLTRB(
+                                                                0 * fem,
+                                                                1.6 * fem,
+                                                                0 * fem,
+                                                                0 * fem),
+                                                            width: 7.82 * fem,
+                                                            height: 6.52 *
+                                                                fem,
+                                                            child: Image
+                                                                .asset(
+                                                              'assets/images/arrow-down-5.png',
+                                                              width: 7.82 *
+                                                                  fem,
                                                               height: 6.52 *
                                                                   fem,
-                                                              child: Image
-                                                                  .asset(
-                                                                'assets/images/arrow-down-5.png',
-                                                                width: 7.82 *
-                                                                    fem,
-                                                                height: 6.52 *
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: height / 14.78,
+                                                    width: width / 11,
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                      CrossAxisAlignment
+                                                          .start,
+                                                      children: [
+                                                        SizedBox(
+                                                            width: width /
+                                                                54.64),
+                                                        Container(
+                                                          // gender8qf (8:2320)
+                                                          margin: EdgeInsets
+                                                              .fromLTRB(
+                                                              0 * fem,
+                                                              0 * fem,
+                                                              15.18 * fem,
+                                                              0 * fem),
+                                                          child: Center(
+                                                            child: KText(
+                                                              text: _userdata['yearofpassed'],
+                                                              style: SafeGoogleFont(
+                                                                'Nunito',
+                                                                fontSize: 16 *
+                                                                    ffem,
+                                                                fontWeight:
+                                                                FontWeight
+                                                                    .w400,
+                                                                height:
+                                                                1.3625 *
+                                                                    ffem /
                                                                     fem,
                                                               ),
                                                             ),
                                                           ),
-                                                        ],
-                                                      ),
+                                                        ),
+                                                        Opacity(
+                                                          // arrowdown5rFs (8:2318)
+                                                          opacity: 0.0,
+                                                          child: Container(
+                                                            margin:
+                                                            EdgeInsets
+                                                                .fromLTRB(
+                                                                0 * fem,
+                                                                1.6 * fem,
+                                                                0 * fem,
+                                                                0 * fem),
+                                                            width: 7.82 * fem,
+                                                            height: 6.52 *
+                                                                fem,
+                                                            child: Image
+                                                                .asset(
+                                                              'assets/images/arrow-down-5.png',
+                                                              width: 7.82 *
+                                                                  fem,
+                                                              height: 6.52 *
+                                                                  fem,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        Popupmenu(
-                                                            context, _userdata
-                                                            .id,
-                                                            popMenuKeys[index]);
-                                                        print(viewUser_details);
-                                                      },
-                                                      child: SizedBox(
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      Popupmenu(context,
+                                                          _userdata.id,
+                                                          popMenuKeys[index]);
+                                                      print(viewUser_details);
+                                                    },
+                                                    child: SizedBox(
 
-                                                          key: popMenuKeys[index],
-                                                          width: width / 9.98,
-                                                          height: height /
-                                                              26.04,
-                                                          child: const Icon(
-                                                              Icons
-                                                                  .more_horiz)),
-                                                    ),
-                                                    /*GestureDetector(
-                                                            onTap: () {
-                                                              // setState(() {
-                                                              //   viewDocid=_userdata.id;
-                                                              //   viewUser_details=!viewUser_details;
-                                                              // });
-                                                              Popupmenu(context, _userdata.id);
-                                                              print(viewUser_details);
-                                                            },
-                                                            child: Container(
-                                                                key: popmenukey,
-                                                                color:Colors.red,
-                                                                width: width / 14.0,
-                                                                height: height / 26.04,
-                                                                child: Icon(Icons.more_horiz)),
-                                                          ),*/
-                                                  ],
-                                                ),
+                                                        key: popMenuKeys[index],
+                                                        width: width / 9.98,
+                                                        height: height /
+                                                            26.04,
+                                                        child: const Icon(
+                                                            Icons
+                                                                .more_horiz)),
+                                                  ),
+                                                  /*GestureDetector(
+                                                          onTap: () {
+                                                            // setState(() {
+                                                            //   viewDocid=_userdata.id;
+                                                            //   viewUser_details=!viewUser_details;
+                                                            // });
+                                                            Popupmenu(context, _userdata.id);
+                                                            print(viewUser_details);
+                                                          },
+                                                          child: Container(
+                                                              key: popmenukey,
+                                                              color:Colors.red,
+                                                              width: width / 14.0,
+                                                              height: height / 26.04,
+                                                              child: Icon(Icons.more_horiz)),
+                                                        ),*/
+                                                ],
                                               ),
                                             );
                                           }
-                                          return const SizedBox();
-                                        },
-                                      ),
-                                    ),
+                                        }
 
-                                    SizedBox(
-                                      width:width/1.7075,
-                                      child: NumberPaginator(
-                                        config: NumberPaginatorUIConfig(
-                                          buttonSelectedBackgroundColor: Constants()
-                                              .primaryAppColor,
-                                          buttonSelectedForegroundColor: Colors
-                                              .white,
-                                        ),
-                                        numberPages: pagecount,
-                                        onPageChange: (int index) {
-                                          documentList.addAll(snapshot.data!.docs);
-                                          setState(() {
-                                            temp = index + 1;
-                                          });
-                                        },
-                                      ),
-                                    )
-                                  ],
+                                      }
+
+                                      else if (SerachValue != "") {
+                                        print("Validddddddddddddddddddddddddddddddddddddddddddddddddddddddddd");
+                                        if (_userdata['Name'].toString().toLowerCase().startsWith(SerachValue.toLowerCase())||
+                                            _userdata['Phone'].toString().toLowerCase().startsWith(SerachValue.toLowerCase())||
+                                            _userdata['yearofpassed'].toString().toLowerCase().startsWith(SerachValue.toLowerCase())||
+                                            _userdata['subjectStream'].toString().toLowerCase().startsWith(SerachValue.toLowerCase())||
+                                            _userdata['email'].toString().toLowerCase().startsWith(SerachValue.toLowerCase())
+                                        ) {
+                                          return Container(
+                                            padding: EdgeInsets.only(
+                                                left: width / 136.6),
+                                            width: width / 1.21,
+                                            height: 78.22 * fem,
+                                            decoration: BoxDecoration(
+                                              color: const Color(
+                                                  0xffffffff),
+                                              borderRadius:
+                                              BorderRadius.circular(
+                                                  10 * fem),
+                                            ),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                              children: [
+                                                SizedBox(
+                                                  width: width / 7.2,
+                                                  height: height / 14.78,
+                                                  child: Row(
+                                                    crossAxisAlignment: CrossAxisAlignment
+                                                        .center,
+                                                    children: [
+                                                      Container(
+                                                          height: height /
+                                                              21.7,
+                                                          width: width /
+                                                              45.533,
+                                                          margin: EdgeInsets
+                                                              .fromLTRB(
+                                                              0 * fem,
+                                                              0 * fem,
+                                                              14.34 * fem,
+                                                              0 * fem),
+                                                          decoration:
+                                                          BoxDecoration(
+                                                            color: Colors
+                                                                .grey
+                                                                .shade300,
+                                                            borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                19.5553703308 *
+                                                                    fem),
+                                                            image:
+                                                            DecorationImage(
+                                                              fit: BoxFit
+                                                                  .cover,
+                                                              image: NetworkImage(
+                                                                  _userdata[
+                                                                  'UserImg']
+                                                                      .toString()),
+                                                            ),
+                                                          ),
+                                                          child: Center(
+                                                              child: _userdata['UserImg']
+                                                                  .toString() ==
+                                                                  ""
+                                                                  ? const Icon(
+                                                                  Icons
+                                                                      .person)
+                                                                  : const Text("")
+                                                          )
+                                                      ),
+                                                      Container(
+                                                        margin: EdgeInsets
+                                                            .fromLTRB(
+                                                            0 * fem,
+                                                            4.14 * fem,
+                                                            129.49 * fem,
+                                                            0 * fem),
+                                                        child: KText(
+                                                          text: "${_userdata['Name']} ${_userdata['lastName']}",
+                                                          style: SafeGoogleFont(
+                                                              'Nunito',
+                                                              fontSize: 18 *
+                                                                  ffem,
+                                                              fontWeight:
+                                                              FontWeight
+                                                                  .w400,
+                                                              height:
+                                                              1.3625 *
+                                                                  ffem /
+                                                                  fem,
+                                                              color:
+                                                              const Color(
+                                                                  0xff030229),
+                                                              textStyle: const TextStyle(
+                                                                  overflow: TextOverflow
+                                                                      .ellipsis
+                                                              )
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: height / 14.78,
+                                                  width: width / 6.2,
+                                                  child: Row(
+                                                    crossAxisAlignment: CrossAxisAlignment
+                                                        .center,
+                                                    children: [
+                                                      KText(
+                                                        text: _userdata['email'],
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: 18 *
+                                                              ffem,
+                                                          fontWeight: FontWeight
+                                                              .w400,
+                                                          height: 1.3625 *
+                                                              ffem / fem,
+                                                          color: const Color(
+                                                              0xff030229),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: height / 14.78,
+                                                  width: width / 7.2,
+                                                  child: Row(
+                                                    crossAxisAlignment: CrossAxisAlignment
+                                                        .center,
+                                                    children: [
+                                                      KText(
+                                                        text: _userdata['Phone']
+                                                            .toString(),
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: 18 *
+                                                              ffem,
+                                                          fontWeight: FontWeight
+                                                              .w400,
+                                                          height: 1.3625 *
+                                                              ffem / fem,
+                                                          color: const Color(
+                                                              0xff030229),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: width / 10,
+                                                  height: height / 14.78,
+                                                  child: Padding(
+                                                    padding: EdgeInsets
+                                                        .only(
+                                                        left: width / 54.64,
+                                                        right: width /
+                                                            54.64),
+                                                    child: Container(
+                                                      width: width / 34.15,
+                                                      height: double
+                                                          .infinity,
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                        _userdata['Gender'] ==
+                                                            "Male"
+                                                            ? const Color(
+                                                            0x195b92ff)
+                                                            : const Color(
+                                                            0xffFEF3F0),
+                                                        borderRadius:
+                                                        BorderRadius
+                                                            .circular(
+                                                            33 * fem),
+                                                      ),
+                                                      child: Center(
+                                                        child: KText(
+                                                          text: _userdata['Gender'],
+                                                          style: SafeGoogleFont(
+                                                            'Nunito',
+                                                            fontSize: 16 *
+                                                                ffem,
+                                                            fontWeight:
+                                                            FontWeight.w400,
+                                                            height:
+                                                            1.3625 * ffem /
+                                                                fem,
+                                                            color: _userdata[
+                                                            'Gender'] ==
+                                                                "Male"
+                                                                ? const Color(
+                                                                0xff5b92ff)
+                                                                : const Color(
+                                                                0xffFE8F6B),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: height / 14.78,
+                                                  width: width / 11.5,
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment
+                                                        .start,
+                                                    children: [
+                                                      SizedBox(
+                                                          width: width /
+                                                              54.64),
+                                                      Container(
+                                                        // gender8qf (8:2320)
+                                                          margin:
+                                                          EdgeInsets
+                                                              .fromLTRB(
+                                                              0 * fem,
+                                                              0 * fem,
+                                                              15.18 * fem,
+                                                              0 * fem),
+                                                          padding: const EdgeInsets
+                                                              .only(
+                                                              left: 5),
+                                                          child: _userdata['verifyed'] ==
+                                                              true
+                                                              ? const Center(
+                                                            child: Icon(
+                                                              Icons
+                                                                  .verified,
+                                                              color:
+                                                              Colors.green,
+                                                            ),
+                                                          )
+                                                              : const Icon(
+                                                            Icons
+                                                                .verified_outlined,
+                                                          )
+                                                      ),
+                                                      Opacity(
+                                                        // arrowdown5rFs (8:2318)
+                                                        opacity: 0.0,
+                                                        child: Container(
+                                                          margin:
+                                                          EdgeInsets
+                                                              .fromLTRB(
+                                                              0 * fem,
+                                                              1.6 * fem,
+                                                              0 * fem,
+                                                              0 * fem),
+                                                          width: 7.82 * fem,
+                                                          height: 6.52 *
+                                                              fem,
+                                                          child: Image
+                                                              .asset(
+                                                            'assets/images/arrow-down-5.png',
+                                                            width: 7.82 *
+                                                                fem,
+                                                            height: 6.52 *
+                                                                fem,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: height / 14.78,
+                                                  width: width / 11,
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment
+                                                        .start,
+                                                    children: [
+                                                      SizedBox(
+                                                          width: width /
+                                                              54.64),
+                                                      Container(
+                                                        // gender8qf (8:2320)
+                                                        margin: EdgeInsets
+                                                            .fromLTRB(
+                                                            0 * fem,
+                                                            0 * fem,
+                                                            15.18 * fem,
+                                                            0 * fem),
+                                                        child: Center(
+                                                          child: KText(
+                                                            text: _userdata['yearofpassed'],
+                                                            style: SafeGoogleFont(
+                                                              'Nunito',
+                                                              fontSize: 16 *
+                                                                  ffem,
+                                                              fontWeight:
+                                                              FontWeight
+                                                                  .w400,
+                                                              height:
+                                                              1.3625 *
+                                                                  ffem /
+                                                                  fem,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Opacity(
+                                                        // arrowdown5rFs (8:2318)
+                                                        opacity: 0.0,
+                                                        child: Container(
+                                                          margin:
+                                                          EdgeInsets
+                                                              .fromLTRB(
+                                                              0 * fem,
+                                                              1.6 * fem,
+                                                              0 * fem,
+                                                              0 * fem),
+                                                          width: 7.82 * fem,
+                                                          height: 6.52 *
+                                                              fem,
+                                                          child: Image
+                                                              .asset(
+                                                            'assets/images/arrow-down-5.png',
+                                                            width: 7.82 *
+                                                                fem,
+                                                            height: 6.52 *
+                                                                fem,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    Popupmenu(context,
+                                                        _userdata.id,
+                                                        popMenuKeys[index]);
+                                                    print(viewUser_details);
+                                                  },
+                                                  child: SizedBox(
+
+                                                      key: popMenuKeys[index],
+                                                      width: width / 9.98,
+                                                      height: height /
+                                                          26.04,
+                                                      child: const Icon(
+                                                          Icons
+                                                              .more_horiz)),
+                                                ),
+                                                /*GestureDetector(
+                                                          onTap: () {
+                                                            // setState(() {
+                                                            //   viewDocid=_userdata.id;
+                                                            //   viewUser_details=!viewUser_details;
+                                                            // });
+                                                            Popupmenu(context, _userdata.id);
+                                                            print(viewUser_details);
+                                                          },
+                                                          child: Container(
+                                                              key: popmenukey,
+                                                              color:Colors.red,
+                                                              width: width / 14.0,
+                                                              height: height / 26.04,
+                                                              child: Icon(Icons.more_horiz)),
+                                                        ),*/
+                                              ],
+                                            ),
+                                          );
+                                        }
+                                      }
+                                      else if(SerachValue==""){
+                                        return Container(
+                                          padding: EdgeInsets.only(
+                                              left: width / 136.6),
+                                          width: width / 1.21,
+                                          height: 78.22 * fem,
+                                          decoration: BoxDecoration(
+                                            color: const Color(
+                                                0xffffffff),
+                                            borderRadius:
+                                            BorderRadius.circular(
+                                                10 * fem),
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            children: [
+                                              SizedBox(
+                                                width: width / 7.2,
+                                                height: height / 14.78,
+                                                child: Row(
+                                                  crossAxisAlignment: CrossAxisAlignment
+                                                      .center,
+                                                  children: [
+                                                    Container(
+                                                        height: height /
+                                                            21.7,
+                                                        width: width /
+                                                            45.533,
+                                                        margin: EdgeInsets
+                                                            .fromLTRB(
+                                                            0 * fem,
+                                                            0 * fem,
+                                                            14.34 * fem,
+                                                            0 * fem),
+                                                        decoration:
+                                                        BoxDecoration(
+                                                          color: Colors
+                                                              .grey
+                                                              .shade300,
+                                                          borderRadius:
+                                                          BorderRadius
+                                                              .circular(
+                                                              19.5553703308 *
+                                                                  fem),
+                                                          image:
+                                                          DecorationImage(
+                                                            fit: BoxFit
+                                                                .cover,
+                                                            image: NetworkImage(
+                                                                _userdata[
+                                                                'UserImg']
+                                                                    .toString()),
+                                                          ),
+                                                        ),
+                                                        child: Center(
+                                                            child: _userdata['UserImg']
+                                                                .toString() ==
+                                                                ""
+                                                                ? const Icon(
+                                                                Icons
+                                                                    .person)
+                                                                : const Text("")
+                                                        )
+                                                    ),
+                                                    Container(
+                                                      margin: EdgeInsets
+                                                          .fromLTRB(
+                                                          0 * fem,
+                                                          4.14 * fem,
+                                                          129.49 * fem,
+                                                          0 * fem),
+                                                      child: KText(
+                                                        text: "${_userdata['Name']} ${_userdata['lastName']}",
+                                                        style: SafeGoogleFont(
+                                                            'Nunito',
+                                                            fontSize: 18 *
+                                                                ffem,
+                                                            fontWeight:
+                                                            FontWeight
+                                                                .w400,
+                                                            height:
+                                                            1.3625 *
+                                                                ffem /
+                                                                fem,
+                                                            color:
+                                                            const Color(
+                                                                0xff030229),
+                                                            textStyle: const TextStyle(
+                                                                overflow: TextOverflow
+                                                                    .ellipsis
+                                                            )
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: height / 14.78,
+                                                width: width / 6.2,
+                                                child: Row(
+                                                  crossAxisAlignment: CrossAxisAlignment
+                                                      .center,
+                                                  children: [
+                                                    KText(
+                                                      text: _userdata['email'],
+                                                      style: SafeGoogleFont(
+                                                        'Nunito',
+                                                        fontSize: 18 *
+                                                            ffem,
+                                                        fontWeight: FontWeight
+                                                            .w400,
+                                                        height: 1.3625 *
+                                                            ffem / fem,
+                                                        color: const Color(
+                                                            0xff030229),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: height / 14.78,
+                                                width: width / 7.2,
+                                                child: Row(
+                                                  crossAxisAlignment: CrossAxisAlignment
+                                                      .center,
+                                                  children: [
+                                                    KText(
+                                                      text: _userdata['Phone']
+                                                          .toString(),
+                                                      style: SafeGoogleFont(
+                                                        'Nunito',
+                                                        fontSize: 18 *
+                                                            ffem,
+                                                        fontWeight: FontWeight
+                                                            .w400,
+                                                        height: 1.3625 *
+                                                            ffem / fem,
+                                                        color: const Color(
+                                                            0xff030229),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: width / 10,
+                                                height: height / 14.78,
+                                                child: Padding(
+                                                  padding: EdgeInsets
+                                                      .only(
+                                                      left: width / 54.64,
+                                                      right: width /
+                                                          54.64),
+                                                  child: Container(
+                                                    width: width / 34.15,
+                                                    height: double
+                                                        .infinity,
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                      _userdata['Gender'] ==
+                                                          "Male"
+                                                          ? const Color(
+                                                          0x195b92ff)
+                                                          : const Color(
+                                                          0xffFEF3F0),
+                                                      borderRadius:
+                                                      BorderRadius
+                                                          .circular(
+                                                          33 * fem),
+                                                    ),
+                                                    child: Center(
+                                                      child: KText(
+                                                        text: _userdata['Gender'],
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize: 16 *
+                                                              ffem,
+                                                          fontWeight:
+                                                          FontWeight.w400,
+                                                          height:
+                                                          1.3625 * ffem /
+                                                              fem,
+                                                          color: _userdata[
+                                                          'Gender'] ==
+                                                              "Male"
+                                                              ? const Color(
+                                                              0xff5b92ff)
+                                                              : const Color(
+                                                              0xffFE8F6B),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: height / 14.78,
+                                                width: width / 11.5,
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    SizedBox(
+                                                        width: width /
+                                                            54.64),
+                                                    Container(
+                                                      // gender8qf (8:2320)
+                                                        margin:
+                                                        EdgeInsets
+                                                            .fromLTRB(
+                                                            0 * fem,
+                                                            0 * fem,
+                                                            15.18 * fem,
+                                                            0 * fem),
+                                                        padding: const EdgeInsets
+                                                            .only(
+                                                            left: 5),
+                                                        child: _userdata['verifyed'] ==
+                                                            true
+                                                            ? const Center(
+                                                          child: Icon(
+                                                            Icons
+                                                                .verified,
+                                                            color:
+                                                            Colors.green,
+                                                          ),
+                                                        )
+                                                            : const Icon(
+                                                          Icons
+                                                              .verified_outlined,
+                                                        )
+                                                    ),
+                                                    Opacity(
+                                                      // arrowdown5rFs (8:2318)
+                                                      opacity: 0.0,
+                                                      child: Container(
+                                                        margin:
+                                                        EdgeInsets
+                                                            .fromLTRB(
+                                                            0 * fem,
+                                                            1.6 * fem,
+                                                            0 * fem,
+                                                            0 * fem),
+                                                        width: 7.82 * fem,
+                                                        height: 6.52 *
+                                                            fem,
+                                                        child: Image
+                                                            .asset(
+                                                          'assets/images/arrow-down-5.png',
+                                                          width: 7.82 *
+                                                              fem,
+                                                          height: 6.52 *
+                                                              fem,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: height / 14.78,
+                                                width: width / 11,
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    SizedBox(
+                                                        width: width /
+                                                            54.64),
+                                                    Container(
+                                                      // gender8qf (8:2320)
+                                                      margin: EdgeInsets
+                                                          .fromLTRB(
+                                                          0 * fem,
+                                                          0 * fem,
+                                                          15.18 * fem,
+                                                          0 * fem),
+                                                      child: Center(
+                                                        child: KText(
+                                                          text: _userdata['yearofpassed'],
+                                                          style: SafeGoogleFont(
+                                                            'Nunito',
+                                                            fontSize: 16 *
+                                                                ffem,
+                                                            fontWeight:
+                                                            FontWeight
+                                                                .w400,
+                                                            height:
+                                                            1.3625 *
+                                                                ffem /
+                                                                fem,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Opacity(
+                                                      // arrowdown5rFs (8:2318)
+                                                      opacity: 0.0,
+                                                      child: Container(
+                                                        margin:
+                                                        EdgeInsets
+                                                            .fromLTRB(
+                                                            0 * fem,
+                                                            1.6 * fem,
+                                                            0 * fem,
+                                                            0 * fem),
+                                                        width: 7.82 * fem,
+                                                        height: 6.52 *
+                                                            fem,
+                                                        child: Image
+                                                            .asset(
+                                                          'assets/images/arrow-down-5.png',
+                                                          width: 7.82 *
+                                                              fem,
+                                                          height: 6.52 *
+                                                              fem,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  Popupmenu(context,
+                                                      _userdata.id,
+                                                      popMenuKeys[index]);
+                                                  print(viewUser_details);
+                                                },
+                                                child: SizedBox(
+
+                                                    key: popMenuKeys[index],
+                                                    width: width / 9.98,
+                                                    height: height /
+                                                        26.04,
+                                                    child: const Icon(
+                                                        Icons
+                                                            .more_horiz)),
+                                              ),
+                                              /*GestureDetector(
+                                                          onTap: () {
+                                                            // setState(() {
+                                                            //   viewDocid=_userdata.id;
+                                                            //   viewUser_details=!viewUser_details;
+                                                            // });
+                                                            Popupmenu(context, _userdata.id);
+                                                            print(viewUser_details);
+                                                          },
+                                                          child: Container(
+                                                              key: popmenukey,
+                                                              color:Colors.red,
+                                                              width: width / 14.0,
+                                                              height: height / 26.04,
+                                                              child: Icon(Icons.more_horiz)),
+                                                        ),*/
+                                            ],
+                                          ),
+                                        );
+                                      }
+                                      return const SizedBox();
+                                    },
+                                  ),
                                 );
                               },
                             ),
+
 
 
                           ],
@@ -10371,7 +3831,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                     ]
                 )
             ),
-          )
+          ),
+          SizedBox(height: height / 65.1),
+          DeveloperCardWidget(),
+          SizedBox(height: height / 65.1),
         ],
       ),
     );
@@ -10387,6 +3850,12 @@ class _Users_ScreenState extends State<Users_Screen> {
   }
 
   Future getCity(state) async {
+    setState(() {
+      _cities.clear();
+    });
+    setState(() {
+      _cities.add("Select City");
+    });
     var response = await getResponse();
     var takestate = response
         .map((map) => StatusModel.StatusModel.fromJson(map))
@@ -10415,95 +3884,36 @@ class _Users_ScreenState extends State<Users_Screen> {
 
   ///Department Fetch Function
   departmentdataFetchFunc() async {
+    print("Department Data List+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
     setState(() {
       departmentDataList.clear();
+      YearDataList.clear();
     });
     setState(() {
       departmentDataList.add('Select Department');
+      YearDataList.add('Select Year');
     });
-    var departmentdata = await FirebaseFirestore.instance.collection(
-        "Department").orderBy("name").get();
+    var departmentdata = await FirebaseFirestore.instance.collection("Department").orderBy("name").get();
     for (int x = 0; x < departmentdata.docs.length; x++) {
       setState(() {
         departmentDataList.add(departmentdata.docs[x]['name'].toString());
       });
     }
+    var acdamicYeardata = await FirebaseFirestore.instance.collection("AcademicYear").orderBy("name").get();
+    for (int x = 0; x < acdamicYeardata.docs.length; x++) {
+      setState(() {
+        YearDataList.add(acdamicYeardata.docs[x]['name'].toString());
+      });
+    }
     print("department Data List $departmentDataList");
+    print("Year Data List $YearDataList");
   }
 
   ///clear controller functions--------------------------------
 
-  controllersclearfunc() {
-    setState(() {
-      Loading = false;
-      firstNamecon.clear();
-      middleNamecon.clear();
-      lastNamecon.clear();
-      dateofBirthcon.clear();
-      gendercon.clear();
-      alterEmailIdcon.clear();
-      aadhaarNumbercon.clear();
-      phoneNumbercon.clear();
-      mobileNumbercon.clear();
-      emailIDcon.clear();
-      adreesscon.clear();
-      citycon.text = "Select City";
-      pinCodecon.clear();
-      statecon.text = "Select State";
-      countrycon.text = "Select Country";
-      yearPassedcon.clear();
-      subjectStremdcon.text = "Select Department";
-      //ownBussinesscon.clear();
-      classcon.clear();
-      rollnocon.clear();
-      lastvisitcon.clear();
-      housecon.clear();
-      statusmessagecon.clear();
-      educationquvalificationcon.clear();
-      additionalquvalificationcon.clear();
-      occupationcon.clear();
-      designationcon.clear();
-      company_concerncon.clear();
-      maritalStatuscon.text = "Marital Status";
-      alumniEmployedController.text = "No";
-      spouseNamecon.clear();
-      anniversaryDatecon.clear();
-      no_of_childreancon.clear();
-      Uploaddocument = null;
-      imgUrl = "";
-      dropdownValidator2 = false;
-      userUpdateDocumentID = "";
-    });
-  }
 
-  ///choose the image fundtions------------------------'\
 
-  addImage(Size size) {
-    InputElement input = FileUploadInputElement() as InputElement
-      ..accept = 'image/*';
-    input.click();
-    input.onChange.listen((event) {
-      final file = input.files!.first;
-      final reader = FileReader();
-      reader.readAsDataUrl(file);
-      reader.onLoadEnd.listen((event) async {
-        setState(() {
-          Url = file;
-          Uploaddocument = reader.result;
-          imgUrl = "";
-        });
-      });
-    });
-  }
 
-  imageupload() async {
-    var snapshot = await FirebaseStorage.instance.ref().child('Images').child(
-        "${Url!.name}").putBlob(Url);
-    String downloadUrl = await snapshot.ref.getDownloadURL();
-    setState(() {
-      imgUrl = downloadUrl;
-    });
-  }
 
   Popupmenu(BuildContext context, _userid, key) async {
     print(
@@ -10541,10 +3951,13 @@ class _Users_ScreenState extends State<Users_Screen> {
               if (item == "Edit") {
                 setState(() {
                   UserEdit = !UserEdit;
+                  docid=_userid;
                 });
-                fetchdate(_userid);
+                //fetchdate(_userid);
               } else if (item == "Delete") {
                 userDetelePopup();
+              }else if (item == "View") {
+                viewPopup(userUpdateDocumentID);
               }
             },
             value: item,
@@ -10552,7 +3965,8 @@ class _Users_ScreenState extends State<Users_Screen> {
               height: height / 18.475,
               decoration: BoxDecoration(
                   color: item == "Edit"
-                      ? const Color(0xff5B93FF).withOpacity(0.6)
+                      ? const Color(0xff5B93FF).withOpacity(0.6): item == "View"
+                      ? Colors.green.withOpacity(0.6)
                       : const Color(0xffE71D36).withOpacity(0.6),
                   borderRadius: BorderRadius.circular(5)),
               child: Row(
@@ -10561,6 +3975,11 @@ class _Users_ScreenState extends State<Users_Screen> {
                   item == "Edit"
                       ? const Icon(
                     Icons.edit,
+                    color: Colors.white,
+                    size: 18,
+                  ): item == "View"
+                      ? Icon(
+                    Icons.remove_red_eye_outlined,
                     color: Colors.white,
                     size: 18,
                   )
@@ -10588,738 +4007,208 @@ class _Users_ScreenState extends State<Users_Screen> {
           .toList(),
     );
   }
+  viewPopup(String userUpdateDocumentID) async {
+    Size size = MediaQuery.of(context).size;
+    double height = size.height;
+    double width = size.width;
 
-  fetchdate(id) async {
-    var document =
-    await FirebaseFirestore.instance.collection("Users").doc(id).get();
-    Map<String, dynamic>? value = document.data();
-    getCity(value!['state'].toString());
-    setState(() {
-      firstNamecon.text = value!['Name'].toString();
-      middleNamecon.text = value["middleName"].toString();
-      lastNamecon.text = value["lastName"].toString();
-      adreesscon.text = value['Address'].toString();
-      emailIDcon.text = value['email'].toString();
-      gendercon.text = value['Gender'].toString();
-      occupationcon.text = value['Occupation'].toString();
-      phoneNumbercon.text = value['Phone'].toString();
-      dateofBirthcon.text = value['dob'].toString();
-      alterEmailIdcon.text = value['alteremail'].toString();
-      aadhaarNumbercon.text = value['aadhaarNo'].toString();
-      mobileNumbercon.text = value['mobileNo'].toString();
-      statecon.text = value['state'].toString();
-      citycon.text = value['city'].toString();
-      pinCodecon.text = value['pinCode'].toString();
-      countrycon.text = value['country'].toString();
-      yearPassedcon.text = value['yearofpassed'].toString();
-      subjectStremdcon.text = value['subjectStream'].toString();
-      classcon.text = value['class'].toString();
-      rollnocon.text = value['rollNo'].toString();
-      lastvisitcon.text = value['lastvisit'].toString();
-      housecon.text = value['house'].toString();
-      statusmessagecon.text = value['statusmessage'].toString();
-      educationquvalificationcon.text =
-          value['educationquvalification'].toString();
-      additionalquvalificationcon.text =
-          value['additionalquvalification'].toString();
-      designationcon.text = value['designation'].toString();
-      company_concerncon.text = value['company_concern'].toString();
-      maritalStatuscon.text = value['maritalStatus'].toString();
-      spouseNamecon.text = value['spouseName'].toString();
-      anniversaryDatecon.text = value['anniversaryDate'].toString();
-      no_of_childreancon.text = value['childreancount'].toString();
-      imgUrl = value['UserImg'].toString();
-      alumniEmployedController.text = value['workingStatus'].toString();
-      // ownBussinesscon.text=value['Ownbusiness'].toString();
-    });
+    DocumentSnapshot<Map<String, dynamic>> userSnapshot =
+    await FirebaseFirestore.instance.collection("Users").doc(userUpdateDocumentID).get();
 
-    print("Sate Controller +++++++++++++++++++++++++++++++++++++++++++");
-    print(statecon.text);
-    print("++++++++++++++++++++++++++++++++++++++++++++");
-  }
+    Map<String, dynamic>? userData = userSnapshot.data();
 
-  String generateRandomString(int len) {
-    var r = Random();
-    const _chars =
-        'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-    return List.generate(len, (index) => _chars[r.nextInt(_chars.length)])
-        .join();
-  }
+    return showDialog(
+      context: context,
+      builder: (ctx) {
+        if (userData == null) {
+          // Handle the case where user data is not found
+          return AlertDialog(
+            // Your error handling UI or message can go here
+            // ...
+          );
+        }
 
-  userdatecreatefunc() async {
-    setState(() {
-      Loading = true;
-    });
-    print("Craete Funtion Entered+++++++++++++++++++++++++++");
-    String userid = generateRandomString(16);
-
-    if (Uploaddocument != null) {
-      var snapshot = await FirebaseStorage.instance.ref().child('Images').child(
-          "${Url!.name}").putBlob(Url);
-      String downloadUrl = await snapshot.ref.getDownloadURL();
-      setState(() {
-        imgUrl = downloadUrl;
-      });
-      print("Img Url Validate_+++++++++++++++++++++++++++++++++++++++++++++");
-      await FirebaseFirestore.instance.collection("Users").doc(userid).set({
-        "Address": adreesscon.text,
-        "Gender": gendercon.text,
-        "Name": firstNamecon.text,
-        "middleName": middleNamecon.text,
-        "lastName": lastNamecon.text,
-        "Occupation": occupationcon.text,
-        "Phone": phoneNumbercon.text,
-        "UserImg": imgUrl,
-        "lastchat": "",
-        "verifyed": false,
-        "dob": dateofBirthcon.text,
-        "alteremail": alterEmailIdcon.text,
-        "aadhaarNo": aadhaarNumbercon.text,
-        "mobileNo": mobileNumbercon.text,
-        "email": emailIDcon.text,
-        "city": citycon.text,
-        "pinCode": pinCodecon.text,
-        "state": statecon.text,
-        "country": countrycon.text,
-        "yearofpassed": yearPassedcon.text,
-        "subjectStream": subjectStremdcon.text,
-        "class": classcon.text,
-        "rollNo": rollnocon.text,
-        "lastvisit": lastvisitcon.text,
-        "house": housecon.text,
-        "statusmessage": statusmessagecon.text,
-        "educationquvalification": educationquvalificationcon.text,
-        "additionalquvalification": additionalquvalificationcon.text,
-        "designation": designationcon.text,
-        "company_concern": company_concerncon.text,
-        "maritalStatus": maritalStatuscon.text,
-        "spouseName": spouseNamecon.text,
-        "anniversaryDate": anniversaryDatecon.text,
-        "childreancount": no_of_childreancon.text,
-        // "Ownbusiness": ownBussinesscon.text,
-        "date": "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}",
-        "timestamp": DateTime
-            .now()
-            .millisecondsSinceEpoch,
-        "userDocId": userid,
-        "Active": false,
-        "Editted":false,
-        "Token": "",
-        "longtitude": 0,
-        "latitude": 0,
-        'workingStatus': alumniEmployedController.text,
-        "regno": "Al${(billcount).toString().padLeft(2, "0")}"
-      });
-      setState(() {
-        Useradd = false;
-      });
-    }
-    else {
-      print("Else Fucntion_+++++++++++++++++++++++++++++++++++++++++++++");
-      FirebaseFirestore.instance.collection("Users").doc(userid).set({
-        "Address": adreesscon.text,
-        "Gender": gendercon.text,
-        "Name": firstNamecon.text,
-        "middleName": middleNamecon.text,
-        "lastName": lastNamecon.text,
-        "Occupation": occupationcon.text,
-        "Phone": phoneNumbercon.text,
-        "UserImg": imgUrl,
-        "lastchat": "",
-        "verifyed": false,
-        "dob": dateofBirthcon.text,
-        "alteremail": alterEmailIdcon.text,
-        "aadhaarNo": aadhaarNumbercon.text,
-        "mobileNo": mobileNumbercon.text,
-        "email": emailIDcon.text,
-        "city": citycon.text,
-        "pinCode": pinCodecon.text,
-        "state": statecon.text,
-        "country": countrycon.text,
-        "yearofpassed": yearPassedcon.text,
-        "subjectStream": subjectStremdcon.text,
-        "class": classcon.text,
-        "rollNo": rollnocon.text,
-        "lastvisit": lastvisitcon.text,
-        "house": housecon.text,
-        "statusmessage": statusmessagecon.text,
-        "educationquvalification": educationquvalificationcon.text,
-        "additionalquvalification": additionalquvalificationcon.text,
-        "designation": designationcon.text,
-        "company_concern": company_concerncon.text,
-        "maritalStatus": maritalStatuscon.text,
-        "spouseName": spouseNamecon.text,
-        "anniversaryDate": anniversaryDatecon.text,
-        "childreancount": no_of_childreancon.text,
-        //  "Ownbusiness": ownBussinesscon.text,
-        "date": "${DateTime
-            .now()
-            .day}/${DateTime
-            .now()
-            .month}/${DateTime
-            .now()
-            .year}",
-        "timestamp": DateTime
-            .now()
-            .millisecondsSinceEpoch,
-        "userDocId": userid,
-        "Active": false,
-        "Editted":false,
-        "Token": "",
-        "longtitude": 0,
-        "latitude": 0,
-        'workingStatus': alumniEmployedController.text,
-        "regno": "Al${(billcount).toString().padLeft(2, "0")}"
-      });
-      setState(() {
-        Useradd = false;
-      });
-    }
-    userCreateSuccessPopup();
-    controllersclearfunc();
-  }
-
-  userCreateSuccessPopup() {
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
-
-    showDialog(
-      barrierColor: Colors.transparent,
-      context: context, builder: (context) {
-      return ZoomIn(
-        duration: const Duration(milliseconds: 300),
-        child: Padding(
-          padding: const EdgeInsets.only(
-              top: 160.0, bottom: 160, left: 400, right: 400),
-          child: Material(
-            color: Colors.white,
-            shadowColor: const Color(0xff245BCA),
-            borderRadius: BorderRadius.circular(8),
-            elevation: 10,
-            child: Container(
-
-              decoration: BoxDecoration(
-                color: const Color(0xffFFFFFF),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Scaffold(
-                backgroundColor: const Color(0xffFFFFFF),
-                body: Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(height: height / 24.6333),
-                      KText(
-                          text: "Add New Alumni Users SuccessFully....", style:
-                      SafeGoogleFont(
-                          'Nunito',
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black,
-                          fontSize: 18
-
-                      )),
-
-                      SizedBox(height: height / 36.95),
-
-                      SizedBox(
-                        height: height / 4.10555,
-                        width: width / 8.53333,
-                        child: SvgPicture.asset(Constants().userSuccessSvg),
-                      ),
-
-                      SizedBox(height: height / 36.95),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            splashColor: Colors.transparent,
-                            hoverColor: Colors.transparent,
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Container(
-                              height: height / 18.475,
-                              width: width / 8.53333,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                              ),
+        return AlertDialog(
+          backgroundColor: Colors.transparent,
+          content: Container(
+            width: size.width * 0.5,
+            margin: EdgeInsets.symmetric(horizontal: width / 68.3, vertical: height / 32.55),
+            decoration: BoxDecoration(
+              color: Constants().primaryAppColor,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  offset: Offset(1, 2),
+                  blurRadius: 3,
+                ),
+              ],
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: size.height * 0.1,
+                  width: double.infinity,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width / 68.3, vertical: height / 81.375),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "User details",
+                          style: SafeGoogleFont('Poppins',
+                              fontSize: width / 78.3,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            height: height / 16.275,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  offset: Offset(1, 2),
+                                  blurRadius: 3,
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: width / 227.66),
                               child: Center(
-                                child: KText(text: "Cancel", style:
-                                SafeGoogleFont(
-                                    'Nunito',
+                                child: KText(
+                                  text: "CLOSE",
+                                  style: SafeGoogleFont(
+                                    'Poppins',
+                                    fontSize: width / 105.375,
                                     fontWeight: FontWeight.w700,
-                                    color: Colors.black,
-                                    fontSize: 16
-
-                                )),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                          InkWell(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Container(
-                              height: height / 18.475,
-                              width: width / 8.53333,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  color: const Color(0xff5D5FEF)
-                              ),
-                              child: Center(
-                                child: KText(text: "Okay",
-                                  style:
-                                  SafeGoogleFont(
-                                      'Nunito',
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.white,
-                                      fontSize: 16
-
-                                  ),),
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-
-                    ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ),
-          ),
-        ),
-      );
-    },);
-  }
-
-
-  userNotValidAgePopup() {
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
-
-    showDialog(
-      barrierColor: Colors.transparent,
-      context: context, builder: (context) {
-      return ZoomIn(
-        duration: const Duration(milliseconds: 300),
-        child: Padding(
-          padding: const EdgeInsets.only(
-              top: 160.0, bottom: 160, left: 400, right: 400),
-          child: Material(
-            color: Colors.white,
-            shadowColor: const Color(0xff245BCA),
-            borderRadius: BorderRadius.circular(8),
-            elevation: 10,
-            child: Container(
-
-              decoration: BoxDecoration(
-                color: const Color(0xffFFFFFF),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Scaffold(
-                backgroundColor: const Color(0xffFFFFFF),
-                body: Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(height: height / 24.6333),
-                      KText(text: "Please Select the Age Correctly ", style:
-                      SafeGoogleFont(
-                          'Nunito',
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black,
-                          fontSize: 18
-
-                      )),
-
-                      SizedBox(height: height / 36.95),
-
-                      SizedBox(
-                          height: height / 4.10555,
-                          width: width / 8.53333,
-                          child: Icon(Icons.error_outline, color: Colors.red,
-                            size: width / 10.5076,)
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        bottomRight: Radius.circular(10),
+                        bottomLeft: Radius.circular(10),
                       ),
-
-                      SizedBox(height: height / 36.95),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                    ),
+                    child: SingleChildScrollView(
+                      child: Column(
                         children: [
-
-                          InkWell(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Container(
-                              height: height / 18.475,
-                              width: width / 8.53333,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  color: const Color(0xff5D5FEF)
-                              ),
-                              child: Center(
-                                child: KText(text: "Okay",
-                                  style:
-                                  SafeGoogleFont(
-                                      'Nunito',
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.white,
-                                      fontSize: 16
-
-                                  ),),
+                          Container(
+                            width: size.width * 0.5,
+                            height: size.height * 0.5,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                filterQuality: FilterQuality.high,
+                                fit: BoxFit.fill,
+                                image: NetworkImage(userData['UserImg']),
                               ),
                             ),
                           ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: width / 136.6, vertical: height / 65.1),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  SizedBox(height: height / 32.55),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Name",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['Name'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+                                  // Continue displaying other user details in a similar manner
+                                  // ...
+
+                                  SizedBox(height: height / 32.55),
+                                  InkWell(
+                                    onTap: () {
+                                      // Your logic goes here
+                                      Navigator.pop(context);
+                                    },
+                                    child: Container(
+                                      height: height / 16.275,
+                                      width: 200,
+                                      decoration: BoxDecoration(
+                                        color: Colors.green,
+                                        borderRadius: BorderRadius.circular(8),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black26,
+                                            offset: Offset(1, 2),
+                                            blurRadius: 3,
+                                          ),
+                                        ],
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: width / 227.66),
+                                        child: Center(
+                                          child: KText(
+                                            text: "Close",
+                                            style: SafeGoogleFont(
+                                              'Poppins',
+                                              fontSize: width / 105.375,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: height / 32.55),
+                                ],
+                              ),
+                            ),
+                          )
                         ],
-                      )
-
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    },);
-  }
-
-
-  userNotValidYearOfPassedPopup() {
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
-
-    showDialog(
-      barrierColor: Colors.transparent,
-      context: context, builder: (context) {
-      return ZoomIn(
-        duration: const Duration(milliseconds: 300),
-        child: Padding(
-          padding: const EdgeInsets.only(
-              top: 160.0, bottom: 160, left: 400, right: 400),
-          child: Material(
-            color: Colors.white,
-            shadowColor: const Color(0xff245BCA),
-            borderRadius: BorderRadius.circular(8),
-            elevation: 10,
-            child: Container(
-
-              decoration: BoxDecoration(
-                color: const Color(0xffFFFFFF),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Scaffold(
-                backgroundColor: const Color(0xffFFFFFF),
-                body: Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(height: height / 24.6333),
-                      KText(text: "Please Select the Pass Year Correctly ", style:
-                      SafeGoogleFont(
-                          'Nunito',
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black,
-                          fontSize: 18
-
-                      )),
-
-                      SizedBox(height: height / 36.95),
-
-                      SizedBox(
-                          height: height / 4.10555,
-                          width: width / 8.53333,
-                          child: Icon(Icons.error_outline, color: Colors.red,
-                            size: width / 10.5076,)
                       ),
-
-                      SizedBox(height: height / 36.95),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-
-                          InkWell(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Container(
-                              height: height / 18.475,
-                              width: width / 8.53333,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  color: const Color(0xff5D5FEF)
-                              ),
-                              child: Center(
-                                child: KText(text: "Okay",
-                                  style:
-                                  SafeGoogleFont(
-                                      'Nunito',
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.white,
-                                      fontSize: 16
-
-                                  ),),
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-
-                    ],
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
           ),
-        ),
-      );
-    },);
+        );
+      },
+    );
   }
 
-  userDataUpdatefuntio() async {
-    print(
-        "UPdate Fucntion++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-    print(userUpdateDocumentID);
-    print("1");
-    print(adreesscon.text);
-    print("2");
-    print(gendercon.text);
-    print("3");
-    print(firstNamecon.text);
-    print("4");
-    print(middleNamecon.text);
-    print("5");
-    print(lastNamecon.text);
-    print("6");
-    print(occupationcon.text);
-    print("7");
-    print(phoneNumbercon.text);
-    print("8");
-    print(phoneNumbercon.text);
-    print("9");
-    print(imgUrl);
-    print("10");
-    print(dateofBirthcon.text);
-    print("11");
-    print(alterEmailIdcon.text);
-    print("12");
-    print(aadhaarNumbercon.text);
-    print("13");
-    print(mobileNumbercon.text);
-    print("14");
-    print(emailIDcon.text);
-    print("15");
-    print(citycon.text);
-    print("16");
-    print(pinCodecon.text);
-    print("17");
-    print(statecon.text);
-    print("18");
-    print(countrycon.text);
-    print("19");
-    print(yearPassedcon.text);
-    print("20");
-    print(subjectStremdcon.text);
-    print("21");
-    print(classcon.text);
-    print("22");
-    print(rollnocon.text);
-    print("23");
-    print(lastvisitcon.text);
-    print("24");
-    print(housecon.text);
-    print("25");
-    print(statusmessagecon.text);
-    print("26");
-    print(educationquvalificationcon.text);
-    print("27");
-    print(additionalquvalificationcon.text);
-    print("28");
-    print(designationcon.text);
-    print("29");
-    print(company_concerncon.text);
-    print("30");
-    print(maritalStatuscon.text);
-    print("31");
-    print(spouseNamecon.text);
-    print("32");
-    print(anniversaryDatecon.text);
-    print("33");
-    print(no_of_childreancon.text);
-    print("34");
-    print(alumniEmployedController.text);
-    print("--------------------------------------------------------");
-    if (imgUrl != "") {
-      print("If Fucntion+++++++++++++++++++++++++++++++++++++++++++++++++++++");
-      await FirebaseFirestore.instance.collection("Users").doc(
-          userUpdateDocumentID).update({
-        "Address": adreesscon.text,
-        "Gender": gendercon.text,
-        "Name": firstNamecon.text,
-        "middleName": middleNamecon.text,
-        "lastName": lastNamecon.text,
-        "Occupation": occupationcon.text,
-        "Phone": phoneNumbercon.text,
-        "UserImg": imgUrl,
-        "lastchat": "",
-        "dob": dateofBirthcon.text,
-        "alteremail": alterEmailIdcon.text,
-        "aadhaarNo": aadhaarNumbercon.text,
-        "mobileNo": mobileNumbercon.text,
-        "email": emailIDcon.text,
-        "city": citycon.text,
-        "pinCode": pinCodecon.text,
-        "state": statecon.text,
-        "country": countrycon.text,
-        "yearofpassed": yearPassedcon.text,
-        "subjectStream": subjectStremdcon.text,
-        "class": classcon.text,
-        "rollNo": rollnocon.text,
-        "lastvisit": lastvisitcon.text,
-        "house": housecon.text,
-        "statusmessage": statusmessagecon.text,
-        "educationquvalification": educationquvalificationcon.text,
-        "additionalquvalification": additionalquvalificationcon.text,
-        "designation": designationcon.text,
-        "company_concern": company_concerncon.text,
-        "maritalStatus": maritalStatuscon.text,
-        "spouseName": spouseNamecon.text,
-        "anniversaryDate": anniversaryDatecon.text,
-        "childreancount": no_of_childreancon.text,
-        'workingStatus': alumniEmployedController.text,
-        // "Ownbusiness": ownBussinesscon.text,
-
-      });
-      setState(() {
-        UserEdit = false;
-      });
-    }
-    else {
-      print(
-          "Else Fucntion+++++++++++++++++++++++++++++++++++++++++++++++++++++");
-      if (imgUrl == "" && Url != null) {
-        var snapshot = await FirebaseStorage.instance.ref()
-            .child('Images')
-            .child("${Url!.name}")
-            .putBlob(Url);
-        String downloadUrl = await snapshot.ref.getDownloadURL();
-        setState(() {
-          imgUrl = downloadUrl;
-        });
-        await FirebaseFirestore.instance.collection("Users").doc(
-            userUpdateDocumentID).update({
-          "Address": adreesscon.text,
-          "Gender": gendercon.text,
-          "Name": firstNamecon.text,
-          "middleName": middleNamecon.text,
-          "lastName": lastNamecon.text,
-          "Occupation": occupationcon.text,
-          "Phone": phoneNumbercon.text,
-          "UserImg": imgUrl == "" ? "" : imgUrl,
-          "lastchat": "",
-          "dob": dateofBirthcon.text,
-          "alteremail": alterEmailIdcon.text,
-          "aadhaarNo": aadhaarNumbercon.text,
-          "mobileNo": mobileNumbercon.text,
-          "email": emailIDcon.text,
-          "city": citycon.text,
-          "pinCode": pinCodecon.text,
-          "state": statecon.text,
-          "country": countrycon.text,
-          "yearofpassed": yearPassedcon.text,
-          "subjectStream": subjectStremdcon.text,
-          "class": classcon.text,
-          "rollNo": rollnocon.text,
-          "lastvisit": lastvisitcon.text,
-          "house": housecon.text,
-          "statusmessage": statusmessagecon.text,
-          "educationquvalification": educationquvalificationcon.text,
-          "additionalquvalification": additionalquvalificationcon.text,
-          "designation": designationcon.text,
-          "company_concern": company_concerncon.text,
-          "maritalStatus": maritalStatuscon.text,
-          "spouseName": spouseNamecon.text,
-          "anniversaryDate": anniversaryDatecon.text,
-          "childreancount": no_of_childreancon.text,
-          'workingStatus': alumniEmployedController.text,
-          //"Ownbusiness": ownBussinesscon.text,
-
-        });
-        setState(() {
-          UserEdit = false;
-        });
-      }
-      else {
-        await FirebaseFirestore.instance.collection("Users").doc(
-            userUpdateDocumentID).update({
-          "Address": adreesscon.text,
-          "Gender": gendercon.text,
-          "Name": firstNamecon.text,
-          "middleName": middleNamecon.text,
-          "lastName": lastNamecon.text,
-          "Occupation": occupationcon.text,
-          "Phone": phoneNumbercon.text,
-          "UserImg": imgUrl == "" ? "" : imgUrl,
-          "lastchat": "",
-          "dob": dateofBirthcon.text,
-          "alteremail": alterEmailIdcon.text,
-          "aadhaarNo": aadhaarNumbercon.text,
-          "mobileNo": mobileNumbercon.text,
-          "email": emailIDcon.text,
-          "city": citycon.text,
-          "pinCode": pinCodecon.text,
-          "state": statecon.text,
-          "country": countrycon.text,
-          "yearofpassed": yearPassedcon.text,
-          "subjectStream": subjectStremdcon.text,
-          "class": classcon.text,
-          "rollNo": rollnocon.text,
-          "lastvisit": lastvisitcon.text,
-          "house": housecon.text,
-          "statusmessage": statusmessagecon.text,
-          "educationquvalification": educationquvalificationcon.text,
-          "additionalquvalification": additionalquvalificationcon.text,
-          "designation": designationcon.text,
-          "company_concern": company_concerncon.text,
-          "maritalStatus": maritalStatuscon.text,
-          "spouseName": spouseNamecon.text,
-          "anniversaryDate": anniversaryDatecon.text,
-          "childreancount": no_of_childreancon.text,
-          'workingStatus': alumniEmployedController.text,
-          //"Ownbusiness": ownBussinesscon.text,
-
-        });
-        setState(() {
-          UserEdit = false;
-        });
-      }
-    }
 
 
-    controllersclearfunc();
-  }
+
+
 
   /// Delete Fucntion ------------------------------------
   userDetelePopup() {
@@ -11414,7 +4303,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                               width: width / 8.53333,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(4),
-                                  color: const Color(0xff5D5FEF)
+                                  color:  Constants().primaryAppColor
                               ),
                               child: Center(
                                 child: KText(text: "Okay",
@@ -11449,85 +4338,6 @@ class _Users_ScreenState extends State<Users_Screen> {
         .delete();
   }
 
-  filterDataMenuItem(BuildContext context, key, size) async {
-    print(
-        "Popupmenu open-----------------------------------------------------------");
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    final render = key.currentContext!.findRenderObject() as RenderBox;
-    await showMenu(
-      color: Colors.grey.shade200,
-      elevation: 0,
-      context: context,
-      position: RelativeRect.fromLTRB(
-          render
-              .localToGlobal(Offset.zero)
-              .dx,
-          render
-              .localToGlobal(Offset.zero)
-              .dy + 50,
-          double.infinity,
-          double.infinity),
-      items: filterDataList
-          .map((item) =>
-          PopupMenuItem<String>(
-            enabled: true,
-            onTap: () async {
-              if (item == "Filter by Date") {
-                var result = await filterPopUp();
-                if (result) {
-                  setState(() {
-                    isFiltered = true;
-                  });
-                }
-              }
-
-            },
-            value: item,
-            child: Container(
-              height: height / 18.475,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(5)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  item == "Filter by Date"
-                      ? Icon(
-                    Icons.print,
-                    color: Color(0xff5B93FF),
-                    size: 18,
-                  ) : Icon(
-                    Icons.circle,
-                    color: Colors.transparent,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 5),
-                    child: Text(
-                      item,
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: item == "Filter by Date"
-                            ? Color(0xff5B93FF)
-                            : Colors.white,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ))
-          .toList(),
-    );
-  }
 
 
   filterPopUp() {
@@ -11564,6 +4374,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                               'Nunito',
                               fontSize: width / 95.375,
                               fontWeight: FontWeight.bold,
+                              color:Colors.white
                             ),
                           ),
                         ),
@@ -11572,7 +4383,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                   ),
                   Expanded(
                     child: Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.only(
                             bottomRight: Radius.circular(10),
@@ -11605,7 +4416,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(7),
                                   boxShadow: [
-                                    BoxShadow(
+                                    const BoxShadow(
                                       color: Colors.black26,
                                       blurRadius: 3,
                                       offset: Offset(2, 3),
@@ -11617,7 +4428,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                   controller:Date1Controller,
                                   decoration: InputDecoration(
                                     hintStyle: SafeGoogleFont('Nunito',
-                                        color: Color(0xff00A99D)),
+                                        color: const Color(0xff00A99D)),
                                     border: InputBorder.none,
                                   ),
                                   onTap: () async {
@@ -11658,7 +4469,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(7),
                                   boxShadow: [
-                                    BoxShadow(
+                                    const BoxShadow(
                                       color: Colors.black26,
                                       blurRadius: 3,
                                       offset: Offset(2, 3),
@@ -11670,7 +4481,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                     controller:Date2Controller,
                                     decoration: InputDecoration(
                                       hintStyle: SafeGoogleFont('Nunito',
-                                          color: Color(0xff00A99D)),
+                                          color: const Color(0xff00A99D)),
 
                                       border: InputBorder.none,
                                     ),
@@ -11725,6 +4536,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                             children: [
                               InkWell(
                                 onTap: () {
+                                  setState((){
+                                    Date1Controller.clear();
+                                    Date2Controller.clear();
+                                  });
                                   Navigator.pop(context, false);
                                 },
                                 child: Container(
@@ -11733,7 +4548,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(8),
                                     boxShadow: [
-                                      BoxShadow(
+                                      const BoxShadow(
                                         color: Colors.black26,
                                         offset: Offset(1, 2),
                                         blurRadius: 3,
@@ -11759,6 +4574,10 @@ class _Users_ScreenState extends State<Users_Screen> {
                               SizedBox(width: width / 273.2),
                               InkWell(
                                 onTap: () {
+                                  setState((){
+                                    Date1Controller.clear();
+                                    Date2Controller.clear();
+                                  });
                                   Navigator.pop(context, true);
                                 },
                                 child: Container(
@@ -11767,7 +4586,7 @@ class _Users_ScreenState extends State<Users_Screen> {
                                     color: Constants().primaryAppColor,
                                     borderRadius: BorderRadius.circular(8),
                                     boxShadow: [
-                                      BoxShadow(
+                                      const BoxShadow(
                                         color: Colors.black26,
                                         offset: Offset(1, 2),
                                         blurRadius: 3,
@@ -11805,6 +4624,274 @@ class _Users_ScreenState extends State<Users_Screen> {
       },
     );
   }
+  TextEditingController FilterController = new TextEditingController();
+
+  shortBydataPopUp(Name,context) async {
+    setState((){
+      FilterController.text="Select ${Name}";
+      SerachValue="";
+    });
+    if(Name=="Department"){
+      print("Department Data List+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+      setState(() {
+        FilterDataList.clear();
+      });
+      setState(() {
+        FilterDataList.add('Select Department');
+      });
+      var departmentdata = await FirebaseFirestore.instance.collection("Department").orderBy("name").get();
+      for (int x = 0; x < departmentdata.docs.length; x++) {
+        setState(() {
+          FilterDataList.add(departmentdata.docs[x]['name'].toString());
+        });
+      }
+      print("department Data List $FilterDataList");
+
+    }
+    else{
+      setState(() {
+        FilterDataList.clear();
+      });
+      setState(() {
+        FilterDataList.add('Select Year');
+      });
+      var acdamicYeardata = await FirebaseFirestore.instance.collection("AcademicYear").orderBy("name").get();
+      for (int x = 0; x < acdamicYeardata.docs.length; x++) {
+        setState(() {
+          FilterDataList.add(acdamicYeardata.docs[x]['name'].toString());
+        });
+      }
+      print("Year Data List $FilterDataList");
+    }
+    print("list of Data_____________________________________________");
+    Size size = MediaQuery.of(context).size;
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    return
+      showDialog(
+      context: context,
+      builder: (ctx) {
+        return StatefulBuilder(builder: (ctx, setState) {
+          return AlertDialog(
+            backgroundColor: Colors.transparent,
+            content: Container(
+              height: size.height * 0.4,
+              width: size.width * 0.3,
+              decoration: BoxDecoration(
+                color: Constants().primaryAppColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: size.height * 0.07,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding:
+                          EdgeInsets.symmetric(horizontal: width / 68.3),
+                          child: KText(
+                            text: "Filter by ${Name}",
+                            style: SafeGoogleFont(
+                              'Nunito',
+                              fontSize: width / 95.375,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(10),
+                            bottomLeft: Radius.circular(10),
+                          )),
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: width / 68.3, vertical: height / 32.55),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: width / 14.8,
+                                child: KText(
+                                  text: "Please Select : ",
+                                  style: SafeGoogleFont(
+                                    'Nunito',
+                                    fontSize: width / 105.571,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: width / 85.375),
+                              Container(
+                                height: height / 16.275,
+                                width: width / 8.177,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(7),
+                                  boxShadow: [
+                                    const BoxShadow(
+                                      color: Colors.black26,
+                                      blurRadius: 3,
+                                      offset: Offset(2, 3),
+                                    )
+                                  ],
+                                ),
+                                child:
+                                DropdownButtonHideUnderline(
+                                  child:
+                                  DropdownButtonFormField2<
+                                      String>(
+                                    isExpanded: true,
+                                    hint: Text('Select ${Name}',
+                                      style:
+                                      SafeGoogleFont(
+                                        'Nunito',
+                                        fontSize: width / 90.571,
+                                      ),
+                                    ),
+                                    items: FilterDataList.map((String
+                                    item) => DropdownMenuItem<String>(
+                                      value: item,
+                                          child: Text(item, style: SafeGoogleFont('Nunito', fontSize: width / 90.571,),),)).toList(),
+                                    value: FilterController.text,
+                                    onChanged: (String?
+                                    value) {
+                                      setState(() {
+                                        FilterController.text = value!;
+                                      });
+                                    },
+
+                                    buttonStyleData:
+                                    const ButtonStyleData(
+
+
+                                    ),
+                                    menuItemStyleData:
+                                    const MenuItemStyleData(
+
+                                    ),
+                                    decoration:
+                                    const InputDecoration(
+                                        border:
+                                        InputBorder
+                                            .none),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  setState((){
+                                    FilterDataValue="";
+                                  });
+                                  Navigator.pop(context, false);
+                                },
+                                child: Container(
+                                  height: height / 16.275,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8),
+                                    boxShadow: [
+                                      const BoxShadow(
+                                        color: Colors.black26,
+                                        offset: Offset(1, 2),
+                                        blurRadius: 3,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: width / 227.66),
+                                    child: Center(
+                                      child: KText(
+                                        text: "Cancel",
+                                        style: SafeGoogleFont(
+                                          'Nunito',
+                                          fontSize: width / 105.375,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: width / 273.2),
+                              InkWell(
+                                onTap: () {
+                                  setState((){
+                                    SerachValue=FilterController.text;
+                                  });
+                                  print(SerachValue);
+                                  print("Heloeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+                                  Navigator.pop(context, true);
+                                },
+                                child: Container(
+                                  height: height / 16.275,
+                                  decoration: BoxDecoration(
+                                    color: Constants().primaryAppColor,
+                                    borderRadius: BorderRadius.circular(8),
+                                    boxShadow: [
+                                      const BoxShadow(
+                                        color: Colors.black26,
+                                        offset: Offset(1, 2),
+                                        blurRadius: 3,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: width / 227.66),
+                                    child: Center(
+                                      child: KText(
+                                        text: "Apply",
+                                        style: SafeGoogleFont(
+                                          'Nunito',
+                                          fontSize: width / 105.375,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+      },
+    );
+  }
+
+
+
+
+
+
+
 }
 
 class Location {

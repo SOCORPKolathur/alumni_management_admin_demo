@@ -8,6 +8,7 @@ import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../Constant_.dart';
+import '../common_widgets/developer_card_widget.dart';
 
 class Acadamic_Year extends StatefulWidget {
   const Acadamic_Year({super.key});
@@ -22,10 +23,44 @@ class _Acadamic_YearState extends State<Acadamic_Year> {
   TextEditingController academicnameContoller=TextEditingController();
 
   bool filtervalue=false;
+  String filterChangeValue="name";
+  DateTime _selectedYear = DateTime.now();
+  String showYear = 'Select Year';
+
+  GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   List datalist = [
     "Edit",
     "Delete",
   ];
+
+  int pagecount = 0;
+  int temp = 1;
+  List list = new List<int>.generate(1000, (i) => i + 1);
+  List <DocumentSnapshot>documentList = [];
+  int documentlength =0 ;
+
+  doclength() async {
+
+    final QuerySnapshot result = await FirebaseFirestore.instance.collection("AcademicYear").get();
+
+    final List < DocumentSnapshot > documents = result.docs;
+
+    setState(() {
+      documentlength = documents.length;
+      pagecount = ((documentlength - 1) ~/ 10) + 1;
+    });
+    print(pagecount);
+    print(documentlength);
+    print("Document Total Length+++++++++++++++++++++++++++++++++++++++++++++++++");
+  }
+
+  @override
+  void initState() {
+    doclength();
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -71,7 +106,7 @@ class _Acadamic_YearState extends State<Acadamic_Year> {
                       decoration: BoxDecoration(
                         color: Constants().primaryAppColor,
                         borderRadius: BorderRadius.circular(8),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             color: Colors.black26,
                             offset: Offset(1, 2),
@@ -118,7 +153,7 @@ class _Acadamic_YearState extends State<Acadamic_Year> {
                       child: Row(
                         children: [
                           KText(
-                            text: "No.",
+                            text: "Si.No.",
                             style:  SafeGoogleFont (
                               'Nunito',
                               fontWeight: FontWeight.w600,
@@ -127,25 +162,18 @@ class _Acadamic_YearState extends State<Acadamic_Year> {
                           Padding(
                             padding: const EdgeInsets.only(
                                 left: 8),
-                            child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  filtervalue = !filtervalue;
-                                });
-                              },
-                              child: Transform.rotate(
-                                angle: filtervalue ? 200 : 0,
-                                child: Opacity(
-                                  // arrowdown2TvZ (8:2307)
-                                  opacity: 0.7,
-                                  child: Container(
+                            child: Transform.rotate(
+                              angle:  0,
+                              child: Opacity(
+                                // arrowdown2TvZ (8:2307)
+                                opacity: 0.7,
+                                child: Container(
+                                  width: width/153.6,
+                                  height: height/73.9,
+                                  child: Image.asset(
+                                    'assets/images/arrow-down-2.png',
                                     width: width/153.6,
                                     height: height/73.9,
-                                    child: Image.asset(
-                                      'assets/images/arrow-down-2.png',
-                                      width: width/153.6,
-                                      height: height/73.9,
-                                    ),
                                   ),
                                 ),
                               ),
@@ -155,8 +183,7 @@ class _Acadamic_YearState extends State<Acadamic_Year> {
                       ),
                     ),
                     SizedBox(
-
-                      width: width/1.9,
+                      width: width/1.85,
                       child: Row(
                         children: [
                           KText(
@@ -173,10 +200,11 @@ class _Acadamic_YearState extends State<Acadamic_Year> {
                               onTap: () {
                                 setState(() {
                                   filtervalue = !filtervalue;
+                                  filterChangeValue="name";
                                 });
                               },
                               child: Transform.rotate(
-                                angle: filtervalue ? 200 : 0,
+                                angle: filterChangeValue=="name"&&filtervalue ? 200 : 0,
                                 child: Opacity(
                                   // arrowdown2TvZ (8:2307)
                                   opacity: 0.7,
@@ -187,6 +215,7 @@ class _Acadamic_YearState extends State<Acadamic_Year> {
                                       'assets/images/arrow-down-2.png',
                                       width: width/153.6,
                                       height: height/73.9,
+                                      color: filterChangeValue=="name"&&filtervalue?Colors.green:Colors.transparent,
                                     ),
                                   ),
                                 ),
@@ -211,26 +240,14 @@ class _Acadamic_YearState extends State<Acadamic_Year> {
                           Padding(
                             padding: const EdgeInsets.only(
                                 left: 8),
-                            child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  filtervalue = !filtervalue;
-                                });
-                              },
-                              child: Transform.rotate(
-                                angle: filtervalue ? 200 : 0,
-                                child: Opacity(
-                                  // arrowdown2TvZ (8:2307)
-                                  opacity: 0.7,
-                                  child: Container(
-                                    width: width/153.6,
-                                    height: height/73.9,
-                                    child: Image.asset(
-                                      'assets/images/arrow-down-2.png',
-                                      width: width/153.6,
-                                      height: height/73.9,
-                                    ),
-                                  ),
+                            child: Transform.rotate(
+                              angle: filtervalue ? 200 : 0,
+                              child: Opacity(
+                                // arrowdown2TvZ (8:2307)
+                                opacity: 0.7,
+                                child: SizedBox(
+                                  width: width/153.6,
+                                  height: height/73.9,
                                 ),
                               ),
                             ),
@@ -246,75 +263,193 @@ class _Acadamic_YearState extends State<Acadamic_Year> {
               padding: EdgeInsets.symmetric(horizontal: width/68.3, vertical: height/32.55),
               child: SizedBox(
                 width:width/1.26,
-                child: StreamBuilder(
-                  stream: FirebaseFirestore.instance.collection("AcademicYear").orderBy("timestamp").snapshots(),
-                  builder: (context, snapshot) {
+                child: SingleChildScrollView(
+                  physics: const ScrollPhysics(),
+                  child: Column(
+                    children: [
+                      StreamBuilder(
+                        stream: FirebaseFirestore.instance.collection("AcademicYear").orderBy(filterChangeValue,descending: filtervalue).snapshots(),
+                        builder: (context, snapshot) {
 
-                    if(snapshot.hasData==null){
-                      return const Center(child: CircularProgressIndicator(),);
-                    }
-                    if(!snapshot.hasData){
-                      return const Center(child: CircularProgressIndicator(),);
-                    }
+                          if(snapshot.hasData==null){
+                            return const Center(child: CircularProgressIndicator(),);
+                          }
+                          if(!snapshot.hasData){
+                            return const Center(child: CircularProgressIndicator(),);
+                          }
 
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: ScrollPhysics(),
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      List<GlobalKey<State<StatefulWidget>>>popMenuKeys = List.generate(snapshot.data!.docs.length, (index) => GlobalKey(),);
-                    return SizedBox(
-                      height: height/15.850,
-                      width: double.infinity,
+                        return SingleChildScrollView(
+                         physics: const NeverScrollableScrollPhysics(),
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height:height/1.6,
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount:  pagecount == temp ? snapshot.data!.docs.length.remainder(10) == 0 ? 10 : snapshot.data!.docs.length.remainder(10) : 10 ,
+                                  itemBuilder: (context, index) {
+                                    List<GlobalKey<State<StatefulWidget>>>popMenuKeys = List.generate(snapshot.data!.docs.length, (index) => GlobalKey(),);
 
-                      child: Row(
+                                    var AcadamicYear=snapshot.data!.docs[(temp*10)-10+index];
+                                    return
+                                    ((temp*10)-10+index >= documentlength)?const SizedBox():
+                                    SizedBox(
+                                    height: height/15.850,
+                                    width: double.infinity,
 
-                        children: [
-                          SizedBox(
-                            width:width/12.075,
-                            child:
-                            KText(
-                              text: (index + 1).toString(),
-                              style:  SafeGoogleFont (
-                                'Nunito',
-                                fontSize:width/105.07,
-                                fontWeight: FontWeight.w600,
+                                    child: Row(
+
+                                      children: [
+                                        SizedBox(
+                                          width:width/12.075,
+                                          child:
+                                          KText(
+                                            text: (index + 1).toString(),
+                                            style:  SafeGoogleFont (
+                                              'Nunito',
+                                              fontSize:width/105.07,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: width/1.9,
+                                          child:
+                                          KText(
+                                            text: AcadamicYear['name'].toString(),
+                                            style:  SafeGoogleFont (
+                                              'Nunito',
+                                              fontSize:width/105.07,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+
+                                        ),
+
+                                        GestureDetector(
+                                          onTap: () {
+                                            Popupmenu(context, popMenuKeys[index], size,AcadamicYear['name'].toString(),snapshot.data!.docs[index].id);
+                                          },
+                                          child: SizedBox(
+                                              key: popMenuKeys[index],
+                                              width:width/7.588,
+                                              child: Icon(
+                                                  Icons.more_horiz)),
+                                        ),
+
+                                      ],
+                                    ),
+
+                                  );
+                                },),
                               ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: width/1.9,
-                            child:
-                            KText(
-                              text: snapshot.data!.docs[index]['name'].toString(),
-                              style:  SafeGoogleFont (
-                                'Nunito',
-                                fontSize:width/105.07,
-                                fontWeight: FontWeight.w600,
+                              Stack(
+                                alignment: Alignment.centerRight,
+                                children: [
+                                  SizedBox(
+                                    width: double.infinity,
+                                    height:height/13.02,
+                                    child: ListView.builder(
+                                        shrinkWrap: true,
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: pagecount,
+                                        itemBuilder: (context,index){
+                                          return InkWell(
+                                            onTap: (){
+                                              setState(() {
+                                                temp=list[index];
+                                              });
+                                              print(temp);
+                                            },
+                                            child: Container(
+                                                height:30,width:30,
+                                                margin: EdgeInsets.only(left:8,right:8,top:10,bottom:10),
+                                                decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(100),
+                                                    color:temp.toString() == list[index].toString() ?  Constants().primaryAppColor : Colors.transparent
+                                                ),
+                                                child: Center(
+                                                  child: Text(list[index].toString(),style: SafeGoogleFont(
+                                                      'Nunito',
+                                                      fontWeight: FontWeight.w700,
+                                                      color: temp.toString() == list[index].toString() ?  Colors.white : Colors.black
+
+                                                  ),),
+                                                )
+                                            ),
+                                          );
+
+                                        }),
+                                  ),
+                                  temp > 1 ?
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 150.0),
+                                    child:
+                                    InkWell(
+                                      onTap:(){
+                                        setState(() {
+                                          temp= temp-1;
+                                        });
+                                      },
+                                      child: Container(
+                                          height:height/16.275,
+                                          width:width/11.3833,
+                                          decoration:BoxDecoration(
+                                              color:Constants().primaryAppColor,
+                                              borderRadius: BorderRadius.circular(80)
+                                          ),
+                                          child: Center(
+                                            child: Text("Previous Page",style: SafeGoogleFont(
+                                              'Nunito',
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.white,
+                                            ),),
+                                          )),
+                                    ),
+                                  )  : Container(),
+                                  Container(
+                                    child: temp < pagecount ?
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 20.0),
+                                      child: InkWell(
+                                        onTap:(){
+                                          setState(() {
+                                            temp= temp+1;
+                                          });
+                                        },
+                                        child:
+                                        Container(
+                                            height:height/16.275,
+                                            width:width/11.3833,
+                                            decoration:BoxDecoration(
+                                                color:Constants().primaryAppColor,
+                                                borderRadius: BorderRadius.circular(80)
+                                            ),
+                                            child: Center(
+                                              child: Text("Next Page",style: SafeGoogleFont(
+                                                'Nunito',
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.white,
+                                              ),),
+                                            )),
+                                      ),
+                                    )  : Container(),
+                                  )
+                                ],
                               ),
-                            ),
-
+                            ],
                           ),
-
-                          GestureDetector(
-                            onTap: () {
-                              Popupmenu(context, popMenuKeys[index], size,snapshot.data!.docs[index]['name'].toString(),snapshot.data!.docs[index].id);
-                            },
-                            child: SizedBox(
-                                key: popMenuKeys[index],
-                                width:width/7.588,
-                                child: Icon(
-                                    Icons.more_horiz)),
-                          ),
-
-                        ],
-                      ),
-
-                    );
-                  },);
-                },),
+                        );
+                      },),
+                    ],
+                  ),
+                ),
               ),
-            )
+            ),
+            SizedBox(height: height / 65.1),
+            DeveloperCardWidget(),
+            SizedBox(height: height / 65.1),
           ],
         ),
       ),
@@ -373,7 +508,7 @@ class _Acadamic_YearState extends State<Acadamic_Year> {
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(8),
-                              boxShadow: [
+                              boxShadow: const [
                                 BoxShadow(
                                   color: Colors.black26,
                                   offset: Offset(1, 2),
@@ -470,7 +605,7 @@ class _Acadamic_YearState extends State<Acadamic_Year> {
                  // margin: EdgeInsets.symmetric(horizontal: width/68.3, vertical: height/32.55),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: Colors.black26,
                         offset: Offset(1, 2),
@@ -479,225 +614,237 @@ class _Acadamic_YearState extends State<Acadamic_Year> {
                     ],
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
+                  child: Form(
+                    key: _formkey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
 
-                      SizedBox(
-                        width:width/1.70666,
-                        height: height/9.2375,
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding:
-                              EdgeInsets.symmetric(horizontal: width/68.3, vertical: height/81.375),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  KText(
-                                    text: "EDIT Item",
-                                    style:  SafeGoogleFont (
-                                      'Nunito',
-                                      fontSize: width/88.3,
-                                      fontWeight: FontWeight.bold,
+                        SizedBox(
+                          width:width/1.70666,
+                          height: height/9.2375,
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding:
+                                EdgeInsets.symmetric(horizontal: width/68.3, vertical: height/81.375),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    KText(
+                                      text: "EDIT Item",
+                                      style:  SafeGoogleFont (
+                                        'Nunito',
+                                        fontSize: width/88.3,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(width: width/5.12,),
-                                  /*Row(
-                                    children: [
-                                      InkWell(
-                                        onTap:(){
-                                          FirebaseFirestore.instance.collection("AcademicYear").doc(Docid).update({
-                                            "name":academicnameContoller.text
-                                          });
-                                          Navigator.pop(context);
+                                    SizedBox(width: width/5.12,),
+                                    /*Row(
+                                      children: [
+                                        InkWell(
+                                          onTap:(){
+                                            FirebaseFirestore.instance.collection("AcademicYear").doc(Docid).update({
+                                              "name":academicnameContoller.text
+                                            });
+                                            Navigator.pop(context);
 
-                                        },
-                                        child: Container(
-                                          height: height/16.275,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(8),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black26,
-                                                offset: Offset(1, 2),
-                                                blurRadius: 3,
-                                              ),
-                                            ],
-                                          ),
-                                          child: Padding(
-                                            padding:
-                                            EdgeInsets.symmetric(horizontal:width/227.66),
-                                            child: Center(
-                                              child: KText(
-                                                text: "UPDATE",
-                                                style:  SafeGoogleFont (
-                                                  'Nunito',
-                                                  fontSize: width/105.375,
-                                                  fontWeight: FontWeight.bold,
+                                          },
+                                          child: Container(
+                                            height: height/16.275,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.circular(8),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black26,
+                                                  offset: Offset(1, 2),
+                                                  blurRadius: 3,
+                                                ),
+                                              ],
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                              EdgeInsets.symmetric(horizontal:width/227.66),
+                                              child: Center(
+                                                child: KText(
+                                                  text: "UPDATE",
+                                                  style:  SafeGoogleFont (
+                                                    'Nunito',
+                                                    fontSize: width/105.375,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      SizedBox(width: width/136.6),
-                                      InkWell(
-                                        onTap: () async {
+                                        SizedBox(width: width/136.6),
+                                        InkWell(
+                                          onTap: () async {
 
-                                          Navigator.pop(context);
-                                        },
-                                        child: Container(
-                                          height: height/16.275,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(8),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black26,
-                                                offset: Offset(1, 2),
-                                                blurRadius: 3,
-                                              ),
-                                            ],
-                                          ),
-                                          child: Padding(
-                                            padding:
-                                            EdgeInsets.symmetric(horizontal:width/227.66),
-                                            child: Center(
-                                              child: KText(
-                                                text: "CANCEL",
-                                                style:  SafeGoogleFont (
-                                                  'Nunito',
-                                                  fontSize: width/105.375,
-                                                  fontWeight: FontWeight.bold,
+                                            Navigator.pop(context);
+                                          },
+                                          child: Container(
+                                            height: height/16.275,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.circular(8),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black26,
+                                                  offset: Offset(1, 2),
+                                                  blurRadius: 3,
+                                                ),
+                                              ],
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                              EdgeInsets.symmetric(horizontal:width/227.66),
+                                              child: Center(
+                                                child: KText(
+                                                  text: "CANCEL",
+                                                  style:  SafeGoogleFont (
+                                                    'Nunito',
+                                                    fontSize: width/105.375,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  )*/
-                                ],
+                                      ],
+                                    )*/
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      Container(
-                          height: height/14.78,
-                          width: width/5.12,
-                          margin: EdgeInsets.only(bottom: height/73.9),
-                          decoration: BoxDecoration(color: const Color(0xffDDDEEE),
-                              borderRadius: BorderRadius.circular(3)
-                          ),
-                          child:
-                          TextFormField(
-                            inputFormatters: [
-                              FilteringTextInputFormatter
-                                  .allow(RegExp(
-                                  "[0-9]")),
                             ],
-                            controller:academicnameContoller,
-                            decoration: InputDecoration(
-                              border:
-                              InputBorder
-                                  .none,
-                              contentPadding: EdgeInsets.only(
-                                  bottom:
-                                  height/73.9,
-                                  top: height/369.5,
-                                  left:
-                                  width/153.6),
-                              counterText:
-                              "",
-                            ),
-                          )),
-
-                      Padding(
-                        padding:  EdgeInsets.only(top:height/30.39),
-                        child: Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.end,
-                          children: [
-                            SizedBox(
-                              width: width/5.2925,
-                            ),
-
-                            /// Update Button
-                            GestureDetector(
-                              onTap:(){
-
-                                groupfunction(Docid);
-                                Navigator.pop(context);
-
-                              },
-                              child: Container(
-                                  height: height/18.475,
-                                  width: width/12.8,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xffD60A0B),
-                                    borderRadius:
-                                    BorderRadius.circular(4),
-                                  ),
-                                  child: Center(
-                                    child: KText(
-                                      text: 'Update',
-                                      style: SafeGoogleFont(
-                                        'Nunito',
-                                        fontSize: width/96,
-                                        fontWeight:
-                                        FontWeight.w600,
-                                        color: Color(0xffFFFFFF),
-                                      ),
-                                    ),
-                                  )),
-                            ),
-                            SizedBox(
-                              width: width/76.8,
-                            ),
-
-                            ///Cancel Button
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  academicnameContoller.clear();
-                                });
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                  height: height/18.475,
-                                  width: width/12.8,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xff00A0E3),
-                                    borderRadius:
-                                    BorderRadius.circular(4),
-                                  ),
-                                  child: Center(
-                                    child: KText(
-                                      text: 'Cancel',
-                                      style: SafeGoogleFont(
-                                        'Nunito',
-                                        fontSize: width/96,
-                                        fontWeight:
-                                        FontWeight.w600,
-                                        color: Color(0xffFFFFFF),
-                                      ),
-                                    ),
-                                  )),
-                            ),
-                            SizedBox(
-                              width: width/76.8,
-                            ),
-
-                          ],
+                          ),
                         ),
-                      ),
+
+                        Container(
+                            height: height/14.78,
+                            width: width/5.12,
+                            margin: EdgeInsets.only(bottom: height/73.9),
+                            decoration: BoxDecoration(color: const Color(0xffDDDEEE),
+                                borderRadius: BorderRadius.circular(3)
+                            ),
+                            child:
+                            TextFormField(
+                              autovalidateMode: AutovalidateMode
+                                  .onUserInteraction,
+                              inputFormatters: [
+                                FilteringTextInputFormatter
+                                    .allow(RegExp(
+                                    "[0-9]")),
+                              ],
+                              controller:academicnameContoller,
+                              readOnly: true,
+                              onTap: (){
+                                selectYear(context);
+                              },
+                              decoration: InputDecoration(
+                                border:
+                                InputBorder
+                                    .none,
+                                contentPadding: EdgeInsets.only(
+                                    bottom:
+                                    height/73.9,
+                                    top: height/369.5,
+                                    left:
+                                    width/153.6),
+                                counterText:
+                                "",
+                              ),
+                              validator: (value)=>value!.isEmpty?"Field is Required":null,
+                            )),
+
+                        Padding(
+                          padding:  EdgeInsets.only(top:height/30.39),
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.end,
+                            children: [
+                              SizedBox(
+                                width: width/5.2925,
+                              ),
+
+                              /// Update Button
+                              GestureDetector(
+                                onTap:(){
+                                  if(_formkey.currentState!.validate()){
+                                    groupfunction(Docid);
+                                    Navigator.pop(context);
+                                  }
 
 
-                    ],
+                                },
+                                child: Container(
+                                    height: height/18.475,
+                                    width: width/12.8,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xffD60A0B),
+                                      borderRadius:
+                                      BorderRadius.circular(4),
+                                    ),
+                                    child: Center(
+                                      child: KText(
+                                        text: 'Update',
+                                        style: SafeGoogleFont(
+                                          'Nunito',
+                                          fontSize: width/96,
+                                          fontWeight:
+                                          FontWeight.w600,
+                                          color: Color(0xffFFFFFF),
+                                        ),
+                                      ),
+                                    )),
+                              ),
+                              SizedBox(
+                                width: width/76.8,
+                              ),
+
+                              ///Cancel Button
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    academicnameContoller.clear();
+                                  });
+                                  Navigator.pop(context);
+                                },
+                                child: Container(
+                                    height: height/18.475,
+                                    width: width/12.8,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xff00A0E3),
+                                      borderRadius:
+                                      BorderRadius.circular(4),
+                                    ),
+                                    child: Center(
+                                      child: KText(
+                                        text: 'Cancel',
+                                        style: SafeGoogleFont(
+                                          'Nunito',
+                                          fontSize: width/96,
+                                          fontWeight:
+                                          FontWeight.w600,
+                                          color: Color(0xffFFFFFF),
+                                        ),
+                                      ),
+                                    )),
+                              ),
+                              SizedBox(
+                                width: width/76.8,
+                              ),
+
+                            ],
+                          ),
+                        ),
+
+
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -725,7 +872,7 @@ class _Acadamic_YearState extends State<Acadamic_Year> {
                   // margin: EdgeInsets.symmetric(horizontal: width/68.3, vertical: height/32.55),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: Colors.black26,
                         offset: Offset(1, 2),
@@ -734,239 +881,258 @@ class _Acadamic_YearState extends State<Acadamic_Year> {
                     ],
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
+                  child: Form(
+                    key: _formkey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
 
-                      SizedBox(
-                        width:width/1.70666,
-                        height: height/9.2375,
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding:
-                              EdgeInsets.symmetric(horizontal: width/68.3, vertical: height/81.375),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  KText(
-                                    text: "Add Item",
-                                    style:  SafeGoogleFont (
-                                      'Nunito',
-                                      fontSize: width/88.3,
-                                      fontWeight: FontWeight.bold,
+                        SizedBox(
+                          width:width/1.70666,
+                          height: height/9.2375,
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding:
+                                EdgeInsets.symmetric(horizontal: width/68.3, vertical: height/81.375),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    KText(
+                                      text: "Add Item",
+                                      style:  SafeGoogleFont (
+                                        'Nunito',
+                                        fontSize: width/88.3,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  ),
-                               SizedBox(width: width/5.12,),
-                                  /*   Row(
-                                    children: [
-                                      InkWell(
-                                        onTap:(){
-                                          FirebaseFirestore.instance.collection("AcademicYear").doc().set({
-                                            "name":academicnameContoller.text,
-                                            "timestamp":DateTime.now().millisecondsSinceEpoch
-                                          });
-                                          setState((){
-                                            academicnameContoller.clear();
-                                          });
-                                          Navigator.pop(context);
+                                 SizedBox(width: width/5.12,),
+                                    /*   Row(
+                                      children: [
+                                        InkWell(
+                                          onTap:(){
+                                            FirebaseFirestore.instance.collection("AcademicYear").doc().set({
+                                              "name":academicnameContoller.text,
+                                              "timestamp":DateTime.now().millisecondsSinceEpoch
+                                            });
+                                            setState((){
+                                              academicnameContoller.clear();
+                                            });
+                                            Navigator.pop(context);
 
-                                        },
-                                        child: Container(
-                                          height: height/16.275,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(8),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black26,
-                                                offset: Offset(1, 2),
-                                                blurRadius: 3,
-                                              ),
-                                            ],
-                                          ),
-                                          child: Padding(
-                                            padding:
-                                            EdgeInsets.symmetric(horizontal:width/227.66),
-                                            child: Center(
-                                              child: KText(
-                                                text: "Save",
-                                                style:  SafeGoogleFont (
-                                                  'Nunito',
-                                                  fontSize: width/105.375,
-                                                  fontWeight: FontWeight.bold,
+                                          },
+                                          child: Container(
+                                            height: height/16.275,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.circular(8),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black26,
+                                                  offset: Offset(1, 2),
+                                                  blurRadius: 3,
+                                                ),
+                                              ],
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                              EdgeInsets.symmetric(horizontal:width/227.66),
+                                              child: Center(
+                                                child: KText(
+                                                  text: "Save",
+                                                  style:  SafeGoogleFont (
+                                                    'Nunito',
+                                                    fontSize: width/105.375,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      SizedBox(width: width/136.6),
-                                      InkWell(
-                                        onTap: () async {
+                                        SizedBox(width: width/136.6),
+                                        InkWell(
+                                          onTap: () async {
 
-                                          Navigator.pop(context);
-                                        },
-                                        child: Container(
-                                          height: height/16.275,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(8),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black26,
-                                                offset: Offset(1, 2),
-                                                blurRadius: 3,
-                                              ),
-                                            ],
-                                          ),
-                                          child: Padding(
-                                            padding:
-                                            EdgeInsets.symmetric(horizontal:width/227.66),
-                                            child: Center(
-                                              child: KText(
-                                                text: "CANCEL",
-                                                style:  SafeGoogleFont (
-                                                  'Nunito',
-                                                  fontSize: width/105.375,
-                                                  fontWeight: FontWeight.bold,
+                                            Navigator.pop(context);
+                                          },
+                                          child: Container(
+                                            height: height/16.275,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.circular(8),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black26,
+                                                  offset: Offset(1, 2),
+                                                  blurRadius: 3,
+                                                ),
+                                              ],
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                              EdgeInsets.symmetric(horizontal:width/227.66),
+                                              child: Center(
+                                                child: KText(
+                                                  text: "CANCEL",
+                                                  style:  SafeGoogleFont (
+                                                    'Nunito',
+                                                    fontSize: width/105.375,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  )*/
-                                ],
+                                      ],
+                                    )*/
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      Container(
-                          height: height/14.78,
-                          width: width/5.12,
-                          margin: EdgeInsets.only(bottom: height/73.9),
-                          decoration: BoxDecoration(
-                              color: const Color(
-                                  0xffDDDEEE),
-                              borderRadius:
-                              BorderRadius.circular(
-                                  3)),
-                          child:
-                          TextFormField(
-
-                            inputFormatters: [
-                              FilteringTextInputFormatter
-                                  .allow(RegExp(
-                                  "[0-9]")),
                             ],
-                            controller:academicnameContoller,
-                            decoration: InputDecoration(
-
-                              border:
-                              InputBorder
-                                  .none,
-                              contentPadding: EdgeInsets.only(
-                                  bottom:
-                                  height/73.9,
-                                  top: height/369.5,
-                                  left:
-                                  width/153.6),
-                              counterText:
-                              "",
-                            ),
-                          )),
-
-                      Padding(
-                        padding:  EdgeInsets.only(top:height/30.39),
-                        child: Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.end,
-                          children: [
-                            SizedBox(
-                              width: width/5.2925,
-                            ),
-
-                            /// Save Button
-                            GestureDetector(
-                              onTap:(){
-                                FirebaseFirestore.instance.collection("AcademicYear").doc().set({
-                                  "name":academicnameContoller.text,
-                                  "timestamp":DateTime.now().millisecondsSinceEpoch
-                                });
-                                setState((){
-                                  academicnameContoller.clear();
-                                });
-                                Navigator.pop(context);
-
-                              },
-                              child: Container(
-                                  height: height/18.475,
-                                  width: width/12.8,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xffD60A0B),
-                                    borderRadius:
-                                    BorderRadius.circular(4),
-                                  ),
-                                  child: Center(
-                                    child: KText(
-                                      text: 'Save',
-                                      style: SafeGoogleFont(
-                                        'Nunito',
-                                        fontSize: width/96,
-                                        fontWeight:
-                                        FontWeight.w600,
-                                        color: Color(0xffFFFFFF),
-                                      ),
-                                    ),
-                                  )),
-                            ),
-                            SizedBox(
-                              width: width/76.8,
-                            ),
-
-                            ///Cancel Button
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  academicnameContoller.clear();
-                                });
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                  height: height/18.475,
-                                  width: width/12.8,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xff00A0E3),
-                                    borderRadius:
-                                    BorderRadius.circular(4),
-                                  ),
-                                  child: Center(
-                                    child: KText(
-                                      text: 'Cancel',
-                                      style: SafeGoogleFont(
-                                        'Nunito',
-                                        fontSize: width/96,
-                                        fontWeight:
-                                        FontWeight.w600,
-                                        color: Color(0xffFFFFFF),
-                                      ),
-                                    ),
-                                  )),
-                            ),
-                            SizedBox(
-                              width: width/76.8,
-                            ),
-
-                          ],
+                          ),
                         ),
-                      ),
+
+                        Container(
+                            height: height/14.78,
+                            width: width/5.12,
+                            margin: EdgeInsets.only(bottom: height/73.9),
+                            decoration: BoxDecoration(
+                                color: const Color(
+                                    0xffDDDEEE),
+                                borderRadius:
+                                BorderRadius.circular(
+                                    3)),
+                            child:
+                            TextFormField(
+                              autovalidateMode: AutovalidateMode
+                                  .onUserInteraction,
+                              inputFormatters: [
+                                FilteringTextInputFormatter
+                                    .allow(RegExp(
+                                    "[0-9]")),
+                              ],
+                              controller:academicnameContoller,
+                              readOnly: true,
+                              onTap: (){
+                                selectYear(context);
+                              },
+                              decoration: InputDecoration(
+
+                                border:
+                                InputBorder
+                                    .none,
+                                contentPadding: EdgeInsets.only(
+                                    bottom:
+                                    height/73.9,
+                                    top: height/369.5,
+                                    left:
+                                    width/153.6),
+                                counterText:
+                                "",
+                              ),
+                              validator: (value)=>value!.isEmpty?"Field is Required":null,
+                            )
+                        ),
+
+                        Padding(
+                          padding:  EdgeInsets.only(top:height/30.39),
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.end,
+                            children: [
+                              SizedBox(
+                                width: width/5.2925,
+                              ),
+
+                              /// Save Button
+                              GestureDetector(
+                                onTap:()async{
+                                 if(_formkey.currentState!.validate()){
+                                   var document = await  FirebaseFirestore.instance.collection("AcademicYear").where ("name",isEqualTo:academicnameContoller.text ).get();
+
+                                   if(document.size <1){
+                                     FirebaseFirestore.instance.collection("AcademicYear").doc().set({
+                                     "name":academicnameContoller.text,
+                                     "timestamp":DateTime.now().millisecondsSinceEpoch
+                                   });
+                                   setState((){
+                                     academicnameContoller.clear();
+                                   });
+                                   Navigator.pop(context);
+                                 }}
+                                 else{
+                                   Navigator.pop(context);
+
+                                 }
+
+                                },
+                                child: Container(
+                                    height: height/18.475,
+                                    width: width/12.8,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xffD60A0B),
+                                      borderRadius:
+                                      BorderRadius.circular(4),
+                                    ),
+                                    child: Center(
+                                      child: KText(
+                                        text: 'Save',
+                                        style: SafeGoogleFont(
+                                          'Nunito',
+                                          fontSize: width/96,
+                                          fontWeight:
+                                          FontWeight.w600,
+                                          color: Color(0xffFFFFFF),
+                                        ),
+                                      ),
+                                    )),
+                              ),
+                              SizedBox(
+                                width: width/76.8,
+                              ),
+
+                              ///Cancel Button
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    academicnameContoller.clear();
+                                  });
+                                  Navigator.pop(context);
+                                },
+                                child: Container(
+                                    height: height/18.475,
+                                    width: width/12.8,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xff00A0E3),
+                                      borderRadius:
+                                      BorderRadius.circular(4),
+                                    ),
+                                    child: Center(
+                                      child: KText(
+                                        text: 'Cancel',
+                                        style: SafeGoogleFont(
+                                          'Nunito',
+                                          fontSize: width/96,
+                                          fontWeight:
+                                          FontWeight.w600,
+                                          color: Color(0xffFFFFFF),
+                                        ),
+                                      ),
+                                    )),
+                              ),
+                              SizedBox(
+                                width: width/76.8,
+                              ),
+
+                            ],
+                          ),
+                        ),
 
 
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -1018,6 +1184,44 @@ class _Acadamic_YearState extends State<Acadamic_Year> {
   });
 
 
+  }
+
+  selectYear(context) async {
+    print("Calling date picker");
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Select Year"),
+          content: SizedBox(
+            width: 300,
+            height: 300,
+            child: YearPicker(
+              firstDate: DateTime(DateTime.now().year - 10, 1),
+              // lastDate: DateTime.now(),
+              lastDate: DateTime.now(),
+              initialDate: DateTime.now(),
+              selectedDate: _selectedYear,
+              currentDate: _selectedYear,
+              onChanged: (DateTime dateTime) {
+                print(dateTime.year);
+
+                if (dateTime != null ) {
+                  setState(() {
+                    _selectedYear = dateTime;
+                    academicnameContoller.text =dateTime.year.toString();
+                    showYear = "${dateTime.year}";
+                  });
+                  Navigator.pop(context);
+
+                }
+
+              },
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Popupmenu(BuildContext context, key, size,DataName,DocumentID) async {

@@ -10,6 +10,7 @@ class JobPostModel {
   String? location;
   String? quvalification;
   String? positions;
+  int? openings;
   bool? verify;
   String? time;
   String? userName;
@@ -18,7 +19,7 @@ class JobPostModel {
 
   JobPostModel(
       {this.id, this.title,this.date, this.views,this.registeredUsers, this.description, this.imgUrl, this.timestamp, this.location,
-        this.time,this.positions,this.quvalification,this.verify,this.userName,this.UserOccupation,this.Batch});
+        this.time,this.positions,this.openings,this.quvalification,this.verify,this.userName,this.UserOccupation,this.Batch});
 
   JobPostModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -46,6 +47,7 @@ class JobPostModel {
     imgUrl = json['img'];
     location = json['location'];
     positions = json['positions'];
+    openings = json['openings'];
     quvalification = json['quvalification'];
     verify = json['verify'];
   }
@@ -69,6 +71,7 @@ class JobPostModel {
     data['uploadTime'] = this.time;
     data['quvalification'] = this.quvalification;
     data['positions'] = this.positions;
+    data['openings'] = this.openings;
     data['verify'] = this.verify;
     data['userName'] = this.userName;
     data['UserOccupation'] = this.UserOccupation;

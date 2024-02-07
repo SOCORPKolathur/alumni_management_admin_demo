@@ -1,6 +1,7 @@
 import 'package:alumni_management_admin/Constant_.dart';
 import 'package:alumni_management_admin/PieChart_all_department.dart';
 import 'package:alumni_management_admin/Screens/notWorkingPiecharts.dart';
+import 'package:alumni_management_admin/common_widgets/developer_card_widget.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/gestures.dart';
@@ -260,6 +261,10 @@ class _Job_ReportsState extends State<Job_Reports> {
                               child:
                               SfCartesianChart(
                                 primaryXAxis: CategoryAxis(),
+                               primaryYAxis: NumericAxis(
+                                   minimum: 0,
+                                   maximum: 100
+                               ),
                                 title: ChartTitle(
                                     text: "Yearly Alumna's Reports",
                                     textStyle: GoogleFonts.nunito(
@@ -268,7 +273,7 @@ class _Job_ReportsState extends State<Job_Reports> {
                                     ),
                                     alignment: ChartAlignment.near
                                 ),
-                                legend: Legend(isVisible: true),
+                               // legend: Legend(isVisible: true),
                                 tooltipBehavior: TooltipBehavior(enable: true),
                                   series: <LineSeries<AlumniData, String>>[
                                     LineSeries<AlumniData, String>(
@@ -770,7 +775,10 @@ class _Job_ReportsState extends State<Job_Reports> {
                   ],
                 ),
               ),
-            )
+            ),
+            SizedBox(height: height / 65.1),
+            DeveloperCardWidget(),
+            SizedBox(height: height / 65.1),
 
 
           ],
@@ -901,7 +909,7 @@ class _Job_ReportsState extends State<Job_Reports> {
       /// in this if statement  overall user working person to filtered to add the line graph  list
         if(UserData.docs[x]['workingStatus']=="Yes"){
           yesValue=yesValue+1;
-          lineGraphListWorkingAlumni.add(AlumniData(sales:double.parse(((yesValue/UserData.docs.length)).toString()),year:UserData.docs[x]['yearofpassed'].toString()  ));
+          lineGraphListWorkingAlumni.add(AlumniData(sales:double.parse(((yesValue/UserData.docs.length)*100).toStringAsFixed(2)),year:UserData.docs[x]['yearofpassed'].toString()  ));
 
           /// in this if Statement too get department one list too check the that list of overall user department is equal to to add the  LineDataList list
           if(departmentDataList.contains(UserData.docs[x]['subjectStream'])){
@@ -911,7 +919,7 @@ class _Job_ReportsState extends State<Job_Reports> {
         }
         if(UserData.docs[x]['workingStatus']=="No"){
           noValue=noValue+1;
-          lineGraphListWorkingAlumni.add(AlumniData(sales:double.parse(((noValue/UserData.docs.length)).toString()),year:UserData.docs[x]['yearofpassed'].toString()  ));
+          lineGraphListWorkingAlumni.add(AlumniData(sales:double.parse(((noValue/UserData.docs.length)*100).toStringAsFixed(2)),year:UserData.docs[x]['yearofpassed'].toString()  ));
           if(departmentDataList.contains(UserData.docs[x]['subjectStream'])){
             value2=value2+1;
             LineDataList2.add(lineData(int.parse(UserData.docs[x]['yearofpassed']), double.parse(((value2/TotalAlumniUserCount)*100).toString())));
@@ -1019,7 +1027,7 @@ class _Job_ReportsState extends State<Job_Reports> {
     print("Controller function entgereddddddddd_______________________________________________");
     for(int i=0;i<dateList.length;i++){
       if(dateList[i]==DateTime.now().year-1){
-        _horizontal.animateTo((i*100).toDouble(), duration: const Duration(milliseconds: 500), curve: Curves.easeOut);
+        _horizontal.animateTo((i*100).toDouble(), duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
       }
     }
   }

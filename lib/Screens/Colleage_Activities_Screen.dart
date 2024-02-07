@@ -7,6 +7,7 @@ import 'package:alumni_management_admin/Constant_.dart';
 import 'package:alumni_management_admin/Models/Colleage_activity.dart';
 import 'package:alumni_management_admin/Models/Language_Model.dart';
 import 'package:alumni_management_admin/Models/Response_Model.dart';
+import 'package:alumni_management_admin/common_widgets/developer_card_widget.dart';
 import 'package:alumni_management_admin/utils.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' as cf;
@@ -50,6 +51,14 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
   bool isFiltered = false;
   List <String> departmentDataList=[];
   List <String> yearDataList=[];
+  List<String> mydate=[];
+  TextEditingController Date1Controller = TextEditingController();
+  TextEditingController Date2Controller = TextEditingController();
+  bool filtervalue=false;
+  bool addPhoto=false;
+  bool SliderImg=false;
+  String addphotoDocummentValue='';
+  String filterChageValue = "title";
 
   File? profileImage;
   var uploadedImage;
@@ -150,11 +159,30 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
     print("Year Data List $yearDataList");
   }
 
+  int pagecount = 0;
+  int temp = 1;
+  List list = new List<int>.generate(1000, (i) => i + 1);
+  List <cf.DocumentSnapshot>documentList = [];
+  int documentlength =0 ;
 
+  doclength() async {
+
+    final cf.QuerySnapshot result = await cf.FirebaseFirestore.instance.collection("ColleageActivities").get();
+
+    final List < cf.DocumentSnapshot > documents = result.docs;
+    setState(() {
+      documentlength = documents.length;
+      pagecount = ((documentlength - 1) ~/ 10) + 1;
+    });
+    print(pagecount);
+    print(documentlength);
+    print("Document Total Length+++++++++++++++++++++++++++++++++++++++++++++++++");
+  }
 
   @override
   void initState() {
     setDateTime();
+    doclength();
     dropDowndataFetchFunc();
     lottieController = AnimationController(vsync: this);
     lottieController.addStatusListener((status) {
@@ -165,8 +193,6 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
     });
     super.initState();
   }
-
-  bool filtervalue = false;
   GlobalKey ExportDataKeys = GlobalKey();
   GlobalKey filterDataKey = GlobalKey();
 
@@ -318,7 +344,15 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                               child: InkWell(
                                 key: filterDataKey,
                                 onTap: () async {
-                                  filterDataMenuItem( context, filterDataKey, size);
+                                  if(dateRangeStart!=null){
+                                    setState(() {
+                                      dateRangeStart=null;
+                                      dateRangeEnd=null;
+                                      mydate.clear();
+                                    });
+                                    doclength();
+                                  }
+                                  else{filterDataMenuItem(context, filterDataKey, size);}
                                 },
                                 child: Container(
                                   height: height / 16.275,
@@ -341,7 +375,7 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                       children: [
                                         Icon(Icons.filter_list_alt,color:Colors.white),
                                         KText(
-                                          text: " Filter by Date",
+                                          text: dateRangeStart==null?" Filter by Date":"Clear Date",
                                           style: SafeGoogleFont(
                                             'Nunito',
                                             fontSize: width / 120.571,
@@ -524,21 +558,28 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                                     ),
                                                   ),
                                                   Checkbox(
-                                                      value: alldepartBoolean,
-                                                      onChanged: (val) {
-                                                        setState(() {
-                                                          alldepartBoolean = !alldepartBoolean;
-                                                        });
-                                                        if (alldepartBoolean == true) {
+                                                    value: alldepartBoolean,
+                                                    onChanged: (val) {
+                                                      setState(() {
+                                                        alldepartBoolean = val ?? false;
+                                                        if (alldepartBoolean) {
+                                                          individualdepartBoolean = false;
+                                                        } else {
+                                                          individualdepartBoolean = true;
                                                           setState(() {
-                                                            avtivityType.text="All";
-                                                            individualdepartBoolean=false;
+                                                            avtivityType.text = "Individual";
                                                           });
                                                         }
-
-                                                        print("avtivityType Controller+++++++++++++++++++++++++++++++++++++++++");
-                                                        print(avtivityType.text);
-                                                      }),
+                                                      });
+                                                      if (alldepartBoolean) {
+                                                        setState(() {
+                                                          avtivityType.text = "All";
+                                                        });
+                                                      }
+                                                      print("avtivityType Controller+++++++++++++++++++++++++++++++++++++++++");
+                                                      print(avtivityType.text);
+                                                    },
+                                                  ),
                                                 ],
                                               ),
                                             ),
@@ -561,20 +602,28 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                                     ),
                                                   ),
                                                   Checkbox(
-                                                      value: individualdepartBoolean,
-                                                      onChanged: (val) {
-                                                        setState(() {
-                                                          individualdepartBoolean = !individualdepartBoolean;
-                                                        });
-                                                        if (individualdepartBoolean == true) {
+                                                    value: individualdepartBoolean,
+                                                    onChanged: (val) {
+                                                      setState(() {
+                                                        individualdepartBoolean = val ?? false;
+                                                        if (individualdepartBoolean) {
+                                                          alldepartBoolean = false;
+                                                        } else {
+                                                          alldepartBoolean = true;
                                                           setState(() {
-                                                            avtivityType.text="Individual";
-                                                            alldepartBoolean=false;
+                                                            avtivityType.text = "All";
                                                           });
                                                         }
-                                                        print("avtivityType Controller+++++++++++++++++++++++++++++++++++++++++");
-                                                        print(avtivityType.text);
-                                                      }),
+                                                      });
+                                                      if (individualdepartBoolean) {
+                                                        setState(() {
+                                                          avtivityType.text = "Individual";
+                                                        });
+                                                      }
+                                                      print("avtivityType Controller+++++++++++++++++++++++++++++++++++++++++");
+                                                      print(avtivityType.text);
+                                                    },
+                                                  ),
                                                 ],
                                               ),
                                             ),
@@ -1051,12 +1100,13 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
 
                                       ///Save  button
                                       GestureDetector(
-                                        onTap:dataSaved==false?
-                                            () async {
-                                          if (dateController.text != "" &&
-                                              timeController.text != "" ) {
+                                        onTap: dataSaved == false
+                                            ? () async {
+                                          if (titleController.text != "" &&
+                                              dateController.text != "" &&
+                                              timeController.text != "") {
                                             setState(() {
-                                              dataSaved=true;
+                                              dataSaved = true;
                                             });
                                             Response response =
                                             await ActivityFireCrud.addEvent(
@@ -1226,446 +1276,8 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                     ),
                                   )
                     : currentTab.toUpperCase() == "VIEW"
-                    ? dateRangeStart != null
-                    ? Column(children: [
-
-                    Container(
-                        color: Colors.white,
-                        width: width / 1.2418,
-                        height: height/13.43636,
-                        child: Row(
-                          children: [
-                            Container(
-                              color: Colors.white,
-                              width: width/19.2,
-                              height: height/14.78,
-                              alignment: Alignment.center,
-                              child: Center(
-                                child: Row(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.center,
-                                  children: [
-                                    KText(
-                                      text: "Si.No",
-                                      style: SafeGoogleFont(
-                                        'Nunito',
-                                        color: Color(0xff030229),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 8),
-                                      child: InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            filtervalue = !filtervalue;
-                                          });
-                                        },
-                                        child: Transform.rotate(
-                                          angle: filtervalue ? 200 : 0,
-                                          child: Opacity(
-                                            // arrowdown2TvZ (8:2307)
-                                            opacity: 0.7,
-                                            child: Container(
-                                              width: width/153.6,
-                                              height: height/73.9,
-                                              child: Image.asset(
-                                                'assets/images/arrow-down-2.png',
-                                                width: width/153.6,
-                                                height: height/73.9,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Container(
-                              color: Colors.white,
-                              width: width/4.3885,
-                              height: height/14.78,
-                              alignment: Alignment.center,
-                              child: Center(
-                                child: Row(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.center,
-                                  children: [
-                                    KText(
-                                      text: "Activity Name",
-                                      style: SafeGoogleFont(
-                                        'Nunito',
-                                        color: Color(0xff030229),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 8),
-                                      child: InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            filtervalue = !filtervalue;
-                                          });
-                                        },
-                                        child: Transform.rotate(
-                                          angle: filtervalue ? 200 : 0,
-                                          child: Opacity(
-                                            // arrowdown2TvZ (8:2307)
-                                            opacity: 0.7,
-                                            child: Container(
-                                              width: width/153.6,
-                                              height: height/73.9,
-                                              child: Image.asset(
-                                                'assets/images/arrow-down-2.png',
-                                                width: width/153.6,
-                                                height: height/73.9,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Container(
-                              color: Colors.white,
-                              width: width/4.3885,
-                              height: height/14.78,
-                              alignment: Alignment.center,
-                              child: Center(
-                                child: Row(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.center,
-                                  children: [
-                                    KText(
-                                      text: "Description",
-                                      style: SafeGoogleFont(
-                                        'Nunito',
-                                        color: Color(0xff030229),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 8),
-                                      child: InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            filtervalue = !filtervalue;
-                                          });
-                                        },
-                                        child: Transform.rotate(
-                                          angle: filtervalue ? 200 : 0,
-                                          child: Opacity(
-                                            // arrowdown2TvZ (8:2307)
-                                            opacity: 0.7,
-                                            child: Container(
-                                              width: width/153.6,
-                                              height: height/73.9,
-                                              child: Image.asset(
-                                                'assets/images/arrow-down-2.png',
-                                                width: width/153.6,
-                                                height: height/73.9,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Container(
-                              color: Colors.white,
-                              width: width/9.6,
-                              height: height/14.78,
-                              alignment: Alignment.center,
-                              child: Center(
-                                child: Row(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.center,
-                                  children: [
-                                    KText(
-                                      text: "Created On",
-                                      style: SafeGoogleFont(
-                                        'Nunito',
-                                        color: Color(0xff030229),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 8),
-                                      child: InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            filtervalue = !filtervalue;
-                                          });
-                                        },
-                                        child: Transform.rotate(
-                                          angle: filtervalue ? 200 : 0,
-                                          child: Opacity(
-                                            // arrowdown2TvZ (8:2307)
-                                            opacity: 0.7,
-                                            child: Container(
-                                              width: width/153.6,
-                                              height: height/73.9,
-                                              child: Image.asset(
-                                                'assets/images/arrow-down-2.png',
-                                                width: width/153.6,
-                                                height: height/73.9,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Container(
-                              color: Colors.white,
-                              width: width/9.6,
-                              height: height/14.78,
-                              alignment: Alignment.center,
-                              child: Center(
-                                child: Row(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.center,
-                                  children: [
-                                    KText(
-                                      text: "Time",
-                                      style: SafeGoogleFont(
-                                        'Nunito',
-                                        color: Color(0xff030229),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 8),
-                                      child: InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            filtervalue = !filtervalue;
-                                          });
-                                        },
-                                        child: Transform.rotate(
-                                          angle: filtervalue ? 200 : 0,
-                                          child: Opacity(
-                                            // arrowdown2TvZ (8:2307)
-                                            opacity: 0.7,
-                                            child: Container(
-                                              width: width/153.6,
-                                              height: height/73.9,
-                                              child: Image.asset(
-                                                'assets/images/arrow-down-2.png',
-                                                width: width/153.6,
-                                                height: height/73.9,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: width/15.36,
-                              height: height/14.78,
-                              child: Center(
-                                child: Row(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.center,
-                                  children: [
-                                    KText(
-                                      text: "Actions",
-                                      style: SafeGoogleFont(
-                                        'Nunito',
-                                        color: Color(0xff030229),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 8),
-                                      child: InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            filtervalue = !filtervalue;
-                                          });
-                                        },
-                                        child: Transform.rotate(
-                                          angle: filtervalue ? 200 : 0,
-                                          child: Opacity(
-                                            // arrowdown2TvZ (8:2307)
-                                            opacity: 0.7,
-                                            child: Container(
-                                              width: width/153.6,
-                                              height: height/73.9,
-                                              child: Image.asset(
-                                                'assets/images/arrow-down-2.png',
-                                                width: width/153.6,
-                                                height: height/73.9,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        )),
-                    SizedBox(
-                      height: height/1.34363, width: width/1.2288,
-                      child: StreamBuilder(
-                        stream: ActivityFireCrud.fetchActivityWithFilter(dateRangeStart!, dateRangeEnd!),
-                        builder: (ctx, snapshot) {
-                          if (snapshot.hasError) {
-                            return Container();
-                          } else if (snapshot.hasData) {
-                            List<ColleageActivityModel> clgActivityData = snapshot.data!;
-                            exportdataListFromStream = clgActivityData;
-                            List<GlobalKey<State<StatefulWidget>>>popMenuKeys = List.generate(clgActivityData.length, (index) => GlobalKey(),);
-                            return ListView.builder(
-                              shrinkWrap: true,
-                              physics: const ScrollPhysics(),
-                              itemCount: clgActivityData.length,
-                              itemBuilder: (ctx, i) {
-                                return SizedBox(
-                                    width: width/1.2288,
-                                    height: height/13.43636,
-                                    child: Padding(
-                                      padding:  EdgeInsets.only(left:width/170.75),
-                                      child: Row(
-                                        children: [
-                                          SizedBox(
-                                            width: width/19.2,
-                                            height: height/14.78,
-                                            child: Padding(
-                                              padding:
-                                              const EdgeInsets.only(
-                                                  left: 8),
-                                              child: KText(
-                                                text: "${i + 1}",
-                                                style: SafeGoogleFont(
-                                                  'Nunito',
-                                                  color:
-                                                  Color(0xff030229),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: width/4.3885,
-                                            height: height/14.78,
-                                            child: Padding(
-                                              padding:
-                                              const EdgeInsets.only(
-                                                  left: 8),
-                                              child: KText(
-                                                text: clgActivityData[i]
-                                                    .title
-                                                    .toString(),
-                                                style: SafeGoogleFont(
-                                                  'Nunito',
-                                                  color:
-                                                  Color(0xff030229),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: width/4.3885,
-                                            height: height/14.78,
-                                            child: Padding(
-                                              padding:
-                                              const EdgeInsets.only(
-                                                  left: 8),
-                                              child: KText(
-                                                text: clgActivityData[i]
-                                                    .description
-                                                    .toString(),
-                                                style: SafeGoogleFont(
-                                                  'Nunito',
-                                                  color:
-                                                  Color(0xff030229),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: width/9.6,
-                                            height: height/14.78,
-                                            child: Padding(
-                                              padding:
-                                              const EdgeInsets.only(
-                                                  left: 8),
-                                              child: KText(
-                                                text: clgActivityData[i]
-                                                    .date
-                                                    .toString(),
-                                                style: SafeGoogleFont(
-                                                  'Nunito',
-                                                  color:
-                                                  Color(0xff030229),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: width/9.6,
-                                            height: height/14.78,
-                                            child: Padding(
-                                              padding:
-                                              const EdgeInsets.only(
-                                                  left: 8),
-                                              child: KText(
-                                                text: clgActivityData[i]
-                                                    .time
-                                                    .toString(),
-                                                style: SafeGoogleFont(
-                                                  'Nunito',
-                                                  color:
-                                                  Color(0xff030229),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              Popupmenu(
-                                                  context,
-                                                  clgActivityData[i],
-                                                  popMenuKeys[i],
-                                                  size);
-                                            },
-                                            child: SizedBox(
-                                                key: popMenuKeys[i],
-                                                width: width/15.36,
-                                                height: height/14.78,
-                                                child: Icon(
-                                                    Icons.more_horiz)),
-                                          ),
-                                        ],
-                                      ),
-                                    ));
-                              },
-                            );
-                          }
-                          return Container();
-                        },
-                      ),
-                    ),
-                                    ],)
-                    : Column(children: [
+                    ? 
+                     Column(children: [
                                     Container(
                       color: Colors.white,
                       width: width / 1.2418,
@@ -1674,7 +1286,7 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                         children: [
                           Container(
                             color: Colors.white,
-                            width: width/19.2,
+                            width: width/16.5,
                             height: height/14.78,
                             alignment: Alignment.center,
                             child: Center(
@@ -1692,25 +1304,18 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         left: 8),
-                                    child: InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          filtervalue = !filtervalue;
-                                        });
-                                      },
-                                      child: Transform.rotate(
-                                        angle: filtervalue ? 200 : 0,
-                                        child: Opacity(
-                                          // arrowdown2TvZ (8:2307)
-                                          opacity: 0.7,
-                                          child: Container(
+                                    child: Transform.rotate(
+                                      angle:  0,
+                                      child: Opacity(
+                                        // arrowdown2TvZ (8:2307)
+                                        opacity: 0.7,
+                                        child: Container(
+                                          width: width/153.6,
+                                          height: height/73.9,
+                                          child: Image.asset(
+                                            'assets/images/arrow-down-2.png',
                                             width: width/153.6,
                                             height: height/73.9,
-                                            child: Image.asset(
-                                              'assets/images/arrow-down-2.png',
-                                              width: width/153.6,
-                                              height: height/73.9,
-                                            ),
                                           ),
                                         ),
                                       ),
@@ -1744,10 +1349,11 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                       onTap: () {
                                         setState(() {
                                           filtervalue = !filtervalue;
+                                          filterChageValue="title";
                                         });
                                       },
                                       child: Transform.rotate(
-                                        angle: filtervalue ? 200 : 0,
+                                        angle: filterChageValue=="title"&&filtervalue ? 200 : 0,
                                         child: Opacity(
                                           // arrowdown2TvZ (8:2307)
                                           opacity: 0.7,
@@ -1758,6 +1364,8 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                               'assets/images/arrow-down-2.png',
                                               width: width/153.6,
                                               height: height/73.9,
+                                                  color:filterChageValue=="title"&&filtervalue==true?
+                                                Colors.green:Colors.transparent
                                             ),
                                           ),
                                         ),
@@ -1770,7 +1378,7 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                           ),
                           Container(
                             color: Colors.white,
-                            width: width/4.3885,
+                            width: width/4.45,
                             height: height/14.78,
                             alignment: Alignment.center,
                             child: Center(
@@ -1792,10 +1400,11 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                       onTap: () {
                                         setState(() {
                                           filtervalue = !filtervalue;
+                                          filterChageValue="subtitle";
                                         });
                                       },
                                       child: Transform.rotate(
-                                        angle: filtervalue ? 200 : 0,
+                                        angle: filterChageValue=="subtitle"&&filtervalue ? 200 : 0,
                                         child: Opacity(
                                           // arrowdown2TvZ (8:2307)
                                           opacity: 0.7,
@@ -1806,6 +1415,8 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                               'assets/images/arrow-down-2.png',
                                               width: width/153.6,
                                               height: height/73.9,
+                                                color:filterChageValue=="subtitle"&&filtervalue==true?
+                                                Colors.green:Colors.transparent
                                             ),
                                           ),
                                         ),
@@ -1818,7 +1429,7 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                           ),
                           Container(
                             color: Colors.white,
-                            width: width/9.6,
+                            width: width/9.5,
                             height: height/14.78,
                             alignment: Alignment.center,
                             child: Center(
@@ -1840,10 +1451,11 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                       onTap: () {
                                         setState(() {
                                           filtervalue = !filtervalue;
+                                          filterChageValue="date";
                                         });
                                       },
                                       child: Transform.rotate(
-                                        angle: filtervalue ? 200 : 0,
+                                        angle:filterChageValue=="date"&& filtervalue ? 200 : 0,
                                         child: Opacity(
                                           // arrowdown2TvZ (8:2307)
                                           opacity: 0.7,
@@ -1854,6 +1466,8 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                               'assets/images/arrow-down-2.png',
                                               width: width/153.6,
                                               height: height/73.9,
+                                                  color:filterChageValue=="date"&&filtervalue==true?
+                                                Colors.green:Colors.transparent
                                             ),
                                           ),
                                         ),
@@ -1866,7 +1480,7 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                           ),
                           Container(
                             color: Colors.white,
-                            width: width/9.6,
+                            width: width/9.0,
                             height: height/14.78,
                             alignment: Alignment.center,
                             child: Center(
@@ -1888,10 +1502,11 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                       onTap: () {
                                         setState(() {
                                           filtervalue = !filtervalue;
+                                          filterChageValue="uploadTime";
                                         });
                                       },
                                       child: Transform.rotate(
-                                        angle: filtervalue ? 200 : 0,
+                                        angle: filterChageValue=="uploadTime"&&filtervalue ? 200 : 0,
                                         child: Opacity(
                                           // arrowdown2TvZ (8:2307)
                                           opacity: 0.7,
@@ -1902,6 +1517,8 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                               'assets/images/arrow-down-2.png',
                                               width: width/153.6,
                                               height: height/73.9,
+                                                color:filterChageValue=="uploadTime"&&filtervalue==true?
+                                                Colors.green:Colors.transparent
                                             ),
                                           ),
                                         ),
@@ -1930,26 +1547,15 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         left: 8),
-                                    child: InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          filtervalue = !filtervalue;
-                                        });
-                                      },
-                                      child: Transform.rotate(
-                                        angle: filtervalue ? 200 : 0,
-                                        child: Opacity(
-                                          // arrowdown2TvZ (8:2307)
-                                          opacity: 0.7,
-                                          child: Container(
-                                            width: width/153.6,
-                                            height: height/73.9,
-                                            child: Image.asset(
-                                              'assets/images/arrow-down-2.png',
-                                              width: width/153.6,
-                                              height: height/73.9,
-                                            ),
-                                          ),
+                                    child: Transform.rotate(
+                                      angle: filtervalue ? 200 : 0,
+                                      child: Opacity(
+                                        // arrowdown2TvZ (8:2307)
+                                        opacity: 0.7,
+                                        child: Container(
+                                          width: width/153.6,
+                                          height: height/73.9,
+
                                         ),
                                       ),
                                     ),
@@ -1963,148 +1569,422 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                     SizedBox(
                       height: height/1.34363,
                       width: width/1.2288,
-                      child: StreamBuilder(
-                        stream: ActivityFireCrud.fetchActivityPost(),
-                        builder: (ctx, snapshot) {
-                          if (snapshot.hasError) {
-                            return Container();
-                          } else if (snapshot.hasData) {
-                            List<ColleageActivityModel> clgActivityData = snapshot.data!;
-                            exportdataListFromStream = clgActivityData;
-                            List<GlobalKey<State<StatefulWidget>>>popMenuKeys = List.generate(clgActivityData.length, (index) => GlobalKey(),);
+                      child: SingleChildScrollView(
+                        physics: const ScrollPhysics(),
+                        child: Column(
+                          children: [
+                            mydate.isEmpty?
+                            StreamBuilder(
+                              stream: ActivityFireCrud.fetchActivityPost(
+                                filter: filtervalue,
+                                filterValue: filterChageValue
+                              ),
+                              builder: (ctx, snapshot) {
+                                if (snapshot.hasError) {
+                                  return Container();
+                                } else if (snapshot.hasData) {
+                                  List<ColleageActivityModel> clgActivityData = snapshot.data!;
+                                  exportdataListFromStream = clgActivityData;
+                                  List<GlobalKey<State<StatefulWidget>>>popMenuKeys = List.generate(clgActivityData.length, (index) => GlobalKey(),);
 
-                            return ListView.builder(
-                              shrinkWrap: true,
-                              physics: const ScrollPhysics(),
-                              itemCount: clgActivityData.length,
-                              itemBuilder: (ctx, i) {
-                                return SizedBox(
-                                    width: width/1.2288,
-                                    height: height/13.43636,
-                                    child: Padding(
-                                      padding:  EdgeInsets.only(left:width/170.75),
-                                      child: Row(
-                                        children: [
-                                          SizedBox(
-                                            width: width/19.2,
-                                            height: height/14.78,
-                                            child: Padding(
-                                              padding:
-                                              const EdgeInsets.only(
-                                                  left: 8),
-                                              child: KText(
-                                                text: "${i + 1}",
-                                                style: SafeGoogleFont(
-                                                  'Nunito',
-                                                  color:
-                                                  Color(0xff030229),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: width/4.3885,
-                                            height: height/14.78,
-                                            child: Padding(
-                                              padding:
-                                              const EdgeInsets.only(
-                                                  left: 8),
-                                              child: KText(
-                                                text: clgActivityData[i]
-                                                    .title
-                                                    .toString(),
-                                                style: SafeGoogleFont(
-                                                  'Nunito',
-                                                  color:
-                                                  Color(0xff030229),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: width/4.3885,
-                                            height: height/14.78,
-                                            child: Padding(
-                                              padding:
-                                              const EdgeInsets.only(
-                                                  left: 8),
-                                              child: KText(
-                                                text: clgActivityData[i]
-                                                    .description
-                                                    .toString(),
-                                                style: SafeGoogleFont(
-                                                  'Nunito',
-                                                  color:
-                                                  Color(0xff030229),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: width/9.6,
-                                            height: height/14.78,
-                                            child: Padding(
-                                              padding:
-                                              const EdgeInsets.only(
-                                                  left: 8),
-                                              child: KText(
-                                                text: clgActivityData[i]
-                                                    .date
-                                                    .toString(),
-                                                style: SafeGoogleFont(
-                                                  'Nunito',
-                                                  color:
-                                                  Color(0xff030229),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: width/9.6,
-                                            height: height/14.78,
-                                            child: Padding(
-                                              padding:
-                                              const EdgeInsets.only(
-                                                  left: 8),
-                                              child: KText(
-                                                text: clgActivityData[i]
-                                                    .time
-                                                    .toString(),
-                                                style: SafeGoogleFont(
-                                                  'Nunito',
-                                                  color:
-                                                  Color(0xff030229),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              Popupmenu(
-                                                  context,
-                                                  clgActivityData[i],
-                                                  popMenuKeys[i],
-                                                  size);
+                                  return SingleChildScrollView(
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height:height/1.35625,
+                                          child: ListView.builder(
+                                            shrinkWrap: true,
+                                            physics: const NeverScrollableScrollPhysics(),
+                                            itemCount: clgActivityData.length,
+                                            itemBuilder: (ctx, i) {
+                                              var clgActivity=clgActivityData[(temp*10)-10+i];
+
+                                              return  ((temp*10)-10+i >= documentlength)? const SizedBox():
+                                              SizedBox(
+                                                  width: width/1.2288,
+                                                  height: height/13.43636,
+                                                  child: Padding(
+                                                    padding:  EdgeInsets.only(left:width/170.75),
+                                                    child: Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: width/19.2,
+                                                          height: height/14.78,
+                                                          child: Padding(
+                                                            padding:
+                                                            const EdgeInsets.only(
+                                                                left: 8),
+                                                            child: KText(
+                                                              text: "${i + 1}",
+                                                              style: SafeGoogleFont(
+                                                                'Nunito',
+                                                                color:
+                                                                Color(0xff030229),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          width: width/4.3885,
+                                                          height: height/14.78,
+                                                          child: Padding(
+                                                            padding:
+                                                            const EdgeInsets.only(
+                                                                left: 8),
+                                                            child: KText(
+                                                              text: clgActivity
+                                                                  .title
+                                                                  .toString(),
+                                                              style: SafeGoogleFont(
+                                                                'Nunito',
+                                                                color:
+                                                                Color(0xff030229),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          width: width/4.3885,
+                                                          height: height/14.78,
+                                                          child: Padding(
+                                                            padding:
+                                                            const EdgeInsets.only(
+                                                                left: 8),
+                                                            child: KText(
+                                                              text: clgActivity
+                                                                  .description
+                                                                  .toString(),
+                                                              style: SafeGoogleFont(
+                                                                'Nunito',
+                                                                color:
+                                                                Color(0xff030229),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          width: width/9.6,
+                                                          height: height/14.78,
+                                                          child: Padding(
+                                                            padding:
+                                                            const EdgeInsets.only(
+                                                                left: 8),
+                                                            child: KText(
+                                                              text: clgActivity
+                                                                  .date
+                                                                  .toString(),
+                                                              style: SafeGoogleFont(
+                                                                'Nunito',
+                                                                color:
+                                                                Color(0xff030229),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          width: width/9.6,
+                                                          height: height/14.78,
+                                                          child: Padding(
+                                                            padding:
+                                                            const EdgeInsets.only(
+                                                                left: 8),
+                                                            child: KText(
+                                                              text: clgActivity
+                                                                  .time
+                                                                  .toString(),
+                                                              style: SafeGoogleFont(
+                                                                'Nunito',
+                                                                color:
+                                                                Color(0xff030229),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            Popupmenu(
+                                                                context,
+                                                                clgActivity,
+                                                                popMenuKeys[i],
+                                                                size);
+                                                          },
+                                                          child: SizedBox(
+                                                              key: popMenuKeys[i],
+                                                              width: width/15.36,
+                                                              height: height/14.78,
+                                                              child: Icon(
+                                                                  Icons.more_horiz)),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ));
                                             },
-                                            child: SizedBox(
-                                                key: popMenuKeys[i],
-                                                width: width/15.36,
-                                                height: height/14.78,
-                                                child: Icon(
-                                                    Icons.more_horiz)),
                                           ),
-                                        ],
-                                      ),
-                                    ));
+                                        ),
+                                        Stack(
+                                          alignment: Alignment.centerRight,
+                                          children: [
+                                            SizedBox(
+                                              width: double.infinity,
+                                              height:height/13.02,
+                                              child: ListView.builder(
+                                                  shrinkWrap: true,
+                                                  scrollDirection: Axis.horizontal,
+                                                  itemCount: pagecount,
+                                                  itemBuilder: (context,index){
+                                                    return InkWell(
+                                                      onTap: (){
+                                                        setState(() {
+                                                          temp=list[index];
+                                                        });
+                                                        print(temp);
+                                                      },
+                                                      child: Container(
+                                                          height:30,width:30,
+                                                          margin: EdgeInsets.only(left:8,right:8,top:10,bottom:10),
+                                                          decoration: BoxDecoration(
+                                                              borderRadius: BorderRadius.circular(100),
+                                                              color:temp.toString() == list[index].toString() ?  Constants().primaryAppColor : Colors.transparent
+                                                          ),
+                                                          child: Center(
+                                                            child: Text(list[index].toString(),style: SafeGoogleFont(
+                                                                'Nunito',
+                                                                fontWeight: FontWeight.w700,
+                                                                color: temp.toString() == list[index].toString() ?  Colors.white : Colors.black
+
+                                                            ),),
+                                                          )
+                                                      ),
+                                                    );
+
+                                                  }),
+                                            ),
+                                            temp > 1 ?
+                                            Padding(
+                                              padding: const EdgeInsets.only(right: 150.0),
+                                              child:
+                                              InkWell(
+                                                onTap:(){
+                                                  setState(() {
+                                                    temp= temp-1;
+                                                  });
+                                                },
+                                                child: Container(
+                                                    height:height/16.275,
+                                                    width:width/11.3833,
+                                                    decoration:BoxDecoration(
+                                                        color:Constants().primaryAppColor,
+                                                        borderRadius: BorderRadius.circular(80)
+                                                    ),
+                                                    child: Center(
+                                                      child: Text("Previous Page",style: SafeGoogleFont(
+                                                        'Nunito',
+                                                        fontWeight: FontWeight.w700,
+                                                        color: Colors.white,
+                                                      ),),
+                                                    )),
+                                              ),
+                                            )  : Container(),
+                                            Container(
+                                              child: temp < pagecount ?
+                                              Padding(
+                                                padding: const EdgeInsets.only(right: 20.0),
+                                                child: InkWell(
+                                                  onTap:(){
+                                                    setState(() {
+                                                      temp= temp+1;
+                                                    });
+                                                  },
+                                                  child:
+                                                  Container(
+                                                      height:height/16.275,
+                                                      width:width/11.3833,
+                                                      decoration:BoxDecoration(
+                                                          color:Constants().primaryAppColor,
+                                                          borderRadius: BorderRadius.circular(80)
+                                                      ),
+                                                      child: Center(
+                                                        child: Text("Next Page",style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontWeight: FontWeight.w700,
+                                                          color: Colors.white,
+                                                        ),),
+                                                      )),
+                                                ),
+                                              )  : Container(),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                                return Container();
                               },
-                            );
-                          }
-                          return Container();
-                        },
+                            ):
+                            StreamBuilder(
+                              stream: ActivityFireCrud.fetchActivityPost(
+                                  filter: filtervalue,
+                                  filterValue: filterChageValue
+                              ),
+                              builder: (ctx, snapshot) {
+                                if (snapshot.hasError) {
+                                  return Container();
+                                } else if (snapshot.hasData) {
+                                  List<ColleageActivityModel> clgActivityData = snapshot.data!;
+                                  exportdataListFromStream = clgActivityData;
+                                  List<GlobalKey<State<StatefulWidget>>>popMenuKeys = List.generate(clgActivityData.length, (index) => GlobalKey(),);
+
+                                  return SizedBox(
+                                    height:height/1.35625,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      itemCount: clgActivityData.length,
+                                      itemBuilder: (ctx, i) {
+                                        var clgActivity=clgActivityData[i];
+
+                                      if(mydate.isNotEmpty){
+                                        if(mydate.contains(clgActivity.date)){
+                                          return
+                                            SizedBox(
+                                                width: width/1.2288,
+                                                height: height/13.43636,
+                                                child: Padding(
+                                                  padding:  EdgeInsets.only(left:width/170.75),
+                                                  child: Row(
+                                                    children: [
+                                                      SizedBox(
+                                                        width: width/19.2,
+                                                        height: height/14.78,
+                                                        child: Padding(
+                                                          padding:
+                                                          const EdgeInsets.only(
+                                                              left: 8),
+                                                          child: KText(
+                                                            text: "${i + 1}",
+                                                            style: SafeGoogleFont(
+                                                              'Nunito',
+                                                              color:
+                                                              Color(0xff030229),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: width/4.3885,
+                                                        height: height/14.78,
+                                                        child: Padding(
+                                                          padding:
+                                                          const EdgeInsets.only(
+                                                              left: 8),
+                                                          child: KText(
+                                                            text: clgActivity
+                                                                .title
+                                                                .toString(),
+                                                            style: SafeGoogleFont(
+                                                              'Nunito',
+                                                              color:
+                                                              Color(0xff030229),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: width/4.3885,
+                                                        height: height/14.78,
+                                                        child: Padding(
+                                                          padding:
+                                                          const EdgeInsets.only(
+                                                              left: 8),
+                                                          child: KText(
+                                                            text: clgActivity
+                                                                .description
+                                                                .toString(),
+                                                            style: SafeGoogleFont(
+                                                              'Nunito',
+                                                              color:
+                                                              Color(0xff030229),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: width/9.6,
+                                                        height: height/14.78,
+                                                        child: Padding(
+                                                          padding:
+                                                          const EdgeInsets.only(
+                                                              left: 8),
+                                                          child: KText(
+                                                            text: clgActivity
+                                                                .date
+                                                                .toString(),
+                                                            style: SafeGoogleFont(
+                                                              'Nunito',
+                                                              color:
+                                                              Color(0xff030229),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: width/9.6,
+                                                        height: height/14.78,
+                                                        child: Padding(
+                                                          padding:
+                                                          const EdgeInsets.only(
+                                                              left: 8),
+                                                          child: KText(
+                                                            text: clgActivity
+                                                                .time
+                                                                .toString(),
+                                                            style: SafeGoogleFont(
+                                                              'Nunito',
+                                                              color:
+                                                              Color(0xff030229),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          Popupmenu(
+                                                              context,
+                                                              clgActivity,
+                                                              popMenuKeys[i],
+                                                              size);
+                                                        },
+                                                        child: SizedBox(
+                                                            key: popMenuKeys[i],
+                                                            width: width/15.36,
+                                                            height: height/14.78,
+                                                            child: Icon(
+                                                                Icons.more_horiz)),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ));
+                                        }
+                                      }
+                                      return const SizedBox();
+                                      },
+                                    ),
+                                  );
+                                }
+                                return Container();
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                                     ],)
-                    : Container()
+                    : Container(),
+                SizedBox(height: height / 65.1),
+                DeveloperCardWidget(),
+                SizedBox(height: height / 65.1),
               ],
             ),
           )),
@@ -3383,7 +3263,7 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                   ),
                   Expanded(
                     child: Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.only(
                             bottomRight: Radius.circular(10),
@@ -3416,7 +3296,7 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(7),
                                   boxShadow: [
-                                    BoxShadow(
+                                    const BoxShadow(
                                       color: Colors.black26,
                                       blurRadius: 3,
                                       offset: Offset(2, 3),
@@ -3425,12 +3305,10 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                 ),
                                 child: TextField(
                                   readOnly: true,
+                                  controller:Date1Controller,
                                   decoration: InputDecoration(
                                     hintStyle: SafeGoogleFont('Nunito',
-                                        color: Color(0xff00A99D)),
-                                    hintText: dateRangeStart != null
-                                        ? "${dateRangeStart!.day}/${dateRangeStart!.month}/${dateRangeStart!.year}"
-                                        : "",
+                                        color: const Color(0xff00A99D)),
                                     border: InputBorder.none,
                                   ),
                                   onTap: () async {
@@ -3442,6 +3320,7 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                     if (pickedDate != null) {
                                       setState(() {
                                         dateRangeStart = pickedDate;
+                                        Date1Controller.text=DateFormat('d/M/yyyy').format(pickedDate);
                                       });
                                     }
                                   },
@@ -3470,7 +3349,7 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(7),
                                   boxShadow: [
-                                    BoxShadow(
+                                    const BoxShadow(
                                       color: Colors.black26,
                                       blurRadius: 3,
                                       offset: Offset(2, 3),
@@ -3478,28 +3357,56 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                   ],
                                 ),
                                 child: TextField(
-                                  readOnly: true,
-                                  decoration: InputDecoration(
-                                    hintStyle: SafeGoogleFont('Nunito',
-                                        color: Color(0xff00A99D)),
-                                    hintText: dateRangeEnd != null
-                                        ? "${dateRangeEnd!.day}/${dateRangeEnd!.month}/${dateRangeEnd!.year}"
-                                        : "",
-                                    border: InputBorder.none,
-                                  ),
-                                  onTap: () async {
-                                    DateTime? pickedDate = await showDatePicker(
-                                        context: context,
-                                        initialDate: DateTime.now(),
-                                        firstDate: DateTime(2000),
-                                        lastDate: DateTime(3000));
-                                    if (pickedDate != null) {
-                                      setState(() {
-                                        dateRangeEnd = pickedDate;
-                                      });
-                                    }
-                                  },
-                                ),
+                                    readOnly: true,
+                                    controller:Date2Controller,
+                                    decoration: InputDecoration(
+                                      hintStyle: SafeGoogleFont('Nunito',
+                                          color: const Color(0xff00A99D)),
+
+                                      border: InputBorder.none,
+                                    ),
+                                    onTap: () async {
+                                      DateTime? pickedDate =
+                                      await showDatePicker(
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime(2000),
+                                          lastDate: DateTime(3000));
+                                      if (pickedDate != null) {
+                                        setState(() {
+                                          Date2Controller.text=DateFormat('d/M/yyyy').format(pickedDate);
+                                          dateRangeEnd = pickedDate;
+                                        });
+                                        DateTime startDate = DateTime.utc(dateRangeStart!.year, dateRangeStart!.month, dateRangeStart!.day);
+                                        DateTime endDate = DateTime.utc(dateRangeEnd!.year, dateRangeEnd!.month, dateRangeEnd!.day);
+                                        print(startDate);
+                                        print(endDate);
+                                        print("+++++++=================");
+                                        getDaysInBetween() {
+                                          final int difference = endDate.difference(startDate).inDays;
+                                          return difference + 1;
+                                        }
+
+
+                                        final items = List<DateTime>.generate(
+                                            getDaysInBetween(), (i) {
+                                          DateTime date = startDate;
+                                          return date.add(Duration(days: i));
+                                        });
+                                        setState(() {
+                                          mydate.clear();
+                                        });
+                                        print(items.length);
+                                        for (int i = 0; i < items.length; i++) {
+                                          setState(() {
+                                            mydate.add(formatter.format(items[i])
+                                                .toString());
+                                          });
+                                          print(mydate);
+                                          print("+++++++++++++000000000+++++++++++");
+                                        }
+                                      }
+                                    }),
                               ),
                             ],
                           ),
@@ -3508,6 +3415,10 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                             children: [
                               InkWell(
                                 onTap: () {
+                                  setState((){
+                                    Date1Controller.clear();
+                                    Date2Controller.clear();
+                                  });
                                   Navigator.pop(context, false);
                                 },
                                 child: Container(
@@ -3516,7 +3427,7 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(8),
                                     boxShadow: [
-                                      BoxShadow(
+                                      const BoxShadow(
                                         color: Colors.black26,
                                         offset: Offset(1, 2),
                                         blurRadius: 3,
@@ -3542,6 +3453,10 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                               SizedBox(width: width / 273.2),
                               InkWell(
                                 onTap: () {
+                                  setState((){
+                                    Date1Controller.clear();
+                                    Date2Controller.clear();
+                                  });
                                   Navigator.pop(context, true);
                                 },
                                 child: Container(
@@ -3550,7 +3465,7 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                     color: Constants().primaryAppColor,
                                     borderRadius: BorderRadius.circular(8),
                                     boxShadow: [
-                                      BoxShadow(
+                                      const BoxShadow(
                                         color: Colors.black26,
                                         offset: Offset(1, 2),
                                         blurRadius: 3,

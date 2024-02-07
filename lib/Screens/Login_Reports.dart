@@ -1,5 +1,6 @@
 import 'package:alumni_management_admin/Constant_.dart';
 import 'package:alumni_management_admin/Models/Language_Model.dart';
+import 'package:alumni_management_admin/common_widgets/developer_card_widget.dart';
 import 'package:alumni_management_admin/utils.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
@@ -809,6 +810,10 @@ class _Login_ReportsState extends State<Login_Reports> with SingleTickerProvider
               SizedBox(height: size.height * 0.04),
            //   const DeveloperCardWidget(),
               SizedBox(height: size.height * 0.01),
+
+              SizedBox(height: height / 65.1),
+              DeveloperCardWidget(),
+              SizedBox(height: height / 65.1),
             ],
           ),
         ),

@@ -1,72 +1,50 @@
-
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
 
-class Testing_screen extends StatefulWidget {
-  const Testing_screen({super.key});
+class CustomPaginator extends StatefulWidget {
+  final int pageCount;
+  final ValueChanged<int> onPageChange;
+
+  CustomPaginator({required this.pageCount, required this.onPageChange});
 
   @override
-  State<Testing_screen> createState() => _Testing_screenState();
+  _CustomPaginatorState createState() => _CustomPaginatorState();
 }
 
-class _Testing_screenState extends State<Testing_screen> {
-
-
-
-  final List<LineData> lineDataList = [
-    LineData(2010, 20),
-    LineData(2011, 40),
-    LineData(2012, 60),
-    LineData(2013, 80),
-    LineData(2014, 100),
-  ];
-
-  LineChartData createLineChartData(List<LineData> lineDataList) {
-    return LineChartData(
-      lineBarsData: [
-        LineChartBarData(
-          spots: lineDataList.map((data) => FlSpot(data.year.toDouble(), data.percentage)).toList(),
-          isCurved: true,
-          color: Colors.blue,
-          belowBarData: BarAreaData(show: false),
-        ),
-      ],
-      titlesData: FlTitlesData(
-        leftTitles: AxisTitles(sideTitles:SideTitles(showTitles: true) ),
-        bottomTitles: AxisTitles(sideTitles:SideTitles(showTitles: true) ),
-      ),
-      borderData: FlBorderData(show: true),
-      gridData: FlGridData(show: true),
-    );
-  }
+class _CustomPaginatorState extends State<CustomPaginator> {
+  int currentPage = 1;
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      appBar: AppBar(
-        title: Text('Smooth Line and Area Graph'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child:
-        LineChart(
-          createLineChartData(lineDataList),
-          duration: Duration(milliseconds: 250),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(
+        widget.pageCount,
+            (index) => GestureDetector(
+          onTap: () {
+            if (currentPage != index + 1) {
+              setState(() {
+                currentPage = index + 1;
+              });
+              widget.onPageChange(currentPage);
+            }
+          },
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 5.0),
+            padding: EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+              color: currentPage == index + 1 ? Colors.blue : Colors.grey,
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            child: Text(
+              (index + 1).toString(),
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
         ),
       ),
     );
-
   }
-
-
-
-
-
-
-  }
-class LineData {
-  final int year;
-  final double percentage;
-
-  LineData(this.year, this.percentage);
 }

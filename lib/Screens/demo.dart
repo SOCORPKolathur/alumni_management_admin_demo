@@ -1,7 +1,13 @@
 import 'package:alumni_management_admin/Screens/Dashboard.dart';
 import 'package:alumni_management_admin/Screens/Events_Page.dart';
 import 'package:alumni_management_admin/Screens/Job_Reports.dart';
+import 'package:alumni_management_admin/Screens/audio_podcasts.dart';
+import 'package:alumni_management_admin/Screens/blog_tab.dart';
+import 'package:alumni_management_admin/Screens/donations_tab.dart';
+import 'package:alumni_management_admin/Screens/faculty.dart';
+import 'package:alumni_management_admin/Screens/screen_gallery.dart';
 import 'package:alumni_management_admin/Screens/usersmanagment.dart';
+import 'package:alumni_management_admin/Screens/website_socialmedia_tab.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +51,8 @@ List<bool> isSelected = [
   false,
   false,
   false,
- // false
+  false,
+  false,
 ];
 List<NavElement> navElements = [
   NavElement(),
@@ -65,35 +72,36 @@ List<NavElement> navElements = [
   NavElement(),
   NavElement(),
   NavElement(),
-  //NavElement(),
+  NavElement(),
+  NavElement(),
 ];
 
 
 List<String> texts = [
   'Dashboard',
   'Alumni Tracking',
-  //'Reports',
   'Users',
   'Gallery',
-  'Events',
+  "Events",
   'Job Post',
   'College Activity',
   'Academic Year',
   'Department',
   'User Management',
   'Messages',
-  'Setting',
   'Login Reports',
   'SMS',
   'Email',
   'Notification',
-  'Sign out',
+  'Blog',
+  'Social Media',
+  'Audio podcasts',
+  'Faculty'
 ];
 
  List<IconData> icons = [
   Icons.data_saver_off,
   Icons.auto_graph_rounded,
- // Icons.groups,
   Icons.person_outlined,
   Icons.image_outlined,
   Icons.event,
@@ -103,12 +111,14 @@ List<String> texts = [
   Icons.document_scanner_sharp,
   Icons.auto_graph_rounded,
   Icons.message,
-  Icons.settings,
   Icons.report,
   Icons.mail,
   Icons.mail,
   Icons.notifications,
-  Icons.logout_sharp,
+   Icons.my_library_books_sharp,
+   Icons.facebook,
+   Icons.mic,
+   Icons.person,
 ];
 
  class MyWidget extends StatefulWidget {
@@ -124,11 +134,12 @@ List<String> texts = [
 class _MyWidgetState extends State<MyWidget> {
 
   void select(int n) {
-    for (int i = 0; i < 17; i++) {
-      if (i == n)
+    for (int i = 0; i < 19; i++) {
+      if (i == n) {
         isSelected[i] = true;
-      else
+      } else {
         isSelected[i] = false;
+      }
     }
   }
 
@@ -142,14 +153,17 @@ class _MyWidgetState extends State<MyWidget> {
 
   @override
   void initState() {
-    print(
-        "ints funxtionssssssssssssssssssssssssssssssssssssssssssssssssssssss");
+    print("ints funxtionssssssssssssssssssssssssssssssssssssssssssssssssssssss");
     print(widget.email);
 
     setState(() {
       pages = DashBoard(
         usermail: widget.email.toString(),
       );
+
+    });
+    setState(() {
+
     });
     // TODO: implement initState
     super.initState();
@@ -179,7 +193,7 @@ class _MyWidgetState extends State<MyWidget> {
                     borderRadius: BorderRadius.circular(20.0),
                   ),
                   child: SingleChildScrollView(
-                    physics: ScrollPhysics(),
+                    physics: const ScrollPhysics(),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,22 +202,23 @@ class _MyWidgetState extends State<MyWidget> {
                           height: height / 52.7857,
                         ),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Padding(
                               padding: EdgeInsets.only(
                                   left: width / 76.8,
                                   top: height / 36.8,
-                                  bottom: height / 147.8),
-                              child: SizedBox(
+                                  ),
+                              child: Container(
                                   width: width / 34.133,
                                   height: height / 16.422,
-                                  child: Image.asset("assets/dummy logo.png")),
+                                  child: Image.asset("assets/logocl.png")),
                             ),
                             SizedBox(
                               width: width / 192,
                             ),
                             KText(
-                              text: "Alumni \nAssociation",
+                              text: "IKIA College",
                               style: GoogleFonts.poppins(
                                   fontWeight: FontWeight.w600,
                                   fontSize: width / 76.8),
@@ -237,7 +252,7 @@ class _MyWidgetState extends State<MyWidget> {
                                 width: value == 1 ? (value * width / 6.0) : 0,
                                 decoration: BoxDecoration(
                                   color: selectedPage == 0
-                                      ? Color(0xff5D5FEF)
+                                      ? Constants().primaryAppColor
                                       : Colors.white,
                                   borderRadius: BorderRadius.circular(9.0),
                                 ),
@@ -250,7 +265,7 @@ class _MyWidgetState extends State<MyWidget> {
                                       Icons.data_saver_off,
                                       color: selectedPage == 0
                                           ? Colors.white
-                                          :  Color(0xff5D5FEF),
+                                          :  Constants().primaryAppColor,
                                     ),
                                     SizedBox(
                                       width: width / 192,
@@ -301,7 +316,7 @@ class _MyWidgetState extends State<MyWidget> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(3),
                                       color: selectedPage == 1
-                                          ? Color(0xff5D5FEF)
+                                          ? Constants().primaryAppColor
                                           : Colors.white,
                                     ),
                                     curve: Curves.easeIn,
@@ -397,7 +412,7 @@ class _MyWidgetState extends State<MyWidget> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(3),
                                       color: selectedPage == 2
-                                          ? Color(0xff5D5FEF)
+                                          ? Constants().primaryAppColor
                                           : Colors.white,
                                     ),
                                     curve: Curves.easeIn,
@@ -493,7 +508,7 @@ class _MyWidgetState extends State<MyWidget> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(3),
                                       color: selectedPage == 3
-                                          ? Color(0xff5D5FEF)
+                                          ? Constants().primaryAppColor
                                           : Colors.white,
                                     ),
                                     curve: Curves.easeIn,
@@ -589,7 +604,7 @@ class _MyWidgetState extends State<MyWidget> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(3),
                                       color: selectedPage == 4
-                                          ? Color(0xff5D5FEF)
+                                          ? Constants().primaryAppColor
                                           : Colors.white,
                                     ),
                                     curve: Curves.easeIn,
@@ -685,7 +700,7 @@ class _MyWidgetState extends State<MyWidget> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(3),
                                       color: selectedPage == 5
-                                          ? Color(0xff5D5FEF)
+                                          ? Constants().primaryAppColor
                                           : Colors.white,
                                     ),
                                     curve: Curves.easeIn,
@@ -781,7 +796,7 @@ class _MyWidgetState extends State<MyWidget> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(3),
                                       color: selectedPage == 6
-                                          ? Color(0xff5D5FEF)
+                                          ? Constants().primaryAppColor
                                           : Colors.white,
                                     ),
                                     curve: Curves.easeIn,
@@ -877,7 +892,7 @@ class _MyWidgetState extends State<MyWidget> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(3),
                                       color: selectedPage == 9
-                                          ? Color(0xff5D5FEF)
+                                          ? Constants().primaryAppColor
                                           : Colors.white,
                                     ),
                                     curve: Curves.easeIn,
@@ -973,7 +988,7 @@ class _MyWidgetState extends State<MyWidget> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(3),
                                       color: selectedPage == 10
-                                          ? Color(0xff5D5FEF)
+                                          ? Constants().primaryAppColor
                                           : Colors.white,
                                     ),
                                     curve: Curves.easeIn,
@@ -1069,7 +1084,7 @@ class _MyWidgetState extends State<MyWidget> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(3),
                                       color: selectedPage == 11
-                                          ? Color(0xff5D5FEF)
+                                          ? Constants().primaryAppColor
                                           : Colors.white,
                                     ),
                                     curve: Curves.easeIn,
@@ -1165,7 +1180,7 @@ class _MyWidgetState extends State<MyWidget> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(3),
                                       color: selectedPage == 12
-                                          ? Color(0xff5D5FEF)
+                                          ? Constants().primaryAppColor
                                           : Colors.white,
                                     ),
                                     curve: Curves.easeIn,
@@ -1258,9 +1273,9 @@ class _MyWidgetState extends State<MyWidget> {
                                   });
                                 },
                                 backgroundColor:   Expaned1?
-                                  Color(0xff5D5FEF) : Colors.white,
+                                  Constants().primaryAppColor : Colors.white,
                                 collapsedBackgroundColor:  Expaned1?
-                                Color(0xff5D5FEF) : Colors.white,
+                                Constants().primaryAppColor : Colors.white,
                                 title: KText(
                                   text: "Communication",
                                   style: GoogleFonts.poppins(
@@ -1301,7 +1316,7 @@ class _MyWidgetState extends State<MyWidget> {
                                             borderRadius:
                                                 BorderRadius.circular(3),
                                             color: selectedPage == 13
-                                                ? Color(0xff5D5FEF)
+                                                ? Constants().primaryAppColor
                                                 : Colors.white,
                                           ),
                                           curve: Curves.easeIn,
@@ -1400,7 +1415,7 @@ class _MyWidgetState extends State<MyWidget> {
                                             borderRadius:
                                                 BorderRadius.circular(3),
                                             color: selectedPage == 14
-                                                ? Color(0xff5D5FEF)
+                                                ? Constants().primaryAppColor
                                                 : Colors.white,
                                           ),
                                           curve: Curves.easeIn,
@@ -1499,7 +1514,7 @@ class _MyWidgetState extends State<MyWidget> {
                                             borderRadius:
                                                 BorderRadius.circular(3),
                                             color: selectedPage == 15
-                                                ? Color(0xff5D5FEF)
+                                                ? Constants().primaryAppColor
                                                 : Colors.white,
                                           ),
                                           curve: Curves.easeIn,
@@ -1595,9 +1610,9 @@ class _MyWidgetState extends State<MyWidget> {
                                   });
                                 },
                                 backgroundColor:   Expaned2?
-                                Color(0xff5D5FEF) : Colors.white,
+                                Constants().primaryAppColor : Colors.white,
                                 collapsedBackgroundColor:  Expaned2?
-                                Color(0xff5D5FEF) : Colors.white,
+                                Constants().primaryAppColor : Colors.white,
                                 title: KText(
                                   text: "Master",
                                   style: GoogleFonts.poppins(
@@ -1638,7 +1653,7 @@ class _MyWidgetState extends State<MyWidget> {
                                             borderRadius:
                                             BorderRadius.circular(3),
                                             color: selectedPage == 7
-                                                ? Color(0xff5D5FEF)
+                                                ? Constants().primaryAppColor
                                                 : Colors.white,
                                           ),
                                           child: Row(
@@ -1737,7 +1752,7 @@ class _MyWidgetState extends State<MyWidget> {
                                             borderRadius:
                                             BorderRadius.circular(3),
                                             color: selectedPage == 8
-                                                ? Color(0xff5D5FEF)
+                                                ? Constants().primaryAppColor
                                                 : Colors.white,
                                           ),
                                           curve: Curves.easeIn,
@@ -1838,7 +1853,7 @@ class _MyWidgetState extends State<MyWidget> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(3),
                                       color: selectedPage == 16
-                                          ? Color(0xff5D5FEF)
+                                          ? Constants().primaryAppColor
                                           : Colors.white,
                                     ),
                                     curve: Curves.easeIn,
@@ -1913,9 +1928,7 @@ class _MyWidgetState extends State<MyWidget> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: navElements
-                              .map(
-                                (e) => NavElement(
+                          children: navElements.map((e) => NavElement(
                               index: navElements.indexOf(e),
                               text: texts[navElements.indexOf(e)],
                               icon: icons[navElements.indexOf(e)],
@@ -1928,19 +1941,14 @@ class _MyWidgetState extends State<MyWidget> {
                                       pages=DashBoard( usermail: widget.email.toString(),);
                                     });
                                   }
-                                /*  if(navElements.indexOf(e)==1){
-                                    setState(() {
-                                      pages=Reports_Screen();
-                                    });
-                                  }*/
                                   if(navElements.indexOf(e)==2){
                                     setState(() {
-                                      pages=const Users_Screen();
+                                      pages= Users_Screen(UserViewed: false,);
                                     });
                                   }
                                   if(navElements.indexOf(e)==3){
                                     setState(() {
-                                      pages=Gallery_Screen();
+                                      pages=ScreenGallery();
                                     });
                                   }
                                   if(navElements.indexOf(e)==4){
@@ -1978,43 +1986,52 @@ class _MyWidgetState extends State<MyWidget> {
                                       pages=const Message_Screen();
                                     });
                                   }
+
                                   if(navElements.indexOf(e)==11){
-                                    setState(() {
-                                      pages=SettingsTabs();
-                                    });
-                                  }
-                                  if(navElements.indexOf(e)==12){
                                     setState(() {
                                       pages= const Login_Reports();
                                     });
                                   }
-                                  if(navElements.indexOf(e)==13){
+                                  if(navElements.indexOf(e)==12){
                                     setState(() {
                                       pages= const SMS_Screen();
                                     });
                                   }
-
-                                  if(navElements.indexOf(e)==14){
+                                  if(navElements.indexOf(e)==13){
                                     setState(() {
                                       pages= const Email_Screen();
                                     });
                                   }
-
-                                  if(navElements.indexOf(e)==15){
+                                  if(navElements.indexOf(e)==14){
                                     setState(() {
                                       pages= const Com_Notification_Screen();
                                     });
                                   }
-
                                   if(navElements.indexOf(e)==1){
                                     setState(() {
                                       pages=const Job_Reports();
                                     });
                                   }
-
-                                  if(navElements.indexOf(e)==16){
-                                    LogoutPopup();
+                                  if(navElements.indexOf(e)==15){
+                                    setState(() {
+                                      pages=BlogTab();
+                                    });
+                                  }if(navElements.indexOf(e)==16){
+                                    setState(() {
+                                       pages=WebsiteAndSocialMediaTab();
+                                    });
                                   }
+                                  if(navElements.indexOf(e)==17){
+                                    setState(() {
+                                      pages=AudioPodcastTab();
+                                    });
+                                  }
+                                  if(navElements.indexOf(e)==18){
+                                    setState(() {
+                                      pages=Faculty_Tab();
+                                    });
+                                  }
+
                                 });
                               },
                             ),
@@ -2034,120 +2051,7 @@ class _MyWidgetState extends State<MyWidget> {
     );
   }
 
-  LogoutPopup() {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
-    showDialog(
-      barrierColor: Colors.transparent,
-      context: context,
-      builder: (context) {
-        return ZoomIn(
-          duration: Duration(milliseconds: 300),
-          child: Padding(
-            padding: EdgeInsets.only(
-                top: height / 4.61875,
-                bottom: height / 4.61875,
-                left: width / 3.84,
-                right: width / 3.84),
-            child: Material(
-              color: Colors.white,
-              shadowColor: Color(0xff245BCA),
-              borderRadius: BorderRadius.circular(8),
-              elevation: 10,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Color(0xffFFFFFF),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Scaffold(
-                  backgroundColor: Color(0xffFFFFFF),
-                  body: Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(height: height / 9.2375),
-                        KText(
-                            text: "Are You Sure Want to Logout",
-                            style: SafeGoogleFont('Nunito',
-                                fontWeight: FontWeight.w700,
-                                color: Colors.black,
-                                fontSize: width / 85.3333)),
-                        SizedBox(height: height / 36.95),
-                        SizedBox(
-                          height: height / 4.105555,
-                          width: width / 8.53333,
-                          child: SvgPicture.asset(Constants().userLogoutSvg),
-                        ),
-                        SizedBox(height: height / 36.95),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            InkWell(
-                              splashColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                height: height / 18.475,
-                                width: width / 8.5333,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Center(
-                                  child: KText(
-                                      text: "Cancel",
-                                      style: SafeGoogleFont('Nunito',
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.black,
-                                          fontSize: width / 96)),
-                                ),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                _signOut();
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                height: height / 18.475,
-                                width: width / 8.5333,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4),
-                                    color: Color(0xff5D5FEF)),
-                                child: Center(
-                                  child: KText(
-                                    text: "Okay",
-                                    style: SafeGoogleFont('Nunito',
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.white,
-                                        fontSize: width / 96),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
 
-  _signOut() async {
-    await FirebaseAuth.instance.signOut();
-    Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const SigninPage(),
-        ));
-  }
 
 }
 
@@ -2178,16 +2082,17 @@ class _NavElementState extends State<NavElement> with TickerProviderStateMixin {
 
   @override
   void initState() {
+
     super.initState();
     _tcc = AnimationController(
-        duration: Duration(milliseconds: 375),
+        duration: Duration(milliseconds: 475),
         reverseDuration: Duration(milliseconds: 300),
         vsync: this);
-    _tca = ColorTween(begin: Colors.black54, end: Colors.black).animate(
-        CurvedAnimation(
-            parent: _tcc, curve: Curves.easeOut, reverseCurve: Curves.easeIn));
+    _tca = ColorTween(begin: Colors.black54, end: Colors.black).animate(CurvedAnimation(parent: _tcc, curve: Curves.easeOut, reverseCurve: Curves.easeIn));
     _tcc.addListener(() {
-      setState(() {});
+      setState(() {
+
+      });
     });
 
     _icc = AnimationController(
@@ -2224,8 +2129,11 @@ class _NavElementState extends State<NavElement> with TickerProviderStateMixin {
       setState(() {
         width = 0.0;
         opacity = 1.0;
-        print(1000 ~/ (5 - (widget.index!)));
+      //  print(1000 ~/ (1 - (widget.index!)));
       });
+    });
+    setState(() {
+
     });
   }
 
@@ -2236,6 +2144,7 @@ class _NavElementState extends State<NavElement> with TickerProviderStateMixin {
     }
     return MouseRegion(
       onEnter: (value) {
+        print("Send Jopb POst+++++++++++++++++++++++++++++++");
         _tcc.forward();
         _lsc.forward();
       },
@@ -2256,22 +2165,22 @@ class _NavElementState extends State<NavElement> with TickerProviderStateMixin {
               color: Colors.white, borderRadius: BorderRadius.circular(15.0)),
           padding: EdgeInsets.only(left: 15.0, top: 5.0, bottom: 5.0),
           height: 60.0,
-          width: 200.0,
+          width: 210.0,
           child: Row(
             children: [
               AnimatedContainer(
                 curve: Curves.easeOut,
-                duration: Duration(milliseconds: 300),
+                duration: const Duration(milliseconds: 300),
                 height: widget.active! ? 45.0 : 35.0,
                 width: widget.active! ? 195.0 : 35.0,
                 decoration: BoxDecoration(
-                  color: widget.active! ? Color(0xff5D5FEF) : Colors.white,
+                  color: widget.active! ?  Constants().primaryAppColor : Colors.white,
                   borderRadius: BorderRadius.circular(9.0),
                 ),
                 child: Row(
                   children: [
                     SizedBox(
-                      width: width / 192,
+                      width: width / 182,
                     ),
                     Icon(
                       widget.icon,

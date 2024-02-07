@@ -1,3 +1,4 @@
+import 'package:alumni_management_admin/Constant_.dart';
 import 'package:alumni_management_admin/utils.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
 import '../Models/Language_Model.dart';
+import '../common_widgets/developer_card_widget.dart';
 
 class UsersManagement extends StatefulWidget {
   String?Username;
@@ -39,7 +41,20 @@ class _UsersManagementState extends State<UsersManagement> {
   List<String>PermissionLis = [];
   List<String>list = [];
 
+  String? validateEmail(String? value) {
+    const pattern = r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'"
+        r'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-'
+        r'\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*'
+        r'[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4]'
+        r'[0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9]'
+        r'[0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\'
+        r'x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])';
+    final regex = RegExp(pattern);
 
+    return value!.isNotEmpty && !regex.hasMatch(value)
+        ? 'Enter the Correct the Email'
+        : null;
+  }
   TextEditingController userName=TextEditingController();
   TextEditingController passWord=TextEditingController();
 
@@ -245,7 +260,7 @@ class _UsersManagementState extends State<UsersManagement> {
                             width: width/10.5076,
                             height: height/16.275,
                             decoration: BoxDecoration(
-                                color: Color(0xff5D5FEF),
+                                color: Constants().primaryAppColor,
                                 borderRadius: BorderRadius.circular(8)
                             ),
                             child:  Row(
@@ -268,14 +283,25 @@ class _UsersManagementState extends State<UsersManagement> {
                       SizedBox(width:width/51.2),
                       InkWell(
                         onTap: (){
-                          updatefunction();
-                          successpopuop("Permission Add Successfully....");
+                          if(dashboard == true|| userManagement == true|| reports == true||
+                           users == true||
+                           gallery == true||
+                            events== true||
+                            news==true||
+                            message== true||
+                            setting== true){
+                            updatefunction();
+                            successpopuop("Permission Add Successfully....");
+                          }
+                          else{
+                            errorPopup("Please Filled Minimum one CheckBox");
+                          }
                         },
                         child: Container(
                             width: width/10.5076,
                             height: height/16.275,
                             decoration: BoxDecoration(
-                                color: Color(0xff5D5FEF),
+                                color: Constants().primaryAppColor,
                                 borderRadius: BorderRadius.circular(8)
                             ),
                             child:  Center(child:  KText( text:"Add Permission",style:SafeGoogleFont (
@@ -412,8 +438,7 @@ class _UsersManagementState extends State<UsersManagement> {
                                       value: gallery,
                                       onChanged: (val) {
                                         setState(() {
-                                          gallery =
-                                          !gallery;
+                                          gallery = !gallery;
                                         });
                                         if (gallery == true) {
                                           PermissionLis.add("gallery");
@@ -712,12 +737,13 @@ class _UsersManagementState extends State<UsersManagement> {
                                                 Center(
                                                   child: InkWell(
                                                     onTap:(){
-                                                      _deletepopup(data.id);
+                                                      _deletepopup(data.id,data['username'].toString());
                                                     },
                                                     child: Material(
 
                                                       borderRadius: BorderRadius.circular(100),
                                                       color: Colors.white,
+                                                      elevation: 10,
                                                       child: Container(
                                                         height:height/21,
                                                         width:width/17.075,
@@ -725,9 +751,8 @@ class _UsersManagementState extends State<UsersManagement> {
                                                             borderRadius: BorderRadius.circular(100),
                                                             color: Colors.white
                                                         ),
-                                                        child: Center(child: Icon(Icons.delete)),
+                                                        child: const Center(child: Icon(Icons.delete)),
                                                       ),
-                                                      elevation: 10,
                                                     ),
                                                   ),
                                                 ),
@@ -747,6 +772,10 @@ class _UsersManagementState extends State<UsersManagement> {
                     ),
                   ),
                   SizedBox(height:height/32.55),
+
+                  SizedBox(height: height / 65.1),
+                  DeveloperCardWidget(),
+                  SizedBox(height: height / 65.1),
 
                 ],
               ),
@@ -850,7 +879,7 @@ class _UsersManagementState extends State<UsersManagement> {
                       height: height / 18.464,
                       width: width / 11.383,
                       decoration: BoxDecoration(
-                          color: Color(0xff5D5FEF),
+                          color: Constants().primaryAppColor,
                           borderRadius: BorderRadius.circular(5)),
                       child: Center(
                           child: KText(
@@ -860,6 +889,114 @@ class _UsersManagementState extends State<UsersManagement> {
                               fontSize: 19*ffem,
                               fontWeight: FontWeight.w700,
                               color: Colors.white
+                            ),
+                          )),
+                    ),
+                  ),
+                  SizedBox(
+                    width: width / 34.15,
+                  )
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+
+  errorPopup(name) {
+    double width=MediaQuery.of(context).size.width;
+    double height=MediaQuery.of(context).size.height;
+    double baseWidth = 1920;
+    double fem = MediaQuery.of(context).size.width / baseWidth;
+    double ffem = fem * 0.97;
+
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return Container(
+          margin: EdgeInsets.only(
+              left: width / 3.268,
+              right: width / 3.845,
+              top: height / 4.106,
+              bottom: height / 4.106),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: const Color(0xffFFFFFF),
+          ),
+          child: Column(
+            children: [
+              SizedBox(
+                height: height / 16.425,
+              ),
+              SizedBox(
+                height: height / 3.750,
+                width: width / 11.383,
+                child: Lottie.asset("assets/error (1).json",fit: BoxFit.cover),
+              ),
+              SizedBox(
+                height: height / 54.75,
+              ),
+              KText( text:name,style:SafeGoogleFont (
+                'Poppins',
+                fontWeight: FontWeight.w700,
+              )
+              ),
+              SizedBox(
+                height: height / 42.1250,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  //cancel button
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      height: height / 18.464,
+                      width: width / 11.383,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(5)),
+                      child: Center(
+                          child: KText(
+                              text:"Cancel",
+                              style:SafeGoogleFont (
+                                  'Poppins',
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white
+                              )
+                          )),
+                    ),
+                  ),
+                  SizedBox(
+                    width: width / 34.15,
+                  ),
+
+                  //okay button
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+
+                    },
+                    child: Container(
+                      height: height / 18.464,
+                      width: width / 11.383,
+                      decoration: BoxDecoration(
+                          color: Constants().primaryAppColor,
+                          borderRadius: BorderRadius.circular(5)),
+                      child: Center(
+                          child: KText(
+                            text: "Okay",
+                            style: SafeGoogleFont (
+                                'Poppins',
+                                fontSize: 19*ffem,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white
                             ),
                           )),
                     ),
@@ -959,7 +1096,7 @@ class _UsersManagementState extends State<UsersManagement> {
   ///delete popup
   String deletefile="https://assets5.lottiefiles.com/packages/lf20_tqsLQJ3Q73.json";
 
-  _deletepopup(docid){
+  _deletepopup(docid,UserName){
     double width=MediaQuery.of(context).size.width;
     double height=MediaQuery.of(context).size.height;
     double baseWidth = 1920;
@@ -980,14 +1117,21 @@ class _UsersManagementState extends State<UsersManagement> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                    SizedBox(height:height/21.7),
-                  KText( text:"Are You Sure Want to Delete",style:
+                  KText( text:"Delete this Record",style:
                   SafeGoogleFont (
                     'Poppins',
-                    fontSize: 19*ffem,
+                    fontSize: 21*ffem,
+                    fontWeight: FontWeight.w700,
+                  ),),
+                  SizedBox(height: height/65.1,),
+                  KText( text:" ${UserName}-Will be Deleted",style:
+                  SafeGoogleFont (
+                    'Poppins',
+                    fontSize: 17*ffem,
                     fontWeight: FontWeight.w700,
                   ),),
 
-                   SizedBox(height:height/32.55),
+                   SizedBox(height:height/52.55),
 
                   SizedBox(
                     height:height/3.6166,
@@ -1007,7 +1151,7 @@ class _UsersManagementState extends State<UsersManagement> {
                       width:width/7.588,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
-                          color: const Color(0xff5D5FEF)
+                          color:  Constants().primaryAppColor
                       ),
                       child: Center(
                         child: KText( text:"Okay",style:
@@ -1136,7 +1280,7 @@ class _UsersManagementState extends State<UsersManagement> {
                                             bottom: height / 82.125),
                                         border: InputBorder.none,
                                       ),
-                                      validator: (value) => value!.isEmpty?"Field is Empty":null,
+                                      validator: validateEmail,
                                     ),
                                   ),
                                 ],
@@ -1325,7 +1469,7 @@ class _UsersManagementState extends State<UsersManagement> {
                                       width: width/11.3833,
                                       height: height/17.1315,
                                       decoration: BoxDecoration(
-                                          color: Color(0xff5D5FEF),
+                                          color: Constants().primaryAppColor,
                                           borderRadius: BorderRadius.circular(8)
                                       ),
                                       child:  Center(child:  KText( text:"Submit",style:  SafeGoogleFont (

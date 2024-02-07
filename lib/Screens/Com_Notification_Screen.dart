@@ -1,11 +1,12 @@
 import 'dart:convert';
 
 
+import 'package:alumni_management_admin/common_widgets/developer_card_widget.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart' as cf;
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import '../Constant_.dart';
@@ -21,24 +22,63 @@ class Com_Notification_Screen extends StatefulWidget {
 }
 
 class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
+  TextEditingController departmentcon = TextEditingController(text:'Select Department');
+  TextEditingController yearcon = TextEditingController(text:'Select Year');
+
   String currentTab = 'ADD';
   bool isUsers = true;
   String Uservalue="All";
   List dropDownApplyedvalue=[];
-
-  TextEditingController subjectController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
   List<bool> Selected = List.generate(100, (index) => false);
-
   List<String> notifylist=[
     "All",
     "Batch",
     "Department",
+    "Department/Batch",
     "Gender"
   ];
   List sendList=[];
   List StreamData=[];
+  List <String> departmentDataList=[];
+  List <String> yearDataList=[];
 
+  TextEditingController subjectController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+
+  ///Department Fetch Function
+  dropDowndataFetchFunc()async{
+    setState(() {
+      departmentDataList.clear();
+      yearDataList.clear();
+    });
+    setState(() {
+      departmentDataList.add('Select Department');
+      yearDataList.add('Select Year');
+    });
+    var departmentdata=await cf.FirebaseFirestore.instance.collection("Department").orderBy("name").get();
+    var acadamicYeardata=await cf.FirebaseFirestore.instance.collection("AcademicYear").orderBy("name").get();
+    for(int x=0;x<departmentdata.docs.length;x++){
+      setState((){
+        departmentDataList.add(departmentdata.docs[x]['name'].toString());
+      });
+    }
+    for(int y=0;y<acadamicYeardata.docs.length;y++){
+      setState((){
+        yearDataList.add(acadamicYeardata.docs[y]['name'].toString());
+      });
+    }
+    print("department Data List $departmentDataList");
+    print("Year Data List $yearDataList");
+  }
+
+  @override
+  void initState() {
+
+    dropDowndataFetchFunc();
+
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +135,7 @@ class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
                           },
                           child: Container(
                             height: height / 18.6,
-                            width: width/10.9714,
+                            width: width/9.9714,
                             decoration: BoxDecoration(
                               color: Constants().primaryAppColor,
                               borderRadius: BorderRadius.circular(8),
@@ -292,10 +332,7 @@ class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
                                                       ),
                                                     ),
                                                   ),
-                                                )
-
-
-
+                                                ),
                                               ],
                                             ),
                                           ),
@@ -315,6 +352,165 @@ class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
                                                      horizontal: width/192
                                                    ),
                                                     child:
+                                                        Uservalue == "Department/Batch"?Row(
+                                                          children: [
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                              CrossAxisAlignment.start,
+                                                              children: [
+                                                                KText(
+                                                                  text: "Department",
+                                                                  style: SafeGoogleFont(
+                                                                    'Nunito',
+                                                                    fontSize: width / 105.571,
+                                                                    fontWeight: FontWeight.bold,
+                                                                  ),
+                                                                ),
+                                                                SizedBox(height: height / 108.5),
+                                                                Material(
+                                                                  borderRadius: BorderRadius.circular(3),
+                                                                  color: Color(0xffDDDEEE),
+                                                                  elevation: 5,
+                                                                  child:
+                                                                  SizedBox(
+                                                                    height: height / 16.02,
+                                                                    width: width / 7.0,
+                                                                    child: DropdownButtonHideUnderline(
+                                                                      child:
+                                                                      DropdownButtonFormField2<
+                                                                          String>(
+                                                                        isExpanded:true,
+                                                                        hint: Text(
+                                                                          'Select Department',
+                                                                          style:
+                                                                          SafeGoogleFont(
+                                                                            'Nunito',
+                                                                          ),
+                                                                        ),
+                                                                        items: departmentDataList
+                                                                            .map((String
+                                                                        item) =>
+                                                                            DropdownMenuItem<
+                                                                                String>(
+                                                                              value: item,
+                                                                              child: Text(
+                                                                                item,
+                                                                                style:
+                                                                                SafeGoogleFont(
+                                                                                  'Nunito',
+                                                                                ),
+                                                                              ),
+                                                                            )).toList(),
+                                                                        value:
+                                                                        departmentcon.text,
+                                                                        onChanged:
+                                                                            (String? value) {
+                                                                          setState(() {
+                                                                            departmentcon.text =
+                                                                            value!;
+                                                                          });
+
+                                                                        },
+                                                                        buttonStyleData:
+                                                                        const ButtonStyleData(
+
+
+                                                                        ),
+                                                                        menuItemStyleData:
+                                                                        const MenuItemStyleData(
+
+                                                                        ),
+                                                                        decoration:
+                                                                        const InputDecoration(
+                                                                            border:
+                                                                            InputBorder
+                                                                                .none),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
+                                                            SizedBox(width: width / 68.3),
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                              CrossAxisAlignment.start,
+                                                              children: [
+                                                                KText(
+                                                                  text: "Year",
+                                                                  style: SafeGoogleFont(
+                                                                    'Nunito',
+                                                                    fontSize: width / 105.571,
+                                                                    fontWeight: FontWeight.bold,
+                                                                  ),
+                                                                ),
+                                                                SizedBox(height: height / 108.5),
+                                                                Material(
+                                                                  borderRadius: BorderRadius.circular(3),
+                                                                  color: Color(0xffDDDEEE),
+                                                                  elevation: 5,
+                                                                  child: SizedBox(
+                                                                    height: height / 16.02,
+                                                                    width: width / 7.0,
+                                                                    child: DropdownButtonHideUnderline(
+                                                                      child:
+                                                                      DropdownButtonFormField2<
+                                                                          String>(
+                                                                        isExpanded:true,
+                                                                        hint: Text(
+                                                                          'Select Year',
+                                                                          style:
+                                                                          SafeGoogleFont(
+                                                                            'Nunito',
+                                                                          ),
+                                                                        ),
+                                                                        items: yearDataList
+                                                                            .map((String
+                                                                        item) =>
+                                                                            DropdownMenuItem<
+                                                                                String>(
+                                                                              value: item,
+                                                                              child: Text(
+                                                                                item,
+                                                                                style:
+                                                                                SafeGoogleFont(
+                                                                                  'Nunito',
+                                                                                ),
+                                                                              ),
+                                                                            )).toList(),
+                                                                        value:
+                                                                        yearcon.text,
+                                                                        onChanged:
+                                                                            (String? value) {
+                                                                          setState(() {
+                                                                            yearcon.text =
+                                                                            value!;
+                                                                          });
+
+                                                                        },
+                                                                        buttonStyleData:
+                                                                        const ButtonStyleData(
+
+
+                                                                        ),
+                                                                        menuItemStyleData:
+                                                                        const MenuItemStyleData(
+
+                                                                        ),
+                                                                        decoration:
+                                                                        const InputDecoration(
+                                                                            border:
+                                                                            InputBorder
+                                                                                .none),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ):
+
                                                     Uservalue=="All"?
                                                     Row(
                                                       children: [
@@ -497,6 +693,7 @@ class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
                                           ),
                                           child: Center(
                                             child:Row(
+                                              // crossAxisAlignment: CrossAxisAlignment.center,
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 Icon(Icons.send,
@@ -786,7 +983,10 @@ class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
                             },
                           ),
                       )
-                      : Container()
+                      : Container(),
+              SizedBox(height: height / 65.1),
+              DeveloperCardWidget(),
+              SizedBox(height: height / 65.1),
             ],
           ),
         ),
@@ -827,6 +1027,25 @@ class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
         StreamData.add("Female");
       });
     }
+    else if (Uservalue == "Batch/Department") {
+      print("Batch/Department Entered--------------------------------------------");
+      print(dropDownApplyedvalue);
+
+      var UserData = await FirebaseFirestore.instance.collection("Users").get();
+      for (int x = 0; x < UserData.docs.length; x++) {
+        var user = UserData.docs[x];
+        if (dropDownApplyedvalue.contains(user['yearofpassed']) &&
+            dropDownApplyedvalue.contains(user['subjectStream'])) {
+          print(dropDownApplyedvalue);
+          setState(() {
+            sendList.add(user['Token']);
+          });
+          print(sendList);
+          print("Send List_______________________________________");
+        }
+      }
+    }
+
 
   }
 
@@ -882,7 +1101,24 @@ class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
         }
       }
     }
+    else if (Uservalue == "Batch/Department") {
+      print("Batch/Department Entered--------------------------------------------");
+      print(dropDownApplyedvalue);
 
+      var UserData = await FirebaseFirestore.instance.collection("Users").get();
+      for (int x = 0; x < UserData.docs.length; x++) {
+        var user = UserData.docs[x];
+        if (dropDownApplyedvalue.contains(user['yearofpassed']) &&
+            dropDownApplyedvalue.contains(user['subjectStream'])) {
+          print(dropDownApplyedvalue);
+          setState(() {
+            sendList.add(user['Token']);
+          });
+          print(sendList);
+          print("Send List_______________________________________");
+        }
+      }
+    }
     else if(Uservalue=="Gender"){
 
       print("Gender Entered--------------------------------------------");
@@ -925,9 +1161,6 @@ class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
             "timestamp":DateTime.now().millisecondsSinceEpoch
           });
           sendPushMessage(token: sendList[x],body: descriptionController.text,title: subjectController.text);
-
-
-
         }
       }
 

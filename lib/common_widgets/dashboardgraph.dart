@@ -1,0 +1,384 @@
+import 'package:alumni_management_admin/Constant_.dart';
+import 'package:alumni_management_admin/Models/Language_Model.dart';
+import 'package:alumni_management_admin/PieChart_all_department.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+class LineChartSample2 extends StatefulWidget {
+  const LineChartSample2({super.key});
+
+  @override
+  State<LineChartSample2> createState() => _LineChartSample2State();
+}
+
+class _LineChartSample2State extends State<LineChartSample2> {
+
+  List<Color> gradientColors = [
+    Constants().primaryAppColor,
+    Constants().primaryAppColor,
+
+  ];
+
+  List<Color> gradientColors2 = [
+    Constants().primaryAppColor.withOpacity(0.25),
+    Constants().primaryAppColor.withOpacity(0),
+
+  ];
+
+  bool showAvg = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return  Container(
+      width: 600,
+      height: 200,
+      child: Stack(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(
+              right: 30,
+              left: 12,
+              top: 24,
+              bottom: 12,
+            ),
+            child: LineChart(
+              mainData(),
+
+            ),
+          ),
+
+        ],
+      ),
+    );
+  }
+
+  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+    const style = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 16,
+    );
+    Widget text;
+    switch (value.toInt()) {
+      case 0:
+        text =  KText(text:'May', style: GoogleFonts.inter(
+            fontWeight: FontWeight.w400,
+            fontSize: 12,
+            color: Color(0xff718EBF)
+        ), );
+        break;
+      case 2:
+        text =  KText(text:'Jun', style: GoogleFonts.inter(
+            fontWeight: FontWeight.w400,
+            fontSize: 12,
+            color: Color(0xff718EBF)
+        ), );
+        break;
+      case 4:
+        text =  KText(text:'Jul', style: GoogleFonts.inter(
+            fontWeight: FontWeight.w400,
+            fontSize: 12,
+            color: Color(0xff718EBF)
+        ), );
+        break;
+      case 6:
+        text =  KText(text:'Aug', style: GoogleFonts.inter(
+            fontWeight: FontWeight.w400,
+            fontSize: 12,
+            color: Color(0xff718EBF)
+        ), );
+        break;
+      case 8:
+        text =  KText(text:'Sep', style: GoogleFonts.inter(
+            fontWeight: FontWeight.w400,
+            fontSize: 12,
+            color: Color(0xff718EBF)
+        ), );
+        break;
+      case 10:
+        text =  KText(text:'Oct', style: GoogleFonts.inter(
+            fontWeight: FontWeight.w400,
+            fontSize: 12,
+            color: Color(0xff718EBF)
+        ), );
+        break;
+      case 12:
+        text =  KText(text:'Nov', style: GoogleFonts.inter(
+            fontWeight: FontWeight.w400,
+            fontSize: 12,
+            color: Color(0xff718EBF)
+        ), );
+        break;
+      case 14:
+        text =  KText(text:'Dec', style: GoogleFonts.inter(
+            fontWeight: FontWeight.w400,
+            fontSize: 12,
+            color: Color(0xff718EBF)
+        ), );
+        break;
+      case 16:
+        text =  KText(text:'Jan', style: GoogleFonts.inter(
+            fontWeight: FontWeight.w400,
+            fontSize: 12,
+            color: Color(0xff718EBF)
+        ), );
+        break;
+      case 18:
+        text =  KText(text:'Feb', style: GoogleFonts.inter(
+            fontWeight: FontWeight.w400,
+            fontSize: 12,
+            color: Color(0xff718EBF)
+        ), );
+        break;
+      case 20:
+        text =  KText(text:'Mar', style: GoogleFonts.inter(
+            fontWeight: FontWeight.w400,
+            fontSize: 12,
+            color: Color(0xff718EBF)
+        ), );
+        break;
+      case 22:
+        text =  KText(text:'April', style: GoogleFonts.inter(
+            fontWeight: FontWeight.w400,
+            fontSize: 12,
+            color: Color(0xff718EBF)
+        ), );
+        break;
+      default:
+        text =  KText(text:'', style: GoogleFonts.inter(
+            fontWeight: FontWeight.w400,
+            fontSize: 12,
+            color: Color(0xff718EBF)
+        ), );
+        break;
+    }
+
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      child: text,
+    );
+  }
+
+  Widget leftTitleWidgets(double value, TitleMeta meta) {
+
+    String text;
+    switch (value.toInt()) {
+      case 1:
+        text = '0';
+        break;
+      case 3:
+        text = '100';
+        break;
+      case 5:
+        text = '200';
+        break;
+      case 7:
+        text = '800';
+      case 9:
+        text = '1000';
+        break;
+      default:
+        return Container();
+    }
+
+    return KText(text:text, style: GoogleFonts.inter(
+        fontWeight: FontWeight.w400,
+        fontSize: 12,
+        color: Color(0xff718EBF)
+    ), );
+  }
+
+  LineChartData mainData() {
+    return LineChartData(
+      gridData: FlGridData(
+        show: true,
+
+        drawVerticalLine: true,
+        horizontalInterval: 1,
+        verticalInterval: 1,
+
+        getDrawingHorizontalLine: (value) {
+          return const FlLine(
+            color: AppColors.mainGridLineColor,
+            strokeWidth: 1,
+          );
+        },
+        getDrawingVerticalLine: (value) {
+          return const FlLine(
+            color: AppColors.mainGridLineColor,
+            strokeWidth: 1,
+          );
+        },
+
+      ),
+      titlesData: FlTitlesData(
+        show: true,
+        rightTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        topTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 30,
+            interval: 1,
+            getTitlesWidget: bottomTitleWidgets,
+          ),
+        ),
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            interval: 1,
+            getTitlesWidget: leftTitleWidgets,
+            reservedSize: 42,
+          ),
+        ),
+      ),
+      borderData: FlBorderData(
+        show: false,
+        border: Border.all(color: const Color(0xff37434d)),
+      ),
+      minX: 0,
+      maxX: 22,
+      minY: 0,
+      maxY: 9,
+      lineBarsData: [
+        LineChartBarData(
+          spots: const [
+            FlSpot(0, 3),
+            FlSpot(2.6, 2),
+            FlSpot(4.9, 5),
+            FlSpot(6.8, 3.1),
+            FlSpot(8, 4),
+            FlSpot(9.5, 3),
+            FlSpot(11, 4),
+            FlSpot(14, 6),
+            FlSpot(16, 3),
+            FlSpot(18, 2),
+            FlSpot(20, 5),
+            FlSpot(22, 4.1),
+          ],
+          isCurved: true,
+          gradient: LinearGradient(
+            colors: gradientColors,
+          ),
+          barWidth: 3,
+          //isStrokeCapRound: true,
+
+
+          dotData: const FlDotData(
+            show: false,
+          ),
+          belowBarData: BarAreaData(
+            show: true,
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: gradientColors2,
+            ),
+          ),
+
+        ),
+      ],
+    );
+  }
+
+  LineChartData avgData() {
+    return LineChartData(
+      lineTouchData: const LineTouchData(enabled: false),
+      gridData: FlGridData(
+        show: true,
+        drawHorizontalLine: true,
+        verticalInterval: 1,
+        horizontalInterval: 1,
+        getDrawingVerticalLine: (value) {
+          return const FlLine(
+            color: Color(0xff37434d),
+            strokeWidth: 1,
+          );
+        },
+        getDrawingHorizontalLine: (value) {
+          return const FlLine(
+            color: Color(0xff37434d),
+            strokeWidth: 1,
+          );
+        },
+      ),
+      titlesData: FlTitlesData(
+        show: true,
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 30,
+            getTitlesWidget: bottomTitleWidgets,
+            interval: 1,
+          ),
+        ),
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            getTitlesWidget: leftTitleWidgets,
+            reservedSize: 42,
+            interval: 1,
+          ),
+        ),
+        topTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        rightTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+      ),
+      borderData: FlBorderData(
+        show: true,
+        border: Border.all(color: const Color(0xff37434d)),
+      ),
+      minX: 0,
+      maxX: 11,
+      minY: 0,
+      maxY: 9,
+      lineBarsData: [
+        LineChartBarData(
+          spots: const [
+            FlSpot(0, 3.44),
+            FlSpot(2.6, 3.44),
+            FlSpot(4.9, 3.44),
+            FlSpot(6.8, 3.44),
+            FlSpot(8, 3.44),
+            FlSpot(9.5, 3.44),
+            FlSpot(11, 3.44),
+          ],
+          isCurved: true,
+          gradient: LinearGradient(
+            colors: [
+              ColorTween(begin: gradientColors[0], end: gradientColors[1])
+                  .lerp(0.2)!,
+              ColorTween(begin: gradientColors[0], end: gradientColors[1])
+                  .lerp(0.2)!,
+            ],
+          ),
+          barWidth: 5,
+          isStrokeCapRound: true,
+          dotData: const FlDotData(
+            show: false,
+          ),
+          belowBarData: BarAreaData(
+            show: true,
+            gradient: LinearGradient(
+              colors: [
+                ColorTween(begin: gradientColors[0], end: gradientColors[1])
+                    .lerp(0.2)!
+                    .withOpacity(0.1),
+                ColorTween(begin: gradientColors[0], end: gradientColors[1])
+                    .lerp(0.2)!
+                    .withOpacity(0.1),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
