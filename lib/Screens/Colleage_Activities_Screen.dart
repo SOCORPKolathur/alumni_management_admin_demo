@@ -1295,7 +1295,7 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                 CrossAxisAlignment.center,
                                 children: [
                                   KText(
-                                    text: "Si.No",
+                                    text: "SL.No",
                                     style: SafeGoogleFont(
                                       'Nunito',
                                       color: Color(0xff030229),
@@ -1596,7 +1596,7 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                           child: ListView.builder(
                                             shrinkWrap: true,
                                             physics: const NeverScrollableScrollPhysics(),
-                                            itemCount: clgActivityData.length,
+                                            itemCount: pagecount == temp ? clgActivityData.length.remainder(10) == 0 ? 10 : clgActivityData.length.remainder(10) : 10,
                                             itemBuilder: (ctx, i) {
                                               var clgActivity=clgActivityData[(temp*10)-10+i];
 
@@ -1616,7 +1616,7 @@ class _Colleage_Activities_ScreenState extends State<Colleage_Activities_Screen>
                                                             const EdgeInsets.only(
                                                                 left: 8),
                                                             child: KText(
-                                                              text: "${i + 1}",
+                                                              text: "${((temp*10)-10+i) + 1}",
                                                               style: SafeGoogleFont(
                                                                 'Nunito',
                                                                 color:

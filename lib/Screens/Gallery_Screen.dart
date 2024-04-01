@@ -35,7 +35,6 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
     'Filter by Date',
   ];
   bool isLoading = false;
-
   Future<void> addImage(String collection, Size size) async {
     final html.FileUploadInputElement input = html.FileUploadInputElement()..accept = 'image/*';
     input.click();
@@ -297,7 +296,8 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                               ),
                             )
                         ),
-                      ) :SizedBox(
+                      ) :
+                      SizedBox(
                         height: height / 18.6,
                         width: width/10.6,
                         ),
@@ -349,7 +349,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
               ],
             ),
             SizedBox(height:height/65.1),
-            addPhoto==true||SliderImg==true?const SizedBox():
+                     addPhoto==true||SliderImg==true?const SizedBox():
             Container(
                 color: Colors.white,
                 width: width/1.2418,
@@ -367,7 +367,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                           CrossAxisAlignment.center,
                           children: [
                             KText(
-                              text: "Si.No",
+                              text: "SL.No",
                               style: SafeGoogleFont(
                                 'Nunito',
                                 color: Color(0xff030229),
@@ -1161,6 +1161,35 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                   ],
                 ),
             ),),
+
+            Row(
+              children: [
+                InkWell(
+                    onTap: (){
+                      setState(() {
+                        addPhoto=false;
+                        isEditSI=false;
+                        SliderImg=false;
+                        addphotoDocummentValue='';
+                      });
+                    },
+                    child: Icon(Icons.arrow_back,color: Colors.white,)),
+                Padding(
+                  padding:  EdgeInsets.only(left:width/192),
+                  child: KText(
+                    text:" Slider Images",
+                    style :SafeGoogleFont (
+                      'Poppins',
+                      fontSize: 22*ffem,
+                      fontWeight: FontWeight.w500,
+                      height: 1.6*ffem/fem,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
             SizedBox(height: height / 65.1),
             DeveloperCardWidget(),
             SizedBox(height: height / 65.1),
@@ -1520,7 +1549,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                       ),
                       Expanded(
                         child: Container(
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             borderRadius: BorderRadius.only(
                               bottomRight: Radius.circular(10),
                               bottomLeft: Radius.circular(10),
@@ -1529,7 +1558,7 @@ class _Gallery_ScreenState extends State<Gallery_Screen> with SingleTickerProvid
                           ),
                           child: GridView.builder(
                               gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisSpacing: 4.0,
                                 mainAxisSpacing: 4.0,
                                 crossAxisCount: 3,

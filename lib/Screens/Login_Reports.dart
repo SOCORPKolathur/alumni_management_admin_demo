@@ -525,7 +525,7 @@ class _Login_ReportsState extends State<Login_Reports> with SingleTickerProvider
                                       SizedBox(
                                         width: width/17.075,
                                         child: Text(
-                                          "SI.NO",
+                                          "SL.NO",
                                           style: SafeGoogleFont (
                                             'Nunito',
                                             fontWeight: FontWeight.w700,

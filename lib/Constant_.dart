@@ -13,7 +13,7 @@ class Constants {
    String docid="HbRb0XiGytHNAWtiaUEN";
    String deleteLottiefile="assets/delete anima.json";
    String ErrorLottiefile="assets/final Error Ani.json";
-   String Lottiefile="";
+   String Lottiefile="assets/emptystate.json";
    String whiteshadeimg="assets/white-trianglify-b79c7e1f.jpg";
    String patterImg="assets/patttern.png";
 

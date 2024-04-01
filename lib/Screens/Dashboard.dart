@@ -53,9 +53,10 @@ class _DashBoardState extends State<DashBoard> {
     final List < DocumentSnapshot > documents = result.docs;
     setState(() {
       documentlength = documents.length;
-      pagecount= ((documentlength~/4) +1) as int;
+      pagecount= (((documentlength - 1) ~/ 4)+1) as int;
 
     });
+    print("pagecount");
     print(pagecount);
   }
 
@@ -176,7 +177,6 @@ class _DashBoardState extends State<DashBoard> {
     return UserViewed==false?
       FadeInRight(
       duration: const Duration(milliseconds: 600),
-
       child: SizedBox(
         // autogroupnx99mr9 (T1hGz35EtnvJDP43Jynx99)
         width: 1574*fem,
@@ -186,181 +186,143 @@ class _DashBoardState extends State<DashBoard> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
 
-              Container(
-                // topbar7QD (6:110)
-                padding: EdgeInsets.fromLTRB(39*fem, 30*fem, 40*fem, 30*fem),
-                width: double.infinity,
-                height: 120*fem,
-                decoration: const BoxDecoration (
-                  color: Color(0xffffffff),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      // alumnimanagment1kV (6:153)
-                      width:width/2.3,
-                      margin: EdgeInsets.fromLTRB(0*fem, 1*fem, 10*fem, 0*fem),
-                      child: KText(
-                        text:
-                        'IKIA COLLEGE ADMIN',
-                        style: SafeGoogleFont (
-                          'Poppins',
-                          fontSize: 36*ffem,
-                          fontWeight: FontWeight.w600,
-                          height: 1.3999999364*ffem/fem,
-                          color: const Color(0xff151d48),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  // topbar7QD (6:110)
+                  padding: EdgeInsets.fromLTRB(39*fem, 0, 40*fem, 0*fem),
+                  width: double.infinity,
+                  height: 120*fem,
+                  decoration:  BoxDecoration (
+                    color: Color(0xffffffff),
+                    borderRadius: BorderRadius.circular(20*fem),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        // alumnimanagment1kV (6:153)
+                        width:width/2.3,
+                        margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 10*fem, 0*fem),
+                        child: KText(
+                          text:
+                          'IKIA COLLEGE ADMIN',
+                          style: SafeGoogleFont (
+                            'Poppins',
+                            fontSize: 36*ffem,
+                            fontWeight: FontWeight.w600,
+                            height: 1.3999999364*ffem/fem,
+                            color: const Color(0xff151d48),
+                          ),
                         ),
                       ),
-                    ),
-                    // Container(
-                    //   // searchbarvMf (6:149)
-                    //   margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 58*fem, 0*fem),
-                    //   padding: EdgeInsets.fromLTRB(28*fem, 16.5*fem, 329*fem, 16.5*fem),
-                    //   height: double.infinity,
-                    //   decoration: BoxDecoration (
-                    //     color: Color(0xfff9fafb),
-                    //     borderRadius: BorderRadius.circular(16*fem),
-                    //   ),
-                    //   child: Row(
-                    //     crossAxisAlignment: CrossAxisAlignment.center,
-                    //     children: [
-                    //       Container(
-                    //         // magnifierD5s (6:150)
-                    //         margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 12*fem, 0*fem),
-                    //         width: 24*fem,
-                    //         height: 24*fem,
-                    //         child: Image.asset(
-                    //           'assets/images/magnifier-27s.png',
-                    //           width: 24*fem,
-                    //           height: 24*fem,
-                    //         ),
-                    //       ),
-                    //       KText(
-                    //         text:
-                    //         // searchherevW5 (6:152)
-                    //         'Search here...',
-                    //         style: SafeGoogleFont (
-                    //           'Poppins',
-                    //           fontSize: 18*ffem,
-                    //           fontWeight: FontWeight.w400,
-                    //           height: 1.5*ffem/fem,
-                    //           color: Color(0xff737791),
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
 
-                   // SizedBox(width:  580*fem,),
-                    SizedBox(
-                      // menuaMf (6:133)
-                      height: double.infinity,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap:(){
-                              _showPopupMenu(context);
-                            },
-                            child: Container(
-                              width:width/12,
-                              // margin: EdgeInsets.fromLTRB(0*fem, 16.5*fem, 58*fem, 16.5*fem),
-                              // padding: EdgeInsets.fromLTRB(0*fem, 0*fem, 7.06*fem, 0*fem),
-                              height: double.infinity,
+                      SizedBox(
+                        // menuaMf (6:133)
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            InkWell(
+                              onTap:(){
+                                _showPopupMenu(context);
+                              },
+                              child: Container(
+                                width:width/12,
+                                // margin: EdgeInsets.fromLTRB(0*fem, 16.5*fem, 58*fem, 16.5*fem),
+                                // padding: EdgeInsets.fromLTRB(0*fem, 0*fem, 7.06*fem, 0*fem),
+                                height: double.infinity,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      // textnHP (6:113)
+                                      margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 23*fem, 0*fem),
+                                      padding: EdgeInsets.fromLTRB(0.75*fem, 0*fem, 0*fem, 0*fem),
+                                      height: double.infinity,
 
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    // textnHP (6:113)
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            // unitedTPX (6:114)
 
-                                    margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 23*fem, 0*fem),
-                                    padding: EdgeInsets.fromLTRB(0.75*fem, 0*fem, 0*fem, 0*fem),
-                                    height: double.infinity,
-
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          // unitedTPX (6:114)
-
-                                          margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 1.75*fem, 0*fem),
-                                          width: 32.5*fem,
-                                          height: 42.5*fem,
-                                          child:
-                                          CountryFlag.fromLanguageCode(
-                                            Constants.flagvalue.toString(),
-                                            borderRadius: 20,
-                                            // width: 9.94*fem,
-                                            // height: 6*fem,
+                                            margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 1.75*fem, 0*fem),
+                                            width: 32.5*fem,
+                                            height: 42.5*fem,
+                                            child:
+                                            CountryFlag.fromLanguageCode(
+                                              Constants.flagvalue.toString(),
+                                              borderRadius: 20,
+                                              // width: 9.94*fem,
+                                              // height: 6*fem,
+                                            ),
                                           ),
-                                        ),
-                                        KText(
-                                          text:
-                                          // engusYQy (6:130)
-                                          Constants.langvalue.toString(),
-                                          style: SafeGoogleFont (
-                                            'Poppins',
-                                            fontSize: 18*ffem,
-                                            fontWeight: FontWeight.w600,
-                                            height: 1.5*ffem/fem,
-                                            color: const Color(0xff374557),
+                                          KText(
+                                            text:
+                                            // engusYQy (6:130)
+                                            Constants.langvalue.toString(),
+                                            style: SafeGoogleFont (
+                                              'Poppins',
+                                              fontSize: 18*ffem,
+                                              fontWeight: FontWeight.w600,
+                                              height: 1.5*ffem/fem,
+                                              color: const Color(0xff374557),
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  const Icon(Icons.arrow_drop_down)
-                                ],
+                                    const Icon(Icons.arrow_drop_down)
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
 
 
-                          Container(
-                            // group1000002734dqj (6:134)
-                            height: 40,
-                            width: 40,
-                            decoration: BoxDecoration(
-                                color: Constants().primaryAppColor.withOpacity(0.20),
-                              borderRadius: BorderRadius.circular(8)
+                            Container(
+                              // group1000002734dqj (6:134)
+                              height: 40,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                  color: Constants().primaryAppColor.withOpacity(0.20),
+                                borderRadius: BorderRadius.circular(8)
+                              ),
+
+                              child: Center(
+                                child: IconButton(onPressed: (){
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Notification_Screen(),));
+                                }, icon: Icon(Icons.notifications_active, color: Constants().primaryAppColor)),
+                              ),
+                            ),
+                            SizedBox(width:10),
+                            Container(
+                              // group1000002734dqj (6:134)
+                              height: 40,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                  color: Constants().primaryAppColor.withOpacity(0.20),
+                                borderRadius: BorderRadius.circular(8)
+                              ),
+
+                              child: Center(
+                                child: IconButton(onPressed: (){
+                                  _showSettingsPopupMenu(context);
+                                }, icon: Icon(Icons.settings, color: Constants().primaryAppColor)),
+                              ),
                             ),
 
-                            child: Center(
-                              child: IconButton(onPressed: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => const Notification_Screen(),));
-                              }, icon: Icon(Icons.notifications_active, color: Constants().primaryAppColor)),
-                            ),
-                          ),
-                          SizedBox(width:10),
-                          Container(
-                            // group1000002734dqj (6:134)
-                            height: 40,
-                            width: 40,
-                            decoration: BoxDecoration(
-                                color: Constants().primaryAppColor.withOpacity(0.20),
-                              borderRadius: BorderRadius.circular(8)
-                            ),
-
-                            child: Center(
-                              child: IconButton(onPressed: (){
-                                _showSettingsPopupMenu(context);
-                              }, icon: Icon(Icons.settings, color: Constants().primaryAppColor)),
-                            ),
-                          ),
-
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
 
               Container(
                 // autogroupa3et6mF (T1hJTpwdBSbRLch6BRA3ET)
-                padding: EdgeInsets.fromLTRB(32*fem, 51*fem, 44*fem, 0*fem),
+                padding: EdgeInsets.fromLTRB(32*fem, 25*fem, 44*fem, 0*fem),
                 width: double.infinity,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -950,7 +912,105 @@ class _DashBoardState extends State<DashBoard> {
                                         ),
                                       ],
                                     ),
-                                    child:const Maopppp(),
+                                    child:Row(
+                                      children: [
+                                        Container(
+                                          width: 320.29*fem,
+
+
+                                            child: const Maopppp()),
+
+                                        Column(
+
+                                            children:[
+                                              Container(
+                                        width: 280.29*fem,
+                                                height:110*fem,
+                                                decoration: BoxDecoration (
+                                                  color: const Color(0xffF3E8FF),
+                                                  borderRadius: BorderRadius.circular(20*fem),
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Column(
+                                                    children: [
+                                                      KText(
+                                                        text:
+                                                        // totaleventsspV (6:1159)
+                                                        '83',
+                                                        style: SafeGoogleFont (
+                                                          'Poppins',
+                                                          fontSize: 35*ffem,
+                                                          fontWeight: FontWeight.w500,
+                                                          height: 1.5*ffem/fem,
+                                                          color: const Color(0xff415166),
+                                                        ),
+                                                      ),
+                                                      KText(
+                                                        text:
+                                                        // totaleventsspV (6:1159)
+                                                        'Alumni in India',
+                                                        style: SafeGoogleFont (
+                                                          'Poppins',
+                                                          fontSize: 24*ffem,
+                                                          fontWeight: FontWeight.w500,
+                                                          height: 1.5*ffem/fem,
+                                                          color: const Color(0xff415166),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(height:12),
+                                              Container(
+                                        width: 280.29*fem,
+                                                height:110*fem,
+                                                decoration: BoxDecoration (
+                                                  color: const Color(0xffDCFCE7),
+                                                  borderRadius: BorderRadius.circular(20*fem),
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Column(
+                                                    children: [
+                                                      KText(
+                                                        text:
+                                                        // totaleventsspV (6:1159)
+                                                        '12',
+                                                        style: SafeGoogleFont (
+                                                          'Poppins',
+                                                          fontSize: 35*ffem,
+                                                          fontWeight: FontWeight.w500,
+                                                          height: 1.5*ffem/fem,
+                                                          color: const Color(0xff415166),
+                                                        ),
+                                                      ),
+                                                      KText(
+                                                        text:
+                                                        // totaleventsspV (6:1159)
+                                                        'Alumni in Abroad',
+                                                        style: SafeGoogleFont (
+                                                          'Poppins',
+                                                          fontSize: 24*ffem,
+                                                          fontWeight: FontWeight.w500,
+                                                          height: 1.5*ffem/fem,
+                                                          color: const Color(0xff415166),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+
+
+                                            ]
+                                        )
+
+
+
+                                      ],
+                                    ),
                                     // Container(
                                     //   // world15p5 (6:448)
                                     //   width: double.infinity,
@@ -980,7 +1040,7 @@ class _DashBoardState extends State<DashBoard> {
                                       height: 32*fem,
                                       child: KText(
                                         text:
-                                        'Alumni in World Wide',
+                                        'Geographical Reports',
                                         style: SafeGoogleFont (
                                           'Poppins',
                                           fontSize: 20*ffem,
@@ -999,7 +1059,7 @@ class _DashBoardState extends State<DashBoard> {
                           Container(
                             // visitorinsightsq6R (6:216)
                              width: 720*fem,
-                             height:285 ,
+                             height:285,
                             decoration: BoxDecoration (
                               borderRadius: BorderRadius.circular(12*fem),
                               image: const DecorationImage (
@@ -1009,7 +1069,39 @@ class _DashBoardState extends State<DashBoard> {
                                 ),
                               ),
                             ),
-                            child: const LineChartSample2()
+                            child: Stack(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top:50.0),
+                                  child: Container(
+                                      width: 720*fem,
+                                      height:235,
+                                      child: const LineChartSample2()),
+                                ),
+                                Positioned(
+                                  // cardtitlewmj (6:922)
+                                  left: 41.0451660156*fem,
+                                  top: 30.3703689575*fem,
+                                  child: Align(
+                                    child: SizedBox(
+                                      width: 250*fem,
+                                      height: 32*fem,
+                                      child: KText(
+                                        text:
+                                        'Alumni Yearly Passing Out',
+                                        style: SafeGoogleFont (
+                                          'Poppins',
+                                          fontSize: 20*ffem,
+                                          fontWeight: FontWeight.w600,
+                                          height: 1.6*ffem/fem,
+                                          color: const Color(0xff05004e),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
                            // LineChartMap(isShowingMainData: true,)
                             // Stack(
                             //   children: [
@@ -1988,8 +2080,53 @@ class _DashBoardState extends State<DashBoard> {
                                                   ],
                                                 ),
                                               ),*/
+                            Container(
+                              color: Colors.white,
+                              width: width/20.2,
+                              height: height/14.78,
+                              alignment: Alignment.center,
+                              child: Center(
+                                child: Row(
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.center,
+                                  children: [
+                                    KText(
+                                      text: "SL.No",
+                                      style: SafeGoogleFont(
+                                        'Nunito',
+                                        color: Color(0xff030229),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding:  EdgeInsets.only(
+                                          left: width/192),
+                                      child: InkWell(
+                                        onTap: () {
 
-                            ///NAme
+                                        },
+                                        child: Transform.rotate(
+                                          angle:  0,
+                                          child: Opacity(
+                                            // arrowdown2TvZ (8:2307)
+                                            opacity: 0.7,
+                                            child: Container(
+                                              width: width/153.6,
+                                              height: height/73.9,
+                                              child: Image.asset(
+                                                'assets/images/arrow-down-2.png',
+                                                width: width/153.6,
+                                                height: height/73.9,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            ///Name
                             Container(
                               color: Colors.white,
                               width: width / 5.5,
@@ -2001,6 +2138,7 @@ class _DashBoardState extends State<DashBoard> {
                                 crossAxisAlignment:
                                 CrossAxisAlignment.center,
                                 children: [
+
                                   KText(
                                     text: "Name",
                                     style: SafeGoogleFont(
@@ -2643,13 +2781,12 @@ class _DashBoardState extends State<DashBoard> {
                           child: ListView.builder(
                             shrinkWrap: true,
                             physics:const  NeverScrollableScrollPhysics(),
-                            itemCount: unVerifyedUserData.length,
+                            itemCount:  pagecount == temp ? unVerifyedUserData.length.remainder(4) == 0 ? 4 : unVerifyedUserData.length.remainder(4) : 4,
                             itemBuilder: (context, index) {
 
                               var _userdata = unVerifyedUserData[(temp*4)-4+index];
 
-                              return   (temp*4)-4+index >= documentlength ?SizedBox():
-                              Container(
+                              return Container(
                                 padding: EdgeInsets.fromLTRB(26.07*fem, 19.56*fem, 39.11*fem, 19.56*fem),
                                 width: 1119.87*fem,
                                 height: 78.22*fem,
@@ -2660,6 +2797,43 @@ class _DashBoardState extends State<DashBoard> {
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
+                                    Container(
+                                      color: Colors.white,
+                                      width: width/17.2,
+                                      height: height/14.78,
+                                      alignment: Alignment.center,
+                                      child: Center(
+                                        child: Row(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                          children: [
+                                            KText(
+                                              text: "${((temp*4)-4+index) + 1}",
+                                              style: SafeGoogleFont(
+                                                  'Nunito',
+                                                  fontSize: 18 *
+                                                      ffem,
+                                                  fontWeight:
+                                                  FontWeight
+                                                      .w400,
+                                                  height:
+                                                  1.3625 *
+                                                      ffem /
+                                                      fem,
+                                                  color:
+                                                  const Color(
+                                                      0xff030229),
+                                                  textStyle: const TextStyle(
+                                                      overflow: TextOverflow
+                                                          .ellipsis
+                                                  )
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+
                                     SizedBox(
                                       width:width/5.464,
                                       child: Row(

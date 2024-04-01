@@ -153,7 +153,7 @@ class _Acadamic_YearState extends State<Acadamic_Year> {
                       child: Row(
                         children: [
                           KText(
-                            text: "Si.No.",
+                            text: "SL.No.",
                             style:  SafeGoogleFont (
                               'Nunito',
                               fontWeight: FontWeight.w600,
@@ -305,7 +305,7 @@ class _Acadamic_YearState extends State<Acadamic_Year> {
                                           width:width/12.075,
                                           child:
                                           KText(
-                                            text: (index + 1).toString(),
+                                            text: "${((temp*10)-10+index) + 1}",
                                             style:  SafeGoogleFont (
                                               'Nunito',
                                               fontSize:width/105.07,
@@ -1197,7 +1197,7 @@ class _Acadamic_YearState extends State<Acadamic_Year> {
             width: 300,
             height: 300,
             child: YearPicker(
-              firstDate: DateTime(DateTime.now().year - 10, 1),
+              firstDate: DateTime(DateTime.now().year - 100, 1),
               // lastDate: DateTime.now(),
               lastDate: DateTime.now(),
               initialDate: DateTime.now(),

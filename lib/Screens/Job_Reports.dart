@@ -10,6 +10,7 @@ import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import '../Models/Language_Model.dart';
+import '../common_widgets/dashboardgraph.dart';
 import '../utils.dart';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -239,6 +240,7 @@ class _Job_ReportsState extends State<Job_Reports> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
 
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -258,8 +260,33 @@ class _Job_ReportsState extends State<Job_Reports> {
                                 vertical: height/32.55,
                                 horizontal: width/68.3,
                               ),
-                              child:
-                              SfCartesianChart(
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        KText(
+                                          text:
+                                          'Alumni Yearly Passing Out',
+                                          style: SafeGoogleFont (
+                                            'Poppins',
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+
+                                            color: const Color(0xff05004e),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                      width:width/1.2196,
+                                      height:height/2.1275,
+                                      child: LineChartSample2()),
+                                ],
+                              )
+                             /* SfCartesianChart(
                                 primaryXAxis: CategoryAxis(),
                                primaryYAxis: NumericAxis(
                                    minimum: 0,
@@ -289,7 +316,7 @@ class _Job_ReportsState extends State<Job_Reports> {
                                     )
                                   ]
 
-                              ),
+                              ),*/
                             /*  LineChart(
                                 curve: Curves.linear,
                                 createLineChartData(areaLineYesList,areaLineNoList,areaLineOwnList),
@@ -909,7 +936,7 @@ class _Job_ReportsState extends State<Job_Reports> {
       /// in this if statement  overall user working person to filtered to add the line graph  list
         if(UserData.docs[x]['workingStatus']=="Yes"){
           yesValue=yesValue+1;
-          lineGraphListWorkingAlumni.add(AlumniData(sales:double.parse(((yesValue/UserData.docs.length)*100).toStringAsFixed(2)),year:UserData.docs[x]['yearofpassed'].toString()  ));
+          lineGraphListWorkingAlumni.add(AlumniData(sales:yesValue,year:UserData.docs[x]['yearofpassed'].toString()  ));
 
           /// in this if Statement too get department one list too check the that list of overall user department is equal to to add the  LineDataList list
           if(departmentDataList.contains(UserData.docs[x]['subjectStream'])){
@@ -919,7 +946,7 @@ class _Job_ReportsState extends State<Job_Reports> {
         }
         if(UserData.docs[x]['workingStatus']=="No"){
           noValue=noValue+1;
-          lineGraphListWorkingAlumni.add(AlumniData(sales:double.parse(((noValue/UserData.docs.length)*100).toStringAsFixed(2)),year:UserData.docs[x]['yearofpassed'].toString()  ));
+          lineGraphListWorkingAlumni.add(AlumniData(sales:noValue,year:UserData.docs[x]['yearofpassed'].toString()  ));
           if(departmentDataList.contains(UserData.docs[x]['subjectStream'])){
             value2=value2+1;
             LineDataList2.add(lineData(int.parse(UserData.docs[x]['yearofpassed']), double.parse(((value2/TotalAlumniUserCount)*100).toString())));
@@ -1295,7 +1322,7 @@ class AlumniData {
 
   AlumniData({this.year, this.sales,});
   final String ?year;
-  late double ?sales;
+  late int ?sales;
 }
 
 class AppColors {

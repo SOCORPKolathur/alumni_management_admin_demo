@@ -37,7 +37,7 @@ class _Notification_ScreenState extends State<Notification_Screen> with SingleTi
 
   setBadgeCount() async {
     var messages = await FirebaseFirestore.instance.collection('Messages').get();
-    var requests = await FirebaseFirestore.instance.collection('ProfileEditRequest').get();
+    var requests = await FirebaseFirestore.instance.collection('ProfileEditRequest').where("Editted",isEqualTo: false).get();
     messages.docs.forEach((element) {
       if(element.get("isViewed") == false){
         messageCount++;
@@ -387,7 +387,7 @@ class _Notification_ScreenState extends State<Notification_Screen> with SingleTi
                             }
                         ),
                         StreamBuilder(
-                            stream: FirebaseFirestore.instance.collection('ProfileEditRequest').snapshots(),
+                            stream: FirebaseFirestore.instance.collection('ProfileEditRequest').where("Editted",isEqualTo: false).snapshots(),
                             builder: (ctx, snap){
                               if(snap.hasData){
                                 return buildRequests(snap.data!.docs);

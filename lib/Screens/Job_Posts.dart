@@ -38,6 +38,9 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
   TextEditingController positionsController = TextEditingController();
   TextEditingController noOfOpeningController = TextEditingController();
 
+
+
+
   DateTime? dateRangeStart;
   DateTime? dateRangeEnd;
   List<String> mydate=[];
@@ -243,7 +246,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                   color: Constants().primaryAppColor,
                                   borderRadius: BorderRadius.circular(8),
                                   boxShadow: [
-                                    BoxShadow(
+                                    const BoxShadow(
                                       color: Colors.black26,
                                       offset: Offset(1, 2),
                                       blurRadius: 3,
@@ -260,7 +263,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                     children: [
                                       currentTab.toUpperCase() != "VIEW"
                                           ? const SizedBox()
-                                          : Icon(
+                                          : const Icon(
                                               Icons.add,
                                               color: Colors.white,
                                             ),
@@ -297,7 +300,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(8),
                                     boxShadow: [
-                                      BoxShadow(
+                                      const BoxShadow(
                                         color: Colors.black26,
                                         offset: Offset(1, 2),
                                         blurRadius: 3,
@@ -313,7 +316,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Icon(
+                                        const Icon(
                                           Icons.logout_rounded,
                                           color: Colors.black,
                                         ),
@@ -355,7 +358,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                         color: Constants().primaryAppColor,
                                         borderRadius: BorderRadius.circular(8),
                                         boxShadow: [
-                                          BoxShadow(
+                                          const BoxShadow(
                                             color: Colors.black26,
                                             offset: Offset(1, 2),
                                             blurRadius: 3,
@@ -367,7 +370,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                             horizontal: width / 227.66),
                                         child: Row(
                                           children: [
-                                            Icon(Icons.filter_list_alt,
+                                            const Icon(Icons.filter_list_alt,
                                                 color: Colors.white),
                                             KText(
                                               text: dateRangeStart==null?" Filter by Date":"Clear Date",
@@ -398,7 +401,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
 
                         color: Colors.white,
                         boxShadow: [
-                          BoxShadow(
+                          const BoxShadow(
                             color: Colors.black26,
                             offset: Offset(1, 2),
                             blurRadius: 3,
@@ -436,7 +439,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                             Container(
                               height: height / 1.421153,
                               width: double.infinity,
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                   color: Color(0xffF7FAFC),
                                   borderRadius: BorderRadius.only(
                                     bottomLeft: Radius.circular(10),
@@ -481,7 +484,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               3),
-                                                      color: Color(0xffDDDEEE),
+                                                      color: const Color(0xffDDDEEE),
                                                       elevation: 5,
                                                       child: SizedBox(
                                                         height: height / 16.02,
@@ -563,7 +566,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                             BorderRadius
                                                                 .circular(3),
                                                         color:
-                                                            Color(0xffDDDEEE),
+                                                            const Color(0xffDDDEEE),
                                                         elevation: 5,
                                                         child: SizedBox(
                                                           height:
@@ -751,7 +754,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               3),
-                                                      color: Color(0xffDDDEEE),
+                                                      color: const Color(0xffDDDEEE),
                                                       elevation: 5,
                                                       child: SizedBox(
                                                         height: height / 16.02,
@@ -825,7 +828,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                         BorderRadius
                                                             .circular(3),
                                                         color:
-                                                        Color(0xffDDDEEE),
+                                                        const Color(0xffDDDEEE),
                                                         elevation: 5,
                                                         child: SizedBox(
                                                           height:
@@ -901,7 +904,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               3),
-                                                      color: Color(0xffDDDEEE),
+                                                      color: const Color(0xffDDDEEE),
                                                       elevation: 5,
                                                       child: SizedBox(
                                                         height: height / 10.850,
@@ -979,7 +982,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               3),
-                                                      color: Color(0xffDDDEEE),
+                                                      color: const Color(0xffDDDEEE),
                                                       elevation: 5,
                                                       child: SizedBox(
                                                         height: height / 6.510,
@@ -1063,7 +1066,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                       ],
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.only(top: 0),
+                                      padding: const EdgeInsets.only(top: 0),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
@@ -1077,7 +1080,26 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                             onTap: () async {
                                               if (dateController.text != "" &&
                                                   timeController.text != "" &&
-                                                  positionsController.text != "") { // Check if Positions is not empty
+
+                                                  titleController.text != "" &&
+                                                  locationController.text != "" &&
+                                                  descriptionController.text != "" &&
+                                                  quvalificationController.text != "" &&
+                                                  noOfOpeningController.text != "" &&
+                                                  positionsController.text != ""
+
+
+
+
+
+
+
+
+
+
+
+                                              ) { // Check if Positions is not empty
+
                                                 Response response = await JobPostFireCrud.addEvent(
                                                   title: titleController.text,
                                                   time: timeController.text,
@@ -1132,7 +1154,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                               height: height / 18.475,
                                               width: width / 12.8,
                                               decoration: BoxDecoration(
-                                                color: Color(0xffD60A0B),
+                                                color: const Color(0xffD60A0B),
                                                 borderRadius: BorderRadius.circular(4),
                                               ),
                                               child: Center(
@@ -1142,7 +1164,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                     'Nunito',
                                                     fontSize: width / 96,
                                                     fontWeight: FontWeight.w600,
-                                                    color: Color(0xffFFFFFF),
+                                                    color: const Color(0xffFFFFFF),
                                                   ),
                                                 ),
                                               ),
@@ -1171,7 +1193,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                 height: height / 18.475,
                                                 width: width / 12.8,
                                                 decoration: BoxDecoration(
-                                                  color: Color(0xff00A0E3),
+                                                  color: const Color(0xff00A0E3),
                                                   borderRadius:
                                                       BorderRadius.circular(4),
                                                 ),
@@ -1183,7 +1205,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                       fontSize: width / 96,
                                                       fontWeight:
                                                           FontWeight.w600,
-                                                      color: Color(0xffFFFFFF),
+                                                      color: const Color(0xffFFFFFF),
                                                     ),
                                                   ),
                                                 )),
@@ -1223,7 +1245,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                       fontSize: width / 96,
                                                       fontWeight:
                                                           FontWeight.w600,
-                                                      color: Color(0xffFFFFFF),
+                                                      color: const Color(0xffFFFFFF),
                                                     ),
                                                   ),
                                                 )),
@@ -1240,7 +1262,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                       ),
                     )
                   : currentTab.toUpperCase() == "VIEW"
-                      ? SizedBox(height: height / 1.23166, width: width / 1.21964,
+                      ? SizedBox(height: height / 1.0166, width: width / 1.21964,
                 child: SingleChildScrollView(
                   physics: const NeverScrollableScrollPhysics(),
                 child: StreamBuilder<List<JobPostModel>>(
@@ -1322,6 +1344,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                             Container(
                                 color: Colors.white,
                                 width: width / 1.2418,
+                                // width: width/1.3009,
                                 height: height / 13.4363,
                                 child: Row(
                                   children: [
@@ -1337,11 +1360,11 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                               .center,
                                           children: [
                                             KText(
-                                              text: "Si.No",
+                                              text: "SL.No",
                                               style:
                                               SafeGoogleFont(
                                                 'Nunito',
-                                                color: Color(
+                                                color: const Color(
                                                     0xff030229),
                                               ),
                                             ),
@@ -1401,7 +1424,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                               style:
                                               SafeGoogleFont(
                                                 'Nunito',
-                                                color: Color(
+                                                color: const Color(
                                                     0xff030229),
                                               ),
                                             ),
@@ -1466,7 +1489,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                             text: "Description",
                                             style: SafeGoogleFont(
                                               'Nunito',
-                                              color: Color(
+                                              color: const Color(
                                                   0xff030229),
                                             ),
                                           ),
@@ -1534,7 +1557,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                               style:
                                               SafeGoogleFont(
                                                 'Nunito',
-                                                color: Color(
+                                                color: const Color(
                                                     0xff030229),
                                               ),
                                             ),
@@ -1603,7 +1626,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                               style:
                                               SafeGoogleFont(
                                                 'Nunito',
-                                                color: Color(
+                                                color: const Color(
                                                     0xff030229),
                                               ),
                                             ),
@@ -1672,7 +1695,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                               style:
                                               SafeGoogleFont(
                                                 'Nunito',
-                                                color: Color(
+                                                color: const Color(
                                                     0xff030229),
                                               ),
                                             ),
@@ -1739,7 +1762,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                               style:
                                               SafeGoogleFont(
                                                 'Nunito',
-                                                color: Color(
+                                                color: const Color(
                                                     0xff030229),
                                               ),
                                             ),
@@ -1783,27 +1806,28 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                     ),
                                   ],
                                 )),
+
                             SizedBox(
-                              height: height / 1.302,
+                              height: height / 1.102,
                               child: TabBarView(
                                 controller: tabController,
                                 physics: const ScrollPhysics(),
                                 children: [
 
                                   SizedBox(
-                                      height: height / 1.34363,
+                                      height: height / 1.14363,
                                       width: width / 1.2288,
                                       child: SingleChildScrollView(
                                         physics: const NeverScrollableScrollPhysics(),
                                         child: Column(
                                           children: [
-                                            
+
                                             SizedBox(
-                                              height:height/1.7131,
+                                              height:height/1.38,
                                               child: ListView.builder(
                                                 shrinkWrap: true,
                                                 physics: const NeverScrollableScrollPhysics(),
-                                                itemCount: verifyed.length,
+                                                itemCount: pagecount == temp ? verifyed.length.remainder(10) == 0 ? 10 : verifyed.length.remainder(10) : 10,
                                                 itemBuilder: (ctx, i) {
 
                                                   var verifyedData=verifyed[(temp*10)-10+i];
@@ -1847,7 +1871,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                       SafeGoogleFont(
                                                                         'Nunito',
                                                                         color:
-                                                                        Color(0xff030229),
+                                                                        const Color(0xff030229),
                                                                       ),
                                                                     ),
                                                                   ),
@@ -1873,7 +1897,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                       SafeGoogleFont(
                                                                         'Nunito',
                                                                         color:
-                                                                        Color(0xff030229),
+                                                                        const Color(0xff030229),
                                                                       ),
                                                                     ),
                                                                   ),
@@ -1899,7 +1923,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                       SafeGoogleFont(
                                                                         'Nunito',
                                                                         color:
-                                                                        Color(0xff030229),
+                                                                        const Color(0xff030229),
                                                                       ),
                                                                     ),
                                                                   ),
@@ -1926,7 +1950,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                       SafeGoogleFont(
                                                                         'Nunito',
                                                                         color:
-                                                                        Color(0xff030229),
+                                                                        const Color(0xff030229),
                                                                       ),
                                                                     ),
                                                                   ),
@@ -1953,7 +1977,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                       SafeGoogleFont(
                                                                         'Nunito',
                                                                         color:
-                                                                        Color(0xff030229),
+                                                                        const Color(0xff030229),
                                                                       ),
                                                                     ),
                                                                   ),
@@ -1988,7 +2012,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                           18.36,
                                                                       height: height /
                                                                           14.78,
-                                                                      child: Icon(
+                                                                      child: const Icon(
                                                                           Icons.more_horiz)),
                                                                 ),
                                                               ],
@@ -2001,8 +2025,8 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                       SizedBox(
                                                         width:
                                                         width / 1.2288,
-                                                        height: height /
-                                                            13.4363,
+                                                        // height: height /
+                                                        //     13.4363,
                                                         child: Padding(
                                                           padding: EdgeInsets
                                                               .only(
@@ -2014,9 +2038,9 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                 width:
                                                                 width /
                                                                     19.2,
-                                                                height:
-                                                                height /
-                                                                    14.78,
+                                                                // height:
+                                                                // height /
+                                                                //     14.78,
                                                                 child:
                                                                 Padding(
                                                                   padding: const EdgeInsets
@@ -2026,12 +2050,12 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                   child:
                                                                   KText(
                                                                     text:
-                                                                    "${i + 1}",
+                                                                    "${((temp*10)-10+i) + 1}",
                                                                     style:
                                                                     SafeGoogleFont(
                                                                       'Nunito',
                                                                       color:
-                                                                      Color(0xff030229),
+                                                                      const Color(0xff030229),
                                                                     ),
                                                                   ),
                                                                 ),
@@ -2039,9 +2063,9 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                               SizedBox(
                                                                 width: width /
                                                                     4.38857,
-                                                                height:
-                                                                height /
-                                                                    14.78,
+                                                                // height:
+                                                                // height /
+                                                                //     14.78,
                                                                 child:
                                                                 Padding(
                                                                   padding: const EdgeInsets
@@ -2057,7 +2081,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                     SafeGoogleFont(
                                                                       'Nunito',
                                                                       color:
-                                                                      Color(0xff030229),
+                                                                      const Color(0xff030229),
                                                                     ),
                                                                   ),
                                                                 ),
@@ -2065,9 +2089,9 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                               SizedBox(
                                                                 width: width /
                                                                     4.38857,
-                                                                height:
-                                                                height /
-                                                                    14.78,
+                                                                // height:
+                                                                // height /
+                                                                //     14.78,
                                                                 child:
                                                                 Padding(
                                                                   padding: const EdgeInsets
@@ -2083,7 +2107,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                     SafeGoogleFont(
                                                                       'Nunito',
                                                                       color:
-                                                                      Color(0xff030229),
+                                                                      const Color(0xff030229),
                                                                     ),
                                                                   ),
                                                                 ),
@@ -2092,9 +2116,9 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                 width:
                                                                 width /
                                                                     9.6,
-                                                                height:
-                                                                height /
-                                                                    14.78,
+                                                                // height:
+                                                                // height /
+                                                                //     14.78,
                                                                 child:
                                                                 Padding(
                                                                   padding: const EdgeInsets
@@ -2110,7 +2134,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                     SafeGoogleFont(
                                                                       'Nunito',
                                                                       color:
-                                                                      Color(0xff030229),
+                                                                      const Color(0xff030229),
                                                                     ),
                                                                   ),
                                                                 ),
@@ -2119,9 +2143,9 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                 width:
                                                                 width /
                                                                     16.0,
-                                                                height:
-                                                                height /
-                                                                    14.78,
+                                                                // height:
+                                                                // height /
+                                                                //     14.78,
                                                                 child:
                                                                 Padding(
                                                                   padding: const EdgeInsets
@@ -2137,16 +2161,17 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                     SafeGoogleFont(
                                                                       'Nunito',
                                                                       color:
-                                                                      Color(0xff030229),
+                                                                      const Color(0xff030229),
                                                                     ),
                                                                   ),
                                                                 ),
                                                               ),
-                                                              SizedBox(
+                                                              Container(
+                                                                // color: Colors.green,
                                                                   width: width /
-                                                                      17.6,
+                                                                      20.6,
                                                                   height: height /
-                                                                      14.78,
+                                                                      25.78,
                                                                   child: verifyedData.verify ==
                                                                       true
                                                                       ? const Icon(
@@ -2172,7 +2197,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                         18.36,
                                                                     height: height /
                                                                         14.78,
-                                                                    child: Icon(
+                                                                    child: const Icon(
                                                                         Icons.more_horiz)),
                                                               ),
                                                             ],
@@ -2205,7 +2230,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                             },
                                                             child: Container(
                                                                 height:30,width:30,
-                                                                margin: EdgeInsets.only(left:8,right:8,top:10,bottom:10),
+                                                                margin: const EdgeInsets.only(left:8,right:8,top:10,bottom:10),
                                                                 decoration: BoxDecoration(
                                                                     borderRadius: BorderRadius.circular(100),
                                                                     color:temp.toString() == list[index].toString() ?  Constants().primaryAppColor : Colors.transparent
@@ -2333,7 +2358,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                   style:
                                                                   SafeGoogleFont(
                                                                     'Nunito',
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff030229),
                                                                   ),
                                                                 ),
@@ -2359,7 +2384,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                   style:
                                                                   SafeGoogleFont(
                                                                     'Nunito',
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff030229),
                                                                   ),
                                                                 ),
@@ -2385,7 +2410,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                   style:
                                                                   SafeGoogleFont(
                                                                     'Nunito',
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff030229),
                                                                   ),
                                                                 ),
@@ -2411,7 +2436,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                   style:
                                                                   SafeGoogleFont(
                                                                     'Nunito',
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff030229),
                                                                   ),
                                                                 ),
@@ -2437,7 +2462,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                   style:
                                                                   SafeGoogleFont(
                                                                     'Nunito',
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff030229),
                                                                   ),
                                                                 ),
@@ -2476,7 +2501,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                       18.36,
                                                                   height: height /
                                                                       14.78,
-                                                                  child: Icon(
+                                                                  child: const Icon(
                                                                       Icons
                                                                           .more_horiz)),
                                                             ),
@@ -2513,7 +2538,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                   style:
                                                                   SafeGoogleFont(
                                                                     'Nunito',
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff030229),
                                                                   ),
                                                                 ),
@@ -2539,7 +2564,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                   style:
                                                                   SafeGoogleFont(
                                                                     'Nunito',
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff030229),
                                                                   ),
                                                                 ),
@@ -2565,7 +2590,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                   style:
                                                                   SafeGoogleFont(
                                                                     'Nunito',
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff030229),
                                                                   ),
                                                                 ),
@@ -2591,7 +2616,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                   style:
                                                                   SafeGoogleFont(
                                                                     'Nunito',
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff030229),
                                                                   ),
                                                                 ),
@@ -2617,7 +2642,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                   style:
                                                                   SafeGoogleFont(
                                                                     'Nunito',
-                                                                    color: Color(
+                                                                    color: const Color(
                                                                         0xff030229),
                                                                   ),
                                                                 ),
@@ -2656,7 +2681,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                       18.36,
                                                                   height: height /
                                                                       14.78,
-                                                                  child: Icon(
+                                                                  child: const Icon(
                                                                       Icons
                                                                           .more_horiz)),
                                                             ),
@@ -2690,7 +2715,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                           },
                                                           child: Container(
                                                               height:30,width:30,
-                                                              margin: EdgeInsets.only(left:8,right:8,top:10,bottom:10),
+                                                              margin: const EdgeInsets.only(left:8,right:8,top:10,bottom:10),
                                                               decoration: BoxDecoration(
                                                                   borderRadius: BorderRadius.circular(100),
                                                                   color:temp2.toString() == list2[index].toString() ?  Constants().primaryAppColor : Colors.transparent
@@ -2781,7 +2806,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
 
 
               SizedBox(height: height / 65.1),
-              DeveloperCardWidget(),
+              const DeveloperCardWidget(),
               SizedBox(height: height / 65.1),
             ],
           ),
@@ -2810,7 +2835,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
             decoration: BoxDecoration(
               color: Constants().primaryAppColor,
               boxShadow: [
-                BoxShadow(
+                const BoxShadow(
                   color: Colors.black26,
                   offset: Offset(1, 2),
                   blurRadius: 3,
@@ -2846,7 +2871,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(8),
                               boxShadow: [
-                                BoxShadow(
+                                const BoxShadow(
                                   color: Colors.black26,
                                   offset: Offset(1, 2),
                                   blurRadius: 3,
@@ -2876,7 +2901,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                 Expanded(
                   child: Container(
                     width: double.infinity,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
                         bottomRight: Radius.circular(10),
@@ -2884,6 +2909,8 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                       ),
                     ),
                     child: SingleChildScrollView(
+
+
                       child: Column(
                         children: [
                           Container(
@@ -2919,7 +2946,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                               fontSize: width / 95.375),
                                         ),
                                       ),
-                                      Text(":"),
+                                      const Text(":"),
                                       SizedBox(width: width / 68.3),
                                       KText(
                                         text: jobPost.title!,
@@ -2940,7 +2967,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                               fontSize: width / 95.375),
                                         ),
                                       ),
-                                      Text(":"),
+                                      const Text(":"),
                                       SizedBox(width: width / 68.3),
                                       Text(
                                         jobPost.positions!,
@@ -2961,7 +2988,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                               fontSize: width / 95.375),
                                         ),
                                       ),
-                                      Text(":"),
+                                      const Text(":"),
                                       SizedBox(width: width / 68.3),
                                       KText(
                                         text: jobPost.location!,
@@ -2971,25 +2998,31 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                     ],
                                   ),
                                   SizedBox(height: height / 32.55),
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: size.width * 0.15,
-                                        child: KText(
-                                          text: "Description",
-                                          style: SafeGoogleFont('Poppins',
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: width / 95.375),
+                                  SizedBox(
+                                    height: 50,
+                                    child: Row(
+                                      children: [
+                                        SizedBox(
+                                          width: size.width * 0.15,
+                                          child: KText(
+                                            text: "Description",
+                                            style: SafeGoogleFont('Poppins',
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: width / 95.375),
+                                          ),
                                         ),
-                                      ),
-                                      Text(":"),
-                                      SizedBox(width: width / 68.3),
-                                      KText(
-                                        text: jobPost.description!,
-                                        style: SafeGoogleFont('Poppins',
-                                            fontSize: width / 105.571),
-                                      )
-                                    ],
+                                        const Text(":"),
+                                        SizedBox(width: width / 68.3),
+                                        Expanded(
+                                          child: KText(
+                                            text: jobPost.description!,
+                                            maxLines: 2,
+                                            style: SafeGoogleFont('Poppins',
+                                                fontSize: width / 105.571),
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                   SizedBox(height: height / 32.55),
                                   Row(
@@ -3003,7 +3036,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                               fontSize: width / 95.375),
                                         ),
                                       ),
-                                      Text(":"),
+                                      const Text(":"),
                                       SizedBox(width: width / 68.3),
                                       KText(
                                         text: jobPost.openings.toString(),
@@ -3024,7 +3057,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                               fontSize: width / 95.375),
                                         ),
                                       ),
-                                      Text(":"),
+                                      const Text(":"),
                                       SizedBox(width: width / 68.3),
                                       Text(
                                         jobPost.userName!,
@@ -3045,7 +3078,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                               fontSize: width / 95.375),
                                         ),
                                       ),
-                                      Text(":"),
+                                      const Text(":"),
                                       SizedBox(width: width / 68.3),
                                       Text(
                                         jobPost.UserOccupation!,
@@ -3066,7 +3099,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                               fontSize: width / 95.375),
                                         ),
                                       ),
-                                      Text(":"),
+                                      const Text(":"),
                                       SizedBox(width: width / 68.3),
                                       Text(
                                         jobPost.date!,
@@ -3087,7 +3120,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                               fontSize: width / 95.375),
                                         ),
                                       ),
-                                      Text(":"),
+                                      const Text(":"),
                                       SizedBox(width: width / 68.3),
                                       Text(
                                         jobPost.time!,
@@ -3138,7 +3171,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                             : Colors.green,
                                         borderRadius: BorderRadius.circular(8),
                                         boxShadow: [
-                                          BoxShadow(
+                                          const BoxShadow(
                                             color: Colors.black26,
                                             offset: Offset(1, 2),
                                             blurRadius: 3,
@@ -3222,12 +3255,12 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: Constants().primaryAppColor,
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         topRight: Radius.circular(10),
                         topLeft: Radius.circular(10),
                       ),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -3242,7 +3275,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.cancel,
                             color: Colors.black,
                           ),
@@ -3252,7 +3285,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                   ),
                   Expanded(
                     child: Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.only(
                           bottomRight: Radius.circular(10),
@@ -3322,7 +3355,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
               decoration: BoxDecoration(
                 color: Colors.white,
                 boxShadow: [
-                  BoxShadow(
+                  const BoxShadow(
                     color: Colors.black26,
                     offset: Offset(1, 2),
                     blurRadius: 3,
@@ -3494,7 +3527,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                   Expanded(
                     child: Container(
                       width: double.infinity,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           color: Color(0xffF7FAFC),
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(10),
@@ -3530,7 +3563,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                           Material(
                                             borderRadius:
                                                 BorderRadius.circular(3),
-                                            color: Color(0xffDDDEEE),
+                                            color: const Color(0xffDDDEEE),
                                             elevation: 5,
                                             child: SizedBox(
                                               height: height / 16.02,
@@ -3585,7 +3618,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                             Material(
                                               borderRadius:
                                                   BorderRadius.circular(3),
-                                              color: Color(0xffDDDEEE),
+                                              color: const Color(0xffDDDEEE),
                                               elevation: 5,
                                               child: SizedBox(
                                                 height: height / 16.02,
@@ -3646,7 +3679,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                           Material(
                                             borderRadius:
                                             BorderRadius.circular(3),
-                                            color: Color(0xffDDDEEE),
+                                            color: const Color(0xffDDDEEE),
                                             elevation: 5,
                                             child: SizedBox(
                                               height: height / 16.02,
@@ -3701,7 +3734,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                             Material(
                                               borderRadius:
                                               BorderRadius.circular(3),
-                                              color: Color(0xffDDDEEE),
+                                              color: const Color(0xffDDDEEE),
                                               elevation: 5,
                                               child: SizedBox(
                                                 height: height / 16.02,
@@ -3742,7 +3775,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                     ],
                                   ),
                                   SizedBox(height: height / 65.1),
-                                  Row(
+                                  const Row(
                                     children: [
                                       /*   Column(
                                         crossAxisAlignment:
@@ -3864,7 +3897,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                           Material(
                                             borderRadius:
                                                 BorderRadius.circular(3),
-                                            color: Color(0xffDDDEEE),
+                                            color: const Color(0xffDDDEEE),
                                             elevation: 5,
                                             child: SizedBox(
                                               height: height / 10.850,
@@ -3918,7 +3951,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                           Material(
                                             borderRadius:
                                                 BorderRadius.circular(3),
-                                            color: Color(0xffDDDEEE),
+                                            color: const Color(0xffDDDEEE),
                                             elevation: 5,
                                             child: SizedBox(
                                               height: height / 6.510,
@@ -3988,7 +4021,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                             ],
                           ),
                           Padding(
-                            padding: EdgeInsets.only(top: 0),
+                            padding: const EdgeInsets.only(top: 0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -4079,7 +4112,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                       height: height / 18.475,
                                       width: width / 12.8,
                                       decoration: BoxDecoration(
-                                        color: Color(0xffD60A0B),
+                                        color: const Color(0xffD60A0B),
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                       child: Center(
@@ -4089,7 +4122,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                             'Nunito',
                                             fontSize: width / 96,
                                             fontWeight: FontWeight.w600,
-                                            color: Color(0xffFFFFFF),
+                                            color: const Color(0xffFFFFFF),
                                           ),
                                         ),
                                       )),
@@ -4114,7 +4147,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                       height: height / 18.475,
                                       width: width / 12.8,
                                       decoration: BoxDecoration(
-                                        color: Color(0xff00A0E3),
+                                        color: const Color(0xff00A0E3),
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                       child: Center(
@@ -4124,7 +4157,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                             'Nunito',
                                             fontSize: width / 96,
                                             fontWeight: FontWeight.w600,
-                                            color: Color(0xffFFFFFF),
+                                            color: const Color(0xffFFFFFF),
                                           ),
                                         ),
                                       )),
@@ -4170,7 +4203,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
       row.add(jobPost[i].description!);
       rows.add(row);
     }
-    String csv = ListToCsvConverter().convert(rows);
+    String csv = const ListToCsvConverter().convert(rows);
     saveCsvToFile(csv);
   }
 
@@ -4198,7 +4231,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
     }
     print(row);
     print("dynamic list++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-    String pdf = ListToCsvConverter().convert(rows);
+    String pdf = const ListToCsvConverter().convert(rows);
     savePdfToFile(pdf);
   }
 
@@ -4254,7 +4287,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
       row.add(jobPost[i].description);
       rows.add(row);
     }
-    String csv = ListToCsvConverter().convert(rows,
+    String csv = const ListToCsvConverter().convert(rows,
         fieldDelimiter: null,
         eol: null,
         textEndDelimiter: null,
@@ -4550,12 +4583,12 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
     backgroundColor: Colors.transparent,
     elevation: 0,
     content: Container(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: Constants().primaryAppColor, width: 3),
           boxShadow: [
-            BoxShadow(
+            const BoxShadow(
               color: Color(0x19000000),
               spreadRadius: 2.0,
               blurRadius: 8.0,
@@ -4568,13 +4601,13 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
           children: [
             Icon(Icons.info_outline, color: Constants().primaryAppColor),
             Padding(
-              padding: EdgeInsets.only(left: 8.0),
+              padding: const EdgeInsets.only(left: 8.0),
               child: Text('Please fill required fields !!',
                   style: SafeGoogleFont('Poppins', color: Colors.black)),
             ),
-            Spacer(),
+            const Spacer(),
             TextButton(
-                onPressed: () => debugPrint("Undid"), child: Text("Undo"))
+                onPressed: () => debugPrint("Undid"), child: const Text("Undo"))
           ],
         )),
   );
@@ -4612,7 +4645,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
     double height = MediaQuery.of(context).size.height;
     final render = key.currentContext!.findRenderObject() as RenderBox;
     await showMenu(
-      color: Color(0xffFFFFFF),
+      color: const Color(0xffFFFFFF),
       elevation: 0,
       context: context,
       position: RelativeRect.fromLTRB(
@@ -4676,36 +4709,36 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                   height: height / 18.475,
                   decoration: BoxDecoration(
                       color: item == "Edit"
-                          ? Color(0xff5B93FF).withOpacity(0.6)
+                          ? const Color(0xff5B93FF).withOpacity(0.6)
                           : item == "View"
                               ? Colors.green.withOpacity(0.6)
-                              : Color(0xffE71D36).withOpacity(0.6),
+                              : const Color(0xffE71D36).withOpacity(0.6),
                       borderRadius: BorderRadius.circular(5)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       item == "Edit"
-                          ? Icon(
+                          ? const Icon(
                               Icons.edit,
                               color: Colors.white,
                               size: 18,
                             )
                           : item == "View"
-                              ? Icon(
+                              ? const Icon(
                                   Icons.remove_red_eye_outlined,
                                   color: Colors.white,
                                   size: 18,
                                 )
-                              : Icon(
+                              : const Icon(
                                   Icons.delete,
                                   color: Colors.white,
                                   size: 18,
                                 ),
                       Padding(
-                        padding: EdgeInsets.only(left: 5),
+                        padding: const EdgeInsets.only(left: 5),
                         child: Text(
                           item,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -4763,9 +4796,9 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                 value: item,
                 child: Material(
                   color: item == "Print"
-                      ? Color(0xff5B93FF)
+                      ? const Color(0xff5B93FF)
                       : item == "Copy"
-                          ? Color(0xffE71D36)
+                          ? const Color(0xffE71D36)
                           : item == "Csv"
                               ? Colors.green
                               : Colors.transparent,
@@ -4776,9 +4809,9 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                     height: height / 18.475,
                     decoration: BoxDecoration(
                         color: item == "Print"
-                            ? Color(0xff5B93FF)
+                            ? const Color(0xff5B93FF)
                             : item == "Copy"
-                                ? Color(0xffE71D36)
+                                ? const Color(0xffE71D36)
                                 : item == "Csv"
                                     ? Colors.green
                                     : Colors.transparent,
@@ -4787,29 +4820,29 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         item == "Print"
-                            ? Icon(
+                            ? const Icon(
                                 Icons.print,
                                 color: Colors.white,
                                 size: 18,
                               )
                             : item == "Copy"
-                                ? Icon(
+                                ? const Icon(
                                     Icons.copy,
                                     color: Colors.white,
                                     size: 18,
                                   )
                                 : item == "Csv"
-                                    ? Icon(
+                                    ? const Icon(
                                         Icons.file_copy_rounded,
                                         color: Colors.white,
                                         size: 18,
                                       )
-                                    : Icon(
+                                    : const Icon(
                                         Icons.circle,
                                         color: Colors.transparent,
                                       ),
                         Padding(
-                          padding: EdgeInsets.only(left: 5),
+                          padding: const EdgeInsets.only(left: 5),
                           child: Text(
                             item,
                             style: TextStyle(
@@ -4871,24 +4904,24 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       item == "Filter by Date"
-                          ? Icon(
+                          ? const Icon(
                               Icons.print,
                               color: Color(0xff5B93FF),
                               size: 18,
                             )
-                          : Icon(
+                          : const Icon(
                               Icons.circle,
                               color: Colors.transparent,
                             ),
                       Padding(
-                        padding: EdgeInsets.only(left: 5),
+                        padding: const EdgeInsets.only(left: 5),
                         child: Text(
                           item,
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
                             color: item == "Filter by Date"
-                                ? Color(0xff5B93FF)
+                                ? const Color(0xff5B93FF)
                                 : Colors.white,
                           ),
                           overflow: TextOverflow.ellipsis,

@@ -1139,37 +1139,42 @@ class _BlogTabState extends State<BlogTab> {
                             ),
                             Container(
                               color: Colors.white,
-                              width: width/9.6,
+                              width: width/6.6,
                               height: height/14.78,
                               alignment: Alignment.center,
-                              child: Center(
-                                child: KText(
-                                  text: "Title",
-                                  style: SafeGoogleFont(
-                                    'Nunito',
-                                    color: Color(0xff030229),
+
+                              child: Row(
+                                children: [
+                                  KText(
+                                    text: "Title",
+                                    style: SafeGoogleFont(
+                                      'Nunito',
+                                      color: Color(0xff030229),
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
                             ),
                             Container(
                               color: Colors.white,
-                              width: width/9.6,
+                              width: width/8.6,
                               height: height/14.78,
                               alignment: Alignment.center,
-                              child: Center(
-                                child: KText(
-                                  text: "Description",
-                                  style: SafeGoogleFont(
-                                    'Nunito',
-                                    color: Color(0xff030229),
+                              child: Row(
+                                children: [
+                                  KText(
+                                    text: "Likes",
+                                    style: SafeGoogleFont(
+                                      'Nunito',
+                                      color: Color(0xff030229),
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
                             ),
                             Container(
                               color: Colors.white,
-                              width: width/9.6,
+                              width: width/12.6,
                               height: height/14.78,
                               alignment: Alignment.center,
                               child: Center(
@@ -1195,7 +1200,7 @@ class _BlogTabState extends State<BlogTab> {
                               alignment: Alignment.center,
                               child: Center(
                                 child: KText(
-                                  text: "Likes",
+                                  text: "Description",
                                   style: SafeGoogleFont(
                                     'Nunito',
                                     color: Color(0xff030229),
@@ -1205,12 +1210,12 @@ class _BlogTabState extends State<BlogTab> {
                             ),
                             Container(
                               color: Colors.white,
-                              width: width/8,
+                              width: width/9,
                               height: height/14.78,
                               alignment: Alignment.center,
                               child: Center(
                                 child: KText(
-                                  text: " Author",
+                                  text: "Author",
                                   style: SafeGoogleFont(
                                     'Nunito',
                                     color: Color(0xff030229),
@@ -1281,7 +1286,7 @@ class _BlogTabState extends State<BlogTab> {
                                                               EdgeInsets.only(
                                                                   left: width/192),
                                                               child: KText(
-                                                                text: blogs.id!,
+                                                                text: "${((temp*10)-10+i)+1}",
                                                                 style: SafeGoogleFont(
                                                                   'Nunito',
                                                                   color:
@@ -1291,7 +1296,7 @@ class _BlogTabState extends State<BlogTab> {
                                                             ),
                                                           ),
                                                           SizedBox(
-                                                            width: width/9.6,
+                                                            width: width/6.9,
                                                             height: height/14.78,
                                                             child: Padding(
                                                               padding:
@@ -1323,7 +1328,7 @@ class _BlogTabState extends State<BlogTab> {
                                                                       .only(left: width/192),
                                                                   child: KText(
                                                                     text: blogs
-                                                                        .description!
+                                                                        .likes!
                                                                         .length
                                                                         .toString(),
                                                                     style: SafeGoogleFont(
@@ -1389,7 +1394,7 @@ class _BlogTabState extends State<BlogTab> {
                                                                   left: width/192),
                                                               child: KText(
                                                                 text: blogs
-                                                                    .likes
+                                                                    .author
                                                                     .toString(),
                                                                 style: SafeGoogleFont(
                                                                   'Nunito',

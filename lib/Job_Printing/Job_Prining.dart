@@ -42,7 +42,7 @@ class JobPosttModelforPdf{
 
   pw.Widget _contentTable(pw.Context context) {
     const tableHeaders = [
-      'Si.NO',
+      'SL.NO',
       "Post Name",
       "Posted By",
       'Date',

@@ -1,5 +1,6 @@
 import 'package:alumni_management_admin/Screens/Dashboard.dart';
 import 'package:alumni_management_admin/Screens/Events_Page.dart';
+import 'package:alumni_management_admin/Screens/Job%20Advertsiment.dart';
 import 'package:alumni_management_admin/Screens/Job_Reports.dart';
 import 'package:alumni_management_admin/Screens/audio_podcasts.dart';
 import 'package:alumni_management_admin/Screens/blog_tab.dart';
@@ -53,8 +54,10 @@ List<bool> isSelected = [
   false,
   false,
   false,
+  false,
 ];
 List<NavElement> navElements = [
+  NavElement(),
   NavElement(),
   NavElement(),
   NavElement(),
@@ -81,6 +84,7 @@ List<String> texts = [
   'Dashboard',
   'Alumni Tracking',
   'Users',
+  'Faculty',
   'Gallery',
   "Events",
   'Job Post',
@@ -96,13 +100,15 @@ List<String> texts = [
   'Blog',
   'Social Media',
   'Audio podcasts',
-  'Faculty'
+  'Job Advertisement',
+
 ];
 
  List<IconData> icons = [
   Icons.data_saver_off,
   Icons.auto_graph_rounded,
   Icons.person_outlined,
+   Icons.person,
   Icons.image_outlined,
   Icons.event,
   Icons.post_add,
@@ -118,7 +124,8 @@ List<String> texts = [
    Icons.my_library_books_sharp,
    Icons.facebook,
    Icons.mic,
-   Icons.person,
+   Icons.add_business_rounded,
+
 ];
 
  class MyWidget extends StatefulWidget {
@@ -134,7 +141,7 @@ List<String> texts = [
 class _MyWidgetState extends State<MyWidget> {
 
   void select(int n) {
-    for (int i = 0; i < 19; i++) {
+    for (int i = 0; i < 20; i++) {
       if (i == n) {
         isSelected[i] = true;
       } else {
@@ -227,7 +234,6 @@ class _MyWidgetState extends State<MyWidget> {
                         ),
                        /* Column(
                           children: [
-
                             GestureDetector(
                               onTap: () {
                                 setState(() {
@@ -1941,6 +1947,11 @@ class _MyWidgetState extends State<MyWidget> {
                                       pages=DashBoard( usermail: widget.email.toString(),);
                                     });
                                   }
+                                  if(navElements.indexOf(e)==1){
+                                    setState(() {
+                                      pages=const Job_Reports();
+                                    });
+                                  }
                                   if(navElements.indexOf(e)==2){
                                     setState(() {
                                       pages= Users_Screen(UserViewed: false,);
@@ -1948,89 +1959,91 @@ class _MyWidgetState extends State<MyWidget> {
                                   }
                                   if(navElements.indexOf(e)==3){
                                     setState(() {
-                                      pages=ScreenGallery();
+                                      pages=Faculty_Tab();
                                     });
                                   }
                                   if(navElements.indexOf(e)==4){
                                     setState(() {
-                                      pages=EventsTab();
+                                      pages=ScreenGallery();
                                     });
                                   }
                                   if(navElements.indexOf(e)==5){
                                     setState(() {
-                                      pages=const Job_Posts();
+                                      pages=EventsTab();
                                     });
                                   }
                                   if(navElements.indexOf(e)==6){
                                     setState(() {
-                                      pages= const Colleage_Activities_Screen();
+                                      pages=const Job_Posts();
                                     });
                                   }
                                   if(navElements.indexOf(e)==7){
                                     setState(() {
-                                      pages= const Acadamic_Year();
+                                      pages= const Colleage_Activities_Screen();
                                     });
                                   }
                                   if(navElements.indexOf(e)==8){
                                     setState(() {
-                                      pages= const Department_Screen();
+                                      pages= const Acadamic_Year();
                                     });
                                   }
                                   if(navElements.indexOf(e)==9){
                                     setState(() {
-                                      pages=UsersManagement();
+                                      pages= const Department_Screen();
                                     });
                                   }
                                   if(navElements.indexOf(e)==10){
+                                    setState(() {
+                                      pages=UsersManagement();
+                                    });
+                                  }
+                                  if(navElements.indexOf(e)==11){
                                     setState(() {
                                       pages=const Message_Screen();
                                     });
                                   }
 
-                                  if(navElements.indexOf(e)==11){
+                                  if(navElements.indexOf(e)==12){
                                     setState(() {
                                       pages= const Login_Reports();
                                     });
                                   }
-                                  if(navElements.indexOf(e)==12){
+                                  if(navElements.indexOf(e)==13){
                                     setState(() {
                                       pages= const SMS_Screen();
                                     });
                                   }
-                                  if(navElements.indexOf(e)==13){
+                                  if(navElements.indexOf(e)==14){
                                     setState(() {
                                       pages= const Email_Screen();
                                     });
                                   }
-                                  if(navElements.indexOf(e)==14){
+                                  if(navElements.indexOf(e)==15){
                                     setState(() {
                                       pages= const Com_Notification_Screen();
                                     });
                                   }
-                                  if(navElements.indexOf(e)==1){
-                                    setState(() {
-                                      pages=const Job_Reports();
-                                    });
-                                  }
-                                  if(navElements.indexOf(e)==15){
+
+                                  if(navElements.indexOf(e)==16){
                                     setState(() {
                                       pages=BlogTab();
                                     });
-                                  }if(navElements.indexOf(e)==16){
+                                  }if(navElements.indexOf(e)==17){
                                     setState(() {
                                        pages=WebsiteAndSocialMediaTab();
                                     });
                                   }
-                                  if(navElements.indexOf(e)==17){
+                                  if(navElements.indexOf(e)==18){
                                     setState(() {
                                       pages=AudioPodcastTab();
                                     });
                                   }
-                                  if(navElements.indexOf(e)==18){
+                                  if(navElements.indexOf(e)==19){
                                     setState(() {
-                                      pages=Faculty_Tab();
+                                      pages=Job_Ads();
                                     });
                                   }
+
 
                                 });
                               },

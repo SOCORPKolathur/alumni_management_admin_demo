@@ -61,84 +61,84 @@ class _LineChartSample2State extends State<LineChartSample2> {
     Widget text;
     switch (value.toInt()) {
       case 0:
-        text =  KText(text:'May', style: GoogleFonts.inter(
+        text =  KText(text:'2013', style: GoogleFonts.inter(
             fontWeight: FontWeight.w400,
             fontSize: 12,
             color: Color(0xff718EBF)
         ), );
         break;
       case 2:
-        text =  KText(text:'Jun', style: GoogleFonts.inter(
+        text =  KText(text:'2014', style: GoogleFonts.inter(
             fontWeight: FontWeight.w400,
             fontSize: 12,
             color: Color(0xff718EBF)
         ), );
         break;
       case 4:
-        text =  KText(text:'Jul', style: GoogleFonts.inter(
+        text =  KText(text:'2015', style: GoogleFonts.inter(
             fontWeight: FontWeight.w400,
             fontSize: 12,
             color: Color(0xff718EBF)
         ), );
         break;
       case 6:
-        text =  KText(text:'Aug', style: GoogleFonts.inter(
+        text =  KText(text:'2016', style: GoogleFonts.inter(
             fontWeight: FontWeight.w400,
             fontSize: 12,
             color: Color(0xff718EBF)
         ), );
         break;
       case 8:
-        text =  KText(text:'Sep', style: GoogleFonts.inter(
+        text =  KText(text:'2017', style: GoogleFonts.inter(
             fontWeight: FontWeight.w400,
             fontSize: 12,
             color: Color(0xff718EBF)
         ), );
         break;
       case 10:
-        text =  KText(text:'Oct', style: GoogleFonts.inter(
+        text =  KText(text:'2018', style: GoogleFonts.inter(
             fontWeight: FontWeight.w400,
             fontSize: 12,
             color: Color(0xff718EBF)
         ), );
         break;
       case 12:
-        text =  KText(text:'Nov', style: GoogleFonts.inter(
+        text =  KText(text:'2019', style: GoogleFonts.inter(
             fontWeight: FontWeight.w400,
             fontSize: 12,
             color: Color(0xff718EBF)
         ), );
         break;
       case 14:
-        text =  KText(text:'Dec', style: GoogleFonts.inter(
+        text =  KText(text:'2020', style: GoogleFonts.inter(
             fontWeight: FontWeight.w400,
             fontSize: 12,
             color: Color(0xff718EBF)
         ), );
         break;
       case 16:
-        text =  KText(text:'Jan', style: GoogleFonts.inter(
+        text =  KText(text:'2021', style: GoogleFonts.inter(
             fontWeight: FontWeight.w400,
             fontSize: 12,
             color: Color(0xff718EBF)
         ), );
         break;
       case 18:
-        text =  KText(text:'Feb', style: GoogleFonts.inter(
+        text =  KText(text:'2022', style: GoogleFonts.inter(
             fontWeight: FontWeight.w400,
             fontSize: 12,
             color: Color(0xff718EBF)
         ), );
         break;
       case 20:
-        text =  KText(text:'Mar', style: GoogleFonts.inter(
+        text =  KText(text:'2023', style: GoogleFonts.inter(
             fontWeight: FontWeight.w400,
             fontSize: 12,
             color: Color(0xff718EBF)
         ), );
         break;
       case 22:
-        text =  KText(text:'April', style: GoogleFonts.inter(
+        text =  KText(text:'2024', style: GoogleFonts.inter(
             fontWeight: FontWeight.w400,
             fontSize: 12,
             color: Color(0xff718EBF)
@@ -190,8 +190,10 @@ class _LineChartSample2State extends State<LineChartSample2> {
 
   LineChartData mainData() {
     return LineChartData(
+
       gridData: FlGridData(
         show: true,
+
 
         drawVerticalLine: true,
         horizontalInterval: 1,
@@ -282,6 +284,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
 
         ),
       ],
+
     );
   }
 

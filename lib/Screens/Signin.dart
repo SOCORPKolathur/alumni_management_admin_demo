@@ -470,6 +470,7 @@ class _SigninPageState extends State<SigninPage> {
                         margin: EdgeInsets.fromLTRB(2*fem, 0*fem, 0*fem, 35.03*fem),
                         child: TextButton(
                           onPressed: () {
+                            print("clicked");
                             _signInWithEmailAndPassword();
 
                           },
@@ -562,6 +563,7 @@ class _SigninPageState extends State<SigninPage> {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     })).user;
     if (user != null) {
+      print("login success");
       setState(() {
         _success = true;
         result = true;
@@ -569,6 +571,7 @@ class _SigninPageState extends State<SigninPage> {
         Docuemntcheckfunction();
       });
     } else {
+      print("failed");
       setState(() {
         _success = false;
         result = false;
@@ -619,7 +622,7 @@ class _SigninPageState extends State<SigninPage> {
         print(deviceLocation);
         print(deviceId);
         print(browsername);
-        FirebaseFirestore.instance.collection('LoginReports').doc(deviceId).set({
+        FirebaseFirestore.instance.collection('LoginReports').doc().set({
           "date":DateFormat('dd-MM-yyyy').format(DateTime.now()).toString(),
           "time":DateFormat("hh:mm a").format(DateTime.now()),
           "timestamp":DateTime.now().millisecondsSinceEpoch,

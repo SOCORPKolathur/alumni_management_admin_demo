@@ -54,11 +54,11 @@ class _UsersManagementState extends State<UsersManagement> {
     return value!.isNotEmpty && !regex.hasMatch(value)
         ? 'Enter the Correct the Email'
         : null;
+
+
   }
   TextEditingController userName=TextEditingController();
   TextEditingController passWord=TextEditingController();
-
-
   @override
   void initState() {
     mangementpermision();
@@ -587,7 +587,7 @@ class _UsersManagementState extends State<UsersManagement> {
                                   height: height/16.275,
                                   child: Center(
                                     child: KText(
-                                      text: "Si.No",
+                                      text: "SL.No",
                                       style:
                                       SafeGoogleFont (
                                         'Poppins',
@@ -628,6 +628,8 @@ class _UsersManagementState extends State<UsersManagement> {
                                     ),
                                   ),
                                 ),
+
+
 
                                 SizedBox(
                                   width: width/6.83,
@@ -1201,289 +1203,328 @@ class _UsersManagementState extends State<UsersManagement> {
   }
 
 
-  adduserdialogBox(){
-    double width=MediaQuery.of(context).size.width;
-    double height=MediaQuery.of(context).size.height;
+  adduserdialogBox() {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     double baseWidth = 1920;
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
-    return
-      showDialog(
-        barrierDismissible: false,
-        barrierColor: Colors.transparent,
-        context: context, builder:(context) {
-        return
-          StatefulBuilder(builder: (context, setState) {
+    return showDialog(
+      barrierDismissible: false,
+      barrierColor: Colors.transparent,
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
             return Form(
               key: _formKey,
               child: Padding(
-                padding:  EdgeInsets.only(top: height/6.51,bottom: height/6.51,left: width/3.9028,right:width/3.9028),
+                padding: EdgeInsets.only(
+                  top: height / 6.51,
+                  bottom: height / 6.51,
+                  left: width / 3.9028,
+                  right: width / 3.9028,
+                ),
                 child: Material(
                   elevation: 10,
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
                   child: Padding(
-                    padding:  EdgeInsets.symmetric(
-                      vertical: height/32.55,
-                        horizontal: width/68.3
+                    padding: EdgeInsets.symmetric(
+                      vertical: height / 32.55,
+                      horizontal: width / 68.3,
                     ),
                     child: SizedBox(
-                      width: width/2.732,
+                      width: width / 2.732,
                       child: Center(
                         child: Column(
                           children: [
-                            KText( text:"Add New User",style:
-                            SafeGoogleFont (
-                              'Poppins',
-                              fontSize: 19*ffem,
-                              fontWeight: FontWeight.w700,
-                            ),),
-
+                            KText(
+                              text: "Add New User",
+                              style: SafeGoogleFont(
+                                'Poppins',
+                                fontSize: 19 * ffem,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
                             SizedBox(
-                              child:
-                              Column(
+                              child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-
-                                  KText(
-                                    text:"User Name",
-                                    style:
-                                    SafeGoogleFont (
-                                      'Poppins',
-                                      fontSize: 19*ffem,
-                                      fontWeight: FontWeight.w700,
-                                    ),
+                                  Row(
+                                    children: [
+                                      KText(
+                                        text: "User Name",
+                                        style: SafeGoogleFont(
+                                          'Poppins',
+                                          fontSize: 19 * ffem,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      Text(
+                                        " *",
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(height: height/41.143,),
-
+                                  SizedBox(height: height / 41.143,),
                                   Container(
                                     width: width / 3.0,
                                     height: height / 14.42,
-                                    //color: Color(0xffDDDEEE),
                                     decoration: BoxDecoration(
-                                        color: const Color(0xffDDDEEE),
-                                        borderRadius: BorderRadius.circular(4)),
+                                      color: const Color(0xffDDDEEE),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
                                     child: TextFormField(
                                       inputFormatters: [
                                         FilteringTextInputFormatter.allow(RegExp(r"[a-z0-9-@ ,.]+|\s")),
-                                        // FilteringTextInputFormatter.allow(RegExp("[a-z]")),
                                       ],
                                       controller: userName,
                                       keyboardType: TextInputType.multiline,
                                       maxLines: null,
                                       style: GoogleFonts.poppins(
-                                          fontSize: width / 106.6),
+                                        fontSize: width / 106.6,
+                                      ),
                                       decoration: InputDecoration(
                                         hintText: "Type a User Name",
                                         contentPadding: EdgeInsets.only(
-                                            left: width / 68.3,
-                                            bottom: height / 82.125),
+                                          left: width / 68.3,
+                                          bottom: height / 82.125,
+                                        ),
                                         border: InputBorder.none,
                                       ),
-                                      validator: validateEmail,
+                                      validator: (validateEmail){
+                                        if (userName.text.isEmpty)  {
+                                          return "Field is Empty";
+                                        }
+                                      },
                                     ),
                                   ),
                                 ],
-                              ),),
-                            SizedBox(height:height/45.5),
-
+                              ),
+                            ),
+                            SizedBox(height: height / 45.5),
                             SizedBox(
-                              child:
-                              Column(
+                              child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-
-                                  KText(
-                                    text:"Password",
-                                    style:
-                                    SafeGoogleFont (
-                                      'Poppins',
-                                      fontSize: 19*ffem,
-                                      fontWeight: FontWeight.w700,
-                                    ),
+                                  Row(
+                                    children: [
+                                      KText(
+                                        text: "Password",
+                                        style: SafeGoogleFont(
+                                          'Poppins',
+                                          fontSize: 19 * ffem,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      Text(
+                                        " *",
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(height: height/41.143,),
-
+                                  SizedBox(height: height / 41.143,),
                                   Container(
                                     width: width / 3.0,
                                     height: height / 14.42,
-                                    //color: Color(0xffDDDEEE),
                                     decoration: BoxDecoration(
-                                        color: const Color(0xffDDDEEE),
-                                        borderRadius: BorderRadius.circular(4)),
+                                      color: const Color(0xffDDDEEE),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
                                     child: TextFormField(
-                                        controller: passWord,
-                                        keyboardType: TextInputType.multiline,
-                                        maxLines: null,
-                                        style: GoogleFonts.poppins(
-                                            fontSize: width / 106.6),
-                                        decoration: InputDecoration(
-                                          hintText: "Type a Password",
-                                          contentPadding: EdgeInsets.only(
-                                              left: width / 68.3,
-                                              bottom: height / 82.125),
-                                          border: InputBorder.none,
+                                      controller: passWord,
+                                      keyboardType: TextInputType.multiline,
+                                      maxLines: null,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: width / 106.6,
+                                      ),
+                                      decoration: InputDecoration(
+                                        hintText: "Type a Password",
+                                        contentPadding: EdgeInsets.only(
+                                          left: width / 68.3,
+                                          bottom: height / 82.125,
                                         ),
-                                        validator: (value){
-                                          if(value!.isEmpty){
-                                            return  "Field is Empty";
-                                          }
-                                          if(value!.isNotEmpty){
-                                            if(value.length<6){
-                                              return  "Please fill the Password";
-                                            }
-                                          }
+                                        border: InputBorder.none,
+                                      ),
+                                      validator: (value) {
+                                        if (value!.isEmpty && userName.text.isEmpty)  {
+                                          return "Field is Empty";
                                         }
 
+                                        if (value.isNotEmpty) {
+                                          if (value.length < 6) {
+                                            return "Please fill the Password";
+                                          }
+                                        }
+                                      },
                                     ),
                                   ),
                                 ],
-                              ),),
-                            SizedBox(height:height/45.5),
+                              ),
+                            ),
+                            SizedBox(height: height / 45.5),
                             KText(
-                              text:  "( Hint : User Name Allows Only Email Address and Password is Minimum 6 Characters )",
-                              style:
-                              SafeGoogleFont (
+                              text: "( Hint : User Name Allows Only Email Address and Password is Minimum 6 Characters )",
+                              style: SafeGoogleFont(
                                 'Poppins',
-                                fontSize: 19*ffem,
+                                fontSize: 19 * ffem,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
-                            SizedBox(height:height/45.5),
+                            SizedBox(height: height / 45.5),
                             Row(
                               children: [
-                                SizedBox(width:width/18.0705),
-                                KText( text:"Select the User Type",style:
-                                SafeGoogleFont (
-                                  'Poppins',
-                                  fontSize: 19*ffem,
-                                  fontWeight: FontWeight.w700,
-                                ),),
+                                SizedBox(width: width / 18.0705),
+                                KText(
+                                  text: "Select the User Type",
+                                  style: SafeGoogleFont(
+                                    'Poppins',
+                                    fontSize: 19 * ffem,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
                               ],
                             ),
-
                             SizedBox(
-                              height:height/10.85,
-                              width:width/2.2766,
-
+                              height: height / 10.85,
+                              width: width / 2.2766,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   SizedBox(
-                                    width:width/9.1066,
+                                    width: width / 9.1066,
                                     child: RadioListTile(
-                                      title:  KText( text:"Admin",style: SafeGoogleFont (
-                                        'Poppins',
-                                        fontSize: 19*ffem,
-                                        fontWeight: FontWeight.w700,
-                                      ),),
+                                      title: KText(
+                                        text: "Admin",
+                                        style: SafeGoogleFont(
+                                          'Poppins',
+                                          fontSize: 19 * ffem,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
                                       value: "admin",
                                       groupValue: Authusertype,
-                                      onChanged: (value){
+                                      onChanged: (value) {
                                         setState(() {
                                           Authusertype = value.toString();
                                         });
                                       },
                                     ),
                                   ),
-
                                   SizedBox(
-                                    width:width/8.5375,
+                                    width: width / 8.5375,
                                     child: RadioListTile(
-                                      title:  KText( text:"Staff", style:SafeGoogleFont (
-                                        'Poppins',
-                                        fontSize: 19*ffem,
-                                        fontWeight: FontWeight.w700,
-                                      ),),
+                                      title: KText(
+                                        text: "Staff",
+                                        style: SafeGoogleFont(
+                                          'Poppins',
+                                          fontSize: 19 * ffem,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
                                       value: "staff",
                                       groupValue: Authusertype,
-                                      onChanged: (value){
+                                      onChanged: (value) {
                                         setState(() {
                                           Authusertype = value.toString();
                                         });
                                       },
                                     ),
                                   ),
-
                                   SizedBox(
-                                    width:width/8.5375,
+                                    width: width / 8.5375,
                                     child: RadioListTile(
-                                      title:  KText( text:"Others",style: SafeGoogleFont (
-                                        'Poppins',
-                                        fontSize: 19*ffem,
-                                        fontWeight: FontWeight.w700,
-                                      ),),
+                                      title: KText(
+                                        text: "Others",
+                                        style: SafeGoogleFont(
+                                          'Poppins',
+                                          fontSize: 19 * ffem,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
                                       value: "others",
                                       groupValue: Authusertype,
-                                      onChanged: (value){
+                                      onChanged: (value) {
                                         setState(() {
                                           Authusertype = value.toString();
                                         });
                                       },
                                     ),
                                   ),
-
-
                                 ],
                               ),
                             ),
-                            SizedBox(height:height/40.5),
+                            SizedBox(height: height / 40.5),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 InkWell(
-                                  onTap: (){
+                                  onTap: () {
                                     setState(() {
-                                      Authusertype="admin";
+                                      Authusertype = "admin";
                                       passWord.clear();
                                       userName.clear();
                                     });
                                     Navigator.pop(context);
                                   },
                                   child: Container(
-                                      width: width/11.3833,
-                                      height: height/17.1315,
-                                      decoration: BoxDecoration(
-                                          color: Color(0xffFFFFFF),
-                                          borderRadius: BorderRadius.circular(8)
+                                    width: width / 11.3833,
+                                    height: height / 17.1315,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xffFFFFFF),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Center(
+                                      child: KText(
+                                        text: "Cancel",
+                                        style: SafeGoogleFont(
+                                          'Poppins',
+                                          fontSize: 19 * ffem,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.black,
+                                        ),
                                       ),
-                                      child:  Center(child:  KText( text:"Cancel",style:  SafeGoogleFont (
-                                        'Poppins',
-                                        fontSize: 19*ffem,
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.black
-                                      ),))
+                                    ),
                                   ),
                                 ),
-                                SizedBox(width:width/153.6),
-
+                                SizedBox(width: width / 153.6),
                                 InkWell(
-                                  onTap: (){
-                                    if(_formKey.currentState!.validate()&&passWord.text.length>6){
+                                  onTap: () {
+                                    if (_formKey.currentState!.validate() &&
+                                        passWord.text.length > 6) {
                                       documentcreatfunc();
+                                    }else if(userName.text.isEmpty){
+
                                     }
-
-
                                   },
                                   child: Container(
-                                      width: width/11.3833,
-                                      height: height/17.1315,
-                                      decoration: BoxDecoration(
-                                          color: Constants().primaryAppColor,
-                                          borderRadius: BorderRadius.circular(8)
+                                    width: width / 11.3833,
+                                    height: height / 17.1315,
+                                    decoration: BoxDecoration(
+                                      color: Constants().primaryAppColor,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Center(
+                                      child: KText(
+                                        text: "Submit",
+                                        style: SafeGoogleFont(
+                                          'Poppins',
+                                          fontSize: 19 * ffem,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white,
+                                        ),
                                       ),
-                                      child:  Center(child:  KText( text:"Submit",style:  SafeGoogleFont (
-                                        'Poppins',
-                                        fontSize: 19*ffem,
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.white
-                                      ),))
+                                    ),
                                   ),
                                 ),
-                                SizedBox(width:width/153.6),
+                                SizedBox(width: width / 153.6),
                               ],
                             ),
-
                           ],
                         ),
                       ),
@@ -1492,8 +1533,12 @@ class _UsersManagementState extends State<UsersManagement> {
                 ),
               ),
             );
-          },);
-      },);
+          },
+        );
+      },
+    );
   }
+
+
 
 }

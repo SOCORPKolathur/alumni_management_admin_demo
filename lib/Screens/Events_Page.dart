@@ -10,6 +10,7 @@ import 'package:alumni_management_admin/Models/event_model.dart';
 import 'package:alumni_management_admin/common_widgets/developer_card_widget.dart';
 import 'package:alumni_management_admin/utils.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' as cf;
 import 'package:cool_alert/cool_alert.dart';
 import 'package:csv/csv.dart';
@@ -64,6 +65,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
 
   List datalist = [
     "Edit",
+    "View"
     "Delete",
   ];
 
@@ -217,7 +219,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                               decoration: BoxDecoration(
                                 color: Constants().primaryAppColor,
                                 borderRadius: BorderRadius.circular(8),
-                                boxShadow: [
+                                boxShadow: const [
                                   BoxShadow(
                                     color: Colors.black26,
                                     offset: Offset(1, 2),
@@ -234,7 +236,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                   children: [
                                     currentTab.toUpperCase() != "VIEW"
                                         ? const SizedBox()
-                                        : Icon(
+                                        : const Icon(
                                             Icons.add,
                                             color: Colors.white,
                                           ),
@@ -270,7 +272,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(8),
-                                  boxShadow: [
+                                  boxShadow: const [
                                     BoxShadow(
                                       color: Colors.black26,
                                       offset: Offset(1, 2),
@@ -285,7 +287,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Icon(
+                                      const Icon(
                                         Icons.logout_rounded,
                                         color: Colors.black,
                                       ),
@@ -326,7 +328,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                               decoration: BoxDecoration(
                                 color: Constants().primaryAppColor,
                                 borderRadius: BorderRadius.circular(8),
-                                boxShadow: [
+                                boxShadow: const [
                                   BoxShadow(
                                     color: Colors.black26,
                                     offset: Offset(1, 2),
@@ -340,9 +342,9 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                     horizontal: width / 227.66),
                                 child: Row(
                                   children: [
-                                    Icon(Icons.filter_list_alt,color:Colors.white),
+                                    const Icon(Icons.filter_list_alt,color:Colors.white),
                                     KText(
-                                      text: dateRangeStart==null?"Filter by Date":"Clear Date",
+                                      text: dateRangeStart==null?"Filter by Date":"Back to Normal",
                                       style: SafeGoogleFont(
                                         'Nunito',
                                         fontSize: width / 120.571,
@@ -370,7 +372,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
               height: height / 1.2336,
               decoration: BoxDecoration(
                 color: Colors.white,
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: Colors.black26,
                     offset: Offset(1, 2),
@@ -403,7 +405,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                     child: Container(
                       height: height / 1.4,
                       width: double.infinity,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           color: Color(0xffF7FAFC),
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(10),
@@ -438,7 +440,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                             Material(
                                               borderRadius:
                                               BorderRadius.circular(3),
-                                              color: Color(0xffDDDEEE),
+                                              color: const Color(0xffDDDEEE),
                                               elevation: 5,
                                               child: SizedBox(
                                                 height: height / 16.02,
@@ -453,7 +455,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                                       fontSize: width / 105.571,
                                                     ),
                                                     readOnly: true,
-                                                    decoration: InputDecoration(
+                                                    decoration: const InputDecoration(
                                                         border: InputBorder.none),
                                                     controller: dateController,
                                                     onTap: () async {
@@ -497,7 +499,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                             Material(
                                               borderRadius:
                                               BorderRadius.circular(3),
-                                              color: Color(0xffDDDEEE),
+                                              color: const Color(0xffDDDEEE),
                                               elevation: 5,
                                               child: SizedBox(
                                                 height: height / 16.02,
@@ -551,7 +553,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                             Material(
                                               borderRadius:
                                               BorderRadius.circular(3),
-                                              color: Color(0xffDDDEEE),
+                                              color: const Color(0xffDDDEEE),
                                               elevation: 5,
                                               child: SizedBox(
                                                 height: height / 12,
@@ -614,7 +616,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                             Material(
                                               borderRadius:
                                               BorderRadius.circular(3),
-                                              color: Color(0xffDDDEEE),
+                                              color: const Color(0xffDDDEEE),
                                               elevation: 5,
                                               child: SizedBox(
                                                 height: height / 12,
@@ -673,7 +675,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                             Material(
                                               borderRadius:
                                               BorderRadius.circular(3),
-                                              color: Color(0xffDDDEEE),
+                                              color: const Color(0xffDDDEEE),
                                               elevation: 5,
                                               child: SizedBox(
                                                 height: height / 6.510,
@@ -754,64 +756,111 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
 
                                   GestureDetector(
                                     onTap: () async {
+                                      bool titlecheck = false;
                                       try{
                                         int a = int.parse(titleController.text);
                                         print("number");
+                                        setState(() {
+                                          titlecheck = true;
+                                        });
 
                                       }
                                       catch(e){
                                         print("correct");
+                                        setState(() {
+                                          titlecheck = false;
+                                        });
 
                                       }
-                                      if (dateController.text != "" &&
-                                          timeController.text != "" &&
-                                          locationController.text != "") {
-                                        Response response =
-                                        await EventsFireCrud.addEvent(
-                                          title: titleController.text,
-                                          time: timeController.text,
-                                          location: locationController.text,
-                                          image: profileImage,
-                                          description: descriptionController.text,
-                                          date: dateController.text,
-                                        );
-                                        if (response.code == 200) {
-                                          CoolAlert.show(
-                                              context: context,
-                                              type: CoolAlertType.success,
-                                              text: "Event created successfully!",
-                                              width: size.width * 0.4,
-                                              backgroundColor: Constants()
-                                                  .primaryAppColor
-                                                  .withOpacity(0.8));
-                                          setState(() {
-                                            locationController.text = "";
-                                            descriptionController.text = "";
-                                            titleController.text = "";
-                                            uploadedImage = null;
-                                            profileImage = null;
-                                            currentTab = 'View';
-                                          });
+                                      if(titlecheck == false) {
+                                        if (dateController.text != "" &&
+                                            timeController.text != "" &&
+                                            locationController.text != "") {
+                                          Response response =
+                                          await EventsFireCrud.addEvent(
+                                            title: titleController.text,
+                                            time: timeController.text,
+                                            location: locationController.text,
+                                            image: profileImage,
+                                            description: descriptionController
+                                                .text,
+                                            date: dateController.text,
+                                          );
+                                          doclength();
+                                          setDateTime();
+                                          if (response.code == 200) {
+                                            CoolAlert.show(
+                                                context: context,
+                                                type: CoolAlertType.success,
+                                                text: "Event created successfully!",
+                                                width: size.width * 0.4,
+                                                backgroundColor: Constants()
+                                                    .primaryAppColor
+                                                    .withOpacity(0.8));
+                                            setState(() {
+                                              locationController.text = "";
+                                              descriptionController.text = "";
+                                              titleController.text = "";
+                                              uploadedImage = null;
+                                              profileImage = null;
+                                              currentTab = 'View';
+                                            });
+                                          } else {
+                                            CoolAlert.show(
+                                                context: context,
+                                                type: CoolAlertType.error,
+                                                text: "Failed to Create Event!",
+                                                width: size.width * 0.4,
+                                                backgroundColor: Constants()
+                                                    .primaryAppColor
+                                                    .withOpacity(0.8));
+                                          }
                                         } else {
-                                          CoolAlert.show(
-                                              context: context,
-                                              type: CoolAlertType.error,
-                                              text: "Failed to Create Event!",
-                                              width: size.width * 0.4,
-                                              backgroundColor: Constants()
-                                                  .primaryAppColor
-                                                  .withOpacity(0.8));
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(snackBar);
                                         }
-                                      } else {
+                                      }
+                                      else{
                                         ScaffoldMessenger.of(context)
-                                            .showSnackBar(snackBar);
+                                            .showSnackBar(SnackBar(
+                                          backgroundColor: Colors.transparent,
+                                          elevation: 0,
+                                          content: Container(
+                                              padding: const EdgeInsets.all(8),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                border: Border.all(color: Constants().primaryAppColor, width: 3),
+                                                boxShadow: const [
+                                                  BoxShadow(
+                                                    color: Color(0x19000000),
+                                                    spreadRadius: 2.0,
+                                                    blurRadius: 8.0,
+                                                    offset: Offset(2, 4),
+                                                  )
+                                                ],
+                                                borderRadius: BorderRadius.circular(4),
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Icon(Icons.info_outline, color: Constants().primaryAppColor),
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(left: 8.0),
+                                                    child: Text('Title should contain atleast one alphabet !!',
+                                                        style: SafeGoogleFont('Poppins', color: Colors.black)),
+                                                  ),
+                                                  const Spacer(),
+                                                  TextButton(
+                                                      onPressed: () => debugPrint("Undid"), child: const Text("Undo"))
+                                                ],
+                                              )),
+                                        ));
                                       }
                                     },
                                     child: Container(
                                         height: height/18.475,
                                         width: width/12.8,
                                         decoration: BoxDecoration(
-                                          color: Color(0xffD60A0B),
+                                          color: const Color(0xffD60A0B),
                                           borderRadius:
                                           BorderRadius.circular(4),
                                         ),
@@ -823,7 +872,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                               fontSize: width/96,
                                               fontWeight:
                                               FontWeight.w600,
-                                              color: Color(0xffFFFFFF),
+                                              color: const Color(0xffFFFFFF),
                                             ),
                                           ),
                                         )),
@@ -847,7 +896,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                         height: height/18.475,
                                         width: width/12.8,
                                         decoration: BoxDecoration(
-                                          color: Color(0xff00A0E3),
+                                          color: const Color(0xff00A0E3),
                                           borderRadius:
                                           BorderRadius.circular(4),
                                         ),
@@ -859,7 +908,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                               fontSize: width/96,
                                               fontWeight:
                                               FontWeight.w600,
-                                              color: Color(0xffFFFFFF),
+                                              color: const Color(0xffFFFFFF),
                                             ),
                                           ),
                                         )),
@@ -896,7 +945,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                               fontSize: width/96,
                                               fontWeight:
                                               FontWeight.w600,
-                                              color: Color(0xffFFFFFF),
+                                              color: const Color(0xffFFFFFF),
                                             ),
                                           ),
                                         )),
@@ -925,6 +974,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                 height: height/13.4363,
                                 child: Row(
                                   children: [
+                                    // sno
                                     Container(
                                       color: Colors.white,
                                       width: width/17.2,
@@ -936,10 +986,10 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                           CrossAxisAlignment.center,
                                           children: [
                                             KText(
-                                              text: "Si.No",
+                                              text: "SL.No",
                                               style: SafeGoogleFont(
                                                 'Nunito',
-                                                color: Color(0xff030229),
+                                                color: const Color(0xff030229),
                                               ),
                                             ),
                                             Padding(
@@ -971,6 +1021,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                         ),
                                       ),
                                     ),
+                                    // event name
                                     Container(
                                       color: Colors.white,
                                       width: width/9.6,
@@ -985,7 +1036,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                               text: "Event Name",
                                               style: SafeGoogleFont(
                                                 'Nunito',
-                                                color: Color(0xff030229),
+                                                color: const Color(0xff030229),
                                               ),
                                             ),
                                             Padding(
@@ -1022,6 +1073,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                         ),
                                       ),
                                     ),
+                                    // register user
                                     Container(
                                       color: Colors.white,
                                       width: width/9.6,
@@ -1036,7 +1088,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                               text: "Register Users",
                                               style: SafeGoogleFont(
                                                 'Nunito',
-                                                color: Color(0xff030229),
+                                                color: const Color(0xff030229),
                                               ),
                                             ),
                                             Padding(
@@ -1073,6 +1125,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                         ),
                                       ),
                                     ),
+                                    // venue
                                     Container(
                                       color: Colors.white,
                                       width: width/9.6,
@@ -1087,7 +1140,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                               text: "venue",
                                               style: SafeGoogleFont(
                                                 'Nunito',
-                                                color: Color(0xff030229),
+                                                color: const Color(0xff030229),
                                               ),
                                             ),
                                             Padding(
@@ -1124,6 +1177,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                         ),
                                       ),
                                     ),
+                                    // description
                                     Container(
                                       color: Colors.white,
                                       width: width/6.3,
@@ -1138,7 +1192,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                               text: "Description",
                                               style: SafeGoogleFont(
                                                 'Nunito',
-                                                color: Color(0xff030229),
+                                                color: const Color(0xff030229),
                                               ),
                                             ),
                                             Padding(
@@ -1175,6 +1229,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                         ),
                                       ),
                                     ),
+                                    // created on
                                     Container(
                                       color: Colors.white,
                                       width: width/8,
@@ -1189,7 +1244,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                               text: " Created On",
                                               style: SafeGoogleFont(
                                                 'Nunito',
-                                                color: Color(0xff030229),
+                                                color: const Color(0xff030229),
                                               ),
                                             ),
                                             Padding(
@@ -1226,6 +1281,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                         ),
                                       ),
                                     ),
+                                    // actions
                                     SizedBox(
                                       width: width/12.36,
                                       height: height/14.78,
@@ -1238,15 +1294,16 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                               text: "Actions",
                                               style: SafeGoogleFont(
                                                 'Nunito',
-                                                color: Color(0xff030229),
+                                                color: const Color(0xff030229),
                                               ),
                                             ),
+
+
                                             Padding(
                                               padding:  EdgeInsets.only(
                                                   left: width/192),
                                               child: InkWell(
                                                 onTap: () {
-
                                                 },
                                                 child: Transform.rotate(
                                                   angle: filtervalue ? 200 : 0,
@@ -1256,12 +1313,12 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                                     child: Container(
                                                       width: width/153.6,
                                                       height: height/73.9,
-
                                                     ),
                                                   ),
                                                 ),
                                               ),
                                             ),
+
                                           ],
                                         ),
                                       ),
@@ -1304,7 +1361,8 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                                           style: SafeGoogleFont(
                                                             'Nunito',
                                                             color:
-                                                            Color(0xff030229),
+                                                            const Color(0xff030229),
+                                                            // Colors.green
                                                           ),
                                                         ),
                                                       ),
@@ -1323,7 +1381,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                                           style: SafeGoogleFont(
                                                             'Nunito',
                                                             color:
-                                                            Color(0xff030229),
+                                                            const Color(0xff030229),
                                                           ),
                                                         ),
                                                       ),
@@ -1347,7 +1405,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                                                   .toString(),
                                                               style: SafeGoogleFont(
                                                                 'Nunito',
-                                                                color: Color(
+                                                                color: const Color(
                                                                     0xff030229),
                                                               ),
                                                             ),
@@ -1357,7 +1415,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                                              EdgeInsets
                                                                 .only(left: width/192),
                                                             child:
-                                                            Icon(Icons.person),
+                                                            const Icon(Icons.person),
                                                           )
                                                         ],
                                                       ),
@@ -1376,7 +1434,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                                           style: SafeGoogleFont(
                                                             'Nunito',
                                                             color:
-                                                            Color(0xff030229),
+                                                            const Color(0xff030229),
                                                           ),
                                                         ),
                                                       ),
@@ -1395,7 +1453,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                                           style: SafeGoogleFont(
                                                             'Nunito',
                                                             color:
-                                                            Color(0xff030229),
+                                                            const Color(0xff030229),
                                                           ),
                                                         ),
                                                       ),
@@ -1414,7 +1472,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                                           style: SafeGoogleFont(
                                                             'Nunito',
                                                             color:
-                                                            Color(0xff030229),
+                                                            const Color(0xff030229),
                                                           ),
                                                         ),
                                                       ),
@@ -1431,7 +1489,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                                           key: popMenuKeys[i],
                                                           width: width/15.36,
                                                           height: height/14.78,
-                                                          child: Icon(
+                                                          child: const Icon(
                                                               Icons.more_horiz)),
                                                     ),
                                                   ],
@@ -1465,10 +1523,10 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                             CrossAxisAlignment.center,
                                             children: [
                                               KText(
-                                                text: "Si.No",
+                                                text: "SL.No",
                                                 style: SafeGoogleFont(
                                                   'Nunito',
-                                                  color: Color(0xff030229),
+                                                  color: const Color(0xff030229),
                                                 ),
                                               ),
                                               Padding(
@@ -1514,7 +1572,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                                 text: "Event Name",
                                                 style: SafeGoogleFont(
                                                   'Nunito',
-                                                  color: Color(0xff030229),
+                                                  color: const Color(0xff030229),
                                                 ),
                                               ),
                                               Padding(
@@ -1565,7 +1623,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                                 text: "Register Users",
                                                 style: SafeGoogleFont(
                                                   'Nunito',
-                                                  color: Color(0xff030229),
+                                                  color: const Color(0xff030229),
                                                 ),
                                               ),
                                               Padding(
@@ -1616,7 +1674,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                                 text: "venue",
                                                 style: SafeGoogleFont(
                                                   'Nunito',
-                                                  color: Color(0xff030229),
+                                                  color: const Color(0xff030229),
                                                 ),
                                               ),
                                               Padding(
@@ -1667,7 +1725,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                                 text: "Description",
                                                 style: SafeGoogleFont(
                                                   'Nunito',
-                                                  color: Color(0xff030229),
+                                                  color: const Color(0xff030229),
                                                 ),
                                               ),
                                               Padding(
@@ -1718,7 +1776,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                                 text: " Created On",
                                                 style: SafeGoogleFont(
                                                   'Nunito',
-                                                  color: Color(0xff030229),
+                                                  color: const Color(0xff030229),
                                                 ),
                                               ),
                                               Padding(
@@ -1767,7 +1825,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                                 text: "Actions",
                                                 style: SafeGoogleFont(
                                                   'Nunito',
-                                                  color: Color(0xff030229),
+                                                  color: const Color(0xff030229),
                                                 ),
                                               ),
                                               Padding(
@@ -1798,243 +1856,277 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                     ],
                                   )),
                               SizedBox(
-                                height: height/1.3436,
+                                height: height/1.2,
                                 width: width/1.2288,
-                                child: SingleChildScrollView(
-                                  physics: const ScrollPhysics(),
-                                  child: Column(
-                                    children: [
-                                      StreamBuilder(
-                                        stream: EventsFireCrud.fetchEvents(filter:filtervalue ,filterValue:filterChageValue ),
-                                        builder: (ctx, snapshot) {
-                                          if (snapshot.hasError) {
-                                            return Container();
-                                          } else if (snapshot.hasData) {
-                                            List<EventsModel> events = snapshot.data!;
-                                            exportdataListFromStream = events;
-                                            List<GlobalKey<State<StatefulWidget>>>popMenuKeys = List.generate(events.length, (index) => GlobalKey(),);
-
-                                            return SingleChildScrollView(
-                                              physics: const NeverScrollableScrollPhysics(),
-                                              child: Column(
-                                                children: [
-
-                                                  SizedBox(
-                                                    height:height/1.35625,
-                                                    child: ListView.builder(
-                                                      shrinkWrap: true,
-                                                      physics: const NeverScrollableScrollPhysics(),
-                                                      itemCount: pagecount == temp ? events.length.remainder(10) == 0 ? 10 : events.length.remainder(10) : 10 ,
-                                                      itemBuilder: (ctx, i) {
-
-                                                        var event=events[(temp*10)-10+i];
-
-                                                        return
-                                                          ((temp*10)-10+i >= documentlength)? const SizedBox():
-                                                          SizedBox(
-                                                            width: width/1.2288,
-                                                            height: height/13.4363,
-                                                            child: Padding(
-                                                              padding:  EdgeInsets.only(left:width/170.75),
-                                                              child: Row(
-                                                                children: [
-                                                                  SizedBox(
-                                                                    width: width/19.2,
-                                                                    height: height/14.78,
-                                                                    child: Padding(
-                                                                      padding:
-                                                                           EdgeInsets.only(
-                                                                              left: width/192),
-                                                                      child: KText(
-                                                                        text: "${i + 1}",
-                                                                        style: SafeGoogleFont(
-                                                                          'Nunito',
-                                                                          color:
-                                                                              Color(0xff030229),
-                                                                        ),
+                                child: Column(
+                                  children: [
+                                    StreamBuilder(
+                                      stream: EventsFireCrud.fetchEvents(filter:filtervalue ,filterValue:filterChageValue ),
+                                      builder: (ctx, snapshot) {
+                                        if (snapshot.hasError) {
+                                          return Container();
+                                        } else if (snapshot.hasData) {
+                                          List<EventsModel> events = snapshot.data!;
+                                          exportdataListFromStream = events;
+                                          List<GlobalKey<State<StatefulWidget>>>popMenuKeys = List.generate(events.length, (index) => GlobalKey(),);
+                                          // Main Events
+                                          return SingleChildScrollView(
+                                            physics: const NeverScrollableScrollPhysics(),
+                                            child: Column(
+                                              children: [
+                                                SizedBox(
+                                                  height:height/1.35625,
+                                                  child: ListView.builder(
+                                                    shrinkWrap: true,
+                                                    physics: const NeverScrollableScrollPhysics(),
+                                                    itemCount: pagecount == temp ? events.length.remainder(10) == 0 ? 10 : events.length.remainder(10) : 10 ,
+                                                    itemBuilder: (ctx, i) {
+                                                      var event=events[(temp*10)-10+i];
+                                                      return
+                                                        ((temp*10)-10+i >= documentlength)? const SizedBox():
+                                                        SizedBox(
+                                                          width: width/1.2288,
+                                                          height: height/13.4363,
+                                                          child: Padding(
+                                                            padding:  EdgeInsets.only(left:width/170.75),
+                                                            child: Row(
+                                                              children: [
+                                                                SizedBox(
+                                                                  width: width/19.2,
+                                                                  // height: height/14.78,
+                                                                  child: Padding(
+                                                                    padding:
+                                                                         EdgeInsets.only(
+                                                                            left: width/192),
+                                                                    child: KText(
+                                                                      text: "${((temp*10)-10+i) + 1}",
+                                                                      style: SafeGoogleFont(
+                                                                        'Nunito',
+                                                                        // color:
+                                                                            // Color(0xff030229),
+                                                                        // Colors.green
                                                                       ),
                                                                     ),
                                                                   ),
-                                                                  SizedBox(
-                                                                    width: width/9.6,
-                                                                    height: height/14.78,
-                                                                    child: Padding(
-                                                                      padding:
-                                                                           EdgeInsets.only(
-                                                                              left: width/192),
-                                                                      child: KText(
-                                                                        text: event.title
-                                                                            .toString(),
-                                                                        style: SafeGoogleFont(
-                                                                          'Nunito',
-                                                                          color:
-                                                                              Color(0xff030229),
-                                                                        ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: width/9.6,
+                                                                  // height: height/14.78,
+                                                                  child: Padding(
+                                                                    padding:
+                                                                         EdgeInsets.only(
+                                                                            left: width/192),
+                                                                    child: KText(
+                                                                      text: event.title
+                                                                          .toString(),
+                                                                      style: SafeGoogleFont(
+                                                                        'Nunito',
+                                                                        color:
+                                                                            const Color(0xff030229),
                                                                       ),
                                                                     ),
                                                                   ),
+                                                                ),
 
-                                                                  SizedBox(
-                                                                    width: width/9.6,
-                                                                    height: height/14.78,
-                                                                    child: Row(
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        Padding(
-                                                                          padding:
-                                                                               EdgeInsets
-                                                                                  .only(left: width/192),
-                                                                          child: KText(
-                                                                            text: event
-                                                                                .registeredUsers!
-                                                                                .length
-                                                                                .toString(),
-                                                                            style: SafeGoogleFont(
-                                                                              'Nunito',
-                                                                              color: Color(
-                                                                                  0xff030229),
-                                                                            ),
+                                                                Container(
+                                                                  // color: Colors.green,
+                                                                  // width: width/9.6,
+                                                                  width: 140,
+                                                                  // height: height/20.78,
+                                                                  child: Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                                    children: [
+                                                                      Padding(
+                                                                        padding:
+                                                                             EdgeInsets
+                                                                                .only(left: width/200),
+                                                                        child: KText(
+                                                                          text: event
+                                                                              .registeredUsers!
+                                                                              .length
+                                                                              .toString(),
+                                                                          style: SafeGoogleFont(
+                                                                            'Nunito',
+                                                                            color: const Color(
+                                                                                0xff030229),
                                                                           ),
                                                                         ),
-                                                                        Padding(
-                                                                          padding:
-                                                                               EdgeInsets
-                                                                                  .only(left: width/192),
-                                                                          child:
-                                                                              Icon(Icons.person),
-                                                                        )
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                  SizedBox(
-                                                                    width: width/9.6,
-                                                                    height: height/14.78,
-                                                                    child: Padding(
-                                                                      padding:
-                                                                           EdgeInsets.only(
-                                                                              left: width/192),
-                                                                      child: KText(
-                                                                        text: event
-                                                                            .location
-                                                                            .toString(),
-                                                                        style: SafeGoogleFont(
-                                                                          'Nunito',
-                                                                          color:
-                                                                              Color(0xff030229),
-                                                                        ),
                                                                       ),
-                                                                    ),
+                                                                      Padding(
+                                                                        padding:
+                                                                             EdgeInsets
+                                                                                .only(left: width/192),
+                                                                        child:
+                                                                            const Icon(Icons.person),
+                                                                      )
+                                                                    ],
                                                                   ),
-                                                                  SizedBox(
-                                                                    width: width/6.144,
-                                                                    height: height/14.78,
-                                                                    child: Padding(
-                                                                      padding:
-                                                                           EdgeInsets.only(
-                                                                              left: width/192),
-                                                                      child: KText(
-                                                                        text: event
-                                                                            .description
-                                                                            .toString(),
-                                                                        style: SafeGoogleFont(
-                                                                          'Nunito',
-                                                                          color:
-                                                                              Color(0xff030229),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  SizedBox(
-                                                                    width: width/9.6,
-                                                                    height: height/14.78,
-                                                                    child: Padding(
-                                                                      padding:
-                                                                      EdgeInsets.only(
-                                                                          left: width/192),
-                                                                      child: KText(
-                                                                        text: event
-                                                                            .date
-                                                                            .toString(),
-                                                                        style: SafeGoogleFont(
-                                                                          'Nunito',
-                                                                          color:
-                                                                          Color(0xff030229),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  GestureDetector(
-                                                                    onTap: () {
-                                                                      Popupmenu(
-                                                                          context,
-                                                                          event,
-                                                                          popMenuKeys[i],
-                                                                          size);
-                                                                    },
-                                                                    child: SizedBox(
-                                                                        key: popMenuKeys[i],
-                                                                        width: width/15.36,
-                                                                        height: height/14.78,
-                                                                        child: Icon(
-                                                                            Icons.more_horiz)),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ));
-                                                      },
-                                                    ),
-                                                  ),
-                                                  Stack(
-                                                    alignment: Alignment.centerRight,
-                                                    children: [
-                                                      SizedBox(
-                                                        width: double.infinity,
-                                                        height:height/13.02,
-                                                        child: ListView.builder(
-                                                            shrinkWrap: true,
-                                                            scrollDirection: Axis.horizontal,
-                                                            itemCount: pagecount,
-                                                            itemBuilder: (context,index){
-                                                              return InkWell(
-                                                                onTap: (){
-                                                                  setState(() {
-                                                                    temp=list[index];
-                                                                  });
-                                                                  print(temp);
-                                                                },
-                                                                child: Container(
-                                                                    height:30,width:30,
-                                                                    margin: EdgeInsets.only(left:8,right:8,top:10,bottom:10),
-                                                                    decoration: BoxDecoration(
-                                                                        borderRadius: BorderRadius.circular(100),
-                                                                        color:temp.toString() == list[index].toString() ?  Constants().primaryAppColor : Colors.transparent
-                                                                    ),
-                                                                    child: Center(
-                                                                      child: Text(list[index].toString(),style: SafeGoogleFont(
-                                                                          'Nunito',
-                                                                          fontWeight: FontWeight.w700,
-                                                                          color: temp.toString() == list[index].toString() ?  Colors.white : Colors.black
-
-                                                                      ),),
-                                                                    )
                                                                 ),
-                                                              );
 
-                                                            }),
+
+                                                                SizedBox(
+                                                                  width: width/9.6,
+                                                                  // height: height/14.78,
+                                                                  child: Padding(
+                                                                    padding:
+                                                                         EdgeInsets.only(
+                                                                            left: width/192),
+                                                                    child: KText(
+                                                                      text: event
+                                                                          .location
+                                                                          .toString(),
+                                                                      style: SafeGoogleFont(
+                                                                        'Nunito',
+                                                                        color:
+                                                                            const Color(0xff030229),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: width/6.144,
+                                                                  // height: height/14.78,
+                                                                  child: Padding(
+                                                                    padding:
+                                                                         EdgeInsets.only(
+                                                                            left: width/192),
+                                                                    child: KText(
+                                                                      text: event
+                                                                          .description
+                                                                          .toString(),
+                                                                      style: SafeGoogleFont(
+                                                                        'Nunito',
+                                                                        color:
+                                                                            const Color(0xff030229),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: width/12.6,
+                                                                  // height: height/14.78,
+                                                                  child: Padding(
+                                                                    padding:
+                                                                    EdgeInsets.only(
+                                                                        left: width/192),
+                                                                    child: KText(
+                                                                      text: event
+                                                                          .date
+                                                                          .toString(),
+                                                                      style: SafeGoogleFont(
+                                                                        'Nunito',
+                                                                        color:
+                                                                        const Color(0xff030229),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                GestureDetector(
+                                                                  onTap: () {
+                                                                    Popupmenu(
+                                                                        context,
+                                                                        event,
+                                                                        popMenuKeys[i],
+                                                                        size);
+                                                                  },
+                                                                  child: SizedBox(
+                                                                      key: popMenuKeys[i],
+                                                                      width: width/7.36,
+                                                                      height: height/14.78,
+                                                                      child: const Icon(
+                                                                          Icons.more_horiz)),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ));
+                                                    },
+                                                  ),
+                                                ),
+
+
+
+
+
+
+
+                                               Stack(
+                                                  alignment: Alignment.centerRight,
+                                                  children: [
+                                                    SizedBox(
+                                                      width: double.infinity,
+                                                      height:height/13.02,
+                                                      child: ListView.builder(
+                                                          shrinkWrap: true,
+                                                          scrollDirection: Axis.horizontal,
+                                                          itemCount: pagecount,
+                                                          itemBuilder: (context,index){
+                                                            return InkWell(
+                                                              onTap: (){
+                                                                setState(() {
+                                                                  temp=list[index];
+                                                                });
+                                                                print(temp);
+                                                              },
+                                                              child: Container(
+                                                                  height:30,width:30,
+                                                                  margin: const EdgeInsets.only(left:8,right:8,top:10,bottom:10),
+                                                                  decoration: BoxDecoration(
+                                                                      borderRadius: BorderRadius.circular(100),
+                                                                      color:temp.toString() == list[index].toString() ?  Constants().primaryAppColor : Colors.transparent
+                                                                  ),
+                                                                  child: Center(
+                                                                    child: Text(list[index].toString(),style: SafeGoogleFont(
+                                                                        'Nunito',
+                                                                        fontWeight: FontWeight.w700,
+                                                                        color: temp.toString() == list[index].toString() ?  Colors.white : Colors.black
+
+                                                                    ),),
+                                                                  )
+                                                              ),
+                                                            );
+
+                                                          }),
+                                                    ),
+
+
+                                                    temp > 1 ?
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(right: 150.0),
+                                                      child:
+                                                      InkWell(
+                                                        onTap:(){
+                                                          setState(() {
+                                                            temp= temp-1;
+                                                          });
+                                                        },
+                                                        child: Container(
+                                                            height:height/16.275,
+                                                            width:width/11.3833,
+                                                            decoration:BoxDecoration(
+                                                                color:Constants().primaryAppColor,
+                                                                borderRadius: BorderRadius.circular(80)
+                                                            ),
+                                                            child: Center(
+                                                              child: Text("Previous Page",style: SafeGoogleFont(
+                                                                'Nunito',
+                                                                fontWeight: FontWeight.w700,
+                                                                color: Colors.white,
+                                                              ),),
+                                                            )),
                                                       ),
-                                                      temp > 1 ?
+                                                    )  : Container(),
+                                                    Container(
+                                                      child: temp < pagecount ?
                                                       Padding(
-                                                        padding: const EdgeInsets.only(right: 150.0),
-                                                        child:
-                                                        InkWell(
+                                                        padding: const EdgeInsets.only(right: 20.0),
+                                                        child: InkWell(
                                                           onTap:(){
                                                             setState(() {
-                                                              temp= temp-1;
+                                                              temp= temp+1;
                                                             });
                                                           },
-                                                          child: Container(
+                                                          child:
+                                                          Container(
                                                               height:height/16.275,
                                                               width:width/11.3833,
                                                               decoration:BoxDecoration(
@@ -2042,7 +2134,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                                                   borderRadius: BorderRadius.circular(80)
                                                               ),
                                                               child: Center(
-                                                                child: Text("Previous Page",style: SafeGoogleFont(
+                                                                child: Text("Next Page",style: SafeGoogleFont(
                                                                   'Nunito',
                                                                   fontWeight: FontWeight.w700,
                                                                   color: Colors.white,
@@ -2050,53 +2142,25 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                                               )),
                                                         ),
                                                       )  : Container(),
-                                                      Container(
-                                                        child: temp < pagecount ?
-                                                        Padding(
-                                                          padding: const EdgeInsets.only(right: 20.0),
-                                                          child: InkWell(
-                                                            onTap:(){
-                                                              setState(() {
-                                                                temp= temp+1;
-                                                              });
-                                                            },
-                                                            child:
-                                                            Container(
-                                                                height:height/16.275,
-                                                                width:width/11.3833,
-                                                                decoration:BoxDecoration(
-                                                                    color:Constants().primaryAppColor,
-                                                                    borderRadius: BorderRadius.circular(80)
-                                                                ),
-                                                                child: Center(
-                                                                  child: Text("Next Page",style: SafeGoogleFont(
-                                                                    'Nunito',
-                                                                    fontWeight: FontWeight.w700,
-                                                                    color: Colors.white,
-                                                                  ),),
-                                                                )),
-                                                          ),
-                                                        )  : Container(),
-                                                      )
-                                                    ],
-                                                  ),
+                                                    )
+                                                  ],
+                                                ),
 
-                                                ],
-                                              ),
-                                            );
-                                          }
-                                          return Container();
-                                        },
-                                      ),
-                                    ],
-                                  ),
+                                              ],
+                                            ),
+                                          );
+                                        }
+                                        return Container();
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           )
                     : Container(),
                       SizedBox(height: height / 65.1),
-                      DeveloperCardWidget(),
+                      const DeveloperCardWidget(),
                       SizedBox(height: height / 65.1),
                     ],
                   ),
@@ -2119,7 +2183,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                 horizontal: width / 68.3, vertical: height / 32.55),
             decoration: BoxDecoration(
               color: Constants().primaryAppColor,
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: Colors.black26,
                   offset: Offset(1, 2),
@@ -2156,7 +2220,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(8),
-                              boxShadow: [
+                              boxShadow: const [
                                 BoxShadow(
                                   color: Colors.black26,
                                   offset: Offset(1, 2),
@@ -2187,7 +2251,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                 Expanded(
                   child: Container(
                     width: double.infinity,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
                         bottomRight: Radius.circular(10),
@@ -2230,7 +2294,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                               fontSize: width / 95.375),
                                         ),
                                       ),
-                                      Text(":"),
+                                      const Text(":"),
                                       SizedBox(width: width / 68.3),
                                       Text(
                                         event.date!,
@@ -2251,7 +2315,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                               fontSize: width / 95.375),
                                         ),
                                       ),
-                                      Text(":"),
+                                      const Text(":"),
                                       SizedBox(width: width / 68.3),
                                       Text(
                                         event.time!,
@@ -2272,7 +2336,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                               fontSize: width / 95.375),
                                         ),
                                       ),
-                                      Text(":"),
+                                      const Text(":"),
                                       SizedBox(width: width / 68.3),
                                       KText(
                                         text: event.location!,
@@ -2293,7 +2357,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                               fontSize: width / 95.375),
                                         ),
                                       ),
-                                      Text(":"),
+                                      const Text(":"),
                                       SizedBox(width: width / 68.3),
                                       KText(
                                         text: event.description!,
@@ -2363,7 +2427,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: Constants().primaryAppColor,
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         topRight: Radius.circular(10),
                         topLeft: Radius.circular(10),
                       ),
@@ -2383,7 +2447,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.cancel,
                             color: Colors.black,
                           ),
@@ -2393,7 +2457,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                   ),
                   Expanded(
                     child: Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.only(
                           bottomRight: Radius.circular(10),
@@ -2464,7 +2528,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                   horizontal: width / 68.3, vertical: height / 32.55),
               decoration: BoxDecoration(
                 color: Colors.white,
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: Colors.black26,
                     offset: Offset(1, 2),
@@ -2638,7 +2702,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                   Container(
                     height: height/1.48,
                     width: double.infinity,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         color: Color(0xffF7FAFC),
                         borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(10),
@@ -2671,7 +2735,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                         SizedBox(height: height / 108.5),
                                         Material(
                                           borderRadius: BorderRadius.circular(3),
-                                          color: Color(0xffDDDEEE),
+                                          color: const Color(0xffDDDEEE),
                                           elevation: 5,
                                           child: SizedBox(
                                             height: height / 16.275,
@@ -2682,7 +2746,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                                   horizontal: width / 170.75),
                                               child: TextFormField(
                                                 readOnly: true,
-                                                decoration: InputDecoration(
+                                                decoration: const InputDecoration(
                                                     border: InputBorder.none),
                                                 controller: dateController,
                                                 onTap: () async {
@@ -2725,7 +2789,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                         SizedBox(height: height / 108.5),
                                         Material(
                                           borderRadius: BorderRadius.circular(3),
-                                          color: Color(0xffDDDEEE),
+                                          color: const Color(0xffDDDEEE),
                                           elevation: 5,
                                           child: SizedBox(
                                             height: height / 16.275,
@@ -2769,7 +2833,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                         SizedBox(height: height / 108.5),
                                         Material(
                                           borderRadius: BorderRadius.circular(3),
-                                          color: Color(0xffDDDEEE),
+                                          color: const Color(0xffDDDEEE),
                                           elevation: 5,
                                           child: SizedBox(
                                             height: height / 16.275,
@@ -2820,7 +2884,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                         SizedBox(height: height / 108.5),
                                         Material(
                                           borderRadius: BorderRadius.circular(3),
-                                          color: Color(0xffDDDEEE),
+                                          color: const Color(0xffDDDEEE),
                                           elevation: 5,
                                           child: SizedBox(
                                             height: height / 10.850,
@@ -2876,7 +2940,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                         SizedBox(height: height / 108.5),
                                         Material(
                                           borderRadius: BorderRadius.circular(3),
-                                          color: Color(0xffDDDEEE),
+                                          color: const Color(0xffDDDEEE),
                                           elevation: 5,
                                           child: SizedBox(
                                             height: height / 6.510,
@@ -2994,6 +3058,8 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                         titleController.text = "";
                                         uploadedImage = null;
                                         profileImage = null;
+                                        final snackBar = SnackBar(content: AwesomeSnackbarContent(title: 'Success!', message: 'Edited!!!!!', contentType: ContentType.success,),);
+                                        ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
                                       });
                                       Navigator.pop(context);
                                       Navigator.pop(context);
@@ -3023,7 +3089,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                     height: height/18.475,
                                     width: width/12.8,
                                     decoration: BoxDecoration(
-                                      color: Color(0xffD60A0B),
+                                      color: const Color(0xffD60A0B),
                                       borderRadius:
                                       BorderRadius.circular(4),
                                     ),
@@ -3035,7 +3101,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                           fontSize: width/96,
                                           fontWeight:
                                           FontWeight.w600,
-                                          color: Color(0xffFFFFFF),
+                                          color: const Color(0xffFFFFFF),
                                         ),
                                       ),
                                     )),
@@ -3060,7 +3126,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                     height: height/18.475,
                                     width: width/12.8,
                                     decoration: BoxDecoration(
-                                      color: Color(0xff00A0E3),
+                                      color: const Color(0xff00A0E3),
                                       borderRadius:
                                       BorderRadius.circular(4),
                                     ),
@@ -3072,7 +3138,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                           fontSize: width/96,
                                           fontWeight:
                                           FontWeight.w600,
-                                          color: Color(0xffFFFFFF),
+                                          color: const Color(0xffFFFFFF),
                                         ),
                                       ),
                                     )),
@@ -3095,7 +3161,6 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
       },
     );
   }
-
   convertToCsv(List<EventsModel> events) async {
     List<List<dynamic>> rows = [];
     List<dynamic> row = [];
@@ -3114,7 +3179,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
       row.add(events[i].description!);
       rows.add(row);
     }
-    String csv = ListToCsvConverter().convert(rows);
+    String csv = const ListToCsvConverter().convert(rows);
     saveCsvToFile(csv);
   }
 
@@ -3136,7 +3201,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
       row.add(events[i].description!);
       rows.add(row);
     }
-    String pdf = ListToCsvConverter().convert(rows);
+    String pdf = const ListToCsvConverter().convert(rows);
     savePdfToFile(pdf);
   }
 
@@ -3184,7 +3249,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
       row.add(events[i].description);
       rows.add(row);
     }
-    String csv = ListToCsvConverter().convert(rows,
+    String csv = const ListToCsvConverter().convert(rows,
         fieldDelimiter: null,
         eol: null,
         textEndDelimiter: null,
@@ -3235,7 +3300,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                   ),
                   Expanded(
                     child: Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.only(
                             bottomRight: Radius.circular(10),
@@ -3267,7 +3332,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(7),
-                                  boxShadow: [
+                                  boxShadow: const [
                                     BoxShadow(
                                       color: Colors.black26,
                                       blurRadius: 3,
@@ -3324,7 +3389,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(7),
-                                  boxShadow: [
+                                  boxShadow: const [
                                     BoxShadow(
                                       color: Colors.black26,
                                       blurRadius: 3,
@@ -3374,7 +3439,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(8),
-                                    boxShadow: [
+                                    boxShadow: const [
                                       BoxShadow(
                                         color: Colors.black26,
                                         offset: Offset(1, 2),
@@ -3408,7 +3473,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                   decoration: BoxDecoration(
                                     color: Constants().primaryAppColor,
                                     borderRadius: BorderRadius.circular(8),
-                                    boxShadow: [
+                                    boxShadow: const [
                                       BoxShadow(
                                         color: Colors.black26,
                                         offset: Offset(1, 2),
@@ -3452,11 +3517,11 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
     backgroundColor: Colors.transparent,
     elevation: 0,
     content: Container(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: Constants().primaryAppColor, width: 3),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Color(0x19000000),
               spreadRadius: 2.0,
@@ -3470,13 +3535,13 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
           children: [
             Icon(Icons.info_outline, color: Constants().primaryAppColor),
             Padding(
-              padding: EdgeInsets.only(left: 8.0),
+              padding: const EdgeInsets.only(left: 8.0),
               child: Text('Please fill required fields !!',
                   style: SafeGoogleFont('Poppins', color: Colors.black)),
             ),
-            Spacer(),
+            const Spacer(),
             TextButton(
-                onPressed: () => debugPrint("Undid"), child: Text("Undo"))
+                onPressed: () => debugPrint("Undid"), child: const Text("Undo"))
           ],
         )),
   );
@@ -3516,7 +3581,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
     double height = MediaQuery.of(context).size.height;
     final render = key.currentContext!.findRenderObject() as RenderBox;
     await showMenu(
-      color: Color(0xffFFFFFF),
+      color: const Color(0xffFFFFFF),
       elevation: 0,
       context: context,
       position: RelativeRect.fromLTRB(
@@ -3540,6 +3605,10 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                     editPopUp(events, size);
                   } else if (item == "Delete") {
                     EventsFireCrud.deleteRecord(id: events.id);
+
+                  //   snakbar
+                    final snackBar = SnackBar(content: AwesomeSnackbarContent(title: 'Success!', message: 'Deleted!!!!!', contentType: ContentType.success,),);
+                    ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
                   }
                 },
                 value: item,
@@ -3547,28 +3616,44 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                   height: height / 18.475,
                   decoration: BoxDecoration(
                       color: item == "Edit"
-                          ? Color(0xff5B93FF).withOpacity(0.6)
-                          : Color(0xffE71D36).withOpacity(0.6),
+                          ? const Color(0xff5B93FF).withOpacity(0.6)
+                          : const Color(0xffE71D36).withOpacity(0.6),
                       borderRadius: BorderRadius.circular(5)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      // item == "Edit"
+                      //     ? const Icon(
+                      //         Icons.edit,
+                      //         color: Colors.white,
+                      //         size: 18,
+                      //       )
+                      //     : const Icon(
+                      //         Icons.delete,
+                      //         color: Colors.white,
+                      //         size: 18,
+                      //       ),
                       item == "Edit"
-                          ? Icon(
-                              Icons.edit,
-                              color: Colors.white,
-                              size: 18,
-                            )
-                          : Icon(
-                              Icons.delete,
-                              color: Colors.white,
-                              size: 18,
-                            ),
+                          ? const Icon(
+                        Icons.edit,
+                        color: Colors.white,
+                        size: 18,
+                      ): item == "View"
+                          ? const Icon(
+                        Icons.remove_red_eye_outlined,
+                        color: Colors.white,
+                        size: 18,
+                      )
+                          : const Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                        size: 18,
+                      ),
                       Padding(
                         padding: EdgeInsets.only(left: width/307.2),
                         child: Text(
                           item,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -3615,9 +3700,9 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                 child: Material(
                   elevation: 10,
                   color: item == "Print"
-                      ? Color(0xff5B93FF):
+                      ? const Color(0xff5B93FF):
                   item == "Copy"
-                      ? Color(0xffE71D36):
+                      ? const Color(0xffE71D36):
                   item == "Csv"
                       ? Colors.green
                       : Colors.transparent,
@@ -3627,9 +3712,9 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                     height: height / 18.475,
                     decoration: BoxDecoration(
                         color: item == "Print"
-                            ? Color(0xff5B93FF):
+                            ? const Color(0xff5B93FF):
                         item == "Copy"
-                            ? Color(0xffE71D36):
+                            ? const Color(0xffE71D36):
                         item == "Csv"
                             ? Colors.green
                             : Colors.transparent,
@@ -3638,24 +3723,24 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         item == "Print"
-                            ? Icon(
+                            ? const Icon(
                                 Icons.print,
                                 color: Colors.white,
                                 size: 18,
                               )
                             : item == "Copy"
-                                ? Icon(
+                                ? const Icon(
                                     Icons.copy,
                                     color: Colors.white,
                                     size: 18,
                                   )
                                     : item == "Csv"
-                                        ? Icon(
+                                        ? const Icon(
                                             Icons.file_copy_rounded,
                                             color: Colors.white,
                                             size: 18,
                                           )
-                                        : Icon(
+                                        : const Icon(
                                             Icons.circle,
                                             color: Colors.transparent,
                                           ),
@@ -3724,11 +3809,11 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               item == "Filter by Date"
-                  ? Icon(
+                  ? const Icon(
                 Icons.print,
                 color: Color(0xff5B93FF),
                 size: 18,
-              ) : Icon(
+              ) : const Icon(
                 Icons.circle,
                 color: Colors.transparent,
               ),
@@ -3740,7 +3825,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
                     color: item == "Filter by Date"
-                        ? Color(0xff5B93FF)
+                        ? const Color(0xff5B93FF)
                         : Colors.white,
                   ),
                   overflow: TextOverflow.ellipsis,

@@ -3,6 +3,7 @@ import 'package:alumni_management_admin/Models/Language_Model.dart';
 import 'package:alumni_management_admin/common_widgets/developer_card_widget.dart';
 import 'package:alumni_management_admin/utils.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
@@ -82,10 +83,6 @@ class _Department_ScreenState extends State<Department_Screen> {
                           fontWeight: FontWeight.w800,
                           color: Colors.black),
                     ),
-
-
-
-
                   ],
                 ),
               ),
@@ -96,6 +93,9 @@ class _Department_ScreenState extends State<Department_Screen> {
                     padding:  EdgeInsets.only(left:width/1.39),
                     child: InkWell(
                       onTap: () async {
+                        setState(() {
+                          departmentnameContoller.clear();
+                        });
                         addItemPopUp();
                       },
                       child: Container(
@@ -104,7 +104,7 @@ class _Department_ScreenState extends State<Department_Screen> {
                         decoration: BoxDecoration(
                           color: Constants().primaryAppColor,
                           borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                               color: Colors.black26,
                               offset: Offset(1, 2),
@@ -119,7 +119,7 @@ class _Department_ScreenState extends State<Department_Screen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.add,color:Colors.white),
+                              const Icon(Icons.add,color:Colors.white),
                               KText(
                                 text: "Add",
                                 style: SafeGoogleFont(
@@ -151,7 +151,7 @@ class _Department_ScreenState extends State<Department_Screen> {
                         child: Row(
                           children: [
                             KText(
-                              text: "Si.No.",
+                              text: "SL.No.",
                               style:  SafeGoogleFont (
                                 'Nunito',
                                 fontWeight: FontWeight.w600,
@@ -279,169 +279,353 @@ class _Department_ScreenState extends State<Department_Screen> {
                               return const Center(child: CircularProgressIndicator(),);
                             }
 
+                            // return SingleChildScrollView(
+                            //   physics: const NeverScrollableScrollPhysics(),
+                            //   child: Column(
+                            //     children: [
+                            //       SizedBox(
+                            //         height:height/1.55,
+                            //         child: ListView.builder(
+                            //           shrinkWrap: true,
+                            //           physics: const NeverScrollableScrollPhysics(),
+                            //           itemCount:  pagecount == temp ? snapshot.data!.docs.length.remainder(10) == 0 ? 10 : snapshot.data!.docs.length.remainder(10) : 10 ,
+                            //           itemBuilder: (context, index) {
+                            //             var DepartmentData=snapshot.data!.docs[(temp*10)-10+index];
+                            //             List<GlobalKey<State<StatefulWidget>>>popMenuKeys = List.generate(snapshot.data!.docs.length, (index) => GlobalKey(),);
+                            //             return
+                            //               ((temp*10)-10+index >= documentlength)?const SizedBox():
+                            //               SizedBox(
+                            //               height: height/15.850,
+                            //               width: double.infinity,
+                            //               child: Row(
+                            //                 children: [
+                            //                   SizedBox(
+                            //                     width:width/12.075,
+                            //                     child:
+                            //                     KText(
+                            //                       text: "${((temp*10)-10+index) + 1}",
+                            //                       style:  SafeGoogleFont (
+                            //                         'Nunito',
+                            //                         fontSize:width/105.07,
+                            //                         fontWeight: FontWeight.w600,
+                            //                       ),
+                            //                     ),
+                            //                   ),
+                            //                   SizedBox(
+                            //                     width: width/1.9,
+                            //                     child:
+                            //                     KText(
+                            //                       text: DepartmentData['name'].toString(),
+                            //                       style:  SafeGoogleFont (
+                            //
+                            //                         'Nunito',
+                            //                         fontSize:width/105.07,
+                            //                         fontWeight: FontWeight.w600,
+                            //                       ),
+                            //                     ),
+                            //
+                            //                   ),
+                            //
+                            //                   GestureDetector(
+                            //                     onTap: () {
+                            //                       Popupmenu(context, popMenuKeys[index], size,DepartmentData['name'].toString(),snapshot.data!.docs[index].id);
+                            //                     },
+                            //                     child: SizedBox(
+                            //                         key: popMenuKeys[index],
+                            //                         width:width/7.588,
+                            //                         child: const Icon(
+                            //                             Icons.more_horiz)),
+                            //                   ),
+                            //
+                            //                 ],
+                            //               ),
+                            //
+                            //             );
+                            //           },),
+                            //
+                            //       ),
+                            //       Stack(
+                            //         alignment: Alignment.centerRight,
+                            //         children: [
+                            //           SizedBox(
+                            //             width: double.infinity,
+                            //             height:height/13.02,
+                            //             child: ListView.builder(
+                            //                 shrinkWrap: true,
+                            //                 scrollDirection: Axis.horizontal,
+                            //                 itemCount: pagecount,
+                            //                 itemBuilder: (context,index){
+                            //                   return InkWell(
+                            //                     onTap: (){
+                            //                       setState(() {
+                            //                         temp=list[index];
+                            //                       });
+                            //                       print(temp);
+                            //                     },
+                            //                     child: Container(
+                            //                         height:30,width:30,
+                            //                         margin: const EdgeInsets.only(left:8,right:8,top:10,bottom:10),
+                            //                         decoration: BoxDecoration(
+                            //                             borderRadius: BorderRadius.circular(100),
+                            //                             color:temp.toString() == list[index].toString() ?  Constants().primaryAppColor : Colors.transparent
+                            //                         ),
+                            //                         child: Center(
+                            //                           child: Text(list[index].toString(),style: SafeGoogleFont(
+                            //                               'Nunito',
+                            //                               fontWeight: FontWeight.w700,
+                            //                               color: temp.toString() == list[index].toString() ?  Colors.white : Colors.black
+                            //
+                            //                           ),),
+                            //                         )
+                            //                     ),
+                            //                   );
+                            //
+                            //                 }),
+                            //           ),
+                            //           temp > 1 ?
+                            //           Padding(
+                            //             padding: const EdgeInsets.only(right: 150.0),
+                            //             child:
+                            //             InkWell(
+                            //               onTap:(){
+                            //                 setState(() {
+                            //                   temp= temp-1;
+                            //                 });
+                            //               },
+                            //               child: Container(
+                            //                   height:height/16.275,
+                            //                   width:width/11.3833,
+                            //                   decoration:BoxDecoration(
+                            //                       color:Constants().primaryAppColor,
+                            //                       borderRadius: BorderRadius.circular(80)
+                            //                   ),
+                            //                   child: Center(
+                            //                     child: Text("Previous Page",style: SafeGoogleFont(
+                            //                       'Nunito',
+                            //                       fontWeight: FontWeight.w700,
+                            //                       color: Colors.white,
+                            //                     ),),
+                            //                   )),
+                            //             ),
+                            //           )  : Container(),
+                            //           Container(
+                            //             child: temp < pagecount ?
+                            //             Padding(
+                            //               padding: const EdgeInsets.only(right: 20.0),
+                            //               child: InkWell(
+                            //                 onTap:(){
+                            //                   setState(() {
+                            //                     temp= temp+1;
+                            //                   });
+                            //                 },
+                            //                 child:
+                            //                 Container(
+                            //                     height:height/16.275,
+                            //                     width:width/11.3833,
+                            //                     decoration:BoxDecoration(
+                            //                         color:Constants().primaryAppColor,
+                            //                         borderRadius: BorderRadius.circular(80)
+                            //                     ),
+                            //                     child: Center(
+                            //                       child: Text("Next Page",style: SafeGoogleFont(
+                            //                         'Nunito',
+                            //                         fontWeight: FontWeight.w700,
+                            //                         color: Colors.white,
+                            //                       ),),
+                            //                     )),
+                            //               ),
+                            //             )  : Container(),
+                            //           )
+                            //         ],
+                            //       ),
+                            //     ],
+                            //   ),
+                            // );
+                            //
+
+
                             return SingleChildScrollView(
                               physics: const NeverScrollableScrollPhysics(),
                               child: Column(
                                 children: [
                                   SizedBox(
-                                    height:height/1.55,
+                                    height: height / 1.55,
                                     child: ListView.builder(
                                       shrinkWrap: true,
                                       physics: const NeverScrollableScrollPhysics(),
-                                      itemCount:  pagecount == temp ? snapshot.data!.docs.length.remainder(10) == 0 ? 10 : snapshot.data!.docs.length.remainder(10) : 10 ,
+                                      itemCount: pagecount == temp
+                                          ? snapshot.data!.docs.length.remainder(10) == 0
+                                          ? 10
+                                          : snapshot.data!.docs.length.remainder(10)
+                                          : 10,
                                       itemBuilder: (context, index) {
-
-                                        var DepartmentData=snapshot.data!.docs[(temp*10)-10+index];
-                                        List<GlobalKey<State<StatefulWidget>>>popMenuKeys = List.generate(snapshot.data!.docs.length, (index) => GlobalKey(),);
-                                        return
-                                          ((temp*10)-10+index >= documentlength)?const SizedBox():
-                                          SizedBox(
-                                          height: height/15.850,
+                                        // Calculate the actual index of the item based on the current page (temp)
+                                        int actualIndex = (temp - 1) * 10 + index;
+                                        if (actualIndex >= snapshot.data!.docs.length) {
+                                          return const SizedBox();
+                                        }
+                                        var DepartmentData = snapshot.data!.docs[actualIndex];
+                                        List<GlobalKey<State<StatefulWidget>>> popMenuKeys =
+                                        List.generate(snapshot.data!.docs.length, (index) => GlobalKey(),);
+                                        return SizedBox(
+                                          height: height / 15.850,
                                           width: double.infinity,
-
                                           child: Row(
-
                                             children: [
                                               SizedBox(
-                                                width:width/12.075,
-                                                child:
-                                                KText(
-                                                  text: (index + 1).toString(),
-                                                  style:  SafeGoogleFont (
+                                                width: width / 12.075,
+                                                child: KText(
+                                                  text: "${actualIndex + 1}",
+                                                  style: SafeGoogleFont(
                                                     'Nunito',
-                                                    fontSize:width/105.07,
+                                                    fontSize: width / 105.07,
                                                     fontWeight: FontWeight.w600,
                                                   ),
                                                 ),
                                               ),
                                               SizedBox(
-                                                width: width/1.9,
-                                                child:
-                                                KText(
+                                                width: width / 1.9,
+                                                child: KText(
                                                   text: DepartmentData['name'].toString(),
-                                                  style:  SafeGoogleFont (
+                                                  style: SafeGoogleFont(
                                                     'Nunito',
-                                                    fontSize:width/105.07,
+                                                    fontSize: width / 105.07,
                                                     fontWeight: FontWeight.w600,
                                                   ),
                                                 ),
-
                                               ),
-
                                               GestureDetector(
                                                 onTap: () {
-                                                  Popupmenu(context, popMenuKeys[index], size,DepartmentData['name'].toString(),snapshot.data!.docs[index].id);
+                                                  Popupmenu(context, popMenuKeys[index], size,
+                                                      DepartmentData['name'].toString(), DepartmentData.id);
                                                 },
                                                 child: SizedBox(
-                                                    key: popMenuKeys[index],
-                                                    width:width/7.588,
-                                                    child: Icon(
-                                                        Icons.more_horiz)),
+                                                  key: popMenuKeys[index],
+                                                  width: width / 7.588,
+                                                  child: const Icon(Icons.more_horiz),
+                                                ),
                                               ),
-
                                             ],
                                           ),
-
                                         );
-                                      },),
+                                      },
+                                    ),
                                   ),
                                   Stack(
                                     alignment: Alignment.centerRight,
                                     children: [
                                       SizedBox(
                                         width: double.infinity,
-                                        height:height/13.02,
+                                        height: height / 13.02,
                                         child: ListView.builder(
-                                            shrinkWrap: true,
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: pagecount,
-                                            itemBuilder: (context,index){
-                                              return InkWell(
-                                                onTap: (){
-                                                  setState(() {
-                                                    temp=list[index];
-                                                  });
-                                                  print(temp);
-                                                },
-                                                child: Container(
-                                                    height:30,width:30,
-                                                    margin: EdgeInsets.only(left:8,right:8,top:10,bottom:10),
-                                                    decoration: BoxDecoration(
-                                                        borderRadius: BorderRadius.circular(100),
-                                                        color:temp.toString() == list[index].toString() ?  Constants().primaryAppColor : Colors.transparent
-                                                    ),
-                                                    child: Center(
-                                                      child: Text(list[index].toString(),style: SafeGoogleFont(
-                                                          'Nunito',
-                                                          fontWeight: FontWeight.w700,
-                                                          color: temp.toString() == list[index].toString() ?  Colors.white : Colors.black
-
-                                                      ),),
-                                                    )
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: pagecount,
+                                          itemBuilder: (context, index) {
+                                            return InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  temp = list[index];
+                                                });
+                                                print(temp);
+                                              },
+                                              child: Container(
+                                                height: 30,
+                                                width: 30,
+                                                margin: const EdgeInsets.only(
+                                                    left: 8, right: 8, top: 10, bottom: 10),
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(100),
+                                                  color: temp.toString() == list[index].toString()
+                                                      ? Constants().primaryAppColor
+                                                      : Colors.transparent,
                                                 ),
-                                              );
-
-                                            }),
+                                                child: Center(
+                                                  child: Text(
+                                                    list[index].toString(),
+                                                    style: SafeGoogleFont(
+                                                      'Nunito',
+                                                      fontWeight: FontWeight.w700,
+                                                      color: temp.toString() == list[index].toString()
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
                                       ),
-                                      temp > 1 ?
-                                      Padding(
+                                      temp > 1
+                                          ? Padding(
                                         padding: const EdgeInsets.only(right: 150.0),
-                                        child:
-                                        InkWell(
-                                          onTap:(){
+                                        child: InkWell(
+                                          onTap: () {
                                             setState(() {
-                                              temp= temp-1;
+                                              temp = temp - 1;
                                             });
                                           },
                                           child: Container(
-                                              height:height/16.275,
-                                              width:width/11.3833,
-                                              decoration:BoxDecoration(
-                                                  color:Constants().primaryAppColor,
-                                                  borderRadius: BorderRadius.circular(80)
-                                              ),
-                                              child: Center(
-                                                child: Text("Previous Page",style: SafeGoogleFont(
+                                            height: height / 16.275,
+                                            width: width / 11.3833,
+                                            decoration: BoxDecoration(
+                                              color: Constants().primaryAppColor,
+                                              borderRadius: BorderRadius.circular(80),
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                "Previous Page",
+                                                style: SafeGoogleFont(
                                                   'Nunito',
                                                   fontWeight: FontWeight.w700,
                                                   color: Colors.white,
-                                                ),),
-                                              )),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                      )  : Container(),
+                                      )
+                                          : Container(),
                                       Container(
-                                        child: temp < pagecount ?
-                                        Padding(
+                                        child: temp < pagecount
+                                            ? Padding(
                                           padding: const EdgeInsets.only(right: 20.0),
                                           child: InkWell(
-                                            onTap:(){
+                                            onTap: () {
                                               setState(() {
-                                                temp= temp+1;
+                                                temp = temp + 1;
                                               });
                                             },
-                                            child:
-                                            Container(
-                                                height:height/16.275,
-                                                width:width/11.3833,
-                                                decoration:BoxDecoration(
-                                                    color:Constants().primaryAppColor,
-                                                    borderRadius: BorderRadius.circular(80)
-                                                ),
-                                                child: Center(
-                                                  child: Text("Next Page",style: SafeGoogleFont(
+                                            child: Container(
+                                              height: height / 16.275,
+                                              width: width / 11.3833,
+                                              decoration: BoxDecoration(
+                                                color: Constants().primaryAppColor,
+                                                borderRadius: BorderRadius.circular(80),
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  "Next Page",
+                                                  style: SafeGoogleFont(
                                                     'Nunito',
                                                     fontWeight: FontWeight.w700,
                                                     color: Colors.white,
-                                                  ),),
-                                                )),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
                                           ),
-                                        )  : Container(),
-                                      )
+                                        )
+                                            : Container(),
+                                      ),
                                     ],
                                   ),
                                 ],
                               ),
                             );
+
+
                           },),
                       ],
                     ),
@@ -449,7 +633,7 @@ class _Department_ScreenState extends State<Department_Screen> {
                 ),
               ),
               SizedBox(height: height / 65.1),
-              DeveloperCardWidget(),
+              const DeveloperCardWidget(),
               SizedBox(height: height / 65.1),
 
             ],
@@ -513,7 +697,7 @@ class _Department_ScreenState extends State<Department_Screen> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(8),
                               boxShadow: [
-                                BoxShadow(
+                                const BoxShadow(
                                   color: Colors.black26,
                                   offset: Offset(1, 2),
                                   blurRadius: 3,
@@ -543,7 +727,7 @@ class _Department_ScreenState extends State<Department_Screen> {
                 Expanded(
                   child: Container(
                     width: double.infinity,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
                         bottomRight: Radius.circular(10),
@@ -565,7 +749,7 @@ class _Department_ScreenState extends State<Department_Screen> {
                               ),
                             ),
                           ),
-                          Text(":"),
+                          const Text(":"),
                           SizedBox(width: width/68.3),
                           Text(
                             Name.toString(),
@@ -611,7 +795,7 @@ class _Department_ScreenState extends State<Department_Screen> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     boxShadow: [
-                      BoxShadow(
+                      const BoxShadow(
                         color: Colors.black26,
                         offset: Offset(1, 2),
                         blurRadius: 3,
@@ -780,8 +964,11 @@ class _Department_ScreenState extends State<Department_Screen> {
                                   if(_formkey.currentState!.validate()){
                                     FirebaseFirestore.instance.collection("Department").doc(Docid).update({
                                       "name":departmentnameContoller.text
+
                                     });
                                     Navigator.pop(context);
+                                    final snackBar = SnackBar(content: AwesomeSnackbarContent(title: 'Sucess!', message: 'Updated this Department', contentType: ContentType.success,),);
+                                    ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
                                   }
 
                                 },
@@ -789,7 +976,7 @@ class _Department_ScreenState extends State<Department_Screen> {
                                     height: height/18.475,
                                     width: width/12.8,
                                     decoration: BoxDecoration(
-                                      color: Color(0xffD60A0B),
+                                      color: const Color(0xffD60A0B),
                                       borderRadius:
                                       BorderRadius.circular(4),
                                     ),
@@ -801,7 +988,7 @@ class _Department_ScreenState extends State<Department_Screen> {
                                           fontSize: width/96,
                                           fontWeight:
                                           FontWeight.w600,
-                                          color: Color(0xffFFFFFF),
+                                          color: const Color(0xffFFFFFF),
                                         ),
                                       ),
                                     )),
@@ -822,7 +1009,7 @@ class _Department_ScreenState extends State<Department_Screen> {
                                     height: height/18.475,
                                     width: width/12.8,
                                     decoration: BoxDecoration(
-                                      color: Color(0xff00A0E3),
+                                      color: const Color(0xff00A0E3),
                                       borderRadius:
                                       BorderRadius.circular(4),
                                     ),
@@ -834,7 +1021,7 @@ class _Department_ScreenState extends State<Department_Screen> {
                                           fontSize: width/96,
                                           fontWeight:
                                           FontWeight.w600,
-                                          color: Color(0xffFFFFFF),
+                                          color: const Color(0xffFFFFFF),
                                         ),
                                       ),
                                     )),
@@ -860,7 +1047,6 @@ class _Department_ScreenState extends State<Department_Screen> {
   }
 
   addItemPopUp() {
-
     double height = MediaQuery.of(context).size.height;
     Size size = MediaQuery.of(context).size;
     double width = MediaQuery.of(context).size.width;
@@ -878,7 +1064,7 @@ class _Department_ScreenState extends State<Department_Screen> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     boxShadow: [
-                      BoxShadow(
+                      const BoxShadow(
                         color: Colors.black26,
                         offset: Offset(1, 2),
                         blurRadius: 3,
@@ -891,7 +1077,6 @@ class _Department_ScreenState extends State<Department_Screen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-
                         SizedBox(
                           width:width/1.70666,
                           height: height/9.2375,
@@ -1034,8 +1219,6 @@ class _Department_ScreenState extends State<Department_Screen> {
                               ),
                               validator: (value)=>value!.isEmpty?"Field is Required":null,
                             )),
-
-
                         Padding(
                           padding:  EdgeInsets.only(top:height/30.39),
                           child: Row(
@@ -1050,7 +1233,7 @@ class _Department_ScreenState extends State<Department_Screen> {
                               /// Save Button
                               GestureDetector(
                                 onTap:() async {
-
+                                  print('Justttttttttt');
                                   if(_formkey.currentState!.validate()){
                                     var document = await FirebaseFirestore.instance.collection("Department").where("name",isEqualTo: departmentnameContoller.text).get();
                                     if(document.size <1) {
@@ -1061,13 +1244,15 @@ class _Department_ScreenState extends State<Department_Screen> {
                                             .now()
                                             .millisecondsSinceEpoch
                                       });
-
                                       groupfunction();
+
                                       Navigator.pop(context);
                                     }
                                     else{
+                                      final snackBar = SnackBar(content: AwesomeSnackbarContent(title: 'Error!', message: 'Already the Course is added', contentType: ContentType.failure,),);
+                                      ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
+                                     print('Added Already');
                                       Navigator.pop(context);
-
                                     }
                                   }
 
@@ -1077,7 +1262,7 @@ class _Department_ScreenState extends State<Department_Screen> {
                                     height: height/18.475,
                                     width: width/12.8,
                                     decoration: BoxDecoration(
-                                      color: Color(0xffD60A0B),
+                                      color: const Color(0xffD60A0B),
                                       borderRadius:
                                       BorderRadius.circular(4),
                                     ),
@@ -1089,11 +1274,12 @@ class _Department_ScreenState extends State<Department_Screen> {
                                           fontSize: width/96,
                                           fontWeight:
                                           FontWeight.w600,
-                                          color: Color(0xffFFFFFF),
+                                          color: const Color(0xffFFFFFF),
                                         ),
                                       ),
                                     )),
                               ),
+
                               SizedBox(
                                 width: width/76.8,
                               ),
@@ -1110,7 +1296,7 @@ class _Department_ScreenState extends State<Department_Screen> {
                                     height: height/18.475,
                                     width: width/12.8,
                                     decoration: BoxDecoration(
-                                      color: Color(0xff00A0E3),
+                                      color: const Color(0xff00A0E3),
                                       borderRadius:
                                       BorderRadius.circular(4),
                                     ),
@@ -1122,7 +1308,7 @@ class _Department_ScreenState extends State<Department_Screen> {
                                           fontSize: width/96,
                                           fontWeight:
                                           FontWeight.w600,
-                                          color: Color(0xffFFFFFF),
+                                          color: const Color(0xffFFFFFF),
                                         ),
                                       ),
                                     )),
@@ -1152,10 +1338,7 @@ class _Department_ScreenState extends State<Department_Screen> {
     return '#${randomColor.toRadixString(16).padLeft(8, '0')}';
   }
   groupfunction()async{
-
     var groupdocument=await FirebaseFirestore.instance.collection("Groups").where("Department",isEqualTo:departmentnameContoller.text).get();
-
-
     Color randomColor() {
       Random random = Random();
       return Color.fromRGBO(
@@ -1165,13 +1348,10 @@ class _Department_ScreenState extends State<Department_Screen> {
         1.0, // Full opacity
       );
     }
+
     print(randomColor().value.toRadixString(16));
-
-
     if(groupdocument.docs.length==0){
-
       var Color=randomColor().value.toRadixString(16);
-
       var AcademicYear= await FirebaseFirestore.instance.collection("AcademicYear").get();
       for(int i=0;i<AcademicYear.docs.length;i++){
         FirebaseFirestore.instance.collection("Groups").doc().set({
@@ -1196,7 +1376,7 @@ class _Department_ScreenState extends State<Department_Screen> {
     double height = MediaQuery.of(context).size.height;
     final render = key.currentContext!.findRenderObject() as RenderBox;
     await showMenu(
-      color: Color(0xffFFFFFF),
+      color: const Color(0xffFFFFFF),
       elevation: 0,
       context: context,
       position: RelativeRect.fromLTRB(
@@ -1214,8 +1394,7 @@ class _Department_ScreenState extends State<Department_Screen> {
           else if (item == "Delete") {
             CoolAlert.show(
                 context: context,
-                type: CoolAlertType
-                    .info,
+                type: CoolAlertType.info,
                 text: "${DataName} will be deleted",
                 title:
                 "Delete this Record?",
@@ -1233,6 +1412,9 @@ class _Department_ScreenState extends State<Department_Screen> {
                 onConfirmBtnTap:
                     () async {
                   FirebaseFirestore.instance.collection("Department").doc(DocumentID).delete();
+                //   snackbar
+                  final snackBar = SnackBar(content: AwesomeSnackbarContent(title: 'Sucess!', message: 'Department: ${DataName} has been Deleted Sucessfully...', contentType: ContentType.success,),);
+                  ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
 
                 });
           }
@@ -1242,28 +1424,28 @@ class _Department_ScreenState extends State<Department_Screen> {
           height: height / 18.475,
           decoration: BoxDecoration(
               color: item == "Edit"
-                  ? Color(0xff5B93FF).withOpacity(0.6)
-                  : Color(0xffE71D36).withOpacity(0.6),
+                  ? const Color(0xff5B93FF).withOpacity(0.6)
+                  : const Color(0xffE71D36).withOpacity(0.6),
               borderRadius: BorderRadius.circular(5)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               item == "Edit"
-                  ? Icon(
+                  ? const Icon(
                 Icons.edit,
                 color: Colors.white,
                 size: 18,
               )
-                  : Icon(
+                  : const Icon(
                 Icons.delete,
                 color: Colors.white,
                 size: 18,
               ),
               Padding(
-                padding: EdgeInsets.only(left: 5),
+                padding: const EdgeInsets.only(left: 5),
                 child: Text(
                   item,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -1278,4 +1460,5 @@ class _Department_ScreenState extends State<Department_Screen> {
           .toList(),
     );
   }
+
 }
