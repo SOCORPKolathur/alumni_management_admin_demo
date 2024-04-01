@@ -2,6 +2,7 @@ import 'package:alumni_management_admin/Screens/Dashboard.dart';
 import 'package:alumni_management_admin/Screens/Events_Page.dart';
 import 'package:alumni_management_admin/Screens/Job%20Advertsiment.dart';
 import 'package:alumni_management_admin/Screens/Job_Reports.dart';
+import 'package:alumni_management_admin/Screens/Notification_Screen.dart';
 import 'package:alumni_management_admin/Screens/audio_podcasts.dart';
 import 'package:alumni_management_admin/Screens/blog_tab.dart';
 import 'package:alumni_management_admin/Screens/donations_tab.dart';
@@ -175,6 +176,33 @@ class _MyWidgetState extends State<MyWidget> {
     // TODO: implement initState
     super.initState();
   }
+  int dawer = 0;
+
+
+  ExpansionTileController admissioncon= new ExpansionTileController();
+  ExpansionTileController studdentcon= new ExpansionTileController();
+  ExpansionTileController staffcon= new ExpansionTileController();
+  ExpansionTileController attdencecon= new ExpansionTileController();
+  ExpansionTileController feescon= new ExpansionTileController();
+  ExpansionTileController examcon= new ExpansionTileController();
+  ExpansionTileController hrcon= new ExpansionTileController();
+  ExpansionTileController noticescon= new ExpansionTileController();
+  ExpansionTileController timetable= new ExpansionTileController();
+
+
+
+
+  bool col1=false;
+  bool col2=false;
+  bool col3=false;
+  bool col4=false;
+  bool col5=false;
+  bool col6=false;
+  bool col7=false;
+  bool col8=false;
+  bool col9=false;
+  String pagename="Dashboard";
+
 
   @override
   Widget build(BuildContext context) {
@@ -208,1849 +236,1465 @@ class _MyWidgetState extends State<MyWidget> {
                         SizedBox(
                           height: height / 52.7857,
                         ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  left: width / 76.8,
-                                  top: height / 36.8,
-                                  ),
-                              child: Container(
-                                  width: width / 34.133,
-                                  height: height / 16.422,
-                                  child: Image.asset("assets/logocl.png")),
-                            ),
-                            SizedBox(
-                              width: width / 192,
-                            ),
-                            KText(
-                              text: "IKIA College",
-                              style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: width / 76.8),
-                            )
-                          ],
+                        Padding(
+                          padding:  EdgeInsets.only(top: height / 36.8,),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: width / 116.8,
+
+                                    ),
+                                child: Container(
+                                    width: width / 34.133,
+                                    height: height / 16.422,
+                                    child: Image.asset("assets/logocl.png")),
+                              ),
+                              SizedBox(
+                                width: width / 192,
+                              ),
+                              KText(
+                                text: "IKIA College",
+                                style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: width / 76.8),
+                              )
+                            ],
+                          ),
                         ),
-                       /* Column(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectedPage = 0;
-                                  pages = DashBoard(
-                                    usermail: widget.email.toString(),
-                                  );
-                                });
-                                if (selectedPage == 0) {
-                                  setState(() {
-                                    value = 1;
-                                  });
-                                } else {
-                                  setState(() {
-                                    value = 0;
-                                  });
-                                }
-                              },
-                              child: AnimatedContainer(
-                                duration: Duration(milliseconds: 300),
-                                height: 50,
-                                width: value == 1 ? (value * width / 6.0) : 0,
-                                decoration: BoxDecoration(
-                                  color: selectedPage == 0
-                                      ? Constants().primaryAppColor
-                                      : Colors.white,
-                                  borderRadius: BorderRadius.circular(9.0),
+
+                        SizedBox(height: 5,),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          child: AnimatedContainer(
+
+                            height: 35,
+                            duration: Duration(milliseconds: 700),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+
+                            ),
+                            padding:  EdgeInsets.only(left: dawer == 0 ? 2.0 :0),
+                            child: Stack(
+                              alignment: Alignment.centerLeft,
+                              children: [
+                                AnimatedContainer(
+                                  curve: Curves.fastOutSlowIn,
+                                  duration: Duration(milliseconds: 700),
+                                  padding: EdgeInsets.only(left: 50),
+                                  width:  dawer == 0
+                                      ? 200 : 0,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: dawer == 0
+                                        ? Constants().primaryAppColor : Colors.transparent,
+                                  ),
+
                                 ),
-                                child: Row(
-                                  children: [
-                                    SizedBox(
-                                      width: width / 192,
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      pages=DashBoard(usermail: widget.email.toString(),);
+                                      dawer=0;
+                                      col1=false;
+                                      col2=false;
+                                      col3=false;
+                                      col4=false;
+                                      col5=false;
+                                      col6=false;
+                                      col7=false;
+                                      col8=false;
+                                      col9=false;
+                                      pagename="Dashboard";
+
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.data_saver_off_rounded,size:20,color: pagename=="Dashboard" ? Colors.white :Colors.black54,),
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 4.0),
+                                          child: KText(
+                                            text:"Dashboard",
+                                            style: GoogleFonts.poppins(
+                                              fontWeight: pagename=="Dashboard"
+                                                  ? FontWeight.w500
+                                                  : FontWeight.w600,
+                                              color:
+                                              pagename=="Dashboard" ? Colors.white :Colors.black54,
+                                              letterSpacing:
+                                              pagename=="Dashboard" ?2.7 : 1.5,
+                                              fontSize: pagename=="Dashboard" ? 13.0 : 12.0,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    Icon(
-                                      Icons.data_saver_off,
-                                      color: selectedPage == 0
-                                          ? Colors.white
-                                          :  Constants().primaryAppColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 5,),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          child: AnimatedContainer(
+
+                            height: 35,
+                            duration: Duration(milliseconds: 700),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+
+                            ),
+                            padding:  EdgeInsets.only(left: dawer == 1 ? 2.0 :0),
+                            child: Stack(
+                              alignment: Alignment.centerLeft,
+                              children: [
+                                AnimatedContainer(
+                                  curve: Curves.fastOutSlowIn,
+                                  duration: Duration(milliseconds: 700),
+                                  padding: EdgeInsets.only(left: 50),
+                                  width:  dawer == 1
+                                      ? 200 : 0,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: dawer == 1
+                                        ? Constants().primaryAppColor : Colors.transparent,
+                                  ),
+
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      pages=Job_Reports();
+                                      dawer=1;
+                                      col1=false;
+                                      col2=false;
+                                      col3=false;
+                                      col4=false;
+                                      col5=false;
+                                      col6=false;
+                                      col7=false;
+                                      col8=false;
+                                      col9=false;
+                                      pagename="Alumni Tracking";
+
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.auto_graph_rounded,size:20,color: pagename=="Alumni Tracking" ? Colors.white :Colors.black54,),
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 4.0),
+                                          child: KText(
+                                            text:"Alumni Tracking",
+                                            style: GoogleFonts.poppins(
+                                              fontWeight: pagename=="Alumni Tracking"
+                                                  ? FontWeight.w500
+                                                  : FontWeight.w600,
+                                              color:
+                                              pagename=="Alumni Tracking" ? Colors.white :Colors.black54,
+                                              letterSpacing:
+                                              pagename=="Alumni Tracking" ? 1.5 : 1.5,
+                                              fontSize: pagename=="Alumni Tracking" ? 13.0 : 12.0,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    SizedBox(
-                                      width: width / 192,
-                                    ),
-                                    KText(
-                                      text: "Dash Board",
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: selectedPage == 0
-                                            ? FontWeight.w500
-                                            : FontWeight.w500,
-                                        color: selectedPage == 0
-                                            ? Colors.white
-                                            : Colors.black,
-                                        letterSpacing:
-                                            selectedPage == 0 ? 2.0 : 0,
-                                        fontSize:
-                                            selectedPage == 0 ? 13.0 : 12.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 5,),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          child: AnimatedContainer(
+
+                            height:   dawer == 2
+                                ? 180 : 35,
+
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+
+                            ),
+                            padding:  EdgeInsets.only(left:  dawer == 2 ? 2.0 :0),
+                            duration: Duration(milliseconds: 400),
+                            child: Stack(
+                              alignment: Alignment.centerLeft,
+                              children: [
+                                AnimatedContainer(
+                                  curve: Curves.fastOutSlowIn,
+                                  duration: Duration(milliseconds: 400),
+                                  padding: EdgeInsets.only(left: 50),
+                                  width:   dawer == 2
+                                      ? 200 : 0,
+                                  height:  dawer == 2
+                                      ? 180 : 35,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color:  dawer == 2
+                                        ? Constants().primaryAppColor : Colors.transparent,
+                                  ),
+
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      dawer=2;
+                                      col1=false;
+                                      col2=false;
+                                      col3=false;
+                                      col4=false;
+                                      col5=false;
+                                      col6=false;
+                                      col7=false;
+                                      col8=false;
+                                      col9=false;
+                                      pagename="Database";
+
+                                    });
+                                  },
+                                  child: Column(
+                                    children: [
+                                      SizedBox(height: 8),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 8.0),
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.storage,size:20,color: pagename=="Database" ? Colors.white :Colors.black54,),
+                                            Padding(
+                                              padding: const EdgeInsets.only(left: 4.0),
+                                              child: KText(
+                                                text:"Database",
+                                                style: GoogleFonts.poppins(
+                                                  fontWeight: pagename=="Database"
+                                                      ? FontWeight.w500
+                                                      : FontWeight.w600,
+                                                  color:
+                                                  pagename=="Database" ? Colors.white :Colors.black54,
+                                                  letterSpacing:
+                                                  pagename=="Database" ? 1.5 : 1.5,
+                                                  fontSize: pagename=="Database" ? 13.0 : 12.0,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                                      SizedBox(height: 8),
+                                      InkWell(
+                                        onTap: (){
+                                          setState(() {
+                                            pagename = "Users";
+                                            pages= Users_Screen(UserViewed: false,);
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 180,
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: pagename == "Users"
+                                                ? Colors.white : Colors.transparent,
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.person_outline,size:20,color: pagename=="Users" ? Constants().primaryAppColor :Colors.white,),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(left: 4.0),
+                                                      child: KText(
+                                                        text:"Users",
+                                                        style: GoogleFonts.poppins(
+                                                          fontWeight: pagename=="Users"
+                                                              ? FontWeight.w500
+                                                              : FontWeight.w600,
+                                                          color:
+                                                          pagename=="Users" ? Constants().primaryAppColor :Colors.white,
+                                                          letterSpacing:
+                                                          pagename=="Users" ? 1.5 : 1.5,
+                                                          fontSize: pagename=="Users" ? 13.0 : 12.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      InkWell(
+                                        onTap: (){
+                                          setState(() {
+                                            pagename = "Faculty";
+                                            pages= Faculty_Tab(FacultyViewed: false,);
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 180,
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: pagename == "Faculty"
+                                                ? Colors.white : Colors.transparent,
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.person,size:20,color: pagename=="Faculty" ? Constants().primaryAppColor :Colors.white,),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(left: 4.0),
+                                                      child: KText(
+                                                        text:"Faculty",
+                                                        style: GoogleFonts.poppins(
+                                                          fontWeight: pagename=="Faculty"
+                                                              ? FontWeight.w500
+                                                              : FontWeight.w600,
+                                                          color:
+                                                          pagename=="Faculty" ? Constants().primaryAppColor :Colors.white,
+                                                          letterSpacing:
+                                                          pagename=="Faculty" ? 1.5 : 1.5,
+                                                          fontSize: pagename=="Faculty" ? 13.0 : 12.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      InkWell(
+                                        onTap: (){
+                                          setState(() {
+                                            pagename = "Gallery";
+                                            pages= Gallery_Screen();
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 180,
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: pagename == "Gallery"
+                                                ? Colors.white : Colors.transparent,
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.image_outlined,size:20,color: pagename=="Gallery" ? Constants().primaryAppColor :Colors.white,),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(left: 4.0),
+                                                      child: KText(
+                                                        text:"Gallery",
+                                                        style: GoogleFonts.poppins(
+                                                          fontWeight: pagename=="Gallery"
+                                                              ? FontWeight.w500
+                                                              : FontWeight.w600,
+                                                          color:
+                                                          pagename=="Gallery" ? Constants().primaryAppColor :Colors.white,
+                                                          letterSpacing:
+                                                          pagename=="Gallery" ? 1.5 : 1.5,
+                                                          fontSize: pagename=="Gallery" ? 13.0 : 12.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
 
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectedPage = 1;
-                                  pages = Reports_Screen();
-                                  value = 0;
-                                });
-                                if (selectedPage == 1) {
-                                  setState(() {
-                                    value = 1;
-                                  });
-                                } else {
-                                  setState(() {
-                                    value = 0;
-                                  });
-                                }
-                              },
-                              child: Stack(
-                                children: [
-                                  AnimatedContainer(
-                                    duration: const Duration(milliseconds: 300),
-                                    width: (value * width / 6.0),
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(3),
-                                      color: selectedPage == 1
-                                          ? Constants().primaryAppColor
-                                          : Colors.white,
-                                    ),
-                                    curve: Curves.easeIn,
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        Icon(
-                                          Icons.groups,
-                                          color: selectedPage == 1
-                                              ? Colors.white
-                                              : Colors.blue,
-                                        ),
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        KText(
-                                          text: "Reports",
-                                          style: GoogleFonts.poppins(
-                                            // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                            color: selectedPage == 1
-                                                ? Colors.white
-                                                : Colors.black,
-                                            //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                            //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 50,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.transparent,
-                                      borderRadius: BorderRadius.circular(9.0),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        Icon(
-                                          Icons.groups,
-                                          color: selectedPage == 1
-                                              ? Colors.white
-                                              : Colors.blue,
-                                        ),
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        KText(
-                                          text: "Reports",
-                                          style: GoogleFonts.poppins(
-                                            // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                            color: selectedPage == 1
-                                                ? Colors.white
-                                                : Colors.black,
-                                            //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                            //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
 
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectedPage = 2;
-                                  pages = Users_Screen();
-                                });
-                                if (selectedPage == 2) {
-                                  setState(() {
-                                    value = 1;
-                                  });
-                                } else {
-                                  setState(() {
-                                    value = 0;
-                                  });
-                                }
-                              },
-                              child: Stack(
-                                children: [
-                                  AnimatedContainer(
-                                    duration: const Duration(milliseconds: 300),
-                                    width: (value * width / 6.0),
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(3),
-                                      color: selectedPage == 2
-                                          ? Constants().primaryAppColor
-                                          : Colors.white,
-                                    ),
-                                    curve: Curves.easeIn,
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        Icon(
-                                          Icons.person_outlined,
-                                          color: selectedPage == 2
-                                              ? Colors.white
-                                              : Colors.blue,
-                                        ),
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        KText(
-                                          text: "Users",
-                                          style: GoogleFonts.poppins(
-                                            // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                            color: selectedPage == 2
-                                                ? Colors.white
-                                                : Colors.black,
-                                            //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                            //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 50,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.transparent,
-                                      borderRadius: BorderRadius.circular(9.0),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        Icon(
-                                          Icons.person_outlined,
-                                          color: selectedPage == 2
-                                              ? Colors.white
-                                              : Colors.blue,
-                                        ),
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        KText(
-                                          text: "Users",
-                                          style: GoogleFonts.poppins(
-                                            // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                            color: selectedPage == 2
-                                                ? Colors.white
-                                                : Colors.black,
-                                            //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                            //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectedPage = 3;
-                                  pages = Gallery_Screen();
-                                });
-                                if (selectedPage == 3) {
-                                  setState(() {
-                                    value = 1;
-                                  });
-                                } else {
-                                  setState(() {
-                                    value = 0;
-                                  });
-                                }
-                              },
-                              child: Stack(
-                                children: [
-                                  AnimatedContainer(
-                                    duration: const Duration(milliseconds: 300),
-                                    width: (value * width / 6.0),
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(3),
-                                      color: selectedPage == 3
-                                          ? Constants().primaryAppColor
-                                          : Colors.white,
-                                    ),
-                                    curve: Curves.easeIn,
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        Icon(
-                                          Icons.image_outlined,
-                                          color: selectedPage == 3
-                                              ? Colors.white
-                                              : Colors.blue,
-                                        ),
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        KText(
-                                          text: "Gallery",
-                                          style: GoogleFonts.poppins(
-                                            // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                            color: selectedPage == 3
-                                                ? Colors.white
-                                                : Colors.black,
-                                            //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                            //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 50,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.transparent,
-                                      borderRadius: BorderRadius.circular(9.0),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        Icon(
-                                          Icons.image_outlined,
-                                          color: selectedPage == 3
-                                              ? Colors.white
-                                              : Colors.blue,
-                                        ),
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        KText(
-                                          text: "Gallery",
-                                          style: GoogleFonts.poppins(
-                                            // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                            color: selectedPage == 3
-                                                ? Colors.white
-                                                : Colors.black,
-                                            //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                            //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectedPage = 4;
-                                  pages = EventsTab();
-                                });
-                                if (selectedPage == 4) {
-                                  setState(() {
-                                    value = 1;
-                                  });
-                                } else {
-                                  setState(() {
-                                    value = 0;
-                                  });
-                                }
-                              },
-                              child: Stack(
-                                children: [
-                                  AnimatedContainer(
-                                    duration: const Duration(milliseconds: 300),
-                                    width: (value * width / 6.0),
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(3),
-                                      color: selectedPage == 4
-                                          ? Constants().primaryAppColor
-                                          : Colors.white,
-                                    ),
-                                    curve: Curves.easeIn,
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        Icon(
-                                          Icons.event,
-                                          color: selectedPage == 4
-                                              ? Colors.white
-                                              : Colors.blue,
-                                        ),
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        KText(
-                                          text: "Events",
-                                          style: GoogleFonts.poppins(
-                                            // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                            color: selectedPage == 4
-                                                ? Colors.white
-                                                : Colors.black,
-                                            //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                            //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 50,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.transparent,
-                                      borderRadius: BorderRadius.circular(9.0),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        Icon(
-                                          Icons.event,
-                                          color: selectedPage == 4
-                                              ? Colors.white
-                                              : Colors.blue,
-                                        ),
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        KText(
-                                          text: "Events",
-                                          style: GoogleFonts.poppins(
-                                            // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                            color: selectedPage == 4
-                                                ? Colors.white
-                                                : Colors.black,
-                                            //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                            //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectedPage = 5;
-                                  pages = Job_Posts();
-                                });
-                                if (selectedPage == 5) {
-                                  setState(() {
-                                    value = 1;
-                                  });
-                                } else {
-                                  setState(() {
-                                    value = 0;
-                                  });
-                                }
-                              },
-                              child: Stack(
-                                children: [
-                                  AnimatedContainer(
-                                    duration: const Duration(milliseconds: 300),
-                                    width: (value * width / 6.0),
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(3),
-                                      color: selectedPage == 5
-                                          ? Constants().primaryAppColor
-                                          : Colors.white,
-                                    ),
-                                    curve: Curves.easeIn,
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        Icon(
-                                          Icons.event,
-                                          color: selectedPage == 5
-                                              ? Colors.white
-                                              : Colors.blue,
-                                        ),
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        KText(
-                                          text: "Job Posts",
-                                          style: GoogleFonts.poppins(
-                                            // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                            color: selectedPage == 5
-                                                ? Colors.white
-                                                : Colors.black,
-                                            //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                            //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 50,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.transparent,
-                                      borderRadius: BorderRadius.circular(9.0),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        Icon(
-                                          Icons.event,
-                                          color: selectedPage == 5
-                                              ? Colors.white
-                                              : Colors.blue,
-                                        ),
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        KText(
-                                          text: "Job Posts",
-                                          style: GoogleFonts.poppins(
-                                            // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                            color: selectedPage == 5
-                                                ? Colors.white
-                                                : Colors.black,
-                                            //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                            //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectedPage = 6;
-                                  pages = Colleage_Activities_Screen();
-                                });
-                                if (selectedPage == 6) {
-                                  setState(() {
-                                    value = 1;
-                                  });
-                                } else {
-                                  setState(() {
-                                    value = 0;
-                                  });
-                                }
-                              },
-                              child: Stack(
-                                children: [
-                                  AnimatedContainer(
-                                    duration: const Duration(milliseconds: 300),
-                                    width: (value * width / 6.0),
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(3),
-                                      color: selectedPage == 6
-                                          ? Constants().primaryAppColor
-                                          : Colors.white,
-                                    ),
-                                    curve: Curves.easeIn,
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        Icon(
-                                          Icons.local_activity,
-                                          color: selectedPage == 6
-                                              ? Colors.white
-                                              : Colors.blue,
-                                        ),
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        KText(
-                                          text: "Clg Activities",
-                                          style: GoogleFonts.poppins(
-                                            // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                            color: selectedPage == 6
-                                                ? Colors.white
-                                                : Colors.black,
-                                            //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                            //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 50,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.transparent,
-                                      borderRadius: BorderRadius.circular(9.0),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        Icon(
-                                          Icons.local_activity,
-                                          color: selectedPage == 6
-                                              ? Colors.white
-                                              : Colors.blue,
-                                        ),
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        KText(
-                                          text: "Clg Activities",
-                                          style: GoogleFonts.poppins(
-                                            // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                            color: selectedPage == 6
-                                                ? Colors.white
-                                                : Colors.black,
-                                            //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                            //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectedPage = 9;
-                                  pages = UsersManagement();
-                                });
-                                if (selectedPage == 9) {
-                                  setState(() {
-                                    value = 1;
-                                  });
-                                } else {
-                                  setState(() {
-                                    value = 0;
-                                  });
-                                }
-                              },
-                              child: Stack(
-                                children: [
-                                  AnimatedContainer(
-                                    duration: const Duration(milliseconds: 300),
-                                    width: (value * width / 6.0),
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(3),
-                                      color: selectedPage == 9
-                                          ? Constants().primaryAppColor
-                                          : Colors.white,
-                                    ),
-                                    curve: Curves.easeIn,
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        Icon(
-                                          Icons.person_outlined,
-                                          color: selectedPage == 9
-                                              ? Colors.white
-                                              : Colors.blue,
-                                        ),
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        KText(
-                                          text: "User Management",
-                                          style: GoogleFonts.poppins(
-                                            // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                            color: selectedPage == 9
-                                                ? Colors.white
-                                                : Colors.black,
-                                            //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                            //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 50,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.transparent,
-                                      borderRadius: BorderRadius.circular(9.0),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        Icon(
-                                          Icons.person_outlined,
-                                          color: selectedPage == 9
-                                              ? Colors.white
-                                              : Colors.blue,
-                                        ),
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        KText(
-                                          text: "User Management",
-                                          style: GoogleFonts.poppins(
-                                            // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                            color: selectedPage == 9
-                                                ? Colors.white
-                                                : Colors.black,
-                                            //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                            //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectedPage = 10;
-                                  pages = Message_Screen();
-                                });
-                                if (selectedPage == 10) {
-                                  setState(() {
-                                    value = 1;
-                                  });
-                                } else {
-                                  setState(() {
-                                    value = 0;
-                                  });
-                                }
-                              },
-                              child: Stack(
-                                children: [
-                                  AnimatedContainer(
-                                    duration: const Duration(milliseconds: 300),
-                                    width: (value * width / 6.0),
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(3),
-                                      color: selectedPage == 10
-                                          ? Constants().primaryAppColor
-                                          : Colors.white,
-                                    ),
-                                    curve: Curves.easeIn,
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        Icon(
-                                          Icons.message,
-                                          color: selectedPage == 10
-                                              ? Colors.white
-                                              : Colors.blue,
-                                        ),
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        KText(
-                                          text: "Message",
-                                          style: GoogleFonts.poppins(
-                                            // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                            color: selectedPage == 10
-                                                ? Colors.white
-                                                : Colors.black,
-                                            //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                            //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 50,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.transparent,
-                                      borderRadius: BorderRadius.circular(9.0),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        Icon(
-                                          Icons.message,
-                                          color: selectedPage == 10
-                                              ? Colors.white
-                                              : Colors.blue,
-                                        ),
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        KText(
-                                          text: "Message",
-                                          style: GoogleFonts.poppins(
-                                            // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                            color: selectedPage == 10
-                                                ? Colors.white
-                                                : Colors.black,
-                                            //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                            //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectedPage = 11;
-                                  pages = SettingsTabs();
-                                });
-                                if (selectedPage == 11) {
-                                  setState(() {
-                                    value = 1;
-                                  });
-                                } else {
-                                  setState(() {
-                                    value = 0;
-                                  });
-                                }
-                              },
-                              child: Stack(
-                                children: [
-                                  AnimatedContainer(
-                                    duration: const Duration(milliseconds: 300),
-                                    width: (value * width / 6.0),
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(3),
-                                      color: selectedPage == 11
-                                          ? Constants().primaryAppColor
-                                          : Colors.white,
-                                    ),
-                                    curve: Curves.easeIn,
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        Icon(
-                                          Icons.settings,
-                                          color: selectedPage == 11
-                                              ? Colors.white
-                                              : Colors.blue,
-                                        ),
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        KText(
-                                          text: "Settings",
-                                          style: GoogleFonts.poppins(
-                                            // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                            color: selectedPage == 11
-                                                ? Colors.white
-                                                : Colors.black,
-                                            //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                            //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 50,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.transparent,
-                                      borderRadius: BorderRadius.circular(9.0),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        Icon(
-                                          Icons.settings,
-                                          color: selectedPage == 11
-                                              ? Colors.white
-                                              : Colors.blue,
-                                        ),
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        KText(
-                                          text: "Settings",
-                                          style: GoogleFonts.poppins(
-                                            // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                            color: selectedPage == 11
-                                                ? Colors.white
-                                                : Colors.black,
-                                            //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                            //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectedPage = 12;
-                                  pages = Login_Reports();
-                                });
-                                if (selectedPage == 12) {
-                                  setState(() {
-                                    value = 1;
-                                  });
-                                } else {
-                                  setState(() {
-                                    value = 0;
-                                  });
-                                }
-                              },
-                              child: Stack(
-                                children: [
-                                  AnimatedContainer(
-                                    duration: const Duration(milliseconds: 300),
-                                    width: (value * width / 6.0),
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(3),
-                                      color: selectedPage == 12
-                                          ? Constants().primaryAppColor
-                                          : Colors.white,
-                                    ),
-                                    curve: Curves.easeIn,
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        Icon(
-                                          Icons.auto_graph_rounded,
-                                          color: selectedPage == 12
-                                              ? Colors.white
-                                              : Colors.blue,
-                                        ),
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        KText(
-                                          text: "Login Reports",
-                                          style: GoogleFonts.poppins(
-                                            // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                            color: selectedPage == 12
-                                                ? Colors.white
-                                                : Colors.black,
-                                            //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                            //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 50,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.transparent,
-                                      borderRadius: BorderRadius.circular(9.0),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        Icon(
-                                          Icons.auto_graph_rounded,
-                                          color: selectedPage == 12
-                                              ? Colors.white
-                                              : Colors.blue,
-                                        ),
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        KText(
-                                          text: "Login Reports",
-                                          style: GoogleFonts.poppins(
-                                            // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                            color: selectedPage == 12
-                                                ? Colors.white
-                                                : Colors.black,
-                                            //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                            //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            ///Expanded Tiles
-                            Card(
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              clipBehavior: Clip.antiAlias,
-                              margin: EdgeInsets.zero,
-                              child: ExpansionTile(
-                                leading:  Icon(
-                                  Icons.circle,
-                                  color: Expaned1
-                                      ? Colors.white
-                                      : Colors.blue,
-                                ),
-                                onExpansionChanged: (value){
-                                  setState(() {
-                                    Expaned1=!Expaned1;
-                                    selectedPage=100;
-                                  });
-                                },
-                                backgroundColor:   Expaned1?
-                                  Constants().primaryAppColor : Colors.white,
-                                collapsedBackgroundColor:  Expaned1?
-                                Constants().primaryAppColor : Colors.white,
-                                title: KText(
-                                  text: "Communication",
-                                  style: GoogleFonts.poppins(
-                                    // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                    color: Expaned1
-                                        ? Colors.white
-                                        : Colors.black,
-                                    //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                    //fontSize: selectedPage==1 ? 13.0 : 12.0,),
+                                    ],
                                   ),
                                 ),
-                                children: [
-
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        selectedPage = 13;
-                                        pages = SMS_Screen();
-                                      });
-                                      if (selectedPage == 13) {
-                                        setState(() {
-                                          value = 1;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          value = 0;
-                                        });
-                                      }
-                                    },
-                                    child: Stack(
-                                      children: [
-                                        AnimatedContainer(
-                                          duration:
-                                              const Duration(milliseconds: 300),
-                                          width: (value * width / 6.0),
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(3),
-                                            color: selectedPage == 13
-                                                ? Constants().primaryAppColor
-                                                : Colors.white,
-                                          ),
-                                          curve: Curves.easeIn,
-                                          child: Row(
-                                            children: [
-                                              SizedBox(
-                                                width: width / 192,
-                                              ),
-                                              Icon(
-                                                Icons.mail,
-                                                color: selectedPage == 13
-                                                    ? Colors.white
-                                                    : Colors.blue,
-                                              ),
-                                              SizedBox(
-                                                width: width / 192,
-                                              ),
-                                              KText(
-                                                text: "SMS",
-                                                style: GoogleFonts.poppins(
-                                                  // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                                  color: selectedPage == 13
-                                                      ? Colors.white
-                                                      : Colors.black,
-                                                  //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                                  //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          height: 50,
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                            color: Colors.transparent,
-                                            borderRadius:
-                                                BorderRadius.circular(9.0),
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              SizedBox(
-                                                width: width / 192,
-                                              ),
-                                              Icon(
-                                                Icons.mail,
-                                                color: selectedPage == 13
-                                                    ? Colors.white
-                                                    : Colors.blue,
-                                              ),
-                                              SizedBox(
-                                                width: width / 192,
-                                              ),
-                                              KText(
-                                                text: "SMS",
-                                                style: GoogleFonts.poppins(
-                                                  // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                                  color: selectedPage == 13
-                                                      ? Colors.white
-                                                      : Colors.black,
-                                                  //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                                  //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        selectedPage = 14;
-                                        pages = Email_Screen();
-                                      });
-                                      if (selectedPage == 14) {
-                                        setState(() {
-                                          value = 1;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          value = 0;
-                                        });
-                                      }
-                                    },
-                                    child: Stack(
-                                      children: [
-                                        AnimatedContainer(
-                                          duration:
-                                              const Duration(milliseconds: 300),
-                                          width: (value * width / 6.0),
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(3),
-                                            color: selectedPage == 14
-                                                ? Constants().primaryAppColor
-                                                : Colors.white,
-                                          ),
-                                          curve: Curves.easeIn,
-                                          child: Row(
-                                            children: [
-                                              SizedBox(
-                                                width: width / 192,
-                                              ),
-                                              Icon(
-                                                Icons.mail,
-                                                color: selectedPage == 14
-                                                    ? Colors.white
-                                                    : Colors.blue,
-                                              ),
-                                              SizedBox(
-                                                width: width / 192,
-                                              ),
-                                              KText(
-                                                text: "Email",
-                                                style: GoogleFonts.poppins(
-                                                  // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                                  color: selectedPage == 14
-                                                      ? Colors.white
-                                                      : Colors.black,
-                                                  //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                                  //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          height: 50,
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                            color: Colors.transparent,
-                                            borderRadius:
-                                                BorderRadius.circular(9.0),
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              SizedBox(
-                                                width: width / 192,
-                                              ),
-                                              Icon(
-                                                Icons.mail,
-                                                color: selectedPage == 14
-                                                    ? Colors.white
-                                                    : Colors.blue,
-                                              ),
-                                              SizedBox(
-                                                width: width / 192,
-                                              ),
-                                              KText(
-                                                text: "Email",
-                                                style: GoogleFonts.poppins(
-                                                  // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                                  color: selectedPage == 14
-                                                      ? Colors.white
-                                                      : Colors.black,
-                                                  //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                                  //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        selectedPage = 15;
-                                        pages = Com_Notification_Screen();
-                                      });
-                                      if (selectedPage == 15) {
-                                        setState(() {
-                                          value = 1;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          value = 0;
-                                        });
-                                      }
-                                    },
-                                    child: Stack(
-                                      children: [
-                                        AnimatedContainer(
-                                          duration:
-                                              const Duration(milliseconds: 300),
-                                          width: (value * width / 6.0),
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(3),
-                                            color: selectedPage == 15
-                                                ? Constants().primaryAppColor
-                                                : Colors.white,
-                                          ),
-                                          curve: Curves.easeIn,
-                                          child: Row(
-                                            children: [
-                                              SizedBox(
-                                                width: width / 192,
-                                              ),
-                                              Icon(
-                                                Icons.notifications,
-                                                color: selectedPage == 15
-                                                    ? Colors.white
-                                                    : Colors.blue,
-                                              ),
-                                              SizedBox(
-                                                width: width / 192,
-                                              ),
-                                              KText(
-                                                text: "Notification",
-                                                style: GoogleFonts.poppins(
-                                                  // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                                  color: selectedPage == 15
-                                                      ? Colors.white
-                                                      : Colors.black,
-                                                  //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                                  //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          height: 50,
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                            color: Colors.transparent,
-                                            borderRadius:
-                                                BorderRadius.circular(9.0),
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              SizedBox(
-                                                width: width / 192,
-                                              ),
-                                              Icon(
-                                                Icons.notifications,
-                                                color: selectedPage == 15
-                                                    ? Colors.white
-                                                    : Colors.blue,
-                                              ),
-                                              SizedBox(
-                                                width: width / 192,
-                                              ),
-                                              KText(
-                                                text: "Notification",
-                                                style: GoogleFonts.poppins(
-                                                  // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                                  color: selectedPage == 15
-                                                      ? Colors.white
-                                                      : Colors.black,
-                                                  //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                                  //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              ],
                             ),
-
-                            Card(
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              clipBehavior: Clip.antiAlias,
-                              margin: EdgeInsets.zero,
-                              child: ExpansionTile(
-                                leading:  Icon(
-                                  Icons.circle,
-                                  color: Expaned1
-                                      ? Colors.white
-                                      : Colors.blue,
-                                ),
-                                onExpansionChanged: (value){
-                                  setState(() {
-                                    Expaned2=!Expaned2;
-                                    selectedPage=100;
-                                  });
-                                },
-                                backgroundColor:   Expaned2?
-                                Constants().primaryAppColor : Colors.white,
-                                collapsedBackgroundColor:  Expaned2?
-                                Constants().primaryAppColor : Colors.white,
-                                title: KText(
-                                  text: "Master",
-                                  style: GoogleFonts.poppins(
-                                    // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                    color: Expaned2
-                                        ? Colors.white
-                                        : Colors.black,
-                                    //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                    //fontSize: selectedPage==1 ? 13.0 : 12.0,),
-                                  ),
-                                ),
-                                children: [
-
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        selectedPage = 7;
-                                        pages = Acadamic_Year();
-                                      });
-                                      if (selectedPage == 7) {
-                                        setState(() {
-                                          value = 1;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          value = 0;
-                                        });
-                                      }
-                                    },
-                                    child: Stack(
-                                      children: [
-                                        AnimatedContainer(
-                                          duration:
-                                          const Duration(milliseconds: 300),
-                                          width: (value * width / 6.0),
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                            BorderRadius.circular(3),
-                                            color: selectedPage == 7
-                                                ? Constants().primaryAppColor
-                                                : Colors.white,
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              SizedBox(
-                                                width: width / 192,
-                                              ),
-                                              Icon(
-                                                Icons.calendar_month_outlined,
-                                                color: selectedPage == 7
-                                                    ? Colors.white
-                                                    : Colors.blue,
-                                              ),
-                                              SizedBox(
-                                                width: width / 192,
-                                              ),
-                                              KText(
-                                                text: "Acadamic Year",
-                                                style: GoogleFonts.poppins(
-                                                  // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                                  color: selectedPage == 7
-                                                      ? Colors.white
-                                                      : Colors.black,
-                                                  //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                                  //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          curve: Curves.easeIn,
-                                        ),
-                                        Container(
-                                          height: 50,
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                            color: Colors.transparent,
-                                            borderRadius:
-                                            BorderRadius.circular(9.0),
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              SizedBox(
-                                                width: width / 192,
-                                              ),
-                                              Icon(
-                                                Icons.calendar_month_outlined,
-                                                color: selectedPage == 7
-                                                    ? Colors.white
-                                                    : Colors.blue,
-                                              ),
-                                              SizedBox(
-                                                width: width / 192,
-                                              ),
-                                              KText(
-                                                text: "Acadamic Year",
-                                                style: GoogleFonts.poppins(
-                                                  // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                                  color: selectedPage == 7
-                                                      ? Colors.white
-                                                      : Colors.black,
-                                                  //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                                  //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        selectedPage = 8;
-                                        pages = Department_Screen();
-                                      });
-                                      if (selectedPage == 8) {
-                                        setState(() {
-                                          value = 1;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          value = 0;
-                                        });
-                                      }
-                                    },
-                                    child: Stack(
-                                      children: [
-                                        AnimatedContainer(
-                                          duration:
-                                          const Duration(milliseconds: 300),
-                                          width: (value * width / 6.0),
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                            BorderRadius.circular(3),
-                                            color: selectedPage == 8
-                                                ? Constants().primaryAppColor
-                                                : Colors.white,
-                                          ),
-                                          curve: Curves.easeIn,
-                                          child: Row(
-                                            children: [
-                                              SizedBox(
-                                                width: width / 192,
-                                              ),
-                                              Icon(
-                                                Icons.class_,
-                                                color: selectedPage == 8
-                                                    ? Colors.white
-                                                    : Colors.blue,
-                                              ),
-                                              SizedBox(
-                                                width: width / 192,
-                                              ),
-                                              KText(
-                                                text: "Department",
-                                                style: GoogleFonts.poppins(
-                                                  // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                                  color: selectedPage == 8
-                                                      ? Colors.white
-                                                      : Colors.black,
-                                                  //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                                  //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          height: 50,
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                            color: Colors.transparent,
-                                            borderRadius:
-                                            BorderRadius.circular(9.0),
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              SizedBox(
-                                                width: width / 192,
-                                              ),
-                                              Icon(
-                                                Icons.class_,
-                                                color: selectedPage == 8
-                                                    ? Colors.white
-                                                    : Colors.blue,
-                                              ),
-                                              SizedBox(
-                                                width: width / 192,
-                                              ),
-                                              KText(
-                                                text: "Department",
-                                                style: GoogleFonts.poppins(
-                                                  // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                                  color: selectedPage == 8
-                                                      ? Colors.white
-                                                      : Colors.black,
-                                                  //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                                  //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                                ],
-                              ),
-                            ),
-
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectedPage = 16;
-                                });
-                                if (selectedPage == 16) {
-                                  setState(() {
-                                    value = 1;
-                                  });
-                                } else {
-                                  setState(() {
-                                    value = 0;
-                                  });
-                                }
-                                LogoutPopup();
-                              },
-                              child: Stack(
-                                children: [
-                                  AnimatedContainer(
-                                    duration: const Duration(milliseconds: 300),
-                                    width: (value * width / 6.0),
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(3),
-                                      color: selectedPage == 16
-                                          ? Constants().primaryAppColor
-                                          : Colors.white,
-                                    ),
-                                    curve: Curves.easeIn,
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        Icon(
-                                          Icons.logout_sharp,
-                                          color: selectedPage == 16
-                                              ? Colors.white
-                                              : Colors.blue,
-                                        ),
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        KText(
-                                          text: "Sign Out",
-                                          style: GoogleFonts.poppins(
-                                            // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                            color: selectedPage == 16
-                                                ? Colors.white
-                                                : Colors.black,
-                                            //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                            //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 50,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.transparent,
-                                      borderRadius: BorderRadius.circular(9.0),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        Icon(
-                                          Icons.logout_sharp,
-                                          color: selectedPage == 16
-                                              ? Colors.white
-                                              : Colors.blue,
-                                        ),
-                                        SizedBox(
-                                          width: width / 192,
-                                        ),
-                                        KText(
-                                          text: "Sign Out",
-                                          style: GoogleFonts.poppins(
-                                            // fontWeight: selectedPage==1 ? FontWeight.w500: FontWeight.w500,
-                                            color: selectedPage == 16
-                                                ? Colors.white
-                                                : Colors.black,
-                                            //letterSpacing: selectedPage==1 ? 2.0 : 0,
-                                            //fontSize: selectedPage==1 ? 13.0 : 12.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),*/
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: navElements.map((e) => NavElement(
-                              index: navElements.indexOf(e),
-                              text: texts[navElements.indexOf(e)],
-                              icon: icons[navElements.indexOf(e)],
-                              active: isSelected[navElements.indexOf(e)],
-                              onTap: () {
-                                setState(() {
-                                  select(navElements.indexOf(e));
-                                  if(navElements.indexOf(e)==0){
-                                    setState(() {
-                                      pages=DashBoard( usermail: widget.email.toString(),);
-                                    });
-                                  }
-                                  if(navElements.indexOf(e)==1){
-                                    setState(() {
-                                      pages=const Job_Reports();
-                                    });
-                                  }
-                                  if(navElements.indexOf(e)==2){
-                                    setState(() {
-                                      pages= Users_Screen(UserViewed: false,);
-                                    });
-                                  }
-                                  if(navElements.indexOf(e)==3){
-                                    setState(() {
-                                      pages=Faculty_Tab();
-                                    });
-                                  }
-                                  if(navElements.indexOf(e)==4){
-                                    setState(() {
-                                      pages=ScreenGallery();
-                                    });
-                                  }
-                                  if(navElements.indexOf(e)==5){
-                                    setState(() {
-                                      pages=EventsTab();
-                                    });
-                                  }
-                                  if(navElements.indexOf(e)==6){
-                                    setState(() {
-                                      pages=const Job_Posts();
-                                    });
-                                  }
-                                  if(navElements.indexOf(e)==7){
-                                    setState(() {
-                                      pages= const Colleage_Activities_Screen();
-                                    });
-                                  }
-                                  if(navElements.indexOf(e)==8){
-                                    setState(() {
-                                      pages= const Acadamic_Year();
-                                    });
-                                  }
-                                  if(navElements.indexOf(e)==9){
-                                    setState(() {
-                                      pages= const Department_Screen();
-                                    });
-                                  }
-                                  if(navElements.indexOf(e)==10){
-                                    setState(() {
-                                      pages=UsersManagement();
-                                    });
-                                  }
-                                  if(navElements.indexOf(e)==11){
-                                    setState(() {
-                                      pages=const Message_Screen();
-                                    });
-                                  }
-
-                                  if(navElements.indexOf(e)==12){
-                                    setState(() {
-                                      pages= const Login_Reports();
-                                    });
-                                  }
-                                  if(navElements.indexOf(e)==13){
-                                    setState(() {
-                                      pages= const SMS_Screen();
-                                    });
-                                  }
-                                  if(navElements.indexOf(e)==14){
-                                    setState(() {
-                                      pages= const Email_Screen();
-                                    });
-                                  }
-                                  if(navElements.indexOf(e)==15){
-                                    setState(() {
-                                      pages= const Com_Notification_Screen();
-                                    });
-                                  }
-
-                                  if(navElements.indexOf(e)==16){
-                                    setState(() {
-                                      pages=BlogTab();
-                                    });
-                                  }if(navElements.indexOf(e)==17){
-                                    setState(() {
-                                       pages=WebsiteAndSocialMediaTab();
-                                    });
-                                  }
-                                  if(navElements.indexOf(e)==18){
-                                    setState(() {
-                                      pages=AudioPodcastTab();
-                                    });
-                                  }
-                                  if(navElements.indexOf(e)==19){
-                                    setState(() {
-                                      pages=Job_Ads();
-                                    });
-                                  }
-
-
-                                });
-                              },
-                            ),
-                          )
-                              .toList(),
+                          ),
                         ),
+                        SizedBox(height: 5,),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          child: AnimatedContainer(
+
+                            height:    dawer == 3
+                                ? 120 : 35,
+
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+
+                            ),
+                            padding:  EdgeInsets.only(left:   dawer == 3 ? 2.0 :0),
+                            duration: Duration(milliseconds: 400),
+                            child: Stack(
+                              alignment: Alignment.centerLeft,
+                              children: [
+                                AnimatedContainer(
+                                  curve: Curves.fastOutSlowIn,
+                                  duration: Duration(milliseconds: 400),
+                                  padding: EdgeInsets.only(left: 50),
+                                  width:    dawer == 3
+                                      ? 200 : 0,
+                                  height:   dawer == 3
+                                      ? 120 : 35,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color:   dawer == 3
+                                        ? Constants().primaryAppColor : Colors.transparent,
+                                  ),
+
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      dawer=3;
+                                      col1=false;
+                                      col2=false;
+                                      col3=false;
+                                      col4=false;
+                                      col5=false;
+                                      col6=false;
+                                      col7=false;
+                                      col8=false;
+                                      col9=false;
+                                      pagename="Masters";
+
+                                    });
+                                  },
+                                  child: Column(
+                                    children: [
+                                      SizedBox(height: 8),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 8.0),
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.admin_panel_settings_sharp,size:20,color: pagename=="Masters" ? Colors.white :Colors.black54,),
+                                            Padding(
+                                              padding: const EdgeInsets.only(left: 4.0),
+                                              child: KText(
+                                                text:"Masters",
+                                                style: GoogleFonts.poppins(
+                                                  fontWeight: pagename=="Masters"
+                                                      ? FontWeight.w500
+                                                      : FontWeight.w600,
+                                                  color:
+                                                  pagename=="Masters" ? Colors.white :Colors.black54,
+                                                  letterSpacing:
+                                                  pagename=="Masters" ? 1.5 : 1.5,
+                                                  fontSize: pagename=="Masters" ? 13.0 : 12.0,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(height: 8),
+                                      InkWell(
+                                        onTap: (){
+                                          setState(() {
+                                            pagename = "Academic Year";
+                                            pages= Acadamic_Year();
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 180,
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: pagename == "Academic Year"
+                                                ? Colors.white : Colors.transparent,
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.pending_actions,size:20,color: pagename=="Academic Year" ? Constants().primaryAppColor :Colors.white,),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(left: 4.0),
+                                                      child: KText(
+                                                        text:"Academic Year",
+                                                        style: GoogleFonts.poppins(
+                                                          fontWeight: pagename=="Academic Year"
+                                                              ? FontWeight.w500
+                                                              : FontWeight.w600,
+                                                          color:
+                                                          pagename=="Academic Year" ? Constants().primaryAppColor :Colors.white,
+                                                          letterSpacing:
+                                                          pagename=="Academic Year" ? 1.5 : 1.5,
+                                                          fontSize: pagename=="Academic Year" ? 13.0 : 12.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      InkWell(
+                                        onTap: (){
+                                          setState(() {
+                                            pagename = "Department";
+                                            pages= Department_Screen();
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 180,
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: pagename == "Department"
+                                                ? Colors.white : Colors.transparent,
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.event_note_sharp,size:20,color: pagename=="Department" ? Constants().primaryAppColor :Colors.white,),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(left: 4.0),
+                                                      child: KText(
+                                                        text:"Department",
+                                                        style: GoogleFonts.poppins(
+                                                          fontWeight: pagename=="Department"
+                                                              ? FontWeight.w500
+                                                              : FontWeight.w600,
+                                                          color:
+                                                          pagename=="Department" ? Constants().primaryAppColor :Colors.white,
+                                                          letterSpacing:
+                                                          pagename=="Department" ? 1.5 : 1.5,
+                                                          fontSize: pagename=="Department" ? 13.0 : 12.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+
+
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 5,),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          child: AnimatedContainer(
+
+                            height:     dawer == 4
+                                ? 120 : 35,
+
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+
+                            ),
+                            padding:  EdgeInsets.only(left:    dawer == 4 ? 2.0 :0),
+                            duration: Duration(milliseconds: 400),
+                            child: Stack(
+                              alignment: Alignment.centerLeft,
+                              children: [
+                                AnimatedContainer(
+                                  curve: Curves.fastOutSlowIn,
+                                  duration: Duration(milliseconds: 400),
+                                  padding: EdgeInsets.only(left: 50),
+                                  width:     dawer == 4
+                                      ? 200 : 0,
+                                  height:    dawer == 4
+                                      ? 120 : 35,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color:    dawer == 4
+                                        ? Constants().primaryAppColor : Colors.transparent,
+                                  ),
+
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      dawer=4;
+                                      col1=false;
+                                      col2=false;
+                                      col3=false;
+                                      col4=false;
+                                      col5=false;
+                                      col6=false;
+                                      col7=false;
+                                      col8=false;
+                                      col9=false;
+                                      pagename="Security";
+
+                                    });
+                                  },
+                                  child: Column(
+                                    children: [
+                                      SizedBox(height: 8),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 8.0),
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.security,size:20,color: pagename=="Security" ? Colors.white :Colors.black54,),
+                                            Padding(
+                                              padding: const EdgeInsets.only(left: 4.0),
+                                              child: KText(
+                                                text:"Security",
+                                                style: GoogleFonts.poppins(
+                                                  fontWeight: pagename=="Security"
+                                                      ? FontWeight.w500
+                                                      : FontWeight.w600,
+                                                  color:
+                                                  pagename=="Security" ? Colors.white :Colors.black54,
+                                                  letterSpacing:
+                                                  pagename=="Security" ? 1.5 : 1.5,
+                                                  fontSize: pagename=="Security" ? 13.0 : 12.0,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(height: 8),
+                                      InkWell(
+                                        onTap: (){
+                                          setState(() {
+                                            pagename = "User Management";
+                                            pages= UsersManagement();
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 180,
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: pagename == "User Management"
+                                                ? Colors.white : Colors.transparent,
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.supervised_user_circle,size:20,color: pagename=="User Management" ? Constants().primaryAppColor :Colors.white,),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(left: 4.0),
+                                                      child: KText(
+                                                        text:"User Management",
+                                                        style: GoogleFonts.poppins(
+                                                          fontWeight: pagename=="User Management"
+                                                              ? FontWeight.w500
+                                                              : FontWeight.w600,
+                                                          color:
+                                                          pagename=="User Management" ? Constants().primaryAppColor :Colors.white,
+                                                          letterSpacing:
+                                                          pagename=="User Management" ? 1.5 : 1.5,
+                                                          fontSize: pagename=="User Management" ? 13.0 : 12.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      InkWell(
+                                        onTap: (){
+                                          setState(() {
+                                            pagename = "Login Reports";
+                                            pages= Login_Reports();
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 180,
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: pagename == "Login Reports"
+                                                ? Colors.white : Colors.transparent,
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.report_gmailerrorred,size:20,color: pagename=="Login Reports" ? Constants().primaryAppColor :Colors.white,),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(left: 4.0),
+                                                      child: KText(
+                                                        text:"Login Reports",
+                                                        style: GoogleFonts.poppins(
+                                                          fontWeight: pagename=="Login Reports"
+                                                              ? FontWeight.w500
+                                                              : FontWeight.w600,
+                                                          color:
+                                                          pagename=="Login Reports" ? Constants().primaryAppColor :Colors.white,
+                                                          letterSpacing:
+                                                          pagename=="Login Reports" ? 1.5 : 1.5,
+                                                          fontSize: pagename=="Login Reports" ? 13.0 : 12.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+
+
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 5,),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          child: AnimatedContainer(
+
+                            height:    dawer == 5
+                                ? 300 : 35,
+
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+
+                            ),
+                            padding:  EdgeInsets.only(left:   dawer == 5 ? 2.0 :0),
+                            duration: Duration(milliseconds: 400),
+                            child: Stack(
+                              alignment: Alignment.centerLeft,
+                              children: [
+                                AnimatedContainer(
+                                  curve: Curves.fastOutSlowIn,
+                                  duration: Duration(milliseconds: 400),
+                                  padding: EdgeInsets.only(left: 50),
+                                  width:    dawer == 5
+                                      ? 200 : 0,
+                                  height:   dawer == 5
+                                      ? 300 : 35,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color:   dawer == 5
+                                        ? Constants().primaryAppColor : Colors.transparent,
+                                  ),
+
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      dawer=5;
+                                      col1=false;
+                                      col2=false;
+                                      col3=false;
+                                      col4=false;
+                                      col5=false;
+                                      col6=false;
+                                      col7=false;
+                                      col8=false;
+                                      col9=false;
+                                      pagename="Communication";
+
+                                    });
+                                  },
+                                  child: Column(
+                                    children: [
+                                      SizedBox(height: 8),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 8.0),
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.commit,size:20,color: pagename=="Communication" ? Colors.white :Colors.black54,),
+                                            Padding(
+                                              padding: const EdgeInsets.only(left: 4.0),
+                                              child: KText(
+                                                text:"Communication",
+                                                style: GoogleFonts.poppins(
+                                                  fontWeight: pagename=="Communication"
+                                                      ? FontWeight.w500
+                                                      : FontWeight.w600,
+                                                  color:
+                                                  pagename=="Communication" ? Colors.white :Colors.black54,
+                                                  letterSpacing:
+                                                  pagename=="Communication" ? 1.5 : 1.5,
+                                                  fontSize: pagename=="Communication" ? 13.0 : 12.0,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(height: 8),
+                                      InkWell(
+                                        onTap: (){
+                                          setState(() {
+                                            pagename = "Messages";
+                                            pages= Message_Screen();
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 180,
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: pagename == "Messages"
+                                                ? Colors.white : Colors.transparent,
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.message_rounded,size:20,color: pagename=="Messages" ? Constants().primaryAppColor :Colors.white,),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(left: 4.0),
+                                                      child: KText(
+                                                        text:"Messages",
+                                                        style: GoogleFonts.poppins(
+                                                          fontWeight: pagename=="Messages"
+                                                              ? FontWeight.w500
+                                                              : FontWeight.w600,
+                                                          color:
+                                                          pagename=="Messages" ? Constants().primaryAppColor :Colors.white,
+                                                          letterSpacing:
+                                                          pagename=="Messages" ? 1.5 : 1.5,
+                                                          fontSize: pagename=="Messages" ? 13.0 : 12.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      InkWell(
+                                        onTap: (){
+                                          setState(() {
+                                            pagename = "SMS";
+                                            pages= SMS_Screen();
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 180,
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: pagename == "SMS"
+                                                ? Colors.white : Colors.transparent,
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.messenger_outline_rounded,size:20,color: pagename=="SMS" ? Constants().primaryAppColor :Colors.white,),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(left: 4.0),
+                                                      child: KText(
+                                                        text:"SMS",
+                                                        style: GoogleFonts.poppins(
+                                                          fontWeight: pagename=="SMS"
+                                                              ? FontWeight.w500
+                                                              : FontWeight.w600,
+                                                          color:
+                                                          pagename=="SMS" ? Constants().primaryAppColor :Colors.white,
+                                                          letterSpacing:
+                                                          pagename=="SMS" ? 1.5 : 1.5,
+                                                          fontSize: pagename=="SMS" ? 13.0 : 12.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      InkWell(
+                                        onTap: (){
+                                          setState(() {
+                                            pagename = "Email";
+                                            pages= Email_Screen();
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 180,
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: pagename == "Email"
+                                                ? Colors.white : Colors.transparent,
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.email,size:20,color: pagename=="Email" ? Constants().primaryAppColor :Colors.white,),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(left: 4.0),
+                                                      child: KText(
+                                                        text:"Email",
+                                                        style: GoogleFonts.poppins(
+                                                          fontWeight: pagename=="Email"
+                                                              ? FontWeight.w500
+                                                              : FontWeight.w600,
+                                                          color:
+                                                          pagename=="Email" ? Constants().primaryAppColor :Colors.white,
+                                                          letterSpacing:
+                                                          pagename=="Email" ? 1.5 : 1.5,
+                                                          fontSize: pagename=="Email" ? 13.0 : 12.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      InkWell(
+                                        onTap: (){
+                                          setState(() {
+                                            pagename = "Notifications";
+                                            pages= Com_Notification_Screen();
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 180,
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: pagename == "Notifications"
+                                                ? Colors.white : Colors.transparent,
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.notifications_active,size:20,color: pagename=="Notifications" ? Constants().primaryAppColor :Colors.white,),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(left: 4.0),
+                                                      child: KText(
+                                                        text:"Notifications",
+                                                        style: GoogleFonts.poppins(
+                                                          fontWeight: pagename=="Notifications"
+                                                              ? FontWeight.w500
+                                                              : FontWeight.w600,
+                                                          color:
+                                                          pagename=="Notifications" ? Constants().primaryAppColor :Colors.white,
+                                                          letterSpacing:
+                                                          pagename=="Notifications" ? 1.5 : 1.5,
+                                                          fontSize: pagename=="Notifications" ? 13.0 : 12.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      InkWell(
+                                        onTap: (){
+                                          setState(() {
+                                            pagename = "Blogs";
+                                            pages= BlogTab();
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 180,
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: pagename == "Blogs"
+                                                ? Colors.white : Colors.transparent,
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.edit_note,size:20,color: pagename=="Blogs" ? Constants().primaryAppColor :Colors.white,),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(left: 4.0),
+                                                      child: KText(
+                                                        text:"Blogs",
+                                                        style: GoogleFonts.poppins(
+                                                          fontWeight: pagename=="Blogs"
+                                                              ? FontWeight.w500
+                                                              : FontWeight.w600,
+                                                          color:
+                                                          pagename=="Blogs" ? Constants().primaryAppColor :Colors.white,
+                                                          letterSpacing:
+                                                          pagename=="Blogs" ? 1.5 : 1.5,
+                                                          fontSize: pagename=="Blogs" ? 13.0 : 12.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      InkWell(
+                                        onTap: (){
+                                          setState(() {
+                                            pagename = "Audio Podcasts";
+                                            pages= AudioPodcastTab();
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 180,
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: pagename == "Audio Podcasts"
+                                                ? Colors.white : Colors.transparent,
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.audio_file_outlined,size:20,color: pagename=="Audio Podcasts" ? Constants().primaryAppColor :Colors.white,),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(left: 4.0),
+                                                      child: KText(
+                                                        text:"Audio Podcasts",
+                                                        style: GoogleFonts.poppins(
+                                                          fontWeight: pagename=="Audio Podcasts"
+                                                              ? FontWeight.w500
+                                                              : FontWeight.w600,
+                                                          color:
+                                                          pagename=="Audio Podcasts" ? Constants().primaryAppColor :Colors.white,
+                                                          letterSpacing:
+                                                          pagename=="Audio Podcasts" ? 1.5 : 1.5,
+                                                          fontSize: pagename=="Audio Podcasts" ? 13.0 : 12.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 5,),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          child: AnimatedContainer(
+
+                            height:    dawer == 6
+                                ? 250 : 35,
+
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+
+                            ),
+                            padding:  EdgeInsets.only(left:   dawer == 6 ? 2.0 :0),
+                            duration: Duration(milliseconds: 400),
+                            child: Stack(
+                              alignment: Alignment.centerLeft,
+                              children: [
+                                AnimatedContainer(
+                                  curve: Curves.fastOutSlowIn,
+                                  duration: Duration(milliseconds: 400),
+                                  padding: EdgeInsets.only(left: 50),
+                                  width:    dawer == 6
+                                      ? 200 : 0,
+                                  height:   dawer == 6
+                                      ? 250 : 35,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color:   dawer == 6
+                                        ? Constants().primaryAppColor : Colors.transparent,
+                                  ),
+
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      dawer=6;
+                                      col1=false;
+                                      col2=false;
+                                      col3=false;
+                                      col4=false;
+                                      col5=false;
+                                      col6=false;
+                                      col7=false;
+                                      col8=false;
+                                      col9=false;
+                                      pagename="Engagement";
+
+                                    });
+                                  },
+                                  child: Column(
+                                    children: [
+                                      SizedBox(height: 8),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 8.0),
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.account_tree_outlined,size:20,color: pagename=="Engagement" ? Colors.white :Colors.black54,),
+                                            Padding(
+                                              padding: const EdgeInsets.only(left: 4.0),
+                                              child: KText(
+                                                text:"Engagement",
+                                                style: GoogleFonts.poppins(
+                                                  fontWeight: pagename=="Engagement"
+                                                      ? FontWeight.w500
+                                                      : FontWeight.w600,
+                                                  color:
+                                                  pagename=="Engagement" ? Colors.white :Colors.black54,
+                                                  letterSpacing:
+                                                  pagename=="Engagement" ? 1.5 : 1.5,
+                                                  fontSize: pagename=="Engagement" ? 13.0 : 12.0,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(height: 8),
+                                      InkWell(
+                                        onTap: (){
+                                          setState(() {
+                                            pagename = "Events";
+                                            pages= EventsTab();
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 180,
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: pagename == "Events"
+                                                ? Colors.white : Colors.transparent,
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.event_note_sharp,size:20,color: pagename=="Events" ? Constants().primaryAppColor :Colors.white,),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(left: 4.0),
+                                                      child: KText(
+                                                        text:"Events",
+                                                        style: GoogleFonts.poppins(
+                                                          fontWeight: pagename=="Events"
+                                                              ? FontWeight.w500
+                                                              : FontWeight.w600,
+                                                          color:
+                                                          pagename=="Events" ? Constants().primaryAppColor :Colors.white,
+                                                          letterSpacing:
+                                                          pagename=="Events" ? 1.5 : 1.5,
+                                                          fontSize: pagename=="Events" ? 13.0 : 12.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      InkWell(
+                                        onTap: (){
+                                          setState(() {
+                                            pagename = "Collage Activity";
+                                            pages= Colleage_Activities_Screen();
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 180,
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: pagename == "Collage Activity"
+                                                ? Colors.white : Colors.transparent,
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.add_chart_outlined,size:20,color: pagename=="Collage Activity" ? Constants().primaryAppColor :Colors.white,),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(left: 4.0),
+                                                      child: KText(
+                                                        text:"Collage Activity",
+                                                        style: GoogleFonts.poppins(
+                                                          fontWeight: pagename=="Collage Activity"
+                                                              ? FontWeight.w500
+                                                              : FontWeight.w600,
+                                                          color:
+                                                          pagename=="Collage Activity" ? Constants().primaryAppColor :Colors.white,
+                                                          letterSpacing:
+                                                          pagename=="Collage Activity" ? 1.5 : 1.5,
+                                                          fontSize: pagename=="Collage Activity" ? 13.0 : 12.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      InkWell(
+                                        onTap: (){
+                                          setState(() {
+                                            pagename = "Job Advertisements";
+                                            pages= Job_Ads();
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 180,
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: pagename == "Job Advertisements"
+                                                ? Colors.white : Colors.transparent,
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.group_work_outlined,size:20,color: pagename=="Job Advertisements" ? Constants().primaryAppColor :Colors.white,),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(left: 4.0),
+                                                      child: KText(
+                                                        text:"Job Advertisements",
+                                                        style: GoogleFonts.poppins(
+                                                          fontWeight: pagename=="Job Advertisements"
+                                                              ? FontWeight.w500
+                                                              : FontWeight.w600,
+                                                          color:
+                                                          pagename=="Job Advertisements" ? Constants().primaryAppColor :Colors.white,
+                                                          letterSpacing:
+                                                          pagename=="Job Advertisements" ? 1.5 : 1.5,
+                                                          fontSize: pagename=="Job Advertisements" ? 13.0 : 12.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      InkWell(
+                                        onTap: (){
+                                          setState(() {
+                                            pagename = "Job Posts";
+                                            pages= Job_Posts();
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 180,
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: pagename == "Job Posts"
+                                                ? Colors.white : Colors.transparent,
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.work_history_outlined,size:20,color: pagename=="Job Posts" ? Constants().primaryAppColor :Colors.white,),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(left: 4.0),
+                                                      child: KText(
+                                                        text:"Job Posts",
+                                                        style: GoogleFonts.poppins(
+                                                          fontWeight: pagename=="Job Posts"
+                                                              ? FontWeight.w500
+                                                              : FontWeight.w600,
+                                                          color:
+                                                          pagename=="Job Posts" ? Constants().primaryAppColor :Colors.white,
+                                                          letterSpacing:
+                                                          pagename=="Job Posts" ? 1.5 : 1.5,
+                                                          fontSize: pagename=="Job Posts" ? 13.0 : 12.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      InkWell(
+                                        onTap: (){
+                                          setState(() {
+                                            pagename = "Social Media";
+                                            pages= WebsiteAndSocialMediaTab();
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 180,
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: pagename == "Social Media"
+                                                ? Colors.white : Colors.transparent,
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.facebook,size:20,color: pagename=="Social Media" ? Constants().primaryAppColor :Colors.white,),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(left: 4.0),
+                                                      child: KText(
+                                                        text:"Social Media",
+                                                        style: GoogleFonts.poppins(
+                                                          fontWeight: pagename=="Social Media"
+                                                              ? FontWeight.w500
+                                                              : FontWeight.w600,
+                                                          color:
+                                                          pagename=="Social Media" ? Constants().primaryAppColor :Colors.white,
+                                                          letterSpacing:
+                                                          pagename=="Social Media" ? 1.5 : 1.5,
+                                                          fontSize: pagename=="Social Media" ? 13.0 : 12.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 5,),
                       ],
                     ),
                   ),

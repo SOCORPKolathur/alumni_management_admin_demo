@@ -25,7 +25,7 @@ class _Reports_ScreenState extends State<Reports_Screen> {
             Padding(
               padding:  EdgeInsets.only(left:width/190.2),
               child: Text(
-                'Reports',
+                'Alumni Tracking',
                 style:GoogleFonts.poppins(
                     fontWeight: FontWeight.w600,
                   fontSize: width / 82.538,

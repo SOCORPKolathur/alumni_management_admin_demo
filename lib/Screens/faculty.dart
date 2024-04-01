@@ -398,7 +398,7 @@ class _Faculty_TabState extends State<Faculty_Tab> {
 
 
   userCounta() async {
-    var user = await FirebaseFirestore.instance.collection("Users").get();
+    var user = await FirebaseFirestore.instance.collection("Faculty").get();
     setState(() {
       billcount = user.docs.length + 1;
     });
@@ -1019,7 +1019,7 @@ class _Faculty_TabState extends State<Faculty_Tab> {
                             SerachValue==""?
                             StreamBuilder(
                               stream:
-                              FirebaseFirestore.instance.collection("Users").orderBy(filterChageValue, descending: filtervalue).snapshots(),
+                              FirebaseFirestore.instance.collection("Faculty").orderBy(filterChageValue, descending: filtervalue).snapshots(),
                               builder: (context, snapshot)  {
                                 if (!snapshot.hasData) {
                                   return const Center(
@@ -1876,7 +1876,7 @@ class _Faculty_TabState extends State<Faculty_Tab> {
                             ):
                             StreamBuilder(
                               stream:
-                              FirebaseFirestore.instance.collection("Users").snapshots(),
+                              FirebaseFirestore.instance.collection("Faculty").snapshots(),
                               builder: (context, snapshot) {
                                 if (!snapshot.hasData) {
                                   return const Center(
@@ -3546,7 +3546,7 @@ class _Faculty_TabState extends State<Faculty_Tab> {
     double width = size.width;
 
     DocumentSnapshot<Map<String, dynamic>> userSnapshot =
-    await FirebaseFirestore.instance.collection("Users").doc(userUpdateDocumentID).get();
+    await FirebaseFirestore.instance.collection("Faculty").doc(userUpdateDocumentID).get();
 
     Map<String, dynamic>? userData = userSnapshot.data();
 
@@ -3866,7 +3866,7 @@ class _Faculty_TabState extends State<Faculty_Tab> {
   }
 
   userDeteleFunction() {
-    FirebaseFirestore.instance.collection("Users")
+    FirebaseFirestore.instance.collection("Faculty")
         .doc(userUpdateDocumentID)
         .delete();
   }

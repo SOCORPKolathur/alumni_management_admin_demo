@@ -44,27 +44,38 @@ class _DashBoardState extends State<DashBoard> {
 
 
   int documentlength =0 ;
+  int indianusers =0 ;
+  int nonindianusers =0 ;
   int pagecount =0 ;
   int temp = 1;
   List list = new List<int>.generate(1000, (i) => i + 1);
   doclength() async {
+    print("function call");
 
     final QuerySnapshot result = await FirebaseFirestore.instance.collection('Users').where("verifyed",isEqualTo:false).get();
+    final QuerySnapshot result2 = await FirebaseFirestore.instance.collection('Users').where("country",isEqualTo:"India").get();
+    final QuerySnapshot result3 = await FirebaseFirestore.instance.collection('Users').where("country",isNotEqualTo:"India").get();
     final List < DocumentSnapshot > documents = result.docs;
+    final List < DocumentSnapshot > documents2 = result2.docs;
+    final List < DocumentSnapshot > documents3 = result3.docs;
     setState(() {
       documentlength = documents.length;
+      indianusers = documents2.length;
+      nonindianusers = documents3.length;
       pagecount= (((documentlength - 1) ~/ 4)+1) as int;
 
     });
     print("pagecount");
     print(pagecount);
+    print(indianusers);
+    print(nonindianusers);
   }
 
   @override
   void initState() {
+    doclength();
     UnVeriFyedUserData();
     totalalumnifunc();
-    doclength();
     setState(() {
       UserViewed=false;
     });
@@ -937,7 +948,7 @@ class _DashBoardState extends State<DashBoard> {
                                                       KText(
                                                         text:
                                                         // totaleventsspV (6:1159)
-                                                        '83',
+                                                        indianusers.toString().padLeft(2,"0"),
                                                         style: SafeGoogleFont (
                                                           'Poppins',
                                                           fontSize: 35*ffem,
@@ -977,7 +988,7 @@ class _DashBoardState extends State<DashBoard> {
                                                       KText(
                                                         text:
                                                         // totaleventsspV (6:1159)
-                                                        '12',
+                                                        nonindianusers.toString().padLeft(2,"0"),
                                                         style: SafeGoogleFont (
                                                           'Poppins',
                                                           fontSize: 35*ffem,
