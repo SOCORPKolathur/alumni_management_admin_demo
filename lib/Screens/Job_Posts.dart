@@ -21,7 +21,8 @@ import 'package:intl/intl.dart';
 import '../JOb_Posts_Crud/JobPost_Crud.dart';
 
 class Job_Posts extends StatefulWidget {
-  const Job_Posts({super.key});
+  int pageval;
+   Job_Posts(this.pageval);
 
   @override
   State<Job_Posts> createState() => _Job_PostsState();
@@ -47,11 +48,11 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
   bool isFiltered = false;
   TextEditingController Date1Controller = TextEditingController();
   TextEditingController Date2Controller = TextEditingController();
-  bool filtervalue=false;
+  bool filtervalue=true;
   bool addPhoto=false;
   bool SliderImg=false;
   String addphotoDocummentValue='';
-  String filterChageValue = "title";
+  String filterChageValue = "timestamp";
   File? profileImage;
   var uploadedImage;
   String? selectedImg;
@@ -62,7 +63,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
 
   String currentTab = 'View';
 
-  Future<void> _selectDate(BuildContext context) async {
+  /*Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
@@ -75,7 +76,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
         selectedDate = picked;
       });
     }
-  }
+  }*/
 
   List datalist = [
     "Edit",
@@ -137,6 +138,12 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
         Navigator.pop(context);
         lottieController.reset();
       }
+    });
+
+
+    setState(() {
+      selectTabIndex=widget.pageval;
+      tabController!.animateTo(widget.pageval,duration: Duration(milliseconds: 200));
     });
     super.initState();
   }
@@ -517,11 +524,12 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                               }
                                                               return null;
                                                             },
-                                                            minLines: 1,
+                                                            maxLines: 1,
                                                             controller:
                                                                 positionsController,
                                                             decoration:
                                                                 InputDecoration(
+                                                                  isDense: true,
                                                               border:
                                                                   InputBorder
                                                                       .none,
@@ -596,11 +604,12 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                     width /
                                                                         105.571,
                                                               ),
-                                                              minLines: 1,
+                                                                  maxLines: 1,
                                                               controller:
                                                                   quvalificationController,
                                                               decoration:
                                                                   InputDecoration(
+                                                                    isDense: true,
                                                                 border:
                                                                     InputBorder
                                                                         .none,
@@ -783,8 +792,10 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                             ),
                                                             controller:
                                                                 locationController,
+                                                            maxLines: 1,
                                                             decoration:
                                                                 InputDecoration(
+                                                                  isDense: true,
                                                               border:
                                                                   InputBorder
                                                                       .none,
@@ -1102,11 +1113,11 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
 
                                                 Response response = await JobPostFireCrud.addEvent(
                                                   title: titleController.text,
-                                                  time: timeController.text,
+                                                  time: DateFormat('hh:mm a').format(DateTime.now()),
                                                   location: locationController.text,
                                                   image: profileImage,
                                                   description: descriptionController.text,
-                                                  date: dateController.text,
+                                                  date: formatter.format(DateTime.now()),
                                                   positions: positionsController.text,
                                                   openings: noOfOpeningController.text,
                                                   quvalification: quvalificationController.text,
@@ -3969,7 +3980,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                       descriptionController,
                                                   decoration: InputDecoration(
                                                     border: InputBorder.none,
-                                                    hintText: "Lucky",
+                                                    hintText: "",
                                                     hintStyle: SafeGoogleFont(
                                                       'Nunito',
                                                       fontSize: width / 97.571,
@@ -4614,7 +4625,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
 
   TimeOfDay _selectedTime = TimeOfDay.now();
 
-  Future<void> _selectTime(BuildContext context) async {
+ /* Future<void> _selectTime(BuildContext context) async {
     TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: _selectedTime,
@@ -4638,7 +4649,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
     });
 
     return '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')} $period';
-  }
+  }*/
 
   Popupmenu(BuildContext context, jobPost, key, size) async {
     double width = MediaQuery.of(context).size.width;

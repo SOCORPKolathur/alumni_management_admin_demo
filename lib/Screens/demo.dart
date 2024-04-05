@@ -11,6 +11,7 @@ import 'package:alumni_management_admin/Screens/screen_gallery.dart';
 import 'package:alumni_management_admin/Screens/usersmanagment.dart';
 import 'package:alumni_management_admin/Screens/website_socialmedia_tab.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -161,18 +162,11 @@ class _MyWidgetState extends State<MyWidget> {
 
   @override
   void initState() {
-    print("ints funxtionssssssssssssssssssssssssssssssssssssssssssssssssssssss");
-    print(widget.email);
-
     setState(() {
-      pages = DashBoard(
-        usermail: widget.email.toString(),
-      );
-
+      pages = DashBoard(usermail: widget.email.toString(),);
     });
-    setState(() {
+    getadmin();
 
-    });
     // TODO: implement initState
     super.initState();
   }
@@ -203,6 +197,19 @@ class _MyWidgetState extends State<MyWidget> {
   bool col9=false;
   String pagename="Dashboard";
 
+  String collegename="";
+  String collegelogo="";
+
+  getadmin() async {
+    var details1=await FirebaseFirestore.instance.collection("AlumniDetails").get();
+    var details=await FirebaseFirestore.instance.collection("AlumniDetails").doc(details1.docs[0].id).get();
+    Map<String,dynamic>?value=details.data();
+    setState(() {
+      collegelogo=value!["logo"];
+      collegename=value["name"];
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -215,8 +222,8 @@ class _MyWidgetState extends State<MyWidget> {
         child: Row(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: width / 192, vertical: height / 92.375),
+              padding: EdgeInsets.only(
+                  left: width / 192, top: height / 92.375,bottom: height / 92.375),
               child: Material(
                 elevation: 1,
                 borderRadius: BorderRadius.circular(20.0),
@@ -249,13 +256,13 @@ class _MyWidgetState extends State<MyWidget> {
                                 child: Container(
                                     width: width / 34.133,
                                     height: height / 16.422,
-                                    child: Image.asset("assets/logocl.png")),
+                                    child: Image.network(collegelogo)),
                               ),
                               SizedBox(
                                 width: width / 192,
                               ),
                               KText(
-                                text: "IKIA College",
+                                text: collegename,
                                 style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.w600,
                                     fontSize: width / 76.8),
@@ -421,7 +428,7 @@ class _MyWidgetState extends State<MyWidget> {
                           padding: const EdgeInsets.symmetric(horizontal: 6),
                           child: AnimatedContainer(
 
-                            height:   dawer == 2
+                            height:   col1  == true
                                 ? 180 : 35,
 
                             decoration: BoxDecoration(
@@ -439,7 +446,7 @@ class _MyWidgetState extends State<MyWidget> {
                                   padding: EdgeInsets.only(left: 50),
                                   width:   dawer == 2
                                       ? 200 : 0,
-                                  height:  dawer == 2
+                                  height: col1  == true
                                       ? 180 : 35,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
@@ -451,17 +458,6 @@ class _MyWidgetState extends State<MyWidget> {
                                 InkWell(
                                   onTap: () {
                                     setState(() {
-                                      dawer=2;
-                                      col1=false;
-                                      col2=false;
-                                      col3=false;
-                                      col4=false;
-                                      col5=false;
-                                      col6=false;
-                                      col7=false;
-                                      col8=false;
-                                      col9=false;
-                                      pagename="Database";
 
                                     });
                                   },
@@ -470,26 +466,47 @@ class _MyWidgetState extends State<MyWidget> {
                                       SizedBox(height: 8),
                                       Padding(
                                         padding: const EdgeInsets.only(left: 8.0),
-                                        child: Row(
-                                          children: [
-                                            Icon(Icons.storage,size:20,color: pagename=="Database" ? Colors.white :Colors.black54,),
-                                            Padding(
-                                              padding: const EdgeInsets.only(left: 4.0),
-                                              child: KText(
-                                                text:"Database",
-                                                style: GoogleFonts.poppins(
-                                                  fontWeight: pagename=="Database"
-                                                      ? FontWeight.w500
-                                                      : FontWeight.w600,
-                                                  color:
-                                                  pagename=="Database" ? Colors.white :Colors.black54,
-                                                  letterSpacing:
-                                                  pagename=="Database" ? 1.5 : 1.5,
-                                                  fontSize: pagename=="Database" ? 13.0 : 12.0,
+                                        child: InkWell(
+                                          onTap: (){
+                                            setState(() {
+                                              dawer=2;
+                                              col1=!col1;
+                                              col2 = false;
+                                              col3=false;
+                                              col4=false;
+                                              col5=false;
+                                              col6=false;
+                                              col7=false;
+                                              col8=false;
+                                              col9=false;
+                                              pagename="Database";
+                                            });
+                                          },
+                                          child: Row(
+                                            children: [
+                                              Icon(Icons.storage,size:20,color: pagename=="Database" ? Colors.white :Colors.black54,),
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0),
+                                                child: Container(
+                                                  width:120,
+                                                  child: KText(
+                                                    text:"Database",
+                                                    style: GoogleFonts.poppins(
+                                                      fontWeight: pagename=="Database"
+                                                          ? FontWeight.w500
+                                                          : FontWeight.w600,
+                                                      color:
+                                                      pagename=="Database" ? Colors.white :Colors.black54,
+                                                      letterSpacing:
+                                                      pagename=="Database" ? 1.5 : 1.5,
+                                                      fontSize: pagename=="Database" ? 13.0 : 12.0,
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
+                                              Icon(col1==true ?Icons.keyboard_arrow_up_outlined : Icons.keyboard_arrow_down_outlined,size:20,color: pagename=="Database" ? Colors.white :Colors.black54,),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                       SizedBox(height: 8),
@@ -497,7 +514,7 @@ class _MyWidgetState extends State<MyWidget> {
                                         onTap: (){
                                           setState(() {
                                             pagename = "Users";
-                                            pages= Users_Screen(UserViewed: false,);
+                                            pages= Users_Screen(UserViewed: false,type: 0,);
                                           });
                                         },
                                         child: Container(
@@ -649,7 +666,7 @@ class _MyWidgetState extends State<MyWidget> {
                           padding: const EdgeInsets.symmetric(horizontal: 6),
                           child: AnimatedContainer(
 
-                            height:    dawer == 3
+                            height:    col2==true
                                 ? 120 : 35,
 
                             decoration: BoxDecoration(
@@ -667,7 +684,7 @@ class _MyWidgetState extends State<MyWidget> {
                                   padding: EdgeInsets.only(left: 50),
                                   width:    dawer == 3
                                       ? 200 : 0,
-                                  height:   dawer == 3
+                                  height:   col2==true
                                       ? 120 : 35,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
@@ -679,17 +696,7 @@ class _MyWidgetState extends State<MyWidget> {
                                 InkWell(
                                   onTap: () {
                                     setState(() {
-                                      dawer=3;
-                                      col1=false;
-                                      col2=false;
-                                      col3=false;
-                                      col4=false;
-                                      col5=false;
-                                      col6=false;
-                                      col7=false;
-                                      col8=false;
-                                      col9=false;
-                                      pagename="Masters";
+
 
                                     });
                                   },
@@ -698,26 +705,48 @@ class _MyWidgetState extends State<MyWidget> {
                                       SizedBox(height: 8),
                                       Padding(
                                         padding: const EdgeInsets.only(left: 8.0),
-                                        child: Row(
-                                          children: [
-                                            Icon(Icons.admin_panel_settings_sharp,size:20,color: pagename=="Masters" ? Colors.white :Colors.black54,),
-                                            Padding(
-                                              padding: const EdgeInsets.only(left: 4.0),
-                                              child: KText(
-                                                text:"Masters",
-                                                style: GoogleFonts.poppins(
-                                                  fontWeight: pagename=="Masters"
-                                                      ? FontWeight.w500
-                                                      : FontWeight.w600,
-                                                  color:
-                                                  pagename=="Masters" ? Colors.white :Colors.black54,
-                                                  letterSpacing:
-                                                  pagename=="Masters" ? 1.5 : 1.5,
-                                                  fontSize: pagename=="Masters" ? 13.0 : 12.0,
+                                        child: InkWell(
+                                            onTap: (){
+                                            setState(() {
+                                              dawer=3;
+                                              col1=false;
+                                              col2 = !col2;
+                                              col3=false;
+                                              col4=false;
+                                              col5=false;
+                                              col6=false;
+                                              col7=false;
+                                              col8=false;
+                                              col9=false;
+                                              pagename="Masters";
+                                            });
+                                          },
+                                          child: Row(
+                                            children: [
+                                              Icon(Icons.admin_panel_settings_sharp,size:20,color: pagename=="Masters" ? Colors.white :Colors.black54,),
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0),
+                                                child: Container(
+                                                  width:120,
+                                                  child: KText(
+                                                    text:"Masters",
+                                                    style: GoogleFonts.poppins(
+                                                      fontWeight: pagename=="Masters"
+                                                          ? FontWeight.w500
+                                                          : FontWeight.w600,
+                                                      color:
+                                                      pagename=="Masters" ? Colors.white :Colors.black54,
+                                                      letterSpacing:
+                                                      pagename=="Masters" ? 1.5 : 1.5,
+                                                      fontSize: pagename=="Masters" ? 13.0 : 12.0,
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
+                                              Icon(col2==true ?Icons.keyboard_arrow_up_outlined : Icons.keyboard_arrow_down_outlined,size:20,color: pagename=="Masters" ? Colors.white :Colors.black54,),
+
+                                            ],
+                                          ),
                                         ),
                                       ),
                                       SizedBox(height: 8),
@@ -830,7 +859,7 @@ class _MyWidgetState extends State<MyWidget> {
                           padding: const EdgeInsets.symmetric(horizontal: 6),
                           child: AnimatedContainer(
 
-                            height:     dawer == 4
+                            height:     col3==true
                                 ? 120 : 35,
 
                             decoration: BoxDecoration(
@@ -848,7 +877,7 @@ class _MyWidgetState extends State<MyWidget> {
                                   padding: EdgeInsets.only(left: 50),
                                   width:     dawer == 4
                                       ? 200 : 0,
-                                  height:    dawer == 4
+                                  height:    col3==true
                                       ? 120 : 35,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
@@ -860,17 +889,6 @@ class _MyWidgetState extends State<MyWidget> {
                                 InkWell(
                                   onTap: () {
                                     setState(() {
-                                      dawer=4;
-                                      col1=false;
-                                      col2=false;
-                                      col3=false;
-                                      col4=false;
-                                      col5=false;
-                                      col6=false;
-                                      col7=false;
-                                      col8=false;
-                                      col9=false;
-                                      pagename="Security";
 
                                     });
                                   },
@@ -879,26 +897,48 @@ class _MyWidgetState extends State<MyWidget> {
                                       SizedBox(height: 8),
                                       Padding(
                                         padding: const EdgeInsets.only(left: 8.0),
-                                        child: Row(
-                                          children: [
-                                            Icon(Icons.security,size:20,color: pagename=="Security" ? Colors.white :Colors.black54,),
-                                            Padding(
-                                              padding: const EdgeInsets.only(left: 4.0),
-                                              child: KText(
-                                                text:"Security",
-                                                style: GoogleFonts.poppins(
-                                                  fontWeight: pagename=="Security"
-                                                      ? FontWeight.w500
-                                                      : FontWeight.w600,
-                                                  color:
-                                                  pagename=="Security" ? Colors.white :Colors.black54,
-                                                  letterSpacing:
-                                                  pagename=="Security" ? 1.5 : 1.5,
-                                                  fontSize: pagename=="Security" ? 13.0 : 12.0,
+                                        child: InkWell(
+                                          onTap: (){
+                                            setState(() {
+                                              dawer=4;
+                                              col1=false;
+                                              col2 = false;
+                                              col3=!col3;
+                                              col4=false;
+                                              col5=false;
+                                              col6=false;
+                                              col7=false;
+                                              col8=false;
+                                              col9=false;
+                                              pagename="Security";
+                                            });
+                                          },
+                                          child: Row(
+                                            children: [
+                                              Icon(Icons.security,size:20,color: pagename=="Security" ? Colors.white :Colors.black54,),
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0),
+                                                child: Container(
+                                                  width:120,
+                                                  child: KText(
+                                                    text:"Security",
+                                                    style: GoogleFonts.poppins(
+                                                      fontWeight: pagename=="Security"
+                                                          ? FontWeight.w500
+                                                          : FontWeight.w600,
+                                                      color:
+                                                      pagename=="Security" ? Colors.white :Colors.black54,
+                                                      letterSpacing:
+                                                      pagename=="Security" ? 1.5 : 1.5,
+                                                      fontSize: pagename=="Security" ? 13.0 : 12.0,
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
+                                              Icon(col3==true ?Icons.keyboard_arrow_up_outlined : Icons.keyboard_arrow_down_outlined,size:20,color: pagename=="Security" ? Colors.white :Colors.black54,),
+                                          
+                                            ],
+                                          ),
                                         ),
                                       ),
                                       SizedBox(height: 8),
@@ -1011,7 +1051,7 @@ class _MyWidgetState extends State<MyWidget> {
                           padding: const EdgeInsets.symmetric(horizontal: 6),
                           child: AnimatedContainer(
 
-                            height:    dawer == 5
+                            height:    col4==true
                                 ? 300 : 35,
 
                             decoration: BoxDecoration(
@@ -1029,7 +1069,7 @@ class _MyWidgetState extends State<MyWidget> {
                                   padding: EdgeInsets.only(left: 50),
                                   width:    dawer == 5
                                       ? 200 : 0,
-                                  height:   dawer == 5
+                                  height:   col4==true
                                       ? 300 : 35,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
@@ -1041,17 +1081,6 @@ class _MyWidgetState extends State<MyWidget> {
                                 InkWell(
                                   onTap: () {
                                     setState(() {
-                                      dawer=5;
-                                      col1=false;
-                                      col2=false;
-                                      col3=false;
-                                      col4=false;
-                                      col5=false;
-                                      col6=false;
-                                      col7=false;
-                                      col8=false;
-                                      col9=false;
-                                      pagename="Communication";
 
                                     });
                                   },
@@ -1060,26 +1089,49 @@ class _MyWidgetState extends State<MyWidget> {
                                       SizedBox(height: 8),
                                       Padding(
                                         padding: const EdgeInsets.only(left: 8.0),
-                                        child: Row(
-                                          children: [
-                                            Icon(Icons.commit,size:20,color: pagename=="Communication" ? Colors.white :Colors.black54,),
-                                            Padding(
-                                              padding: const EdgeInsets.only(left: 4.0),
-                                              child: KText(
-                                                text:"Communication",
-                                                style: GoogleFonts.poppins(
-                                                  fontWeight: pagename=="Communication"
-                                                      ? FontWeight.w500
-                                                      : FontWeight.w600,
-                                                  color:
-                                                  pagename=="Communication" ? Colors.white :Colors.black54,
-                                                  letterSpacing:
-                                                  pagename=="Communication" ? 1.5 : 1.5,
-                                                  fontSize: pagename=="Communication" ? 13.0 : 12.0,
+                                        child: InkWell(
+                                          onTap: (){
+                                            setState(() {
+
+                                              dawer=5;
+                                              col1=false;
+                                              col2 = false;
+                                              col3=false;
+                                              col4=!col4;
+                                              col5=false;
+                                              col6=false;
+                                              col7=false;
+                                              col8=false;
+                                              col9=false;
+                                              pagename="Communication";
+                                            });
+                                          },
+                                          child: Row(
+                                            children: [
+                                              Icon(Icons.commit,size:20,color: pagename=="Communication" ? Colors.white :Colors.black54,),
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0),
+                                                child: Container(
+                                                  width:120,
+                                                  child: KText(
+                                                    text:"Communication",
+                                                    style: GoogleFonts.poppins(
+                                                      fontWeight: pagename=="Communication"
+                                                          ? FontWeight.w500
+                                                          : FontWeight.w600,
+                                                      color:
+                                                      pagename=="Communication" ? Colors.white :Colors.black54,
+                                                      letterSpacing:
+                                                      pagename=="Communication" ? 1.5 : 1.5,
+                                                      fontSize: pagename=="Communication" ? 13.0 : 12.0,
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
+                                              Icon(col4==true ?Icons.keyboard_arrow_up_outlined : Icons.keyboard_arrow_down_outlined,size:20,color: pagename=="Communication" ? Colors.white :Colors.black54,),
+                                          
+                                            ],
+                                          ),
                                         ),
                                       ),
                                       SizedBox(height: 8),
@@ -1379,7 +1431,7 @@ class _MyWidgetState extends State<MyWidget> {
                           padding: const EdgeInsets.symmetric(horizontal: 6),
                           child: AnimatedContainer(
 
-                            height:    dawer == 6
+                            height:    col5==true
                                 ? 250 : 35,
 
                             decoration: BoxDecoration(
@@ -1397,7 +1449,7 @@ class _MyWidgetState extends State<MyWidget> {
                                   padding: EdgeInsets.only(left: 50),
                                   width:    dawer == 6
                                       ? 200 : 0,
-                                  height:   dawer == 6
+                                  height:   col5==true
                                       ? 250 : 35,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
@@ -1407,47 +1459,55 @@ class _MyWidgetState extends State<MyWidget> {
 
                                 ),
                                 InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      dawer=6;
-                                      col1=false;
-                                      col2=false;
-                                      col3=false;
-                                      col4=false;
-                                      col5=false;
-                                      col6=false;
-                                      col7=false;
-                                      col8=false;
-                                      col9=false;
-                                      pagename="Engagement";
 
-                                    });
-                                  },
                                   child: Column(
                                     children: [
                                       SizedBox(height: 8),
                                       Padding(
                                         padding: const EdgeInsets.only(left: 8.0),
-                                        child: Row(
-                                          children: [
-                                            Icon(Icons.account_tree_outlined,size:20,color: pagename=="Engagement" ? Colors.white :Colors.black54,),
-                                            Padding(
-                                              padding: const EdgeInsets.only(left: 4.0),
-                                              child: KText(
-                                                text:"Engagement",
-                                                style: GoogleFonts.poppins(
-                                                  fontWeight: pagename=="Engagement"
-                                                      ? FontWeight.w500
-                                                      : FontWeight.w600,
-                                                  color:
-                                                  pagename=="Engagement" ? Colors.white :Colors.black54,
-                                                  letterSpacing:
-                                                  pagename=="Engagement" ? 1.5 : 1.5,
-                                                  fontSize: pagename=="Engagement" ? 13.0 : 12.0,
+                                        child: InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              dawer=6;
+                                              col1=false;
+                                              col2=false;
+                                              col3=false;
+                                              col4=false;
+                                              col5=!col5;
+                                              col6=false;
+                                              col7=false;
+                                              col8=false;
+                                              col9=false;
+                                              pagename="Engagement";
+
+                                            });
+                                          },
+                                          child: Row(
+                                            children: [
+                                              Icon(Icons.account_tree_outlined,size:20,color: pagename=="Engagement" ? Colors.white :Colors.black54,),
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0),
+                                                child: Container(
+                                                  width:120,
+                                                  child: KText(
+                                                    text:"Engagement",
+                                                    style: GoogleFonts.poppins(
+                                                      fontWeight: pagename=="Engagement"
+                                                          ? FontWeight.w500
+                                                          : FontWeight.w600,
+                                                      color:
+                                                      pagename=="Engagement" ? Colors.white :Colors.black54,
+                                                      letterSpacing:
+                                                      pagename=="Engagement" ? 1.5 : 1.5,
+                                                      fontSize: pagename=="Engagement" ? 13.0 : 12.0,
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
+                                              Icon(col5==true ?Icons.keyboard_arrow_up_outlined : Icons.keyboard_arrow_down_outlined,size:20,color: pagename=="Engagement" ? Colors.white :Colors.black54,),
+                                          
+                                            ],
+                                          ),
                                         ),
                                       ),
                                       SizedBox(height: 8),
@@ -1524,7 +1584,7 @@ class _MyWidgetState extends State<MyWidget> {
                                                     Padding(
                                                       padding: const EdgeInsets.only(left: 4.0),
                                                       child: KText(
-                                                        text:"Collage Activity",
+                                                        text:"College Activity",
                                                         style: GoogleFonts.poppins(
                                                           fontWeight: pagename=="Collage Activity"
                                                               ? FontWeight.w500
@@ -1596,7 +1656,7 @@ class _MyWidgetState extends State<MyWidget> {
                                         onTap: (){
                                           setState(() {
                                             pagename = "Job Posts";
-                                            pages= Job_Posts();
+                                            pages= Job_Posts(0);
                                           });
                                         },
                                         child: Container(

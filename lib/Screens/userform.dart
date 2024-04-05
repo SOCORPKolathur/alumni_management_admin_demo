@@ -182,7 +182,8 @@ class _UserFormState extends State<UserForm> {
         "Phone": phoneNumbercon.text,
         "mobileNo": mobileNumbercon.text,
         "email": emailIDcon.text,
-        "alteremail": alterEmailIdcon.text, "city": citycon.text,
+        "alteremail": alterEmailIdcon.text,
+        "city": citycon.text,
         "pinCode": pinCodecon.text,
         "state": statecon.text,
         "country": countrycon.text,
@@ -526,10 +527,10 @@ class _UserFormState extends State<UserForm> {
       lastDate: DateTime.now(),
     );
 
-    if (picked != null && picked != lastVisitDate) {
+    if (picked != null) {
       setState(() {
         lastVisitDate = picked;
-        lastvisitcon.text = DateFormat('yyyy-MM-dd').format(lastVisitDate);
+        lastvisitcon.text = DateFormat('yyyy-MM-dd').format(picked);
       });
     }
   }

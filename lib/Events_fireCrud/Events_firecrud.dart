@@ -35,13 +35,19 @@ class EventsFireCrud {
     if(image != null){
       downloadUrl = await uploadImageToStorage(image);
     }
+    print("hjgfhjygjhgjghjgjhgjhg");
+
     Response response = Response();
     DocumentReference documentReferencer = EventCollection.doc();
     DateTime tempDate = DateFormat("dd-MM-yyyy").parse(date);
+    DateTime tempDate2 = DateTime.now();
+    print(tempDate2.millisecondsSinceEpoch);
+    print("tempDate2.millisecondsSinceEpoch");
     EventsModel event = EventsModel(
       time: time,
       title: title,
       timestamp: tempDate.millisecondsSinceEpoch,
+      timestampmain: tempDate2.millisecondsSinceEpoch,
       location: location,
       imgUrl: image != null ? downloadUrl : '',
       id: "",
@@ -51,10 +57,11 @@ class EventsFireCrud {
       registeredUsers: [],
     );
     event.id = documentReferencer.id;
+    print(event.timestampmain);
     var json = event.toJson();
     var result = await documentReferencer.set(json).whenComplete(() {
       response.code = 200;
-      response.message = "Sucessfully added to the database";
+      response.message = "Successfully added to the database";
     }).catchError((e) {
       response.code = 500;
       response.message = e;

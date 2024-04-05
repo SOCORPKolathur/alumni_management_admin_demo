@@ -17,6 +17,9 @@ class Constants {
    String whiteshadeimg="assets/white-trianglify-b79c7e1f.jpg";
    String patterImg="assets/patttern.png";
 
+
+   String notifictionapikey="AAAAMbpijGg:APA91bGJh2qke8JHGkBaJvJ5-mSnllb0aAIi-lF2YKt9MejKB-m51-SQZJR2u3tYdC9UsOB0ps_G6n29EuZPGFW5xAp4lHQDFWi11TFSDn65VyXYyFY0c-SzXuwk2fE31ADp9MdryFBB";
+
    String deleteUserSvg="assets/Delete Users.svg";
    String userLogoutSvg="assets/Logout img.svg";
    String userSuccessSvg="assets/Success Users.svg";

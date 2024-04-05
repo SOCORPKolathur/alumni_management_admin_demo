@@ -1,3 +1,4 @@
+import 'package:alumni_management_admin/Screens/Job_Posts.dart';
 import 'package:alumni_management_admin/Screens/Setting_Screen.dart';
 import 'package:alumni_management_admin/Screens/audio_podcasts.dart';
 import 'package:alumni_management_admin/Screens/donations_tab.dart';
@@ -114,7 +115,7 @@ class _DashBoardState extends State<DashBoard> {
 
 
   UnVeriFyedUserData()async{
-    var Unverifyedusersdata=await FirebaseFirestore.instance.collection("Users").orderBy("Name").get();
+    var Unverifyedusersdata=await FirebaseFirestore.instance.collection("Users").orderBy("timestamp",descending: true).get();
     for(int x=0;x<Unverifyedusersdata.docs.length;x++){
       if(Unverifyedusersdata.docs[x]['verifyed']==false){
         setState(() {
@@ -175,7 +176,9 @@ class _DashBoardState extends State<DashBoard> {
   TextEditingController requestedLanguageController = TextEditingController();
 
   bool UserViewed=false;
+  bool jobpost=false;
 
+  int type =1;
   List <UnVerfiyedUser> unVerifyedUserData=[];
 
   @override
@@ -185,7 +188,7 @@ class _DashBoardState extends State<DashBoard> {
     double baseWidth = 1920;
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
-    return UserViewed==false?
+    return UserViewed ==false && jobpost == false?
       FadeInRight(
       duration: const Duration(milliseconds: 600),
       child: SizedBox(
@@ -218,7 +221,7 @@ class _DashBoardState extends State<DashBoard> {
                         margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 10*fem, 0*fem),
                         child: KText(
                           text:
-                          'IKIA COLLEGE ADMIN',
+                          'Admin Panel',
                           style: SafeGoogleFont (
                             'Poppins',
                             fontSize: 36*ffem,
@@ -413,87 +416,199 @@ class _DashBoardState extends State<DashBoard> {
                                       ],
                                     ),
                                   ),
-                                  Container(
-                                    // tU9 (6:192)
-                                    margin: EdgeInsets.fromLTRB(1*fem, 0*fem, 0*fem, 0*fem),
-                                    padding: EdgeInsets.fromLTRB(20*fem, 20*fem, 20*fem, 20*fem),
-                                    width: 260*fem,
-                                    decoration: BoxDecoration (
-                                      color: const Color(0xffffe2e5),
-                                      borderRadius: BorderRadius.circular(20*fem),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          // autogroupsjwbBTF (T1hJxZck5kqw33p9g8sjWb)
-                                          margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 16*fem),
-                                          width: 40*fem,
-                                          height: 40*fem,
-                                          child: Stack(
-                                            children: [
-                                              Positioned(
-                                                // iconJXs (6:197)
-                                                left: 0*fem,
-                                                top: 0*fem,
-                                                child: Align(
-                                                  child: SizedBox(
-                                                    width: 40*fem,
-                                                    height: 40*fem,
-                                                    child: Image.asset(
-                                                      'assets/images/icon-91T.png',
+                                  InkWell(
+                                    onTap:(){
+                                     setState(() {
+                                       UserViewed=true;
+                                       type=0;
+                                     });
+                                    },
+                                    child: Container(
+                                      // tU9 (6:192)
+                                      margin: EdgeInsets.fromLTRB(1*fem, 0*fem, 0*fem, 0*fem),
+                                      padding: EdgeInsets.fromLTRB(20*fem, 20*fem, 20*fem, 20*fem),
+                                      width: 260*fem,
+                                      decoration: BoxDecoration (
+                                        color: const Color(0xffffe2e5),
+                                        borderRadius: BorderRadius.circular(20*fem),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            // autogroupsjwbBTF (T1hJxZck5kqw33p9g8sjWb)
+                                            margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 16*fem),
+                                            width: 40*fem,
+                                            height: 40*fem,
+                                            child: Stack(
+                                              children: [
+                                                Positioned(
+                                                  // iconJXs (6:197)
+                                                  left: 0*fem,
+                                                  top: 0*fem,
+                                                  child: Align(
+                                                    child: SizedBox(
                                                       width: 40*fem,
                                                       height: 40*fem,
+                                                      child: Image.asset(
+                                                        'assets/images/icon-91T.png',
+                                                        width: 40*fem,
+                                                        height: 40*fem,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                              Positioned(
-                                                // icons8users1001Q57 (6:1169)
-                                                left: 8*fem,
-                                                top: 8*fem,
-                                                child: Align(
-                                                  child: SizedBox(
-                                                    width: 24*fem,
-                                                    height: 24*fem,
-                                                    child: Image.asset(
-                                                      'assets/images/icons8-users-100-1.png',
-                                                      fit: BoxFit.cover,
+                                                Positioned(
+                                                  // icons8users1001Q57 (6:1169)
+                                                  left: 8*fem,
+                                                  top: 8*fem,
+                                                  child: Align(
+                                                    child: SizedBox(
+                                                      width: 24*fem,
+                                                      height: 24*fem,
+                                                      child: Image.asset(
+                                                        'assets/images/icons8-users-100-1.png',
+                                                        fit: BoxFit.cover,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        Container(
-                                          // 6yX (6:196)
-                                          margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 8*fem),
-                                          child: KText(
+                                          Container(
+                                            // 6yX (6:196)
+                                            margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 8*fem),
+                                            child: KText(
+                                                text:
+                                              TotalUsers.toString(),
+                                              style: SafeGoogleFont (
+                                                'Poppins',
+                                                fontSize: 24*ffem,
+                                                fontWeight: FontWeight.w600,
+                                                height: 1.3333333333*ffem/fem,
+                                                color: const Color(0xff151d48),
+                                              ),
+                                            ),
+                                          ),
+                                          KText(
+                                            text:
+                                            // totalalumni2MP (6:195)
+                                            'Total Alumni ',
+                                            style: SafeGoogleFont (
+                                              'Poppins',
+                                              fontSize: 16*ffem,
+                                              fontWeight: FontWeight.w500,
+                                              height: 1.5*ffem/fem,
+                                              color: const Color(0xff415166),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: 32*fem,
+                            ),
+                            SizedBox(
+                              // autogroupjenfvaV (T1hK6tiCTeNCNLLmzYjeNf)
+                              width: 260*fem,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+
+                                  InkWell(
+                                    onTap:(){
+                                      setState(() {
+                                        UserViewed=true;
+                                        type=1;
+                                      });
+                                    },
+                                    child: Container(
+                                      // YkH (6:1156)
+                                      padding: EdgeInsets.fromLTRB(20*fem, 20*fem, 20*fem, 20*fem),
+                                      width: double.infinity,
+                                      decoration: BoxDecoration (
+                                        color: const Color(0xffFFF4DE),
+                                        borderRadius: BorderRadius.circular(20*fem),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            // autogroupojbdRPX (T1hKexd6iKE1oHGtR2oJbd)
+                                            margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 16*fem),
+                                            width: 40*fem,
+                                            height: 40*fem,
+                                            child: Stack(
+                                              children: [
+                                                Positioned(
+                                                  // iconLmP (6:1125)
+                                                  left: 0*fem,
+                                                  top: 0*fem,
+                                                  child: Align(
+                                                    child: SizedBox(
+                                                      width: 40*fem,
+                                                      height: 40*fem,
+                                                      child: Image.asset(
+                                                        'assets/images/icon-a2d.png',
+                                                        width: 40*fem,
+                                                        height: 40*fem,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Positioned(
+                                                  // icons8verified641eXB (6:1170)
+                                                  left: 10.9999847412*fem,
+                                                  top: 6*fem,
+                                                  child: Align(
+                                                    child: SizedBox(
+                                                      width: 24*fem,
+                                                      height: 24*fem,
+                                                      child: Image.asset(
+                                                        'assets/images/icons8-verified-64-1.png',
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Container(
+                                            // xhX (6:1160)
+                                            margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 8*fem),
+                                            child: KText(
                                               text:
-                                            TotalUsers.toString(),
-                                            style: SafeGoogleFont (
-                                              'Poppins',
-                                              fontSize: 24*ffem,
-                                              fontWeight: FontWeight.w600,
-                                              height: 1.3333333333*ffem/fem,
-                                              color: const Color(0xff151d48),
+                                              verifyedUsers.toString(),
+                                              style: SafeGoogleFont (
+                                                'Poppins',
+                                                fontSize: 24*ffem,
+                                                fontWeight: FontWeight.w600,
+                                                height: 1.3333333333*ffem/fem,
+                                                color: const Color(0xff151d48),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        KText(
-                                          text:
-                                          // totalalumni2MP (6:195)
-                                          'Total Alumni ',
-                                          style: SafeGoogleFont (
-                                            'Poppins',
-                                            fontSize: 16*ffem,
-                                            fontWeight: FontWeight.w500,
-                                            height: 1.5*ffem/fem,
-                                            color: const Color(0xff415166),
+                                          KText(
+                                            text:
+                                            // totaleventsspV (6:1159)
+                                            'Verified Alumni ',
+                                            style: SafeGoogleFont (
+                                              'Poppins',
+                                              fontSize: 16*ffem,
+                                              fontWeight: FontWeight.w500,
+                                              height: 1.5*ffem/fem,
+                                              color: const Color(0xff415166),
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -510,86 +625,94 @@ class _DashBoardState extends State<DashBoard> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
 
-                                  Container(
-                                    // YkH (6:1156)
-                                    padding: EdgeInsets.fromLTRB(20*fem, 20*fem, 20*fem, 20*fem),
-                                    width: double.infinity,
-                                    decoration: BoxDecoration (
-                                      color: const Color(0xffFFF4DE),
-                                      borderRadius: BorderRadius.circular(20*fem),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          // autogroupojbdRPX (T1hKexd6iKE1oHGtR2oJbd)
-                                          margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 16*fem),
-                                          width: 40*fem,
-                                          height: 40*fem,
-                                          child: Stack(
-                                            children: [
-                                              Positioned(
-                                                // iconLmP (6:1125)
-                                                left: 0*fem,
-                                                top: 0*fem,
-                                                child: Align(
-                                                  child: SizedBox(
-                                                    width: 40*fem,
-                                                    height: 40*fem,
-                                                    child: Image.asset(
-                                                      'assets/images/icon-a2d.png',
+                                  InkWell(
+                                    onTap:(){
+                                      setState(() {
+                                        UserViewed=true;
+                                        type=3;
+                                      });
+                                    },
+                                    child: Container(
+                                      // YkH (6:1156)
+                                      padding: EdgeInsets.fromLTRB(20*fem, 20*fem, 20*fem, 20*fem),
+                                      width: double.infinity,
+                                      decoration: BoxDecoration (
+                                        color: const Color(0xffDCFCE7),
+                                        borderRadius: BorderRadius.circular(20*fem),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            // autogrouprcsdhNy (T1hKnxPmxNHYkv2D3GRcsD)
+                                            margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 16*fem),
+                                            width: 40*fem,
+                                            height: 40*fem,
+                                            child: Stack(
+                                              children: [
+                                                Positioned(
+                                                  // icon2AM (6:1137)
+                                                  left: 0*fem,
+                                                  top: 0*fem,
+                                                  child: Align(
+                                                    child: SizedBox(
                                                       width: 40*fem,
                                                       height: 40*fem,
+                                                      child: Image.asset(
+                                                        'assets/images/icon-rV7.png',
+                                                        width: 40*fem,
+                                                        height: 40*fem,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                              Positioned(
-                                                // icons8verified641eXB (6:1170)
-                                                left: 10.9999847412*fem,
-                                                top: 6*fem,
-                                                child: Align(
-                                                  child: SizedBox(
-                                                    width: 24*fem,
-                                                    height: 24*fem,
-                                                    child: Image.asset(
-                                                      'assets/images/icons8-verified-64-1.png',
-                                                      fit: BoxFit.cover,
+                                                Positioned(
+                                                  // icons8student1001ios (6:1171)
+                                                  left: 7.9999809265*fem,
+                                                  top: 6*fem,
+                                                  child: Align(
+                                                    child: SizedBox(
+                                                      width: 24*fem,
+                                                      height: 24*fem,
+                                                      child: Image.asset(
+                                                        'assets/images/icons8-student-100-1.png',
+                                                        fit: BoxFit.cover,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          // xhX (6:1160)
-                                          margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 8*fem),
-                                          child: KText(
-                                            text:
-                                            verifyedUsers.toString(),
-                                            style: SafeGoogleFont (
-                                              'Poppins',
-                                              fontSize: 24*ffem,
-                                              fontWeight: FontWeight.w600,
-                                              height: 1.3333333333*ffem/fem,
-                                              color: const Color(0xff151d48),
+                                              ],
                                             ),
                                           ),
-                                        ),
-                                        KText(
-                                          text:
-                                          // totaleventsspV (6:1159)
-                                          'Verified Alumni ',
-                                          style: SafeGoogleFont (
-                                            'Poppins',
-                                            fontSize: 16*ffem,
-                                            fontWeight: FontWeight.w500,
-                                            height: 1.5*ffem/fem,
-                                            color: const Color(0xff415166),
+                                          Container(
+                                            // xhX (6:1160)
+                                            margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 8*fem),
+                                            child: KText(
+                                              text:
+                                              UnverifyedUsers.toString(),
+                                              style: SafeGoogleFont (
+                                                'Poppins',
+                                                fontSize: 24*ffem,
+                                                fontWeight: FontWeight.w600,
+                                                height: 1.3333333333*ffem/fem,
+                                                color: const Color(0xff151d48),
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                          KText(
+                                            text:
+                                            // totaleventsspV (6:1159)
+                                            'Unverified Alumni',
+                                            style: SafeGoogleFont (
+                                              'Poppins',
+                                              fontSize: 16*ffem,
+                                              fontWeight: FontWeight.w500,
+                                              height: 1.5*ffem/fem,
+                                              color: const Color(0xff415166),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -606,86 +729,93 @@ class _DashBoardState extends State<DashBoard> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
 
-                                  Container(
-                                    // YkH (6:1156)
-                                    padding: EdgeInsets.fromLTRB(20*fem, 20*fem, 20*fem, 20*fem),
-                                    width: double.infinity,
-                                    decoration: BoxDecoration (
-                                      color: const Color(0xffDCFCE7),
-                                      borderRadius: BorderRadius.circular(20*fem),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          // autogrouprcsdhNy (T1hKnxPmxNHYkv2D3GRcsD)
-                                          margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 16*fem),
-                                          width: 40*fem,
-                                          height: 40*fem,
-                                          child: Stack(
-                                            children: [
-                                              Positioned(
-                                                // icon2AM (6:1137)
-                                                left: 0*fem,
-                                                top: 0*fem,
-                                                child: Align(
-                                                  child: SizedBox(
-                                                    width: 40*fem,
-                                                    height: 40*fem,
-                                                    child: Image.asset(
-                                                      'assets/images/icon-rV7.png',
+                                  InkWell(
+                                    onTap:(){
+                              setState(() {
+                                jobpost=true;
+                              });
+                            },
+                                    child: Container(
+                                      // YkH (6:1156)
+                                      padding: EdgeInsets.fromLTRB(20*fem, 20*fem, 20*fem, 20*fem),
+                                      width: double.infinity,
+                                      decoration: BoxDecoration (
+                                        color: const Color(0xffF3E8FF),
+                                        borderRadius: BorderRadius.circular(20*fem),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            // autogroupqvsuLyf (T1hKwNKRciRVgcVfHDqvsu)
+                                            margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 16*fem),
+                                            width: 40*fem,
+                                            height: 40*fem,
+                                            child: Stack(
+                                              children: [
+                                                Positioned(
+                                                  // icon4uf (6:1149)
+                                                  left: 0*fem,
+                                                  top: 0*fem,
+                                                  child: Align(
+                                                    child: SizedBox(
                                                       width: 40*fem,
                                                       height: 40*fem,
+                                                      child: Image.asset(
+                                                        'assets/images/icon-wUM.png',
+                                                        width: 40*fem,
+                                                        height: 40*fem,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                              Positioned(
-                                                // icons8student1001ios (6:1171)
-                                                left: 7.9999809265*fem,
-                                                top: 6*fem,
-                                                child: Align(
-                                                  child: SizedBox(
-                                                    width: 24*fem,
-                                                    height: 24*fem,
-                                                    child: Image.asset(
-                                                      'assets/images/icons8-student-100-1.png',
-                                                      fit: BoxFit.cover,
+                                                Positioned(
+                                                  // icons8news641nam (6:1172)
+                                                  left: 7.9999694824*fem,
+                                                  top: 8*fem,
+                                                  child: Align(
+                                                    child: SizedBox(
+                                                      width: 24*fem,
+                                                      height: 24*fem,
+                                                      child: Image.asset(
+                                                        'assets/images/icons8-news-64-1.png',
+                                                        fit: BoxFit.cover,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          // xhX (6:1160)
-                                          margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 8*fem),
-                                          child: KText(
-                                            text:
-                                            UnverifyedUsers.toString(),
-                                            style: SafeGoogleFont (
-                                              'Poppins',
-                                              fontSize: 24*ffem,
-                                              fontWeight: FontWeight.w600,
-                                              height: 1.3333333333*ffem/fem,
-                                              color: const Color(0xff151d48),
+                                              ],
                                             ),
                                           ),
-                                        ),
-                                        KText(
-                                          text:
-                                          // totaleventsspV (6:1159)
-                                          'Unverified Alumni',
-                                          style: SafeGoogleFont (
-                                            'Poppins',
-                                            fontSize: 16*ffem,
-                                            fontWeight: FontWeight.w500,
-                                            height: 1.5*ffem/fem,
-                                            color: const Color(0xff415166),
+                                          Container(
+                                            // xhX (6:1160)
+                                            margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 8*fem),
+                                            child: KText(
+                                              text:
+                                              jobPost.toString(),
+                                              style: SafeGoogleFont (
+                                                'Poppins',
+                                                fontSize: 24*ffem,
+                                                fontWeight: FontWeight.w600,
+                                                height: 1.3333333333*ffem/fem,
+                                                color: const Color(0xff151d48),
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                          KText(
+                                            text:
+                                            // totaleventsspV (6:1159)
+                                            'Total  Job posts',
+                                            style: SafeGoogleFont (
+                                              'Poppins',
+                                              fontSize: 16*ffem,
+                                              fontWeight: FontWeight.w500,
+                                              height: 1.5*ffem/fem,
+                                              color: const Color(0xff415166),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -702,182 +832,93 @@ class _DashBoardState extends State<DashBoard> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
 
-                                  Container(
-                                    // YkH (6:1156)
-                                    padding: EdgeInsets.fromLTRB(20*fem, 20*fem, 20*fem, 20*fem),
-                                    width: double.infinity,
-                                    decoration: BoxDecoration (
-                                      color: const Color(0xffF3E8FF),
-                                      borderRadius: BorderRadius.circular(20*fem),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          // autogroupqvsuLyf (T1hKwNKRciRVgcVfHDqvsu)
-                                          margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 16*fem),
-                                          width: 40*fem,
-                                          height: 40*fem,
-                                          child: Stack(
-                                            children: [
-                                              Positioned(
-                                                // icon4uf (6:1149)
-                                                left: 0*fem,
-                                                top: 0*fem,
-                                                child: Align(
-                                                  child: SizedBox(
-                                                    width: 40*fem,
-                                                    height: 40*fem,
-                                                    child: Image.asset(
-                                                      'assets/images/icon-wUM.png',
+                                  InkWell(
+                              onTap:(){
+                              setState(() {
+                                jobpost=true;
+                              });
+                            },
+                                    child: Container(
+                                      // YkH (6:1156)
+                                      padding: EdgeInsets.fromLTRB(20*fem, 20*fem, 20*fem, 20*fem),
+                                      width: double.infinity,
+                                      decoration: BoxDecoration (
+                                        color: const Color(0xffd4ecff),
+                                        borderRadius: BorderRadius.circular(20*fem),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            // autogroupgmcpeoK (T1hKEdzHrKagYjFcr9gmCP)
+                                            margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 16*fem),
+                                            width: 40*fem,
+                                            height: 40*fem,
+                                            child: Stack(
+                                              children: [
+                                                Positioned(
+                                                  // iconZvH (6:1161)
+                                                  left: 0*fem,
+                                                  top: 0*fem,
+                                                  child: Align(
+                                                    child: SizedBox(
                                                       width: 40*fem,
                                                       height: 40*fem,
+                                                      child: Image.asset(
+                                                        'assets/images/icon-U4R.png',
+                                                        width: 40*fem,
+                                                        height: 40*fem,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                              Positioned(
-                                                // icons8news641nam (6:1172)
-                                                left: 7.9999694824*fem,
-                                                top: 8*fem,
-                                                child: Align(
-                                                  child: SizedBox(
-                                                    width: 24*fem,
-                                                    height: 24*fem,
-                                                    child: Image.asset(
-                                                      'assets/images/icons8-news-64-1.png',
-                                                      fit: BoxFit.cover,
+                                                Positioned(
+                                                  // icons8events9615dj (6:1173)
+                                                  left: 5*fem,
+                                                  top: 4*fem,
+                                                  child: Align(
+                                                    child: SizedBox(
+                                                      width: 30*fem,
+                                                      height: 30*fem,
+                                                      child: Image.asset(
+                                                        'assets/images/icons8-events-96-1.png',
+                                                        fit: BoxFit.cover,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          // xhX (6:1160)
-                                          margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 8*fem),
-                                          child: KText(
-                                            text:
-                                            jobPost.toString(),
-                                            style: SafeGoogleFont (
-                                              'Poppins',
-                                              fontSize: 24*ffem,
-                                              fontWeight: FontWeight.w600,
-                                              height: 1.3333333333*ffem/fem,
-                                              color: const Color(0xff151d48),
+                                              ],
                                             ),
                                           ),
-                                        ),
-                                        KText(
-                                          text:
-                                          // totaleventsspV (6:1159)
-                                          'Total  Job posts',
-                                          style: SafeGoogleFont (
-                                            'Poppins',
-                                            fontSize: 16*ffem,
-                                            fontWeight: FontWeight.w500,
-                                            height: 1.5*ffem/fem,
-                                            color: const Color(0xff415166),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              width: 32*fem,
-                            ),
-                            SizedBox(
-                              // autogroupjenfvaV (T1hK6tiCTeNCNLLmzYjeNf)
-                              width: 260*fem,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-
-                                  Container(
-                                    // YkH (6:1156)
-                                    padding: EdgeInsets.fromLTRB(20*fem, 20*fem, 20*fem, 20*fem),
-                                    width: double.infinity,
-                                    decoration: BoxDecoration (
-                                      color: const Color(0xffd4ecff),
-                                      borderRadius: BorderRadius.circular(20*fem),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          // autogroupgmcpeoK (T1hKEdzHrKagYjFcr9gmCP)
-                                          margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 16*fem),
-                                          width: 40*fem,
-                                          height: 40*fem,
-                                          child: Stack(
-                                            children: [
-                                              Positioned(
-                                                // iconZvH (6:1161)
-                                                left: 0*fem,
-                                                top: 0*fem,
-                                                child: Align(
-                                                  child: SizedBox(
-                                                    width: 40*fem,
-                                                    height: 40*fem,
-                                                    child: Image.asset(
-                                                      'assets/images/icon-U4R.png',
-                                                      width: 40*fem,
-                                                      height: 40*fem,
-                                                    ),
-                                                  ),
-                                                ),
+                                          Container(
+                                            // xhX (6:1160)
+                                            margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 8*fem),
+                                            child: KText(
+                                              text:
+                                             unVerifiedJobs.toString(),
+                                              style: SafeGoogleFont (
+                                                'Poppins',
+                                                fontSize: 24*ffem,
+                                                fontWeight: FontWeight.w600,
+                                                height: 1.3333333333*ffem/fem,
+                                                color: const Color(0xff151d48),
                                               ),
-                                              Positioned(
-                                                // icons8events9615dj (6:1173)
-                                                left: 5*fem,
-                                                top: 4*fem,
-                                                child: Align(
-                                                  child: SizedBox(
-                                                    width: 30*fem,
-                                                    height: 30*fem,
-                                                    child: Image.asset(
-                                                      'assets/images/icons8-events-96-1.png',
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          // xhX (6:1160)
-                                          margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 8*fem),
-                                          child: KText(
-                                            text:
-                                           unVerifiedJobs.toString(),
-                                            style: SafeGoogleFont (
-                                              'Poppins',
-                                              fontSize: 24*ffem,
-                                              fontWeight: FontWeight.w600,
-                                              height: 1.3333333333*ffem/fem,
-                                              color: const Color(0xff151d48),
                                             ),
                                           ),
-                                        ),
-                                        KText(
-                                          text:
-                                          // totaleventsspV (6:1159)
-                                          'Unverified Jobs ',
-                                          style: SafeGoogleFont (
-                                            'Poppins',
-                                            fontSize: 16*ffem,
-                                            fontWeight: FontWeight.w500,
-                                            height: 1.5*ffem/fem,
-                                            color: const Color(0xff415166),
+                                          KText(
+                                            text:
+                                            // totaleventsspV (6:1159)
+                                            'Unverified Jobs ',
+                                            style: SafeGoogleFont (
+                                              'Poppins',
+                                              fontSize: 16*ffem,
+                                              fontWeight: FontWeight.w500,
+                                              height: 1.5*ffem/fem,
+                                              color: const Color(0xff415166),
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -2799,7 +2840,7 @@ class _DashBoardState extends State<DashBoard> {
 
                               return Container(
                                 padding: EdgeInsets.fromLTRB(26.07*fem, 19.56*fem, 39.11*fem, 19.56*fem),
-                                width: 1119.87*fem,
+
                                 height: 78.22*fem,
                                 decoration: BoxDecoration (
                                   color: const Color(0xffffffff),
@@ -2968,48 +3009,39 @@ class _DashBoardState extends State<DashBoard> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width:width/30.075),
-                                    GestureDetector(
+                                    SizedBox(width:width/108.075),
+                                    InkWell(
                                       onTap: (){
 
-                                        if(viewDocid=='') {
+
                                           setState(() {
                                             viewDocid = _userdata.UserDocId!.toString();
                                           });
                                           ViewinUserDetailsPopup();
-                                        }
-                                        else{
-                                          setState(() {
-                                            viewDocid = '';
-                                          });
-                                        }
+
                                       },
-                                      child: SizedBox(
-                                        width:width/22.766,
-                                        height:height/26.04,
-                                        child: Container(
-                                            margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 0.65*fem),
-                                            width: 18.25*fem,
-                                            height: 15.56*fem,
-                                            decoration: BoxDecoration(
-                                                color:Constants().primaryAppColor,
-                                                borderRadius: BorderRadius.circular(5)
-                                            ),
-                                            child: Center(child: KText(
-                                              text:viewDocid==_userdata.UserDocId?"Close":
-                                              "View" , style: SafeGoogleFont (
-                                              'Nunito',
-                                              fontSize: 16*ffem,
-                                              fontWeight: FontWeight.w400,
-                                              height: 1.3625*ffem/fem,
-                                              color: const Color(0xffFFFFFF),
-                                            ),),)
-                                          // Image.asset(
-                                          //   'assets/images/menu-fRb.png',
-                                          //   width: 18.25*fem,
-                                          //   height: 4.56*fem,
-                                          // ),
-                                        ),
+                                      child: Container(
+                                          margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 0*fem),
+                                          width:width/22.766,
+                                          height:height/26.04,
+                                          decoration: BoxDecoration(
+                                              color:Constants().primaryAppColor,
+                                              borderRadius: BorderRadius.circular(5)
+                                          ),
+                                          child: Center(child: KText(
+                                            text:viewDocid==_userdata.UserDocId?"Close":
+                                            "View" , style: SafeGoogleFont (
+                                            'Nunito',
+                                            fontSize: 16*ffem,
+                                            fontWeight: FontWeight.w400,
+                                            height: 1.3625*ffem/fem,
+                                            color: const Color(0xffFFFFFF),
+                                          ),),)
+                                        // Image.asset(
+                                        //   'assets/images/menu-fRb.png',
+                                        //   width: 18.25*fem,
+                                        //   height: 4.56*fem,
+                                        // ),
                                       ),
                                     ),
                                   ],
@@ -3163,18 +3195,29 @@ class _DashBoardState extends State<DashBoard> {
       ),
     ):
     Stack(
+      alignment: Alignment.topCenter,
       children: [
-        Users_Screen(UserViewed: UserViewed,),
-        Positioned(
-          top: 0,
-          right: 0,
+        jobpost==false? Users_Screen(UserViewed: UserViewed,type: type,) : Job_Posts(1),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
           child: InkWell(
             onTap: () {
               setState(() {
                 UserViewed = false;
+                jobpost=false;
               });
             },
-            child: Icon(Icons.close),
+            child: Material(
+              borderRadius: BorderRadius.circular(50),
+              elevation: 4,
+              child: Container(
+              width: 40,
+                height:40,
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(50)),
+
+
+                child: Center(child: Icon(Icons.close))),
+            ),
           ),
         ),
       ],
@@ -5992,12 +6035,19 @@ class _DashBoardState extends State<DashBoard> {
                                   "verifyed": !currentUserVerifyed
                                 });
                                 UnVeriFyedUserData();
-                                Navigator.pop(context);
+                                Navigator.of(context).pop();
                                 Navigator.of(context).push(new MaterialPageRoute(
-                                  builder: (BuildContext context) =>MyWidget(email: FirebaseAuth.instance.currentUser!.email)
+                                    builder: (context) => MyWidget(email: FirebaseAuth.instance.currentUser!.email)
                                 ));
 
+                                CoolAlert.show(
+                                  context: context,
+                                  type: CoolAlertType.success,
+                                  text: "Alumni verified successfully!",
+                                  width: width * 0.4,
+                                  backgroundColor: Constants().primaryAppColor.withOpacity(0.8),
 
+                                );
 
                               },
                               child: Container(

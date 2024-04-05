@@ -520,6 +520,7 @@ class _Job_AdsState extends State<Job_Ads> with TickerProviderStateMixin {
                                                           positionsController,
                                                           decoration:
                                                           InputDecoration(
+                                                            isDense: true,
                                                             border:
                                                             InputBorder
                                                                 .none,
@@ -599,6 +600,7 @@ class _Job_AdsState extends State<Job_Ads> with TickerProviderStateMixin {
                                                             quvalificationController,
                                                             decoration:
                                                             InputDecoration(
+                                                              isDense: true,
                                                               border:
                                                               InputBorder
                                                                   .none,
@@ -768,29 +770,21 @@ class _Job_AdsState extends State<Job_Ads> with TickerProviderStateMixin {
                                                             width /
                                                                 170.75),
                                                         child: TextFormField(
-                                                          inputFormatters: [
+                                                        /*  inputFormatters: [
                                                             FilteringTextInputFormatter
                                                                 .allow(RegExp(
                                                                 "[a-zA-Z ]")),
-                                                          ],
-                                                          style:
-                                                          SafeGoogleFont(
-                                                            'Nunito',
-                                                            fontSize: width /
-                                                                105.571,
+                                                          ],*/
+                                                          style: SafeGoogleFont('Nunito',
+                                                            fontSize: width / 105.571,
                                                           ),
-                                                          controller:
-                                                          locationController,
-                                                          decoration:
-                                                          InputDecoration(
-                                                            border:
-                                                            InputBorder
-                                                                .none,
-                                                            hintStyle:
-                                                            SafeGoogleFont(
-                                                              'Nunito',
-                                                              fontSize:
-                                                              width /
+                                                          maxLines: 1,
+                                                          
+                                                          controller: locationController,
+                                                          decoration: InputDecoration(
+                                                              isDense: true,
+                                                            border: InputBorder.none,
+                                                            hintStyle: SafeGoogleFont('Nunito', fontSize: width /
                                                                   105.571,
                                                             ),
                                                           ),
@@ -858,6 +852,7 @@ class _Job_AdsState extends State<Job_Ads> with TickerProviderStateMixin {
                                                             controller: noOfOpeningController,
                                                             decoration:
                                                             InputDecoration(
+                                                              isDense: true,
                                                               border:
                                                               InputBorder
                                                                   .none,
@@ -938,6 +933,7 @@ class _Job_AdsState extends State<Job_Ads> with TickerProviderStateMixin {
                                                           titleController,
                                                           decoration:
                                                           InputDecoration(
+                                                            isDense: true,
                                                             border:
                                                             InputBorder
                                                                 .none,
@@ -3937,7 +3933,7 @@ class _Job_AdsState extends State<Job_Ads> with TickerProviderStateMixin {
                                                   descriptionController,
                                                   decoration: InputDecoration(
                                                     border: InputBorder.none,
-                                                    hintText: "Lucky",
+                                                    hintText: "",
                                                     hintStyle: SafeGoogleFont(
                                                       'Nunito',
                                                       fontSize: width / 97.571,

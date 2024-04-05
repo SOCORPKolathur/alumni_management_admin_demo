@@ -8,6 +8,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../../Constant_.dart';
+
 class HomeController extends GetxController {
 
   TextEditingController username = TextEditingController();
@@ -86,7 +88,7 @@ class HomeController extends GetxController {
         headers: <String, String>{
           'Content-Type': 'application/json',
           'Authorization':
-          'key=AAAAMbpijGg:APA91bGJh2qke8JHGkBaJvJ5-mSnllb0aAIi-lF2YKt9MejKB-m51-SQZJR2u3tYdC9UsOB0ps_G6n29EuZPGFW5xAp4lHQDFWi11TFSDn65VyXYyFY0c-SzXuwk2fE31ADp9MdryFBB',
+          'key=${Constants().notifictionapikey}',
       },
         body: jsonEncode(
           <String, dynamic>{

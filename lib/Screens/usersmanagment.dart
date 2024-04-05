@@ -1183,7 +1183,17 @@ class _UsersManagementState extends State<UsersManagement> {
   }
 
   ///create document function
-  documentcreatfunc(){
+  documentcreatfunc() async {
+    try{
+      final User? user =
+      (await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: userName.text,
+          password: passWord.text,
+      )).user;
+    if (user != null) {
+    setState(() {
+      String _userEmail = user.uid;
+    });
     FirebaseFirestore.instance.collection("AdminUser").doc().set({
       "Type":Authusertype,
       "password":passWord.text,
@@ -1199,10 +1209,52 @@ class _UsersManagementState extends State<UsersManagement> {
     mangementpermision();
     Navigator.pop(context);
     successpopuop("New User Add Successfully....");
+    }
+    else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(snackBar);
+    }
+    }
+    catch(e){
+      ScaffoldMessenger.of(context)
+          .showSnackBar(snackBar);
+    }
+
 
   }
 
-
+  final snackBar = SnackBar(
+    backgroundColor: Colors.transparent,
+    elevation: 0,
+    content: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Constants().primaryAppColor, width: 3),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x19000000),
+              spreadRadius: 2.0,
+              blurRadius: 8.0,
+              offset: Offset(2, 4),
+            )
+          ],
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.info_outline, color: Constants().primaryAppColor),
+            const Padding(
+              padding: EdgeInsets.only(left: 8.0),
+              child: Text('Please fill required fields !!',
+                  style: TextStyle(color: Colors.black)),
+            ),
+            const Spacer(),
+            TextButton(
+                onPressed: () => debugPrint("Undid"), child: const Text("Undo"))
+          ],
+        )),
+  );
   adduserdialogBox() {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
@@ -1377,7 +1429,7 @@ class _UsersManagementState extends State<UsersManagement> {
                               ),
                             ),
                             SizedBox(height: height / 45.5),
-                            Row(
+                           /* Row(
                               children: [
                                 SizedBox(width: width / 18.0705),
                                 KText(
@@ -1459,7 +1511,7 @@ class _UsersManagementState extends State<UsersManagement> {
                                 ],
                               ),
                             ),
-                            SizedBox(height: height / 40.5),
+                            SizedBox(height: height / 40.5),*/
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [

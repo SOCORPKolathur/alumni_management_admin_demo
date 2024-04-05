@@ -3,7 +3,9 @@ import 'dart:convert';
 
 import 'package:alumni_management_admin/common_widgets/developer_card_widget.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' as cf;
@@ -11,6 +13,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import '../Constant_.dart';
 import '../Models/Language_Model.dart';
+import '../common_widgets/loading_state.dart';
 import '../utils.dart';
 
 class Com_Notification_Screen extends StatefulWidget {
@@ -27,10 +30,11 @@ class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
 
   String currentTab = 'ADD';
   bool isUsers = true;
-  String Uservalue="All";
+  String Uservalue="Select Type";
   List dropDownApplyedvalue=[];
   List<bool> Selected = List.generate(100, (index) => false);
   List<String> notifylist=[
+    "Select Type",
     "All",
     "Batch",
     "Department",
@@ -186,537 +190,547 @@ class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
                         ],
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      child: Stack(
+                        alignment: Alignment.center,
                         children: [
-                          Container(
-                            color: Colors.white,
-                            height: size.height * 0.08,
-                            width: width/1.3837,
-
-                            child: Row(
-                              children: [
-                                const Icon(Icons.message),
-                                SizedBox(width: width / 136.6),
-                                KText(
-                                  text: "Send Notification",
-                                  style: SafeGoogleFont(
-                                    'Nunito',
-                                    fontSize: width/68.3,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            width: width / 1.2418,
-
-                            decoration: const BoxDecoration(
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Container(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(10),
-                                  bottomRight: Radius.circular(10),
-                                )),
-                            padding: EdgeInsets.only(
-                             // top:height / 72.55 ,
-                                bottom: height / 42.55,
-                                left: width / 68.3,
-                              right: width / 68.3
-                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-
-                                Padding(
-                                  padding: EdgeInsets.only(left: width / 54.64),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          SizedBox(
-                                            height: height / 13.02,
-                                            width: width / 2.464,
-
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-
-                                                Text("Please Select : ",style:  SafeGoogleFont (
-                                                  'Poppins',
-                                                )),
-
-                                                Container(
-                                                  height: height / 13.02,
-                                                  width: width / 6.464,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(5),
-                                                      color: Colors.grey.shade300
-                                                  ),
-                                                  child: DropdownButtonHideUnderline(
-                                                    child: DropdownButtonFormField2<String>(
-
-                                                      hint: KText(
-                                                          text:'Select',
-                                                          style:  SafeGoogleFont (
-                                                            'Poppins',
-                                                          )
-                                                      ),
-                                                      items: notifylist.map((String item) => DropdownMenuItem<String>(
-                                                        value: item,
-                                                        child: KText(
-                                                            text: item,
-                                                            style:  SafeGoogleFont (
-                                                              'Poppins',
-                                                            )
-                                                        ),
-                                                      ))
-                                                          .toList(),
-                                                      value: Uservalue,
-                                                      onChanged: (String? value) {
-                                                        setState(() {
-                                                          Uservalue = value!;
-                                                        });
-                                                        dropdownSelectStreamData();
-                                                      },
-                                                      buttonStyleData:  const ButtonStyleData(
-                                                      ),decoration: const InputDecoration(
-                                                        border: InputBorder.none
-                                                    ),
-
-                                                    ),
-                                                  ),
-                                                ),
-
-
-                                                Padding(
-                                                  padding:  EdgeInsets.only(left:width/27.32),
-                                                  child: InkWell(
-                                                    onTap: () async {
-                                                      print("Apply Button-------------------------------------------------------");
-                                                      getStreamDatafunction();
-                                                    },
-                                                    child: Container(
-                                                      height: height / 16.6,
-                                                      decoration: BoxDecoration(
-                                                        color: Constants().primaryAppColor,
-                                                        borderRadius:
-                                                        BorderRadius.circular(8),
-                                                        boxShadow: const [
-                                                          BoxShadow(
-                                                            color: Colors.black26,
-                                                            offset: Offset(1, 2),
-                                                            blurRadius: 3,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      child: Padding(
-                                                        padding: EdgeInsets.symmetric(
-                                                            horizontal: width /60.6),
-                                                        child: Center(
-                                                          child: KText(
-                                                            text: "Apply",
-                                                            style: SafeGoogleFont(
-                                                              'Nunito',
-                                                              color: Colors.white,
-                                                              fontSize: width / 106.6,
-                                                              fontWeight: FontWeight.bold,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-
-                                          Container(
-                                            height:height/5.0,
-                                            width: width/1.536,
-                                            color: Colors.white,
-                                            child: SingleChildScrollView(
-                                              physics: const ScrollPhysics(),
-                                              child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                children: [
-                                                  Padding(
-                                                   padding: EdgeInsets.symmetric(
-                                                     vertical: height/92.375,
-                                                     horizontal: width/192
-                                                   ),
-                                                    child:
-                                                        Uservalue == "Department/Batch"?Row(
-                                                          children: [
-                                                            Column(
-                                                              crossAxisAlignment:
-                                                              CrossAxisAlignment.start,
-                                                              children: [
-                                                                KText(
-                                                                  text: "Department",
-                                                                  style: SafeGoogleFont(
-                                                                    'Nunito',
-                                                                    fontSize: width / 105.571,
-                                                                    fontWeight: FontWeight.bold,
-                                                                  ),
-                                                                ),
-                                                                SizedBox(height: height / 108.5),
-                                                                Material(
-                                                                  borderRadius: BorderRadius.circular(3),
-                                                                  color: Color(0xffDDDEEE),
-                                                                  elevation: 5,
-                                                                  child:
-                                                                  SizedBox(
-                                                                    height: height / 16.02,
-                                                                    width: width / 7.0,
-                                                                    child: DropdownButtonHideUnderline(
-                                                                      child:
-                                                                      DropdownButtonFormField2<
-                                                                          String>(
-                                                                        isExpanded:true,
-                                                                        hint: Text(
-                                                                          'Select Department',
-                                                                          style:
-                                                                          SafeGoogleFont(
-                                                                            'Nunito',
-                                                                          ),
-                                                                        ),
-                                                                        items: departmentDataList
-                                                                            .map((String
-                                                                        item) =>
-                                                                            DropdownMenuItem<
-                                                                                String>(
-                                                                              value: item,
-                                                                              child: Text(
-                                                                                item,
-                                                                                style:
-                                                                                SafeGoogleFont(
-                                                                                  'Nunito',
-                                                                                ),
-                                                                              ),
-                                                                            )).toList(),
-                                                                        value:
-                                                                        departmentcon.text,
-                                                                        onChanged:
-                                                                            (String? value) {
-                                                                          setState(() {
-                                                                            departmentcon.text =
-                                                                            value!;
-                                                                          });
-
-                                                                        },
-                                                                        buttonStyleData:
-                                                                        const ButtonStyleData(
-
-
-                                                                        ),
-                                                                        menuItemStyleData:
-                                                                        const MenuItemStyleData(
-
-                                                                        ),
-                                                                        decoration:
-                                                                        const InputDecoration(
-                                                                            border:
-                                                                            InputBorder
-                                                                                .none),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                )
-                                                              ],
-                                                            ),
-                                                            SizedBox(width: width / 68.3),
-                                                            Column(
-                                                              crossAxisAlignment:
-                                                              CrossAxisAlignment.start,
-                                                              children: [
-                                                                KText(
-                                                                  text: "Year",
-                                                                  style: SafeGoogleFont(
-                                                                    'Nunito',
-                                                                    fontSize: width / 105.571,
-                                                                    fontWeight: FontWeight.bold,
-                                                                  ),
-                                                                ),
-                                                                SizedBox(height: height / 108.5),
-                                                                Material(
-                                                                  borderRadius: BorderRadius.circular(3),
-                                                                  color: Color(0xffDDDEEE),
-                                                                  elevation: 5,
-                                                                  child: SizedBox(
-                                                                    height: height / 16.02,
-                                                                    width: width / 7.0,
-                                                                    child: DropdownButtonHideUnderline(
-                                                                      child:
-                                                                      DropdownButtonFormField2<
-                                                                          String>(
-                                                                        isExpanded:true,
-                                                                        hint: Text(
-                                                                          'Select Year',
-                                                                          style:
-                                                                          SafeGoogleFont(
-                                                                            'Nunito',
-                                                                          ),
-                                                                        ),
-                                                                        items: yearDataList
-                                                                            .map((String
-                                                                        item) =>
-                                                                            DropdownMenuItem<
-                                                                                String>(
-                                                                              value: item,
-                                                                              child: Text(
-                                                                                item,
-                                                                                style:
-                                                                                SafeGoogleFont(
-                                                                                  'Nunito',
-                                                                                ),
-                                                                              ),
-                                                                            )).toList(),
-                                                                        value:
-                                                                        yearcon.text,
-                                                                        onChanged:
-                                                                            (String? value) {
-                                                                          setState(() {
-                                                                            yearcon.text =
-                                                                            value!;
-                                                                          });
-
-                                                                        },
-                                                                        buttonStyleData:
-                                                                        const ButtonStyleData(
-
-
-                                                                        ),
-                                                                        menuItemStyleData:
-                                                                        const MenuItemStyleData(
-
-                                                                        ),
-                                                                        decoration:
-                                                                        const InputDecoration(
-                                                                            border:
-                                                                            InputBorder
-                                                                                .none),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                )
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ):
-
-                                                    Uservalue=="All"?
-                                                    Row(
-                                                      children: [
-
-                                                        Checkbox(
-                                                          value: isUsers,
-                                                          onChanged: (val) {
-                                                            setState(() {
-                                                              isUsers = val!;
-                                                            });
-                                                            print("Users Alll000000000000000000000000000000000000000000000000");
-                                                            print(isUsers);
-                                                          },
-                                                        ),
-                                                        SizedBox(width: width / 136.6),
-                                                        const Text("Users")
-                                                      ],
-                                                    ):
-                                                    SizedBox(
-                                                      child: GridView.builder(
-                                                        itemCount: StreamData.length,
-                                                          physics: const ScrollPhysics(),
-                                                          shrinkWrap: true,
-                                                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                                            crossAxisCount: 5,
-                                                            childAspectRatio: 110/50,
-                                                          ),
-                                                          itemBuilder: (context, index) {
-                                                            return SizedBox(
-                                                              height:height/18.475,
-                                                              width:width/10.24,
-                                                              child: Row(
-                                                                children: [
-
-                                                                  Checkbox(
-                                                                    value: Selected[index],
-                                                                    onChanged: (val) {
-                                                                      setState(() {
-                                                                        Selected[index] = !Selected[index];
-                                                                      });
-                                                                      if(Selected[index]==true){
-                                                                        setState(() {
-                                                                          dropDownApplyedvalue.add(StreamData[index]);
-                                                                        });
-                                                                        print("if Funcion------------------------------------");
-                                                                        print(StreamData[index]);
-                                                                        print(Selected[index]);
-                                                                        print(dropDownApplyedvalue);
-                                                                      }
-                                                                      else{
-                                                                       setState(() {
-                                                                         dropDownApplyedvalue.remove(StreamData[index]);
-                                                                       });
-                                                                       print("Else Funcion------------------------------------");
-                                                                       print(StreamData[index]);
-                                                                       print(Selected[index]);
-                                                                       print(dropDownApplyedvalue);
-                                                                      }
-                                                                    },
-                                                                  ),
-                                                                  SizedBox(width: width / 136.6),
-                                                                  SizedBox(
-                                                                    width:width/12.8,
-                                                                    child: Text(StreamData[index],style: TextStyle(
-                                                                      overflow: TextOverflow.ellipsis
-                                                                    ),),
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            );
-                                                          },),
-                                                    )
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-
-
-
-
-                                SizedBox(height: height / 65.1),
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: [
-                                      KText(
-                                        text: "Subject",
-                                        style: SafeGoogleFont(
-                                          'Nunito',
-                                          color: Colors.black,
-                                          fontSize: width / 105.07,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(height:height/73.9),
-                                      Container(
-                                        decoration: BoxDecoration(color: const Color(0xffDDDEEE),
-                                            borderRadius: BorderRadius.circular(3)),
-                                        child: Padding(
-                                          padding:  EdgeInsets.symmetric(
-                                            horizontal: width/192,
-                                            vertical: height/92.375
-                                          ),
-                                          child: TextFormField(
-                                            decoration: InputDecoration(
-                                              border: InputBorder.none
-                                            ),
-                                            style: TextStyle(
-                                                fontSize: width / 113.83),
-                                            controller: subjectController,
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(height: height / 21.7),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                height: size.height * 0.08,
+                                width: width/1.3837,
+                          
+                                child: Row(
                                   children: [
+                                    const Icon(Icons.message),
+                                    SizedBox(width: width / 136.6),
                                     KText(
-                                      text: "Description",
+                                      text: "Send Notification",
                                       style: SafeGoogleFont(
                                         'Nunito',
-                                        color: Colors.black,
-                                        fontSize: width / 105.07,
+                                        fontSize: width/68.3,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    SizedBox(height:height/73.9),
-                                    Container(
-                                        width: double.infinity,
-                                        height:height/7.78,
-                                        decoration: BoxDecoration(color: const Color(0xffDDDEEE),
-                                            borderRadius: BorderRadius.circular(3)),
-                                        child: TextFormField(
-                                          style: TextStyle(
-                                              fontSize: width / 113.83),
-                                          controller:
-                                          descriptionController,
-                                          decoration: InputDecoration(
-                                              border: InputBorder.none,
-                                              contentPadding:
-                                              EdgeInsets.only(
-                                                  left:
-                                                  width / 91.06,
-                                                  top: height /
-                                                      162.75,
-                                                  bottom: height /
-                                                      162.75)),
-                                          maxLines: null,
-                                        )),
                                   ],
                                 ),
-                                SizedBox(height: height / 65.1),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
+                              ),
+                              Container(
+                                width: width / 1.2418,
+                          
+                                decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10),
+                                    )),
+                                padding: EdgeInsets.only(
+                                 // top:height / 72.55 ,
+                                    bottom: height / 42.55,
+                                    left: width / 68.3,
+                                  right: width / 68.3
+                                 ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-
-                                    GestureDetector(
-                                      onTap: () async {
-                                        print("Send Buton-----------------------------------------------");
-                                        setTheData();
-                                      },
-                                      child: Container(
-                                          height: height/18.475,
-                                          width: width/12.8,
-                                          decoration: BoxDecoration(
-                                            color: Color(0xffD60A0B),
-                                            borderRadius:
-                                            BorderRadius.circular(4),
-                                          ),
-                                          child: Center(
-                                            child:Row(
-                                              // crossAxisAlignment: CrossAxisAlignment.center,
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                Icon(Icons.send,
-                                                    color: Colors.white),
-                                                SizedBox(width: width /273.2),
-                                                KText(
-                                                  text: "SEND",
-                                                  style: SafeGoogleFont (
-                                                    'Nunito',
-                                                    color: Colors.white,
-                                                    fontSize: width /136.6,
-                                                    fontWeight: FontWeight.bold,
+                          
+                                    Padding(
+                                      padding: EdgeInsets.only(left: width / 54.64),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              SizedBox(
+                                                height: height / 13.02,
+                                                width: width / 2.464,
+                          
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                          
+                                                    Text("Please Select : ",style:  SafeGoogleFont (
+                                                      'Poppins',
+                                                    )),
+                          
+                                                    Container(
+                                                      height: height / 13.02,
+                                                      width: width / 6.464,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius: BorderRadius.circular(5),
+                                                          color: Colors.grey.shade300
+                                                      ),
+                                                      child: DropdownButtonHideUnderline(
+                                                        child: DropdownButtonFormField2<String>(
+                          
+                                                          hint: KText(
+                                                              text:'Select',
+                                                              style:  SafeGoogleFont (
+                                                                'Poppins',
+                                                              )
+                                                          ),
+                                                          items: notifylist.map((String item) => DropdownMenuItem<String>(
+                                                            value: item,
+                                                            child: KText(
+                                                                text: item,
+                                                                style:  SafeGoogleFont (
+                                                                  'Poppins',
+                                                                )
+                                                            ),
+                                                          ))
+                                                              .toList(),
+                                                          value: Uservalue,
+                                                          onChanged: (String? value) {
+                                                            setState(() {
+                                                              Uservalue = value!;
+                                                            });
+                                                            dropdownSelectStreamData();
+                                                          },
+                                                          buttonStyleData:  const ButtonStyleData(
+                                                          ),decoration: const InputDecoration(
+                                                            border: InputBorder.none
+                                                        ),
+                          
+                                                        ),
+                                                      ),
+                                                    ),
+                          
+                          
+                                                    Padding(
+                                                      padding:  EdgeInsets.only(left:width/27.32),
+                                                      child: InkWell(
+                                                        onTap: () async {
+                                                          print("Apply Button-------------------------------------------------------");
+                                                          getStreamDatafunction();
+                                                        },
+                                                        child: Container(
+                                                          height: height / 16.6,
+                                                          decoration: BoxDecoration(
+                                                            color: Constants().primaryAppColor,
+                                                            borderRadius:
+                                                            BorderRadius.circular(8),
+                                                            boxShadow: const [
+                                                              BoxShadow(
+                                                                color: Colors.black26,
+                                                                offset: Offset(1, 2),
+                                                                blurRadius: 3,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          child: Padding(
+                                                            padding: EdgeInsets.symmetric(
+                                                                horizontal: width /60.6),
+                                                            child: Center(
+                                                              child: KText(
+                                                                text: "Apply",
+                                                                style: SafeGoogleFont(
+                                                                  'Nunito',
+                                                                  color: Colors.white,
+                                                                  fontSize: width / 106.6,
+                                                                  fontWeight: FontWeight.bold,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                          
+                                              Container(
+                                                height:height/5.0,
+                                                width: width/1.536,
+                                                color: Colors.white,
+                                                child: SingleChildScrollView(
+                                                  physics: const ScrollPhysics(),
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    children: [
+                                                      Padding(
+                                                       padding: EdgeInsets.symmetric(
+                                                         vertical: height/92.375,
+                                                         horizontal: width/192
+                                                       ),
+                                                        child:
+                                                            Uservalue == "Department/Batch"?Row(
+                                                              children: [
+                                                                Column(
+                                                                  crossAxisAlignment:
+                                                                  CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    KText(
+                                                                      text: "Department",
+                                                                      style: SafeGoogleFont(
+                                                                        'Nunito',
+                                                                        fontSize: width / 105.571,
+                                                                        fontWeight: FontWeight.bold,
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(height: height / 108.5),
+                                                                    Material(
+                                                                      borderRadius: BorderRadius.circular(3),
+                                                                      color: Color(0xffDDDEEE),
+                                                                      elevation: 5,
+                                                                      child:
+                                                                      SizedBox(
+                                                                        height: height / 16.02,
+                                                                        width: width / 7.0,
+                                                                        child: DropdownButtonHideUnderline(
+                                                                          child:
+                                                                          DropdownButtonFormField2<
+                                                                              String>(
+                                                                            isExpanded:true,
+                                                                            hint: Text(
+                                                                              'Select Department',
+                                                                              style:
+                                                                              SafeGoogleFont(
+                                                                                'Nunito',
+                                                                              ),
+                                                                            ),
+                                                                            items: departmentDataList
+                                                                                .map((String
+                                                                            item) =>
+                                                                                DropdownMenuItem<
+                                                                                    String>(
+                                                                                  value: item,
+                                                                                  child: Text(
+                                                                                    item,
+                                                                                    style:
+                                                                                    SafeGoogleFont(
+                                                                                      'Nunito',
+                                                                                    ),
+                                                                                  ),
+                                                                                )).toList(),
+                                                                            value:
+                                                                            departmentcon.text,
+                                                                            onChanged:
+                                                                                (String? value) {
+                                                                              setState(() {
+                                                                                departmentcon.text =
+                                                                                value!;
+                                                                              });
+                          
+                                                                            },
+                                                                            buttonStyleData:
+                                                                            const ButtonStyleData(
+                          
+                          
+                                                                            ),
+                                                                            menuItemStyleData:
+                                                                            const MenuItemStyleData(
+                          
+                                                                            ),
+                                                                            decoration:
+                                                                            const InputDecoration(
+                                                                                border:
+                                                                                InputBorder
+                                                                                    .none),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                                SizedBox(width: width / 68.3),
+                                                                Column(
+                                                                  crossAxisAlignment:
+                                                                  CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    KText(
+                                                                      text: "Year",
+                                                                      style: SafeGoogleFont(
+                                                                        'Nunito',
+                                                                        fontSize: width / 105.571,
+                                                                        fontWeight: FontWeight.bold,
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(height: height / 108.5),
+                                                                    Material(
+                                                                      borderRadius: BorderRadius.circular(3),
+                                                                      color: Color(0xffDDDEEE),
+                                                                      elevation: 5,
+                                                                      child: SizedBox(
+                                                                        height: height / 16.02,
+                                                                        width: width / 7.0,
+                                                                        child: DropdownButtonHideUnderline(
+                                                                          child:
+                                                                          DropdownButtonFormField2<
+                                                                              String>(
+                                                                            isExpanded:true,
+                                                                            hint: Text(
+                                                                              'Select Year',
+                                                                              style:
+                                                                              SafeGoogleFont(
+                                                                                'Nunito',
+                                                                              ),
+                                                                            ),
+                                                                            items: yearDataList
+                                                                                .map((String
+                                                                            item) =>
+                                                                                DropdownMenuItem<
+                                                                                    String>(
+                                                                                  value: item,
+                                                                                  child: Text(
+                                                                                    item,
+                                                                                    style:
+                                                                                    SafeGoogleFont(
+                                                                                      'Nunito',
+                                                                                    ),
+                                                                                  ),
+                                                                                )).toList(),
+                                                                            value:
+                                                                            yearcon.text,
+                                                                            onChanged:
+                                                                                (String? value) {
+                                                                              setState(() {
+                                                                                yearcon.text =
+                                                                                value!;
+                                                                              });
+                          
+                                                                            },
+                                                                            buttonStyleData:
+                                                                            const ButtonStyleData(
+                          
+                          
+                                                                            ),
+                                                                            menuItemStyleData:
+                                                                            const MenuItemStyleData(
+                          
+                                                                            ),
+                                                                            decoration:
+                                                                            const InputDecoration(
+                                                                                border:
+                                                                                InputBorder
+                                                                                    .none),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ):
+                          
+                                                        Uservalue=="All"?
+                                                        Row(
+                                                          children: [
+                          
+                                                            Checkbox(
+                                                              value: isUsers,
+                                                              onChanged: (val) {
+                                                                setState(() {
+                                                                  isUsers = val!;
+                                                                });
+                                                                print("Users Alll000000000000000000000000000000000000000000000000");
+                                                                print(isUsers);
+                                                              },
+                                                            ),
+                                                            SizedBox(width: width / 136.6),
+                                                            const Text("Users")
+                                                          ],
+                                                        ):
+                                                        SizedBox(
+                                                          child: GridView.builder(
+                                                            itemCount: StreamData.length,
+                                                              physics: const ScrollPhysics(),
+                                                              shrinkWrap: true,
+                                                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                                                crossAxisCount: 5,
+                                                                childAspectRatio: 110/50,
+                                                              ),
+                                                              itemBuilder: (context, index) {
+                                                                return SizedBox(
+                                                                  height:height/18.475,
+                                                                  width:width/10.24,
+                                                                  child: Row(
+                                                                    children: [
+                          
+                                                                      Checkbox(
+                                                                        value: Selected[index],
+                                                                        onChanged: (val) {
+                                                                          setState(() {
+                                                                            Selected[index] = !Selected[index];
+                                                                          });
+                                                                          if(Selected[index]==true){
+                                                                            setState(() {
+                                                                              dropDownApplyedvalue.add(StreamData[index]);
+                                                                            });
+                                                                            print("if Funcion------------------------------------");
+                                                                            print(StreamData[index]);
+                                                                            print(Selected[index]);
+                                                                            print(dropDownApplyedvalue);
+                                                                          }
+                                                                          else{
+                                                                           setState(() {
+                                                                             dropDownApplyedvalue.remove(StreamData[index]);
+                                                                           });
+                                                                           print("Else Funcion------------------------------------");
+                                                                           print(StreamData[index]);
+                                                                           print(Selected[index]);
+                                                                           print(dropDownApplyedvalue);
+                                                                          }
+                                                                        },
+                                                                      ),
+                                                                      SizedBox(width: width / 136.6),
+                                                                      SizedBox(
+                                                                        width:width/12.8,
+                                                                        child: Text(StreamData[index],style: TextStyle(
+                                                                          overflow: TextOverflow.ellipsis
+                                                                        ),),
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                );
+                                                              },),
+                                                        )
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
-                                              ],
-                                            ),
-                                          )),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
+                          
+                          
+                          
+                          
+                                    SizedBox(height: height / 65.1),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          KText(
+                                            text: "Subject",
+                                            style: SafeGoogleFont(
+                                              'Nunito',
+                                              color: Colors.black,
+                                              fontSize: width / 105.07,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height:height/73.9),
+                                          Container(
+                                            decoration: BoxDecoration(color: const Color(0xffDDDEEE),
+                                                borderRadius: BorderRadius.circular(3)),
+                                            child: Padding(
+                                              padding:  EdgeInsets.symmetric(
+                                                horizontal: width/192,
+                                                vertical: height/92.375
+                                              ),
+                                              child: TextFormField(
+                                                decoration: InputDecoration(
+                                                  border: InputBorder.none
+                                                ),
+                                                style: TextStyle(
+                                                    fontSize: width / 113.83),
+                                                controller: subjectController,
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: height / 21.7),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        KText(
+                                          text: "Description",
+                                          style: SafeGoogleFont(
+                                            'Nunito',
+                                            color: Colors.black,
+                                            fontSize: width / 105.07,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        SizedBox(height:height/73.9),
+                                        Container(
+                                            width: double.infinity,
+                                            height:height/7.78,
+                                            decoration: BoxDecoration(color: const Color(0xffDDDEEE),
+                                                borderRadius: BorderRadius.circular(3)),
+                                            child: TextFormField(
+                                              style: TextStyle(
+                                                  fontSize: width / 113.83),
+                                              controller:
+                                              descriptionController,
+                                              decoration: InputDecoration(
+                                                  border: InputBorder.none,
+                                                  contentPadding:
+                                                  EdgeInsets.only(
+                                                      left:
+                                                      width / 91.06,
+                                                      top: height /
+                                                          162.75,
+                                                      bottom: height /
+                                                          162.75)),
+                                              maxLines: null,
+                                            )),
+                                      ],
+                                    ),
+                                    SizedBox(height: height / 65.1),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                          
+                                        InkWell(
+                                          onTap: () async {
+                                            print("Send Buton-----------------------------------------------");
+                                            
+                                            setState(() {
+                                              isloading= true;
+                                            });
+                                            setTheData();
+                                          },
+                                          child: Container(
+                                              height: height/18.475,
+                                              width: width/12.8,
+                                              decoration: BoxDecoration(
+                                                color: Color(0xffD60A0B),
+                                                borderRadius:
+                                                BorderRadius.circular(4),
+                                              ),
+                                              child: Center(
+                                                child:Row(
+                                                  // crossAxisAlignment: CrossAxisAlignment.center,
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Icon(Icons.send,
+                                                        color: Colors.white),
+                                                    SizedBox(width: width /273.2),
+                                                    KText(
+                                                      text: "SEND",
+                                                      style: SafeGoogleFont (
+                                                        'Nunito',
+                                                        color: Colors.white,
+                                                        fontSize: width /136.6,
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )),
+                                        ),
+                                      ],
+                                    )
                                   ],
-                                )
-                              ],
-                            ),
+                                ),
+                              ),
+                            ],
                           ),
+                          Visibility(child: LoadingState(),visible: isloading,)
                         ],
                       ),
                     )
@@ -728,7 +742,7 @@ class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
                         color: Colors.white,
                         child: StreamBuilder(
                             stream: FirebaseFirestore.instance
-                                .collection('Notification').orderBy("timestamp")
+                                .collection('Notification').orderBy("timestamp",descending: true)
                                 .snapshots(),
                             builder: (ctx, snapshot) {
                               if (snapshot.hasError) {
@@ -1139,40 +1153,137 @@ class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
   }
 
   /// Submit button functions
+  
+  bool isloading = false;
   setTheData() async {
-
+    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
     print("Submitted Enter00000000000000000000000000000000000000000000000000");
     print(sendList.length);
     print(sendList);
 
     if(sendList.isNotEmpty){
+      FirebaseFirestore.instance.collection("Notification").doc().set({
+        "title":subjectController.text,
+        "description":descriptionController.text,
+        "msgType":Uservalue,
+        "date":"${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}",
+        "time":DateFormat("hh:mm a").format(DateTime.now()),
+        "timestamp":DateTime.now().millisecondsSinceEpoch
+      });
+      setState(() {
+        isloading= false;
+      });
       var UserData=await FirebaseFirestore.instance.collection("Users").get();
       for(int x=0;x<UserData.docs.length;x++){
+        print(UserData.docs[x]['Name']);
         if(sendList.contains(UserData.docs[x]['Token'].toString())){
-          print(UserData.docs[x]['Token'].toString());
+          print(UserData.docs[x]['Name']);
           print(sendList);
           print("Document Create Function Enter Successsss");
-          FirebaseFirestore.instance.collection("Notification").doc().set({
-            "title":subjectController.text,
-            "description":descriptionController.text,
-             "msgType":Uservalue,
-            "date":"${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}",
-            "time":DateFormat("hh:mm a").format(DateTime.now()),
-            "timestamp":DateTime.now().millisecondsSinceEpoch
-          });
+
           sendPushMessage(token: sendList[x],body: descriptionController.text,title: subjectController.text);
         }
       }
+      CoolAlert.show(
+        context: context,
+        type: CoolAlertType.success,
+        text: "Notification send successfully!",
+        width: width * 0.4,
+        backgroundColor: Constants().primaryAppColor.withOpacity(0.8),
+
+      );
 
     }
     else{
+      setState(() {
+        isloading= false;
+      });
+      ScaffoldMessenger.of(context)
+          .showSnackBar(snackBar);
       print("Error");
+
     }
 
 
 
   }
-
+  final snackBar = SnackBar(
+    backgroundColor: Colors.transparent,
+    elevation: 0,
+    content: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Constants().primaryAppColor, width: 3),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x19000000),
+              spreadRadius: 2.0,
+              blurRadius: 8.0,
+              offset: Offset(2, 4),
+            )
+          ],
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.info_outline, color: Constants().primaryAppColor),
+            const Padding(
+              padding: EdgeInsets.only(left: 8.0),
+              child: Text('Please select the user type',
+                  style: TextStyle(color: Colors.black)),
+            ),
+            const Spacer(),
+            TextButton(
+                onPressed: () => debugPrint("Undid"), child: const Text("Undo"))
+          ],
+        )),
+  );
+   popup() {
+    final double width=MediaQuery.of(context).size.width;
+    final double height=MediaQuery.of(context).size.height;
+    double baseWidth = 1920;
+    double fem = MediaQuery.of(context).size.width / baseWidth;
+    double ffem = fem * 0.97;
+    return AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success ,
+      borderSide: BorderSide(
+        color:Colors.green ,
+        width: width/683,
+      ),
+      width: width/4.878,
+      buttonsBorderRadius: BorderRadius.all(
+        Radius.circular(2),
+      ),
+      dismissOnTouchOutside: true,
+      dismissOnBackKeyPress: false,
+      onDismissCallback: (type) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: KText(
+              text: 'Dismissed by $type',
+              style:
+              SafeGoogleFont (
+                'Poppins',
+                fontSize: 22*ffem,
+                fontWeight: FontWeight.w500,
+                height: 1.6*ffem/fem,
+              ),
+            ),
+          ),
+        );
+      },
+      headerAnimationLoop: false,
+      animType: AnimType.bottomSlide,
+      title: 'Send Successfully',
+      desc: "Notification Send successfully",
+      showCloseIcon: true,
+      btnCancelOnPress: () {},
+      btnOkOnPress: () {},
+    );
+  }
   void sendPushMessage({required String token, required String body, required String title}) async {
     try {
       await http.post(
@@ -1180,7 +1291,7 @@ class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
         headers: <String, String>{
           'Content-Type': 'application/json',
           'Authorization':
-          'key=AAAAMbpijGg:APA91bGJh2qke8JHGkBaJvJ5-mSnllb0aAIi-lF2YKt9MejKB-m51-SQZJR2u3tYdC9UsOB0ps_G6n29EuZPGFW5xAp4lHQDFWi11TFSDn65VyXYyFY0c-SzXuwk2fE31ADp9MdryFBB',
+          'key=${Constants().notifictionapikey}',
         },
         body: jsonEncode(
           <String, dynamic>{

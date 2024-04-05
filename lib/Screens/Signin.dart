@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'dart:ui';
 import 'package:alumni_management_admin/utils.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 
@@ -28,7 +29,7 @@ class _SigninPageState extends State<SigninPage> {
   String deviceLocation = '';
   String deviceOs = '';
   String deviceId = '';
-  String ?browsername;
+  String browsername="";
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
   String adnroidInfo1 = '';
@@ -39,9 +40,25 @@ class _SigninPageState extends State<SigninPage> {
   @override
   void initState() {
     getUserLocation();
+    getadmin();
     // TODO: implement initState
     super.initState();
   }
+
+  String collegename="";
+  String collegelogo="";
+
+  getadmin() async {
+    var details1=await FirebaseFirestore.instance.collection("AlumniDetails").get();
+    var details=await FirebaseFirestore.instance.collection("AlumniDetails").doc(details1.docs[0].id).get();
+    Map<String,dynamic>?value=details.data();
+    setState(() {
+      collegelogo=value!["logo"];
+      collegename=value["name"];
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1861;
@@ -87,8 +104,8 @@ class _SigninPageState extends State<SigninPage> {
                           child: SizedBox(
                             width: 107.43*fem,
                             height: 107.43*fem,
-                            child: Image.asset(
-                              'assets/logocl.png',
+                            child: Image.network(
+                              collegelogo,
                               width: 107.43*fem,
                               height: 107.43*fem,
                             ),
@@ -102,7 +119,7 @@ class _SigninPageState extends State<SigninPage> {
                           maxWidth: 332*fem,
                         ),
                         child: Text(
-                          'IKIA College \nAlumni  Management',
+                          '${collegename} \nAlumni  Management',
                           textAlign: TextAlign.center,
                           style: SafeGoogleFont (
                             'Poppins',
@@ -277,6 +294,7 @@ class _SigninPageState extends State<SigninPage> {
                                 borderRadius: BorderRadius.circular(10*fem),
                               ),
                               child: TextField(
+                                autofillHints: [AutofillHints.username],
                                 controller: emailController,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
@@ -326,6 +344,7 @@ class _SigninPageState extends State<SigninPage> {
                                 borderRadius: BorderRadius.circular(10*fem),
                               ),
                               child: TextField(
+                                autofillHints: [AutofillHints.password],
                                 controller: passwordController,
                                 obscureText: _showpassword,
                                 decoration: InputDecoration(
@@ -622,7 +641,8 @@ class _SigninPageState extends State<SigninPage> {
         print(deviceLocation);
         print(deviceId);
         print(browsername);
-        FirebaseFirestore.instance.collection('LoginReports').doc().set({
+        TextInput.finishAutofillContext();
+        await FirebaseFirestore.instance.collection('LoginReports').doc().set({
           "date":DateFormat('dd-MM-yyyy').format(DateTime.now()).toString(),
           "time":DateFormat("hh:mm a").format(DateTime.now()),
           "timestamp":DateTime.now().millisecondsSinceEpoch,

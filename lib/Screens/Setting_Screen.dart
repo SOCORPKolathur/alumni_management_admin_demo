@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:html';
 import 'package:alumni_management_admin/common_widgets/developer_card_widget.dart';
 import 'package:alumni_management_admin/utils.dart';
@@ -54,7 +55,8 @@ class _SettingsTabsState extends State<SettingsTabs> {
   String Logo = '';
 
   setData() async {
-    var details=await FirebaseFirestore.instance.collection("AlumniDetails").doc(Constants().docid.toString()).get();
+    var details1=await FirebaseFirestore.instance.collection("AlumniDetails").get();
+    var details=await FirebaseFirestore.instance.collection("AlumniDetails").doc(details1.docs[0].id).get();
     Map<String,dynamic>?value=details.data();
     setState(() {
       Logo = value!['logo'];
@@ -76,43 +78,38 @@ class _SettingsTabsState extends State<SettingsTabs> {
 
   }
 
-  File? profileImage;
-  var uploadedImage;
-  String? selectedImg;
 
-  selectImage() async {
+  File? Url;
+  var Uploaddocument;
+  addImage() {
     InputElement input = FileUploadInputElement() as InputElement
       ..accept = 'image/*';
     input.click();
-    input.onChange.listen((event) async {
+    input.onChange.listen((event) {
       final file = input.files!.first;
-      FileReader reader = FileReader();
+      final reader = FileReader();
       reader.readAsDataUrl(file);
-      reader.onLoadEnd.listen((event) {
+      reader.onLoadEnd.listen((event) async {
         setState(() {
-          profileImage = file;
+          Url = file;
+          Uploaddocument = reader.result;
+          Logo = "";
         });
-        setState(() {
-          uploadedImage = reader.result;
-          selectedImg = null;
-        });
-        setState(() {
-
-        });
+        imageupload();
       });
     });
-
-    print("Selcetd Image");
-    String downloadUrl =  await uploadImageToStorage(profileImage);
-
-    print(downloadUrl);
-    var doc = await FirebaseFirestore.instance.collection('AlumniDetails').get();
-
-    FirebaseFirestore.instance.collection('AlumniDetails').doc(doc.docs.first.id).update({
-      "logo" : downloadUrl,
-    });
-
   }
+  // used this in Update page too
+  imageupload() async {
+    var snapshot = await FirebaseStorage.instance.ref().child('CollegeLogos').child(
+        "${Url!.name}").putBlob(Url);
+    String downloadUrl = await snapshot.ref.getDownloadURL();
+    setState(() {
+      Logo = downloadUrl;
+    });
+  }
+
+
   String? validateEmail(String? value) {
     const pattern = r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'"
         r'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-'
@@ -222,24 +219,29 @@ class _SettingsTabsState extends State<SettingsTabs> {
                                   child: Column(
                                     children: [
                                       SizedBox(height: size.height * 0.1),
-                                      Logo != ""
+                                      Uploaddocument==null? Logo != ""
                                           ? Image.network(
                                         Logo,
                                         height: height/10.26388,
                                         width: width/21.3333,
                                       )
                                           :  Icon(
-                                        Icons.church,
-                                        color: Colors.white,
+                                        Icons.camera_alt_outlined,
+                                        color: Colors.black,
                                         size: width/29.538,
-                                      ),
-                                      // Icon(
-                                      //   Icons.church,
-                                      //   size: width/7.588,
-                                      // ),
+                                      ) : Image.memory(
+                                          height: height/10.26388,
+                                          width: width/21.3333,
+                                          Uint8List.fromList(
+                                        base64Decode(
+                                          Uploaddocument!.split(',').last,
+                                        ),)),
+
                                       SizedBox(height: height/73.9),
                                       InkWell(
-                                        onTap: selectImage,
+                                        onTap: (){
+                                          addImage();
+                                        },
                                         child: Container(
                                           height: height / 18.6,
                                           width: size.width * 0.1,
@@ -303,7 +305,7 @@ class _SettingsTabsState extends State<SettingsTabs> {
                                                 child: TextFormField(
                                                   autovalidateMode: AutovalidateMode.onUserInteraction,
                                                   inputFormatters: [
-                                                    FilteringTextInputFormatter.allow(RegExp("[a-z,A-Z]")),
+                                                    FilteringTextInputFormatter.allow(RegExp("[a-z,A-Z ]")),
                                                   ],
                                                   controller:
                                                   nameController,
@@ -597,7 +599,7 @@ class _SettingsTabsState extends State<SettingsTabs> {
                                                   controller:
                                                   cityController,
                                                   inputFormatters: [
-                                                    FilteringTextInputFormatter.allow(RegExp("[a-z,A-Z]")),
+                                                    FilteringTextInputFormatter.allow(RegExp("[a-z,A-Z ]")),
                                                   ],
                                                   decoration:
                                                   InputDecoration(
@@ -646,7 +648,7 @@ class _SettingsTabsState extends State<SettingsTabs> {
                                                   controller:
                                                   stateController,
                                                   inputFormatters: [
-                                                    FilteringTextInputFormatter.allow(RegExp("[a-z,A-Z]")),
+                                                    FilteringTextInputFormatter.allow(RegExp("[a-z,A-Z ]")),
                                                   ],
                                                   decoration:
                                                   InputDecoration(
@@ -926,15 +928,12 @@ class _SettingsTabsState extends State<SettingsTabs> {
     );
   }
 
-  Updatedatafunc(){
+  Updatedatafunc() async {
     Size size = MediaQuery.of(context).size;
-    CoolAlert.show(
-        context: context,
-        type: CoolAlertType.success,
-        text: "Updated successfully!",
-        width: size.width * 0.4,
-        backgroundColor: Constants().primaryAppColor.withOpacity(0.8));
-    FirebaseFirestore.instance.collection("AlumniDetails").doc(Constants().docid.toString()).update({
+
+
+    var details1=await FirebaseFirestore.instance.collection("AlumniDetails").get();
+    FirebaseFirestore.instance.collection("AlumniDetails").doc(details1.docs[0].id).update({
       'logo':Logo,
       'name':  nameController.text,
       'phone':phoneController.text,
@@ -953,17 +952,17 @@ class _SettingsTabsState extends State<SettingsTabs> {
 
 
 
-
+    CoolAlert.show(
+        context: context,
+        type: CoolAlertType.success,
+        text: "Updated successfully!",
+        width: size.width * 0.4,
+        backgroundColor: Constants().primaryAppColor.withOpacity(0.8));
 
 
   }
 
 
-  static Future<String> uploadImageToStorage(file) async {
-    print("File Selected");
-    var snapshot = await FirebaseStorage.instance.ref().child('dailyupdates').child("${file.name}").putBlob(file);
-    String downloadUrl = await snapshot.ref.getDownloadURL();
-    return downloadUrl;
-  }
+
 }
 

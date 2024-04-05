@@ -65,7 +65,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
 
   List datalist = [
     "Edit",
-    "View"
+    //"View",
     "Delete",
   ];
 
@@ -124,8 +124,8 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
     super.initState();
   }
 
-  bool filtervalue = false;
-  String filterChageValue = "title";
+  bool filtervalue = true;
+  String filterChageValue = "timestampmain";
   GlobalKey ExportDataKeys = GlobalKey();
   GlobalKey filterDataKey = GlobalKey();
   int pagecount = 0;
@@ -2894,16 +2894,14 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                                   vertical: height / 81.375,
                                                   horizontal: width / 170.75),
                                               child: TextFormField(
-                                                inputFormatters: [
+                                               /* inputFormatters: [
                                                   FilteringTextInputFormatter
                                                       .allow(RegExp(
                                                       r"^[a-zA-Z0-9.]+[a-zA-Z]+"))
 
 
-                                                ],
-
-                                                keyboardType:
-                                                TextInputType.multiline,
+                                                ],*/
+                                                keyboardType: TextInputType.multiline,
                                                 minLines: 1,
                                                 maxLines: 5,
                                                 controller: titleController,
@@ -2958,7 +2956,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                                 controller: descriptionController,
                                                 decoration: InputDecoration(
                                                   border: InputBorder.none,
-                                                  hintText: "Lucky",
+                                                  hintText: "",
                                                   hintStyle: SafeGoogleFont(
                                                     'Nunito',
                                                     fontSize: width / 97.571,
@@ -3040,6 +3038,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                           date: dateController.text,
                                           registeredUsers:
                                           event.registeredUsers,
+                                          timestampmain: event.timestampmain
                                         ),
                                         profileImage,
                                         event.imgUrl ?? "");
@@ -3058,7 +3057,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                         titleController.text = "";
                                         uploadedImage = null;
                                         profileImage = null;
-                                        final snackBar = SnackBar(content: AwesomeSnackbarContent(title: 'Success!', message: 'Edited!!!!!', contentType: ContentType.success,),);
+                                        final snackBar = SnackBar(content: AwesomeSnackbarContent(title: 'Event Edited Successfully!', message: 'Edited!!!!!', contentType: ContentType.success,),);
                                         ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
                                       });
                                       Navigator.pop(context);
@@ -3607,7 +3606,7 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                     EventsFireCrud.deleteRecord(id: events.id);
 
                   //   snakbar
-                    final snackBar = SnackBar(content: AwesomeSnackbarContent(title: 'Success!', message: 'Deleted!!!!!', contentType: ContentType.success,),);
+                    final snackBar = SnackBar(content: AwesomeSnackbarContent(title: 'Event Deleted Successfully !', message: 'Deleted!!!!!', contentType: ContentType.success,),);
                     ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
                   }
                 },
@@ -3616,7 +3615,8 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                   height: height / 18.475,
                   decoration: BoxDecoration(
                       color: item == "Edit"
-                          ? const Color(0xff5B93FF).withOpacity(0.6)
+                          ? const Color(0xff5B93FF).withOpacity(0.6) : item == "View"
+                          ?  Colors.green.withOpacity(0.6)
                           : const Color(0xffE71D36).withOpacity(0.6),
                       borderRadius: BorderRadius.circular(5)),
                   child: Row(

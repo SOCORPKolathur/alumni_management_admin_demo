@@ -454,6 +454,7 @@ class _UserEditFormState extends State<UserEditForm> {
     getCity(value!['state'].toString());
     setState(() {
       firstNamecon.text = value!['Name'].toString();
+      prefixcon.text = value!['prefix'].toString();
       middleNamecon.text = value["middleName"].toString();
       lastNamecon.text = value["lastName"].toString();
       adreesscon.text = value['Address'].toString();
@@ -986,7 +987,7 @@ class _UserEditFormState extends State<UserEditForm> {
       Loading = true;
     });
     print("Craete Funtion Entered+++++++++++++++++++++++++++");
-    String userid = generateRandomString(16);
+
 
     if (Uploaddocument != null) {
       var snapshot = await FirebaseStorage.instance.ref().child('Images').child(
@@ -996,7 +997,7 @@ class _UserEditFormState extends State<UserEditForm> {
         imgUrl = downloadUrl;
       });
       print("Img Url Validate_+++++++++++++++++++++++++++++++++++++++++++++");
-      await FirebaseFirestore.instance.collection("Users").doc(userid).set({
+      await FirebaseFirestore.instance.collection("Users").doc(widget.docid).update({
         "Address": adreesscon.text,
         "Gender": gendercon.text,
         "Name": firstNamecon.text,
@@ -1036,7 +1037,7 @@ class _UserEditFormState extends State<UserEditForm> {
         "timestamp": DateTime
             .now()
             .millisecondsSinceEpoch,
-        "userDocId": userid,
+
         "Active": false,
         "Editted":false,
         "Token": "",
@@ -1051,7 +1052,7 @@ class _UserEditFormState extends State<UserEditForm> {
     }
     else {
       print("Else Fucntion_+++++++++++++++++++++++++++++++++++++++++++++");
-      FirebaseFirestore.instance.collection("Users").doc(userid).set({
+      FirebaseFirestore.instance.collection("Users").doc(widget.docid).update({
         "Address": adreesscon.text,
         "Gender": gendercon.text,
         "Name": firstNamecon.text,
@@ -1097,7 +1098,6 @@ class _UserEditFormState extends State<UserEditForm> {
         "timestamp": DateTime
             .now()
             .millisecondsSinceEpoch,
-        "userDocId": userid,
         "Active": false,
         "Editted":false,
         "Token": "",
@@ -1110,8 +1110,9 @@ class _UserEditFormState extends State<UserEditForm> {
         Useradd = false;
       });
     }
+
     userCreateSuccessPopup();
-    controllersclearfunc();
+
   }
 
   userCreateSuccessPopup() {
@@ -1198,7 +1199,11 @@ class _UserEditFormState extends State<UserEditForm> {
                           ),
                           InkWell(
                             onTap: () {
-                              Navigator.pop(context);
+                              controllersclearfunc();
+                              Navigator.of(context).pop();
+                              widget.updateDisplay(!widget.displayFirstWidget);
+
+
                             },
                             child: Container(
                               height: height / 18.475,
@@ -1507,8 +1512,7 @@ class _UserEditFormState extends State<UserEditForm> {
     print("--------------------------------------------------------");
     if (imgUrl != "") {
       print("If Fucntion+++++++++++++++++++++++++++++++++++++++++++++++++++++");
-      await FirebaseFirestore.instance.collection("Users").doc(
-          userUpdateDocumentID).update({
+      await FirebaseFirestore.instance.collection("Users").doc(userUpdateDocumentID).update({
         "Address": adreesscon.text,
         "Gender": gendercon.text,
         "Name": firstNamecon.text,
@@ -1562,8 +1566,7 @@ class _UserEditFormState extends State<UserEditForm> {
         setState(() {
           imgUrl = downloadUrl;
         });
-        await FirebaseFirestore.instance.collection("Users").doc(
-            userUpdateDocumentID).update({
+        await FirebaseFirestore.instance.collection("Users").doc(userUpdateDocumentID).update({
           "Address": adreesscon.text,
           "Gender": gendercon.text,
           "Name": firstNamecon.text,
@@ -1606,8 +1609,7 @@ class _UserEditFormState extends State<UserEditForm> {
         });
       }
       else {
-        await FirebaseFirestore.instance.collection("Users").doc(
-            userUpdateDocumentID).update({
+        await FirebaseFirestore.instance.collection("Users").doc(userUpdateDocumentID).update({
           "Address": adreesscon.text,
           "Gender": gendercon.text,
           "Name": firstNamecon.text,
@@ -2596,7 +2598,7 @@ class _UserEditFormState extends State<UserEditForm> {
                                                     decoration: BoxDecoration(
                                                       borderRadius: BorderRadius.circular(100),
                                                       color: const Color(0xffDDDEEE),
-                                                      image: Uploaddocument != null
+                                                      image: imgUrl==""? Uploaddocument != null
                                                           ? DecorationImage(
                                                         fit: BoxFit.cover,
                                                         image: MemoryImage(
@@ -2610,6 +2612,9 @@ class _UserEditFormState extends State<UserEditForm> {
                                                           : DecorationImage(
                                                         fit: BoxFit.cover,
                                                         image: AssetImage('assets/avator.png'),
+                                                      ) : DecorationImage(
+                                                        fit: BoxFit.cover,
+                                                        image: NetworkImage(imgUrl),
                                                       ),
                                                     ),
                                                   ),

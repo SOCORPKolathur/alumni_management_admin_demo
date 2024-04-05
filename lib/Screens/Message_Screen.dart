@@ -335,7 +335,7 @@ class _Message_ScreenState extends State<Message_Screen>
                                                     color: Color(0xff030229),
                                                   ),),
                                                   subtitle:
-                                                  KText(text:"${snapshot.data!.docs[index]['class'].toString()} ${snapshot.data!.docs[index]['subjectStream'].toString()} Batch",
+                                                  KText(text:"${snapshot.data!.docs[index]['subjectStream'].toString()} - ${snapshot.data!.docs[index]['yearofpassed'].toString()}",
                                                     style: SafeGoogleFont (
                                                       'Nunito',
                                                       fontSize: width/113.833,
@@ -408,7 +408,7 @@ class _Message_ScreenState extends State<Message_Screen>
                                                   color: Color(0xff030229),
                                                 ),),
                                                 subtitle:
-                                                KText(text:"${snapshot.data!.docs[index]['class'].toString()} ${snapshot.data!.docs[index]['subjectStream'].toString()} Batch",
+                                                KText(text:"${snapshot.data!.docs[index]['subjectStream'].toString()} - ${snapshot.data!.docs[index]['yearofpassed'].toString()}",
                                                   style: SafeGoogleFont (
                                                     'Nunito',
                                                     fontSize: width/113.833,
@@ -1713,7 +1713,7 @@ class _Message_ScreenState extends State<Message_Screen>
         headers: <String, String>{
           'Content-Type': 'application/json',
           'Authorization':
-          'key=AAAAMbpijGg:APA91bGJh2qke8JHGkBaJvJ5-mSnllb0aAIi-lF2YKt9MejKB-m51-SQZJR2u3tYdC9UsOB0ps_G6n29EuZPGFW5xAp4lHQDFWi11TFSDn65VyXYyFY0c-SzXuwk2fE31ADp9MdryFBB',
+          'key=${Constants().notifictionapikey}',
         },
         body: jsonEncode(
           <String, dynamic>{
