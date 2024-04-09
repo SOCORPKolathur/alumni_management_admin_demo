@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         home:
-        FirebaseAuth.instance.currentUser==null?const SigninPage():MyWidget(email: FirebaseAuth.instance.currentUser!.email),
+        FirebaseAuth.instance.currentUser==null?const SigninPage() : MyWidget(email: FirebaseAuth.instance.currentUser!.email),
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,

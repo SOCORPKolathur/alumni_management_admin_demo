@@ -130,7 +130,7 @@ class _SigninPageState extends State<SigninPage> {
                           ),
                         ),
                       ),
-                      Container(
+                   /*   Container(
                         // autogroupzqm5qKF (T1hYR6MrKx3z5s33k2ZqM5)
                         margin: EdgeInsets.fromLTRB(1.39*fem, 0*fem, 0.61*fem, 32.11*fem),
                         width: double.infinity,
@@ -259,7 +259,7 @@ class _SigninPageState extends State<SigninPage> {
                             ),
                           ],
                         ),
-                      ),
+                      ),*/
                       Container(
                         // usernameS81 (10:883)
                         margin: EdgeInsets.fromLTRB(2*fem, 0*fem, 0*fem, 23.35*fem),
@@ -349,7 +349,7 @@ class _SigninPageState extends State<SigninPage> {
                                 obscureText: _showpassword,
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    contentPadding: EdgeInsets.only(bottom: 20),
+                                    contentPadding: EdgeInsets.only(bottom: 17),
                                   suffixIcon: InkWell(
 
                                       onTap:(){
@@ -357,7 +357,7 @@ class _SigninPageState extends State<SigninPage> {
                                           _showpassword=!_showpassword;
                                         });
                                       },
-                                      child: Icon(Icons.remove_red_eye,size: 22,color:Color(0xff030229)))
+                                      child: Icon(_showpassword?Icons.remove_red_eye:Icons.remove_red_eye_outlined,size: 22,color:Color(0xff030229)))
                                 ),
                                 style: SafeGoogleFont (
                                   'Nunito',

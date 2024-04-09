@@ -40,6 +40,7 @@ class JobPostFireCrud {
     required String userName,
     required String UserOccupation,
     required String Batch,
+    required String LastDate,
   }) async {
     String downloadUrl = '';
     if(image != null){
@@ -66,6 +67,7 @@ class JobPostFireCrud {
       views: [],
       registeredUsers: [],
       openings: int.parse(openings.toString()),
+        LastDate:LastDate
 
     );
     event.id = documentReferencer.id;

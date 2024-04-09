@@ -16,10 +16,11 @@ class JobPostModel {
   String? userName;
   String? UserOccupation;
   String? Batch;
+  String? LastDate;
 
   JobPostModel(
       {this.id, this.title,this.date, this.views,this.registeredUsers, this.description, this.imgUrl, this.timestamp, this.location,
-        this.time,this.positions,this.openings,this.quvalification,this.verify,this.userName,this.UserOccupation,this.Batch});
+        this.time,this.positions,this.openings,this.quvalification,this.verify,this.userName,this.UserOccupation,this.Batch,this.LastDate});
 
   JobPostModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -29,6 +30,7 @@ class JobPostModel {
     userName = json['userName'];
     UserOccupation = json['UserOccupation'];
     Batch = json['Batch'];
+    LastDate = json['LastDate'];
     time = json['uploadTime'];
     if (json['views'] != null) {
       views = <String>[];
@@ -58,6 +60,7 @@ class JobPostModel {
     data['title'] = this.title;
     data['date'] = this.date;
     data['Batch'] = this.Batch;
+    data['LastDate'] = this.LastDate;
     if (this.views != null) {
       data['views'] = this.views!.map((v) => v).toList();
     }

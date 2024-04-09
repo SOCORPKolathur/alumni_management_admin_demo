@@ -166,6 +166,12 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
     Size size = MediaQuery.of(context).size;
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    double baseWidth = 1920;
+    double fem = MediaQuery
+        .of(context)
+        .size
+        .width / baseWidth;
+    double ffem = fem * 0.97;
     return Padding(
       padding: EdgeInsets.symmetric(
           vertical: height / 81.375, horizontal: width / 170.75),
@@ -1367,6 +1373,46 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                                         ),
                                                       ),
                                                     ),
+                                                    Container(
+                                                        height: height /
+                                                            21.7,
+                                                        width: width /
+                                                            45.533,
+                                                        margin: EdgeInsets
+                                                            .fromLTRB(
+                                                            0 * fem,
+                                                            0 * fem,
+                                                            14.34 * fem,
+                                                            0 * fem),
+                                                        decoration:
+                                                        BoxDecoration(
+                                                          color: Colors
+                                                              .grey
+                                                              .shade300,
+                                                          borderRadius:
+                                                          BorderRadius
+                                                              .circular(
+                                                              19.5553703308 *
+                                                                  fem),
+                                                          image:
+                                                          DecorationImage(
+                                                            fit: BoxFit
+                                                                .cover,
+                                                            image: NetworkImage(
+                                                                events[i].imgUrl
+                                                                    .toString()),
+                                                          ),
+                                                        ),
+                                                        child: Center(
+                                                            child:events[i].imgUrl
+                                                                .toString() ==
+                                                                ""
+                                                                ? const Icon(
+                                                                Icons
+                                                                    .image)
+                                                                : const Text("")
+                                                        )
+                                                    ),
                                                     SizedBox(
                                                       width: width/9.6,
                                                       height: height/14.78,
@@ -1908,6 +1954,46 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                                                       ),
                                                                     ),
                                                                   ),
+                                                                ),
+                                                                Container(
+                                                                    height: height /
+                                                                        21.7,
+                                                                    width: width /
+                                                                        45.533,
+                                                                    margin: EdgeInsets
+                                                                        .fromLTRB(
+                                                                        0 * fem,
+                                                                        0 * fem,
+                                                                        14.34 * fem,
+                                                                        0 * fem),
+                                                                    decoration:
+                                                                    BoxDecoration(
+                                                                      color: Colors
+                                                                          .grey
+                                                                          .shade300,
+                                                                      borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                          19.5553703308 *
+                                                                              fem),
+                                                                      image:
+                                                                      DecorationImage(
+                                                                        fit: BoxFit
+                                                                            .cover,
+                                                                        image: NetworkImage(
+                                                                            events[i].imgUrl
+                                                                                .toString()),
+                                                                      ),
+                                                                    ),
+                                                                    child: Center(
+                                                                        child:events[i].imgUrl
+                                                                            .toString() ==
+                                                                            ""
+                                                                            ? const Icon(
+                                                                            Icons
+                                                                                .image)
+                                                                            : const Text("")
+                                                                    )
                                                                 ),
                                                                 SizedBox(
                                                                   width: width/9.6,

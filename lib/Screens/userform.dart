@@ -69,6 +69,9 @@ class _UserFormState extends State<UserForm> {
   GlobalKey filterDataKey = GlobalKey();
 
   List<String> departmentDataList = [];
+  List<String> classesDataList = ["Select"];
+  List<String> housesDataList = ["Select"];
+  List<String> shifDataList = ["Select","Morning","Evening"];
   List<String> YearDataList = [];
   List<String> FilterDataList = [];
 
@@ -86,7 +89,7 @@ class _UserFormState extends State<UserForm> {
   TextEditingController emailIDcon = TextEditingController();
   TextEditingController adreesscon = TextEditingController();
   TextEditingController companycon = TextEditingController();
-  TextEditingController Shiftcon = TextEditingController();
+  TextEditingController Shiftcon = TextEditingController(text: "Select");
   TextEditingController appointmentcon = TextEditingController();
   TextEditingController organizationcon = TextEditingController();
   TextEditingController industrycon = TextEditingController();
@@ -100,10 +103,10 @@ class _UserFormState extends State<UserForm> {
   TextEditingController countrycon = TextEditingController(text: "Select Country");
   TextEditingController yearPassedcon = TextEditingController();
   TextEditingController subjectStremdcon = TextEditingController(text: "Select Department");
-  TextEditingController classcon = TextEditingController();
+  TextEditingController classcon = TextEditingController(text: "Select");
   TextEditingController rollnocon = TextEditingController();
   TextEditingController lastvisitcon = TextEditingController();
-  TextEditingController housecon = TextEditingController();
+  TextEditingController housecon = TextEditingController(text: "Select");
   TextEditingController statusmessagecon = TextEditingController();
   TextEditingController competitveexampassedcon = TextEditingController();
   TextEditingController currentacademiccon = TextEditingController();
@@ -539,11 +542,15 @@ class _UserFormState extends State<UserForm> {
     print("Department Data List+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
     setState(() {
       departmentDataList.clear();
+      classesDataList.clear();
+      housesDataList.clear();
       YearDataList.clear();
     });
     setState(() {
       departmentDataList.add('Select Department');
       YearDataList.add('Select Year');
+      classesDataList.add('Select');
+      housesDataList.add('Select');
     });
     var departmentdata = await FirebaseFirestore.instance.collection("Department").orderBy("name").get();
     for (int x = 0; x < departmentdata.docs.length; x++) {
@@ -557,6 +564,22 @@ class _UserFormState extends State<UserForm> {
         YearDataList.add(acdamicYeardata.docs[x]['name'].toString());
       });
     }
+
+
+    var classesYeardata = await FirebaseFirestore.instance.collection("Classes").orderBy("name").get();
+    for (int x = 0; x < classesYeardata.docs.length; x++) {
+      setState(() {
+        classesDataList.add(classesYeardata.docs[x]['name'].toString());
+      });
+    }
+
+    var housesYeardata = await FirebaseFirestore.instance.collection("Houses").orderBy("name").get();
+    for (int x = 0; x < housesYeardata.docs.length; x++) {
+      setState(() {
+        housesDataList.add(housesYeardata.docs[x]['name'].toString());
+      });
+    }
+
     print("department Data List $departmentDataList");
     print("Year Data List $YearDataList");
   }
@@ -2837,48 +2860,77 @@ class _UserFormState extends State<UserForm> {
                                           height: height /
                                               123.1666),
                                       Container(
-                                          height: height /
-                                              15.114,
-                                          width: width / 4.6545,
-                                          decoration: BoxDecoration(
-                                              color: const Color(
-                                                  0xffDDDEEE),
-                                              borderRadius:
-                                              BorderRadius
-                                                  .circular(
-                                                  3)),
+                                        height: height / 15.114,
+                                        width: width / 4.6545,
+                                        decoration: BoxDecoration(
+                                            color: const Color(
+                                                0xffDDDEEE),
+                                            borderRadius:
+                                            BorderRadius.circular(
+                                                3)),
+                                        child:
+                                        DropdownButtonHideUnderline(
                                           child:
-                                          TextFormField(
-                                            autovalidateMode: AutovalidateMode
-                                                .onUserInteraction,
-                                            controller:
-                                            classcon,
-                                            inputFormatters: [
-                                              FilteringTextInputFormatter
-                                                  .allow(
-                                                  RegExp(
-                                                      "[a-zA-Z ]")),
-                                            ],
+                                          DropdownButtonFormField2<
+                                              String>(
+                                            isExpanded: true,
+                                            hint: Text(
+                                              'Select Class',
+                                              style:
+                                              SafeGoogleFont(
+                                                'Nunito',
+                                                fontSize:
+                                                20 * ffem,
+                                              ),
+                                            ),
+                                            items: classesDataList
+                                                .map((String
+                                            item) =>
+                                                DropdownMenuItem<
+                                                    String>(
+                                                  value: item,
+                                                  child: Text(
+                                                    item,
+                                                    style:
+                                                    SafeGoogleFont(
+                                                      'Nunito',
+                                                      fontSize:
+                                                      20 *
+                                                          ffem,
+                                                    ),
+                                                  ),
+                                                )).toList(),
+                                            value:
+                                            classcon.text,
+                                            validator: (value) {
+
+                                            },
+                                            onChanged: (String? value) {
+
+                                                setState(() {
+                                                  classcon.text = value!;
+                                                });
+
+                                            },
+
+                                            buttonStyleData:
+                                            const ButtonStyleData(
+
+
+                                            ),
+                                            menuItemStyleData:
+                                            const MenuItemStyleData(
+
+                                            ),
                                             decoration:
                                             const InputDecoration(
-                                              border: InputBorder
-                                                  .none,
-                                              contentPadding: EdgeInsets
-                                                  .only(
-                                                  bottom:
-                                                  10,
-                                                  top:
-                                                  2,
-                                                  left:
-                                                  10),
-                                            ),
-                                            validator: (
-                                                value) =>
-                                            value!
-                                                .isEmpty
-                                                ? 'Field is required'
-                                                : null,
-                                          ))
+                                                border:
+                                                InputBorder
+                                                    .none),
+                                          ),
+                                        ),
+
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -2987,41 +3039,80 @@ class _UserFormState extends State<UserForm> {
                                           height: height /
                                               123.1666),
                                       Container(
-                                          height: height /
-                                              15.114,
-                                          width: width / 4.6545,
-                                          decoration: BoxDecoration(
-                                              color: const Color(
-                                                  0xffDDDEEE),
-                                              borderRadius:
-                                              BorderRadius
-                                                  .circular(
-                                                  3)),
+                                        height: height / 15.114,
+                                        width: width / 4.6545,
+                                        decoration: BoxDecoration(
+                                            color: const Color(
+                                                0xffDDDEEE),
+                                            borderRadius:
+                                            BorderRadius.circular(
+                                                3)),
+                                        child:
+                                        DropdownButtonHideUnderline(
                                           child:
-                                          TextFormField(
-                                            controller:
-                                            housecon,
-                                            inputFormatters: [
-                                              FilteringTextInputFormatter
-                                                  .allow(
-                                                  RegExp(
-                                                      "[a-zA-Z0-9 ]")),
-                                            ],
+                                          DropdownButtonFormField2<
+                                              String>(
+                                            isExpanded: true,
+                                            hint: Text(
+                                              'Select House',
+                                              style:
+                                              SafeGoogleFont(
+                                                'Nunito',
+                                                fontSize:
+                                                20 * ffem,
+                                              ),
+                                            ),
+                                            items: housesDataList
+                                                .map((String
+                                            item) =>
+                                                DropdownMenuItem<
+                                                    String>(
+                                                  value: item,
+                                                  child: Text(
+                                                    item,
+                                                    style:
+                                                    SafeGoogleFont(
+                                                      'Nunito',
+                                                      fontSize:
+                                                      20 *
+                                                          ffem,
+                                                    ),
+                                                  ),
+                                                )).toList(),
+                                            value:
+                                            housecon.text,
+                                            validator: (value) {
+
+                                            },
+                                            onChanged: (String?
+                                            value) {
+
+                                                setState(() {
+                                                  housecon.text =
+                                                  value!;
+
+                                                });
+
+                                            },
+
+                                            buttonStyleData:
+                                            const ButtonStyleData(
+
+
+                                            ),
+                                            menuItemStyleData:
+                                            const MenuItemStyleData(
+
+                                            ),
                                             decoration:
                                             const InputDecoration(
-                                              border: InputBorder
-                                                  .none,
-                                              contentPadding: EdgeInsets
-                                                  .only(
-                                                  bottom:
-                                                  10,
-                                                  top:
-                                                  2,
-                                                  left:
-                                                  10),
-                                            ),
-                                            //  validator: (value) => value!.isEmpty ? 'Field is required' : null,
-                                          ))
+                                                border:
+                                                InputBorder
+                                                    .none),
+                                          ),
+                                        ),
+
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -3207,54 +3298,75 @@ class _UserFormState extends State<UserForm> {
                                     123.1666),
                             Container(
                               height: height / 15.114,
-                              width: width / 3.0842,
+                              width: width / 4.6545,
                               decoration: BoxDecoration(
                                   color: const Color(
                                       0xffDDDEEE),
                                   borderRadius:
-                                  BorderRadius
-                                      .circular(
+                                  BorderRadius.circular(
                                       3)),
                               child:
-                              TextFormField(
-                                  autovalidateMode: AutovalidateMode
-                                      .onUserInteraction,
-                                  controller: Shiftcon,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter
-                                        .allow(
-                                        RegExp(
-                                            "[a-zA-Z0-9 ]")),
-                                  ],
-                                  maxLength: 25,
-                                  decoration: const InputDecoration(
-                                    border: InputBorder
-                                        .none,
-                                    contentPadding: EdgeInsets
-                                        .only(
-                                        bottom:
-                                        10,
-                                        top:
-                                        2,
-                                        left:
-                                        10),
-                                    counterText:
-                                    "",
+                              DropdownButtonHideUnderline(
+                                child:
+                                DropdownButtonFormField2<
+                                    String>(
+                                  isExpanded: true,
+                                  hint: Text(
+                                    'Select Class',
+                                    style:
+                                    SafeGoogleFont(
+                                      'Nunito',
+                                      fontSize:
+                                      20 * ffem,
+                                    ),
                                   ),
-                                  validator: (
-                                      value) =>
-                                  value!
-                                      .isEmpty
-                                      ? 'Field is required'
-                                      : null,
+                                  items: shifDataList
+                                      .map((String
+                                  item) =>
+                                      DropdownMenuItem<
+                                          String>(
+                                        value: item,
+                                        child: Text(
+                                          item,
+                                          style:
+                                          SafeGoogleFont(
+                                            'Nunito',
+                                            fontSize:
+                                            20 *
+                                                ffem,
+                                          ),
+                                        ),
+                                      )).toList(),
+                                  value:
+                                  Shiftcon.text,
+                                  validator: (value) {
 
-                                  onChanged: (value) {
+                                  },
+                                  onChanged: (String? value) {
+
                                     setState(() {
-                                      shiftValidator =
-                                      false;
+                                      Shiftcon.text = value!;
                                     });
-                                  }
+
+                                  },
+
+                                  buttonStyleData:
+                                  const ButtonStyleData(
+
+
+                                  ),
+                                  menuItemStyleData:
+                                  const MenuItemStyleData(
+
+                                  ),
+                                  decoration:
+                                  const InputDecoration(
+                                      border:
+                                      InputBorder
+                                          .none),
+                                ),
                               ),
+
                             ),
                           ],
                         ),

@@ -1,3 +1,4 @@
+import 'package:alumni_management_admin/ClassesMaster.dart';
 import 'package:alumni_management_admin/Screens/Dashboard.dart';
 import 'package:alumni_management_admin/Screens/Events_Page.dart';
 import 'package:alumni_management_admin/Screens/Job%20Advertsiment.dart';
@@ -10,6 +11,7 @@ import 'package:alumni_management_admin/Screens/faculty.dart';
 import 'package:alumni_management_admin/Screens/screen_gallery.dart';
 import 'package:alumni_management_admin/Screens/usersmanagment.dart';
 import 'package:alumni_management_admin/Screens/website_socialmedia_tab.dart';
+import 'package:alumni_management_admin/houses.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -667,7 +669,7 @@ class _MyWidgetState extends State<MyWidget> {
                           child: AnimatedContainer(
 
                             height:    col2==true
-                                ? 120 : 35,
+                                ? 200 : 35,
 
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
@@ -685,7 +687,7 @@ class _MyWidgetState extends State<MyWidget> {
                                   width:    dawer == 3
                                       ? 200 : 0,
                                   height:   col2==true
-                                      ? 120 : 35,
+                                      ? 200 : 35,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
                                     color:   dawer == 3
@@ -833,6 +835,100 @@ class _MyWidgetState extends State<MyWidget> {
                                                           letterSpacing:
                                                           pagename=="Department" ? 1.5 : 1.5,
                                                           fontSize: pagename=="Department" ? 13.0 : 12.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      InkWell(
+                                        onTap: (){
+                                          setState(() {
+                                            pagename = "Classes";
+                                            pages= ClassesMaster();
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 180,
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: pagename == "Classes"
+                                                ? Colors.white : Colors.transparent,
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.event_note_sharp,size:20,color: pagename=="Classes" ? Constants().primaryAppColor :Colors.white,),
+                                                    Padding(
+                                                      padding:  EdgeInsets.only(left: width/341.5,top: height/130.2),
+                                                      child: KText(
+                                                        text:"Classes",
+                                                        style: GoogleFonts.poppins(
+                                                          fontWeight: pagename=="Classes"
+                                                              ? FontWeight.w500
+                                                              : FontWeight.w600,
+                                                          color:
+                                                          pagename=="Classes" ? Constants().primaryAppColor :Colors.white,
+                                                          letterSpacing:
+                                                          pagename=="Classes" ? 1.5 : 1.5,
+                                                          fontSize: pagename=="Classes" ? 13.0 : 12.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      InkWell(
+                                        onTap: (){
+                                          setState(() {
+                                            pagename = "Houses";
+                                            pages= HousesMaster();
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 180,
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: pagename == "Houses"
+                                                ? Colors.white : Colors.transparent,
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.event_note_sharp,size:20,color: pagename=="Houses" ? Constants().primaryAppColor :Colors.white,),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(left: 4.0),
+                                                      child: KText(
+                                                        text:"Houses",
+                                                        style: GoogleFonts.poppins(
+                                                          fontWeight: pagename=="Houses"
+                                                              ? FontWeight.w500
+                                                              : FontWeight.w600,
+                                                          color:
+                                                          pagename=="Houses" ? Constants().primaryAppColor :Colors.white,
+                                                          letterSpacing:
+                                                          pagename=="Houses" ? 1.5 : 1.5,
+                                                          fontSize: pagename=="Houses" ? 13.0 : 12.0,
                                                         ),
                                                       ),
                                                     ),

@@ -3198,25 +3198,40 @@ class _DashBoardState extends State<DashBoard> {
       alignment: Alignment.topCenter,
       children: [
         jobpost==false? Users_Screen(UserViewed: UserViewed,type: type,) : Job_Posts(1),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: InkWell(
-            onTap: () {
-              setState(() {
-                UserViewed = false;
-                jobpost=false;
-              });
-            },
-            child: Material(
-              borderRadius: BorderRadius.circular(50),
-              elevation: 4,
-              child: Container(
-              width: 40,
-                height:40,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(50)),
-
-
-                child: Center(child: Icon(Icons.close))),
+        SlideInDown(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: InkWell(
+              onTap: () {
+                setState(() {
+                  UserViewed = false;
+                  jobpost=false;
+                });
+              },
+              child: Material(
+                borderRadius: BorderRadius.circular(12),
+                elevation: 4,
+                child: Container(
+                width: 90,
+                  height:30,
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(12),color :Colors.red),
+          
+          
+                  child: Center(child: Row(
+                    children: [
+                      Icon(Icons.close,color: Colors.white,),
+                      SizedBox(width: 15,),
+                      Text("Close",style: SafeGoogleFont(
+              'Nunito',
+              fontSize: 18 * ffem,
+              fontWeight: FontWeight.w400,
+              height: 1.3625 * ffem / fem,
+              color: const Color(
+              0xffffffff),
+              ),)
+                    ],
+                  ))),
+              ),
             ),
           ),
         ),

@@ -34,6 +34,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
   TextEditingController titleController = TextEditingController();
   TextEditingController timeController = TextEditingController();
   TextEditingController locationController = TextEditingController();
+  TextEditingController lastDateController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController quvalificationController = TextEditingController();
   TextEditingController positionsController = TextEditingController();
@@ -894,6 +895,204 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
 
                                             SizedBox(height: height / 65.1),
                                             Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .start,
+                                              children: [
+                                                /*  Column(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                children: [
+                                                  KText(
+                                                    text: "Date *",
+                                                    style: SafeGoogleFont(
+                                                      'Nunito',
+                                                      fontSize: width / 105.571,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: height / 108.5),
+                                                  Material(
+                                                    borderRadius: BorderRadius.circular(3),
+                                                    color: Color(0xffDDDEEE),
+                                                    elevation: 5,
+                                                    child: SizedBox(
+                                                      height: height / 16.02,
+                                                      width: width / 9.106,
+                                                      child: Padding(
+                                                        padding: EdgeInsets.symmetric(
+                                                            vertical: height / 81.375,
+                                                            horizontal: width / 170.75),
+                                                        child: TextFormField(
+                                                          style: SafeGoogleFont(
+                                                            'Nunito',
+                                                            fontSize: width / 105.571,
+                                                          ),
+                                                          readOnly: true,
+                                                          decoration: InputDecoration(
+                                                              border: InputBorder.none),
+                                                          controller: dateController,
+                                                          onTap: () async {
+                                                            DateTime? pickedDate =
+                                                            await showDatePicker(
+                                                                context: context,
+                                                                initialDate:
+                                                                DateTime.now(),
+                                                                firstDate:
+                                                                DateTime(1900),
+                                                                lastDate:
+                                                                DateTime(3000));
+                                                            if (pickedDate != null) {
+                                                              setState(() {
+                                                                dateController.text =
+                                                                    formatter.format(
+                                                                        pickedDate);
+                                                              });
+                                                            }
+                                                          },
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                              SizedBox(width: width / 68.3),
+                                              Column(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                children: [
+                                                  KText(
+                                                    text: "Time *",
+                                                    style: SafeGoogleFont(
+                                                      'Nunito',
+                                                      fontSize: width / 105.571,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: height / 108.5),
+                                                  Material(
+                                                    borderRadius: BorderRadius.circular(3),
+                                                    color: Color(0xffDDDEEE),
+                                                    elevation: 5,
+                                                    child: SizedBox(
+                                                      height: height / 16.02,
+                                                      width: width / 9.106,
+                                                      child: Padding(
+                                                        padding: EdgeInsets.symmetric(
+                                                            vertical: height / 81.375,
+                                                            horizontal: width / 170.75),
+                                                        child: TextFormField(
+                                                          readOnly: true,
+                                                          onTap: () {
+                                                            _selectTime(context);
+                                                          },
+                                                          controller: timeController,
+                                                          decoration: InputDecoration(
+                                                            border: InputBorder.none,
+                                                            hintStyle: SafeGoogleFont(
+                                                              'Nunito',
+                                                              fontSize: width / 105.571,
+                                                            ),
+                                                          ),
+                                                          style: SafeGoogleFont(
+                                                            'Nunito',
+                                                            fontSize: width / 105.571,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                              SizedBox(width: width / 68.3),*/
+
+                                                Column(
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                                  children: [
+                                                    KText(
+                                                      text: "Last Date ",
+                                                      style: SafeGoogleFont(
+                                                        'Nunito',
+                                                        fontSize:
+                                                        width / 105.571,
+                                                        fontWeight:
+                                                        FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                        height: height / 108.5),
+                                                    Material(
+                                                      borderRadius:
+                                                      BorderRadius.circular(
+                                                          3),
+                                                      color: const Color(0xffDDDEEE),
+                                                      elevation: 5,
+                                                      child: SizedBox(
+                                                        height: height / 16.02,
+                                                        width:
+                                                        size.width * 0.17,
+                                                        child: Padding(
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                              vertical:
+                                                              height /
+                                                                  81.375,
+                                                              horizontal:
+                                                              width /
+                                                                  170.75),
+                                                          child: TextFormField(
+                                                            inputFormatters: [
+                                                              FilteringTextInputFormatter
+                                                                  .allow(RegExp(
+                                                                  "[a-zA-Z ]")),
+                                                            ],
+                                                            readOnly: true,
+
+                                                            onTap: () async {
+                                                              DateTime? pickedDate =
+                                                              await Constants().datePicker(context);
+                                                              if (pickedDate != null) {
+                                                                setState(() {
+                                                                  lastDateController.text = formatter.format(pickedDate);
+                                                                });
+                                                              }
+                                                            },
+                                                            style:
+                                                            SafeGoogleFont(
+                                                              'Nunito',
+                                                              fontSize: width /
+                                                                  105.571,
+                                                            ),
+                                                            controller:
+                                                            lastDateController,
+                                                            maxLines: 1,
+                                                            decoration:
+                                                            InputDecoration(
+                                                              isDense: true,
+                                                              border:
+                                                              InputBorder
+                                                                  .none,
+                                                              hintStyle:
+                                                              SafeGoogleFont(
+                                                                'Nunito',
+                                                                fontSize:
+                                                                width /
+                                                                    105.571,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+
+                                              ],
+                                            ),
+
+                                            SizedBox(height: height / 65.1),
+                                            Row(
                                               children: [
                                                 Column(
                                                   crossAxisAlignment:
@@ -1125,6 +1324,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                   userName: "Admin",
                                                   UserOccupation: "Admin",
                                                   Batch: "Admin",
+                                                    LastDate:lastDateController.text
                                                 );
 
                                                 if (response.code == 200) {
@@ -1157,7 +1357,8 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                     backgroundColor: Constants().primaryAppColor.withOpacity(0.8),
                                                   );
                                                 }
-                                              } else {
+                                              }
+                                              else {
                                                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                               }
                                             },
@@ -1421,7 +1622,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                     ),
                                     Container(
                                       color: Colors.white,
-                                      width: width / 4.38857,
+                                      width: width / 9.38857,
                                       height: height / 14.78,
                                       alignment: Alignment.center,
                                       child: Center(
@@ -1432,6 +1633,74 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                           children: [
                                             KText(
                                               text: "Post Name",
+                                              style:
+                                              SafeGoogleFont(
+                                                'Nunito',
+                                                color: const Color(
+                                                    0xff030229),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                              const EdgeInsets
+                                                  .only(
+                                                  left: 8),
+                                              child: InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    filtervalue = !filtervalue;
+                                                    filterChageValue="title";
+                                                  });
+                                                },
+                                                child: Transform
+                                                    .rotate(
+                                                  angle:filterChageValue=="title"&&
+                                                  filtervalue
+                                                      ? 200
+                                                      : 0,
+                                                  child: Opacity(
+                                                    // arrowdown2TvZ (8:2307)
+                                                    opacity: 0.7,
+                                                    child:
+                                                    Container(
+                                                      width: width /
+                                                          153.6,
+                                                      height:
+                                                      height /
+                                                          73.9,
+                                                      child: Image
+                                                          .asset(
+                                                        'assets/images/arrow-down-2.png',
+                                                        width: width /
+                                                            153.6,
+                                                        height:
+                                                        height /
+                                                            73.9,
+                                                          color:filterChageValue=="title"&&filtervalue==true?Colors.green:
+                                                          Colors.transparent
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      color: Colors.white,
+                                      width: width / 7.38857,
+                                      height: height / 14.78,
+                                      alignment: Alignment.center,
+                                      child: Center(
+                                        child: Row(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment
+                                              .center,
+                                          children: [
+                                            KText(
+                                              text: "Title",
                                               style:
                                               SafeGoogleFont(
                                                 'Nunito',
@@ -1889,7 +2158,32 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                 ),
                                                                 SizedBox(
                                                                   width: width /
-                                                                      4.38857,
+                                                                      9.38857,
+                                                                  height:
+                                                                  height /
+                                                                      14.78,
+                                                                  child:
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                        .only(
+                                                                        left:
+                                                                        8),
+                                                                    child:
+                                                                    KText(
+                                                                      text:verifyedData.positions
+                                                                          .toString(),
+                                                                      style:
+                                                                      SafeGoogleFont(
+                                                                        'Nunito',
+                                                                        color:
+                                                                        const Color(0xff030229),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: width /
+                                                                      7.38857,
                                                                   height:
                                                                   height /
                                                                       14.78,
@@ -2033,11 +2327,11 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                   }
                                                   else if(mydate.isEmpty){
                                                     return  ((temp*10)-10+i >= documentlength)? const SizedBox():
-                                                      SizedBox(
+                                                    SizedBox(
                                                         width:
                                                         width / 1.2288,
-                                                        // height: height /
-                                                        //     13.4363,
+                                                        height: height /
+                                                            13.4363,
                                                         child: Padding(
                                                           padding: EdgeInsets
                                                               .only(
@@ -2049,9 +2343,9 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                 width:
                                                                 width /
                                                                     19.2,
-                                                                // height:
-                                                                // height /
-                                                                //     14.78,
+                                                                height:
+                                                                height /
+                                                                    14.78,
                                                                 child:
                                                                 Padding(
                                                                   padding: const EdgeInsets
@@ -2061,7 +2355,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                   child:
                                                                   KText(
                                                                     text:
-                                                                    "${((temp*10)-10+i) + 1}",
+                                                                    "${ temp * i+ 2}",
                                                                     style:
                                                                     SafeGoogleFont(
                                                                       'Nunito',
@@ -2073,10 +2367,35 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                               ),
                                                               SizedBox(
                                                                 width: width /
-                                                                    4.38857,
-                                                                // height:
-                                                                // height /
-                                                                //     14.78,
+                                                                    9.38857,
+                                                                height:
+                                                                height /
+                                                                    14.78,
+                                                                child:
+                                                                Padding(
+                                                                  padding: const EdgeInsets
+                                                                      .only(
+                                                                      left:
+                                                                      8),
+                                                                  child:
+                                                                  KText(
+                                                                    text:verifyedData.positions
+                                                                        .toString(),
+                                                                    style:
+                                                                    SafeGoogleFont(
+                                                                      'Nunito',
+                                                                      color:
+                                                                      const Color(0xff030229),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                width: width /
+                                                                    7.38857,
+                                                                height:
+                                                                height /
+                                                                    14.78,
                                                                 child:
                                                                 Padding(
                                                                   padding: const EdgeInsets
@@ -2100,9 +2419,9 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                               SizedBox(
                                                                 width: width /
                                                                     4.38857,
-                                                                // height:
-                                                                // height /
-                                                                //     14.78,
+                                                                height:
+                                                                height /
+                                                                    14.78,
                                                                 child:
                                                                 Padding(
                                                                   padding: const EdgeInsets
@@ -2127,9 +2446,9 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                 width:
                                                                 width /
                                                                     9.6,
-                                                                // height:
-                                                                // height /
-                                                                //     14.78,
+                                                                height:
+                                                                height /
+                                                                    14.78,
                                                                 child:
                                                                 Padding(
                                                                   padding: const EdgeInsets
@@ -2154,9 +2473,9 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                 width:
                                                                 width /
                                                                     16.0,
-                                                                // height:
-                                                                // height /
-                                                                //     14.78,
+                                                                height:
+                                                                height /
+                                                                    14.78,
                                                                 child:
                                                                 Padding(
                                                                   padding: const EdgeInsets
@@ -2177,12 +2496,11 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                   ),
                                                                 ),
                                                               ),
-                                                              Container(
-                                                                // color: Colors.green,
+                                                              SizedBox(
                                                                   width: width /
-                                                                      20.6,
+                                                                      17.6,
                                                                   height: height /
-                                                                      25.78,
+                                                                      14.78,
                                                                   child: verifyedData.verify ==
                                                                       true
                                                                       ? const Icon(
@@ -2377,7 +2695,33 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                             ),
                                                             SizedBox(
                                                               width: width /
-                                                                  4.38857,
+                                                                  9.38857,
+                                                              height:
+                                                              height /
+                                                                  14.78,
+                                                              child:
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .only(
+                                                                    left:
+                                                                    8),
+                                                                child:
+                                                                KText(
+                                                                  text: NotverifyedData
+                                                                      .positions
+                                                                      .toString(),
+                                                                  style:
+                                                                  SafeGoogleFont(
+                                                                    'Nunito',
+                                                                    color: const Color(
+                                                                        0xff030229),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              width: width /
+                                                                  7.38857,
                                                               height:
                                                               height /
                                                                   14.78,
@@ -2545,7 +2889,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                 child:
                                                                 KText(
                                                                   text:
-                                                                  "${ i + 2}",
+                                                                  "${i + 1}",
                                                                   style:
                                                                   SafeGoogleFont(
                                                                     'Nunito',
@@ -2557,7 +2901,33 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                             ),
                                                             SizedBox(
                                                               width: width /
-                                                                  4.38857,
+                                                                  9.38857,
+                                                              height:
+                                                              height /
+                                                                  14.78,
+                                                              child:
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .only(
+                                                                    left:
+                                                                    8),
+                                                                child:
+                                                                KText(
+                                                                  text: NotverifyedData
+                                                                      .positions
+                                                                      .toString(),
+                                                                  style:
+                                                                  SafeGoogleFont(
+                                                                    'Nunito',
+                                                                    color: const Color(
+                                                                        0xff030229),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              width: width /
+                                                                  7.38857,
                                                               height:
                                                               height /
                                                                   14.78,
@@ -3003,6 +3373,27 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                       SizedBox(width: width / 68.3),
                                       KText(
                                         text: jobPost.location!,
+                                        style: SafeGoogleFont('Poppins',
+                                            fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Last Date",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      const Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: jobPost.LastDate!,
                                         style: SafeGoogleFont('Poppins',
                                             fontSize: width / 105.571),
                                       )
@@ -3597,7 +3988,8 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                   controller:
                                                       positionsController,
                                                   decoration: InputDecoration(
-                                                    border: InputBorder.none,
+                                                    isDense: true,
+                                                       border: InputBorder.none,
 
                                                     hintStyle: SafeGoogleFont(
                                                       'Nunito',
@@ -3653,6 +4045,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                     controller:
                                                         quvalificationController,
                                                     decoration: InputDecoration(
+                                                      isDense: true,
                                                       border: InputBorder.none,
                                                       hintStyle: SafeGoogleFont(
                                                         'Nunito',
@@ -3713,6 +4106,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                   controller:
                                                   locationController,
                                                   decoration: InputDecoration(
+                                                    isDense: true,
                                                     border: InputBorder.none,
 
                                                     hintStyle: SafeGoogleFont(
@@ -3769,6 +4163,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                     controller:
                                                     noOfOpeningController,
                                                     decoration: InputDecoration(
+                                                      isDense: true,
                                                       border: InputBorder.none,
                                                       hintStyle: SafeGoogleFont(
                                                         'Nunito',
@@ -3929,6 +4324,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                   maxLines: 5,
                                                   controller: titleController,
                                                   decoration: InputDecoration(
+                                                    isDense: true,
                                                     border: InputBorder.none,
                                                     hintStyle: SafeGoogleFont(
                                                       'Nunito',
@@ -3979,6 +4375,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                   controller:
                                                       descriptionController,
                                                   decoration: InputDecoration(
+                                                    isDense: true,
                                                     border: InputBorder.none,
                                                     hintText: "",
                                                     hintStyle: SafeGoogleFont(
