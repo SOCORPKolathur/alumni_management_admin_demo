@@ -4462,6 +4462,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                 Batch: 'Admin',
                                                 UserOccupation: 'Admin',
                                                 quvalification: quvalificationController.text,
+
                                                 positions: positionsController.text,
                                               ),
                                               profileImage,
