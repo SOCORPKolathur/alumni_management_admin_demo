@@ -156,7 +156,7 @@ class _UserFormState extends State<UserForm> {
   }
 
 
- userdatecreatefunc() async {
+  userdatecreatefunc() async {
 
     String userid = generateRandomString(16);
 
@@ -2733,83 +2733,34 @@ class _UserFormState extends State<UserForm> {
                                             borderRadius:
                                             BorderRadius.circular(
                                                 3)),
-                                        child:
-                                        DropdownButtonHideUnderline(
-                                          child:
-                                          DropdownButtonFormField2<
-                                              String>(
-                                            isExpanded: true,
-                                            hint: Text(
-                                              'Select Department',
-                                              style:
-                                              SafeGoogleFont(
-                                                'Nunito',
-                                                fontSize:
-                                                20 * ffem,
-                                              ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(left:12.0),
+                                          child: DropdownSearch <String>(
+                                            autoValidateMode: AutovalidateMode.onUserInteraction,
+                                            selectedItem: subjectStremdcon.text,
+                                            popupProps: const PopupProps.menu(
+                                              showSearchBox: true,
                                             ),
-                                            items: departmentDataList
-                                                .map((String
-                                            item) =>
-                                                DropdownMenuItem<
-                                                    String>(
-                                                  value: item,
-                                                  child: Text(
-                                                    item,
-                                                    style:
-                                                    SafeGoogleFont(
-                                                      'Nunito',
-                                                      fontSize:
-                                                      20 *
-                                                          ffem,
-                                                    ),
-                                                  ),
-                                                )).toList(),
-                                            value:
-                                            subjectStremdcon.text,
-                                            validator: (value) {
-                                              if (value == 'Select Department') {
-                                                setState(() {
-                                                  dropdownDepartmentValidator = true;
-                                                });
-                                              }
-                                              return null;
-                                            },
+                                            dropdownDecoratorProps: DropDownDecoratorProps(
+                                              baseStyle:SafeGoogleFont( 'Nunito', fontSize:  20 * ffem,),
+                                              textAlignVertical: TextAlignVertical.center,
+                                              dropdownSearchDecoration: const InputDecoration(
+                                                  border: InputBorder.none),
+                                            ),
+                                            items: departmentDataList,
+
                                             onChanged: (String?
                                             value) {
-                                              if (value ==
-                                                  'Select Department') {
-                                                setState(() {
-                                                  dropdownDepartmentValidator =
-                                                  true;
-                                                });
-                                              }
-                                              else {
-                                                setState(() {
-                                                  subjectStremdcon.text =
-                                                  value!;
-                                                  dropdownDepartmentValidator =
-                                                  false;
-                                                });
-                                              }
+
+                                              setState(() {
+                                                subjectStremdcon.text = value!;
+
+                                              });
+
                                             },
-
-                                            buttonStyleData:
-                                            const ButtonStyleData(
-
-
-                                            ),
-                                            menuItemStyleData:
-                                            const MenuItemStyleData(
-
-                                            ),
-                                            decoration:
-                                            const InputDecoration(
-                                                border:
-                                                InputBorder
-                                                    .none),
                                           ),
-                                        ),
+                                        )
+
 
                                       ),
                                       dropdownDepartmentValidator == true && subjectStremdcon.text ==
@@ -2868,67 +2819,34 @@ class _UserFormState extends State<UserForm> {
                                             borderRadius:
                                             BorderRadius.circular(
                                                 3)),
-                                        child:
-                                        DropdownButtonHideUnderline(
-                                          child:
-                                          DropdownButtonFormField2<
-                                              String>(
-                                            isExpanded: true,
-                                            hint: Text(
-                                              'Select Class',
-                                              style:
-                                              SafeGoogleFont(
-                                                'Nunito',
-                                                fontSize:
-                                                20 * ffem,
-                                              ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(left:12.0),
+                                          child: DropdownSearch <String>(
+                                            autoValidateMode: AutovalidateMode.onUserInteraction,
+                                            selectedItem: classcon.text,
+                                            popupProps: const PopupProps.menu(
+                                              showSearchBox: true,
                                             ),
-                                            items: classesDataList
-                                                .map((String
-                                            item) =>
-                                                DropdownMenuItem<
-                                                    String>(
-                                                  value: item,
-                                                  child: Text(
-                                                    item,
-                                                    style:
-                                                    SafeGoogleFont(
-                                                      'Nunito',
-                                                      fontSize:
-                                                      20 *
-                                                          ffem,
-                                                    ),
-                                                  ),
-                                                )).toList(),
-                                            value:
-                                            classcon.text,
-                                            validator: (value) {
+                                            dropdownDecoratorProps: DropDownDecoratorProps(
+                                              baseStyle:SafeGoogleFont( 'Nunito', fontSize:  20 * ffem,),
+                                              textAlignVertical: TextAlignVertical.center,
+                                              dropdownSearchDecoration: const InputDecoration(
+                                                  border: InputBorder.none),
+                                            ),
+                                            items: classesDataList,
 
-                                            },
-                                            onChanged: (String? value) {
+                                            onChanged: (String?
+                                            value) {
 
                                                 setState(() {
                                                   classcon.text = value!;
+
                                                 });
 
                                             },
-
-                                            buttonStyleData:
-                                            const ButtonStyleData(
-
-
-                                            ),
-                                            menuItemStyleData:
-                                            const MenuItemStyleData(
-
-                                            ),
-                                            decoration:
-                                            const InputDecoration(
-                                                border:
-                                                InputBorder
-                                                    .none),
                                           ),
-                                        ),
+                                        )
+
 
                                       ),
                                     ],
@@ -3048,69 +2966,33 @@ class _UserFormState extends State<UserForm> {
                                             BorderRadius.circular(
                                                 3)),
                                         child:
-                                        DropdownButtonHideUnderline(
-                                          child:
-                                          DropdownButtonFormField2<
-                                              String>(
-                                            isExpanded: true,
-                                            hint: Text(
-                                              'Select House',
-                                              style:
-                                              SafeGoogleFont(
-                                                'Nunito',
-                                                fontSize:
-                                                20 * ffem,
-                                              ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(left:12.0),
+                                          child: DropdownSearch <String>(
+                                            autoValidateMode: AutovalidateMode.onUserInteraction,
+                                            selectedItem: housecon.text,
+                                            popupProps: const PopupProps.menu(
+                                              showSearchBox: true,
                                             ),
-                                            items: housesDataList
-                                                .map((String
-                                            item) =>
-                                                DropdownMenuItem<
-                                                    String>(
-                                                  value: item,
-                                                  child: Text(
-                                                    item,
-                                                    style:
-                                                    SafeGoogleFont(
-                                                      'Nunito',
-                                                      fontSize:
-                                                      20 *
-                                                          ffem,
-                                                    ),
-                                                  ),
-                                                )).toList(),
-                                            value:
-                                            housecon.text,
-                                            validator: (value) {
+                                            dropdownDecoratorProps: DropDownDecoratorProps(
+                                              baseStyle:SafeGoogleFont( 'Nunito', fontSize:  20 * ffem,),
+                                              textAlignVertical: TextAlignVertical.center,
+                                              dropdownSearchDecoration: const InputDecoration(
+                                                  border: InputBorder.none),
+                                            ),
+                                            items: housesDataList,
 
-                                            },
                                             onChanged: (String?
                                             value) {
 
-                                                setState(() {
-                                                  housecon.text =
-                                                  value!;
+                                              setState(() {
+                                                housecon.text = value!;
 
-                                                });
+                                              });
 
                                             },
-
-                                            buttonStyleData:
-                                            const ButtonStyleData(
-
-
-                                            ),
-                                            menuItemStyleData:
-                                            const MenuItemStyleData(
-
-                                            ),
-                                            decoration:
-                                            const InputDecoration(
-                                                border:
-                                                InputBorder
-                                                    .none),
                                           ),
-                                        ),
+                                        )
 
                                       ),
                                     ],
@@ -3305,67 +3187,33 @@ class _UserFormState extends State<UserForm> {
                                   borderRadius:
                                   BorderRadius.circular(
                                       3)),
-                              child:
-                              DropdownButtonHideUnderline(
-                                child:
-                                DropdownButtonFormField2<
-                                    String>(
-                                  isExpanded: true,
-                                  hint: Text(
-                                    'Select Class',
-                                    style:
-                                    SafeGoogleFont(
-                                      'Nunito',
-                                      fontSize:
-                                      20 * ffem,
-                                    ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(left:12.0),
+                                child: DropdownSearch <String>(
+                                  autoValidateMode: AutovalidateMode.onUserInteraction,
+                                  selectedItem: Shiftcon.text,
+                                  popupProps: const PopupProps.menu(
+                                    showSearchBox: true,
                                   ),
-                                  items: shifDataList
-                                      .map((String
-                                  item) =>
-                                      DropdownMenuItem<
-                                          String>(
-                                        value: item,
-                                        child: Text(
-                                          item,
-                                          style:
-                                          SafeGoogleFont(
-                                            'Nunito',
-                                            fontSize:
-                                            20 *
-                                                ffem,
-                                          ),
-                                        ),
-                                      )).toList(),
-                                  value:
-                                  Shiftcon.text,
-                                  validator: (value) {
+                                  dropdownDecoratorProps: DropDownDecoratorProps(
+                                    baseStyle:SafeGoogleFont( 'Nunito', fontSize:  20 * ffem,),
+                                    textAlignVertical: TextAlignVertical.center,
+                                    dropdownSearchDecoration: const InputDecoration(
+                                        border: InputBorder.none),
+                                  ),
+                                  items: shifDataList,
 
-                                  },
-                                  onChanged: (String? value) {
+                                  onChanged: (String?
+                                  value) {
 
                                     setState(() {
                                       Shiftcon.text = value!;
+
                                     });
 
                                   },
-
-                                  buttonStyleData:
-                                  const ButtonStyleData(
-
-
-                                  ),
-                                  menuItemStyleData:
-                                  const MenuItemStyleData(
-
-                                  ),
-                                  decoration:
-                                  const InputDecoration(
-                                      border:
-                                      InputBorder
-                                          .none),
                                 ),
-                              ),
+                              )
 
                             ),
                           ],

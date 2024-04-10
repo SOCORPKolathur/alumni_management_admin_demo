@@ -4033,17 +4033,14 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                           width / 170.75),
                                                   child: TextFormField(
                                                     inputFormatters: [
-                                                      FilteringTextInputFormatter
-                                                          .allow(RegExp(
-                                                              "[a-zA-Z ]")),
+                                                      FilteringTextInputFormatter.allow(RegExp("[a-zA-Z ]")),
                                                     ],
                                                     style: SafeGoogleFont(
                                                       'Nunito',
                                                       fontSize: width / 105.571,
                                                     ),
                                                     minLines: 1,
-                                                    controller:
-                                                        quvalificationController,
+                                                    controller: quvalificationController,
                                                     decoration: InputDecoration(
                                                       isDense: true,
                                                       border: InputBorder.none,
@@ -4464,7 +4461,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                 userName: 'Admin',
                                                 Batch: 'Admin',
                                                 UserOccupation: 'Admin',
-                                                quvalification: 'Admin',
+                                                quvalification: quvalificationController.text,
                                                 positions: positionsController.text,
                                               ),
                                               profileImage,
