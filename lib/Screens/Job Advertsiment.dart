@@ -1007,6 +1007,7 @@ class _Job_AdsState extends State<Job_Ads> with TickerProviderStateMixin {
                                                           descriptionController,
                                                           decoration:
                                                           InputDecoration(
+                                                            isDense: true,
                                                             border:
                                                             InputBorder
                                                                 .none,
@@ -3550,6 +3551,7 @@ class _Job_AdsState extends State<Job_Ads> with TickerProviderStateMixin {
                                                   controller:
                                                   positionsController,
                                                   decoration: InputDecoration(
+                                                    isDense: true,
                                                     border: InputBorder.none,
 
                                                     hintStyle: SafeGoogleFont(
@@ -3606,6 +3608,7 @@ class _Job_AdsState extends State<Job_Ads> with TickerProviderStateMixin {
                                                     controller:
                                                     quvalificationController,
                                                     decoration: InputDecoration(
+                                                      isDense: true,
                                                       border: InputBorder.none,
                                                       hintStyle: SafeGoogleFont(
                                                         'Nunito',
@@ -3666,6 +3669,7 @@ class _Job_AdsState extends State<Job_Ads> with TickerProviderStateMixin {
                                                   controller:
                                                   locationController,
                                                   decoration: InputDecoration(
+                                                    isDense: true,
                                                     border: InputBorder.none,
 
                                                     hintStyle: SafeGoogleFont(
@@ -3722,6 +3726,7 @@ class _Job_AdsState extends State<Job_Ads> with TickerProviderStateMixin {
                                                     controller:
                                                     noOfOpeningController,
                                                     decoration: InputDecoration(
+                                                      isDense: true,
                                                       border: InputBorder.none,
                                                       hintStyle: SafeGoogleFont(
                                                         'Nunito',
@@ -3882,6 +3887,7 @@ class _Job_AdsState extends State<Job_Ads> with TickerProviderStateMixin {
                                                   maxLines: 5,
                                                   controller: titleController,
                                                   decoration: InputDecoration(
+                                                    isDense: true,
                                                     border: InputBorder.none,
                                                     hintStyle: SafeGoogleFont(
                                                       'Nunito',
@@ -3932,6 +3938,7 @@ class _Job_AdsState extends State<Job_Ads> with TickerProviderStateMixin {
                                                   controller:
                                                   descriptionController,
                                                   decoration: InputDecoration(
+                                                    isDense: true,
                                                     border: InputBorder.none,
                                                     hintText: "",
                                                     hintStyle: SafeGoogleFont(
@@ -4346,6 +4353,7 @@ class _Job_AdsState extends State<Job_Ads> with TickerProviderStateMixin {
                                   readOnly: true,
                                   controller:Date1Controller,
                                   decoration: InputDecoration(
+                                    isDense: true,
                                     hintStyle: SafeGoogleFont('Nunito',
                                         color: const Color(0xff00A99D)),
                                     border: InputBorder.none,
@@ -4399,6 +4407,7 @@ class _Job_AdsState extends State<Job_Ads> with TickerProviderStateMixin {
                                     readOnly: true,
                                     controller:Date2Controller,
                                     decoration: InputDecoration(
+                                      isDense: true,
                                       hintStyle: SafeGoogleFont('Nunito',
                                           color: const Color(0xff00A99D)),
 

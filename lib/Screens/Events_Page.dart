@@ -1456,38 +1456,43 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                                         ),
                                                       ),
                                                     ),
-                                                    SizedBox(
-                                                      width: width/9.6,
-                                                      height: height/14.78,
-                                                      child: Row(
-                                                        crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                        children: [
-                                                          Padding(
-                                                            padding:
-                                                             EdgeInsets
-                                                                .only(left: width/192),
-                                                            child: KText(
-                                                              text: events[i]
-                                                                  .registeredUsers!
-                                                                  .length
-                                                                  .toString(),
-                                                              style: SafeGoogleFont(
-                                                                'Nunito',
-                                                                color: const Color(
-                                                                    0xff030229),
+                                                    InkWell(
+                                                      onTap: (){
+                                                        viewregisteredusers(events[i].registeredUsers!);
+                                                      },
+                                                      child: SizedBox(
+                                                        width: width/9.6,
+                                                        height: height/14.78,
+                                                        child: Row(
+                                                          crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                          children: [
+                                                            Padding(
+                                                              padding:
+                                                               EdgeInsets
+                                                                  .only(left: width/192),
+                                                              child: KText(
+                                                                text: events[i]
+                                                                    .registeredUsers!
+                                                                    .length
+                                                                    .toString(),
+                                                                style: SafeGoogleFont(
+                                                                  'Nunito',
+                                                                  color: const Color(
+                                                                      0xff030229),
+                                                                ),
                                                               ),
                                                             ),
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                             EdgeInsets
-                                                                .only(left: width/192),
-                                                            child:
-                                                            const Icon(Icons.person),
-                                                          )
-                                                        ],
+                                                            Padding(
+                                                              padding:
+                                                               EdgeInsets
+                                                                  .only(left: width/192),
+                                                              child:
+                                                              const Icon(Icons.person),
+                                                            )
+                                                          ],
+                                                        ),
                                                       ),
                                                     ),
                                                     SizedBox(
@@ -2038,38 +2043,43 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
                                                                   ),
                                                                 ),
 
-                                                                Container(
-                                                                  // color: Colors.green,
-                                                                  // width: width/9.6,
-                                                                  width: 140,
-                                                                  // height: height/20.78,
-                                                                  child: Row(
-                                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                                    children: [
-                                                                      Padding(
-                                                                        padding:
-                                                                             EdgeInsets
-                                                                                .only(left: width/200),
-                                                                        child: KText(
-                                                                          text: event
-                                                                              .registeredUsers!
-                                                                              .length
-                                                                              .toString(),
-                                                                          style: SafeGoogleFont(
-                                                                            'Nunito',
-                                                                            color: const Color(
-                                                                                0xff030229),
+                                                                InkWell(
+                                                                  onTap: (){
+                                                                    viewregisteredusers(events[i].registeredUsers!);
+                                                                  },
+                                                                  child: Container(
+                                                                    // color: Colors.green,
+                                                                    // width: width/9.6,
+                                                                    width: 140,
+                                                                    // height: height/20.78,
+                                                                    child: Row(
+                                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding:
+                                                                               EdgeInsets
+                                                                                  .only(left: width/200),
+                                                                          child: KText(
+                                                                            text: event
+                                                                                .registeredUsers!
+                                                                                .length
+                                                                                .toString(),
+                                                                            style: SafeGoogleFont(
+                                                                              'Nunito',
+                                                                              color: const Color(
+                                                                                  0xff030229),
+                                                                            ),
                                                                           ),
                                                                         ),
-                                                                      ),
-                                                                      Padding(
-                                                                        padding:
-                                                                             EdgeInsets
-                                                                                .only(left: width/192),
-                                                                        child:
-                                                                            const Icon(Icons.person),
-                                                                      )
-                                                                    ],
+                                                                        Padding(
+                                                                          padding:
+                                                                               EdgeInsets
+                                                                                  .only(left: width/192),
+                                                                          child:
+                                                                              const Icon(Icons.person),
+                                                                        )
+                                                                      ],
+                                                                    ),
                                                                   ),
                                                                 ),
 
@@ -3949,5 +3959,200 @@ class _EventsTabState extends State<EventsTab> with SingleTickerProviderStateMix
           .toList(),
     );
   }
+  viewregisteredusers(List<String> userdocid) async {
+    Size size = MediaQuery.of(context).size;
+    double height = size.height;
+    double width = size.width;
 
+
+
+
+    return showDialog(
+      context: context,
+      builder: (ctx) {
+
+
+        return AlertDialog(
+          backgroundColor: Colors.transparent,
+          content: Container(
+            width: size.width * 0.5,
+            margin: EdgeInsets.symmetric(horizontal: width / 68.3, vertical: height / 32.55),
+            decoration: BoxDecoration(
+              color: Constants().primaryAppColor,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  offset: Offset(1, 2),
+                  blurRadius: 3,
+                ),
+              ],
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: size.height * 0.1,
+                  width: double.infinity,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width / 68.3, vertical: height / 81.375),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Register Users List",
+                          style: SafeGoogleFont(
+                            'Nunito',
+                            fontSize: 22,
+                            fontWeight: FontWeight.w700,
+
+                            color:  Colors.white,
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            height: height / 16.275,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  offset: Offset(1, 2),
+                                  blurRadius: 3,
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: width / 227.66),
+                              child: Center(
+                                child: KText(
+                                  text: "CLOSE",
+                                  style: SafeGoogleFont(
+                                    'Nunito',
+                                    fontSize: 20 ,
+                                    fontWeight: FontWeight.w700,
+                                    color: const Color(0xff030229),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    height: 500,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        bottomRight: Radius.circular(10),
+                        bottomLeft: Radius.circular(10),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Container(
+                                width:200,
+                                child: Text(
+                                  "Name",
+                                  style: SafeGoogleFont(
+                                    'Nunito',
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+
+                                    color:  Colors.black,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                width:200,
+                                child: Text(
+                                  "Phone",
+                                  style: SafeGoogleFont(
+                                    'Nunito',
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+
+                                    color:  Colors.black,
+                                  ),
+                                ),
+                              ),
+
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Divider(),
+                        ),
+                        StreamBuilder(
+                          stream: cf.FirebaseFirestore.instance.collection("Users").orderBy("timestamp",descending: true).snapshots(),
+                          builder: (ctx,snapshots){
+                            return Expanded(
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                  itemCount: snapshots.data!.docs.length,
+                                  itemBuilder: (ctx,index){
+                                return userdocid.contains(snapshots.data!.docs[index].id) ?
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width:200,
+                                        child: Text(
+                                          snapshots.data!.docs[index]["Name"],
+                                          style: SafeGoogleFont(
+                                            'Nunito',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+
+                                            color:  Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        width:200,
+                                        child: Text(
+                                          snapshots.data!.docs[index]["Phone"],
+                                          style: SafeGoogleFont(
+                                            'Nunito',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+
+                                            color:  Colors.black,
+                                          ),
+                                        ),
+                                      ),
+
+                                    ],
+                                  ),
+                                ) : Container();
+                              }),
+                            );
+                          },
+                        ),
+                      ],
+                    )
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }

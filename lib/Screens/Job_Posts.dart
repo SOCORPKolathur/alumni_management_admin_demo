@@ -14,6 +14,8 @@ import 'package:cool_alert/cool_alert.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_holo_date_picker/date_picker.dart';
+import 'package:flutter_holo_date_picker/i18n/date_picker_i18n.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pdf/pdf.dart';
 import 'package:intl/intl.dart';
@@ -1050,8 +1052,14 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                             readOnly: true,
 
                                                             onTap: () async {
-                                                              DateTime? pickedDate =
-                                                              await Constants().datePicker(context);
+                                                              DateTime? pickedDate = await DatePicker.showSimpleDatePicker(context,
+                                                                initialDate: DateTime.now(),
+                                                                firstDate: DateTime.now(),
+                                                                lastDate: DateTime(2060),
+                                                                dateFormat: "dd-MM-yyyy",
+                                                                locale: DateTimePickerLocale.en_us,
+                                                                looping: true,
+                                                              );
                                                               if (pickedDate != null) {
                                                                 setState(() {
                                                                   lastDateController.text = formatter.format(pickedDate);
@@ -1902,7 +1910,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                               .center,
                                           children: [
                                             KText(
-                                              text: "Time",
+                                              text: "Last Date",
                                               style:
                                               SafeGoogleFont(
                                                 'Nunito',
@@ -1920,12 +1928,12 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                   setState(() {
                                                     filtervalue =
                                                     !filtervalue;
-                                                    filterChageValue="uploadTime";
+                                                    filterChageValue="LastDate";
                                                   });
                                                 },
                                                 child: Transform
                                                     .rotate(
-                                                  angle:filterChageValue=="uploadTime"&&
+                                                  angle:filterChageValue=="LastDate"&&
                                                   filtervalue
                                                       ? 200
                                                       : 0,
@@ -2276,7 +2284,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                     child:
                                                                     KText(
                                                                       text: verifyedData
-                                                                          .time
+                                                                          .LastDate
                                                                           .toString(),
                                                                       style:
                                                                       SafeGoogleFont(
@@ -2485,7 +2493,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                   child:
                                                                   KText(
                                                                     text: verifyedData
-                                                                        .time
+                                                                        .LastDate
                                                                         .toString(),
                                                                     style:
                                                                     SafeGoogleFont(
@@ -2812,7 +2820,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                 child:
                                                                 KText(
                                                                   text: NotverifyedData
-                                                                      .time
+                                                                      .LastDate
                                                                       .toString(),
                                                                   style:
                                                                   SafeGoogleFont(
@@ -3018,7 +3026,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                 child:
                                                                 KText(
                                                                   text: NotverifyedData
-                                                                      .time
+                                                                      .LastDate
                                                                       .toString(),
                                                                   style:
                                                                   SafeGoogleFont(

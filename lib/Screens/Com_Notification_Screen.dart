@@ -873,7 +873,18 @@ class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
                                                         fontWeight: FontWeight.w600,
                                                       ),
                                                     ),
-                                                  )
+                                                  ),
+                                                  SizedBox(
+                                                    width: width/7.68,
+                                                    child: KText(
+                                                      text: "Actions",
+                                                      style: SafeGoogleFont(
+                                                        'Nunito',
+                                                        fontSize: width / 105.07,
+                                                        fontWeight: FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ],
                                               ),
                                             ),
@@ -977,6 +988,41 @@ class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
                                                                   width / 105.07,
                                                               fontWeight:
                                                                   FontWeight.w600,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        InkWell(
+                                                          onTap: (){
+                                                            FirebaseFirestore.instance.collection('Notification').doc(notifications[i].id).delete();
+                                                            ScaffoldMessenger.of(context)
+                                                                .showSnackBar(snackBar2);
+                                                          },
+                                                          child: Container(
+                                                            height: height / 16.475,
+                                                            decoration: BoxDecoration(
+                                                                color: const Color(0xffE71D36).withOpacity(0.6),
+                                                                borderRadius: BorderRadius.circular(5)),
+                                                            child: Row(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              children: [
+                                                               const Icon(
+                                                                  Icons.delete,
+                                                                  color: Colors.white,
+                                                                  size: 18,
+                                                                ),
+                                                                Padding(
+                                                                  padding: const EdgeInsets.only(left: 5),
+                                                                  child: Text(
+                                                                    "Delete",
+                                                                    style: const TextStyle(
+                                                                      fontSize: 13,
+                                                                      fontWeight: FontWeight.bold,
+                                                                      color: Colors.white,
+                                                                    ),
+                                                                    overflow: TextOverflow.ellipsis,
+                                                                  ),
+                                                                ),
+                                                              ],
                                                             ),
                                                           ),
                                                         ),
@@ -1237,6 +1283,37 @@ class _Com_Notification_ScreenState extends State<Com_Notification_Screen> {
             const Spacer(),
             TextButton(
                 onPressed: () => debugPrint("Undid"), child: const Text("Undo"))
+          ],
+        )),
+  );
+  final snackBar2 = SnackBar(
+    backgroundColor: Colors.transparent,
+    elevation: 0,
+    content: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Constants().primaryAppColor, width: 3),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x19000000),
+              spreadRadius: 2.0,
+              blurRadius: 8.0,
+              offset: Offset(2, 4),
+            )
+          ],
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.info_outline, color: Constants().primaryAppColor),
+            const Padding(
+              padding: EdgeInsets.only(left: 8.0),
+              child: Text('Notification Deleted Sucessfully',
+                  style: TextStyle(color: Colors.black)),
+            ),
+            const Spacer(),
+
           ],
         )),
   );
