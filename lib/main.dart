@@ -36,6 +36,7 @@ class MyApp extends StatelessWidget {
       state: LocalizationProvider.of(context).state,
       child:
       MaterialApp(
+
         title: 'Alumni_Management_Admin',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
