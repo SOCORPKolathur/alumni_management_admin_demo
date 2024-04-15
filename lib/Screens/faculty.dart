@@ -357,7 +357,7 @@ class _Faculty_TabState extends State<Faculty_Tab> {
   doclength() async {
     try {
       final QuerySnapshot result =
-      await FirebaseFirestore.instance.collection('Users').get();
+      await FirebaseFirestore.instance.collection('Faculty').get();
       final List<DocumentSnapshot> documents = result.docs;
 
       setState(() {
@@ -446,7 +446,7 @@ class _Faculty_TabState extends State<Faculty_Tab> {
             UserEdit == true
                 ? UserEditForm(docid :docid, displayFirstWidget: Useradd, updateDisplay: updateDisplay,)
                 : Useradd == true
-                ? FacultyForm()
+                ? FacultyForm(displayFirstWidget: Useradd,updateDisplay: updateDisplay,)
 
                 : FadeInRight(child: SizedBox(
                 width: 1610 * fem,
@@ -925,7 +925,7 @@ class _Faculty_TabState extends State<Faculty_Tab> {
                                           .center,
                                       children: [
                                         KText(
-                                          text: "Batch",
+                                          text: "Pincode",
                                           style: SafeGoogleFont(
                                             'Nunendito',
                                             color: const Color(0xff030229),
@@ -939,12 +939,12 @@ class _Faculty_TabState extends State<Faculty_Tab> {
                                             onTap: () {
                                               setState(() {
                                                 filtervalue = !filtervalue;
-                                                filterChageValue = "yearofpassed";
+                                                filterChageValue = "pinCode";
                                               });
                                             },
                                             child: Transform.rotate(
                                               angle: filtervalue &&
-                                                  filterChageValue == "yearofpassed"
+                                                  filterChageValue == "pinCode"
                                                   ? 200
                                                   : 0,
                                               child: Opacity(
@@ -958,7 +958,7 @@ class _Faculty_TabState extends State<Faculty_Tab> {
                                                       width: width / 153.6,
                                                       height: height / 73.9,
                                                       color:filtervalue &&
-                                                          filterChageValue == "yearofpassed"?Colors.green:Colors.transparent
+                                                          filterChageValue == "pinCode"?Colors.green:Colors.transparent
                                                   ),
                                                 ),
                                               ),
@@ -1338,7 +1338,7 @@ class _Faculty_TabState extends State<Faculty_Tab> {
                                                                     0 * fem),
                                                                 child: Center(
                                                                   child: KText(
-                                                                    text: _userdata['yearofpassed'],
+                                                                    text: _userdata['pinCode'],
                                                                     style: SafeGoogleFont(
                                                                       'Nunito',
                                                                       fontSize: 16 *
@@ -1706,7 +1706,7 @@ class _Faculty_TabState extends State<Faculty_Tab> {
                                                                 0 * fem),
                                                             child: Center(
                                                               child: KText(
-                                                                text: _userdata['yearofpassed'],
+                                                                text: _userdata['pinCode'],
                                                                 style: SafeGoogleFont(
                                                                   'Nunito',
                                                                   fontSize: 16 *
@@ -2204,7 +2204,7 @@ class _Faculty_TabState extends State<Faculty_Tab> {
                                                                 0 * fem),
                                                             child: Center(
                                                               child: KText(
-                                                                text: _userdata['yearofpassed'],
+                                                                text: _userdata['pinCode'],
                                                                 style: SafeGoogleFont(
                                                                   'Nunito',
                                                                   fontSize: 16 *
@@ -2558,7 +2558,7 @@ class _Faculty_TabState extends State<Faculty_Tab> {
                                                               0 * fem),
                                                           child: Center(
                                                             child: KText(
-                                                              text: _userdata['yearofpassed'],
+                                                              text: _userdata['pinCode'],
                                                               style: SafeGoogleFont(
                                                                 'Nunito',
                                                                 fontSize: 16 *
@@ -2918,7 +2918,7 @@ class _Faculty_TabState extends State<Faculty_Tab> {
                                                             0 * fem),
                                                         child: Center(
                                                           child: KText(
-                                                            text: _userdata['yearofpassed'],
+                                                            text: _userdata['pinCode'],
                                                             style: SafeGoogleFont(
                                                               'Nunito',
                                                               fontSize: 16 *
@@ -3268,7 +3268,7 @@ class _Faculty_TabState extends State<Faculty_Tab> {
                                                           0 * fem),
                                                       child: Center(
                                                         child: KText(
-                                                          text: _userdata['yearofpassed'],
+                                                          text: _userdata['pinCode'],
                                                           style: SafeGoogleFont(
                                                             'Nunito',
                                                             fontSize: 16 *
@@ -3483,7 +3483,7 @@ class _Faculty_TabState extends State<Faculty_Tab> {
               });
               if (item == "Edit") {
                 setState(() {
-                  UserEdit = !UserEdit;
+                  //UserEdit = !UserEdit;
                   docid=_userid;
                 });
                 //fetchdate(_userid);
@@ -3540,203 +3540,7 @@ class _Faculty_TabState extends State<Faculty_Tab> {
           .toList(),
     );
   }
-  viewPopup(String userUpdateDocumentID) async {
-    Size size = MediaQuery.of(context).size;
-    double height = size.height;
-    double width = size.width;
 
-    DocumentSnapshot<Map<String, dynamic>> userSnapshot =
-    await FirebaseFirestore.instance.collection("Faculty").doc(userUpdateDocumentID).get();
-
-    Map<String, dynamic>? userData = userSnapshot.data();
-
-    return showDialog(
-      context: context,
-      builder: (ctx) {
-        if (userData == null) {
-          // Handle the case where user data is not found
-          return AlertDialog(
-            // Your error handling UI or message can go here
-            // ...
-          );
-        }
-
-        return AlertDialog(
-          backgroundColor: Colors.transparent,
-          content: Container(
-            width: size.width * 0.5,
-            margin: EdgeInsets.symmetric(horizontal: width / 68.3, vertical: height / 32.55),
-            decoration: BoxDecoration(
-              color: Constants().primaryAppColor,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black26,
-                  offset: Offset(1, 2),
-                  blurRadius: 3,
-                ),
-              ],
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: size.height * 0.1,
-                  width: double.infinity,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width / 68.3, vertical: height / 81.375),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "User details",
-                          style: SafeGoogleFont('Poppins',
-                              fontSize: width / 78.3,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Container(
-                            height: height / 16.275,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black26,
-                                  offset: Offset(1, 2),
-                                  blurRadius: 3,
-                                ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: width / 227.66),
-                              child: Center(
-                                child: KText(
-                                  text: "CLOSE",
-                                  style: SafeGoogleFont(
-                                    'Poppins',
-                                    fontSize: width / 105.375,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        bottomRight: Radius.circular(10),
-                        bottomLeft: Radius.circular(10),
-                      ),
-                    ),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Container(
-                            width: size.width * 0.5,
-                            height: size.height * 0.5,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                filterQuality: FilterQuality.high,
-                                fit: BoxFit.fill,
-                                image: NetworkImage(userData['UserImg']),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: double.infinity,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: width / 136.6, vertical: height / 65.1),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  SizedBox(height: height / 32.55),
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: size.width * 0.15,
-                                        child: KText(
-                                          text: "Name",
-                                          style: SafeGoogleFont('Poppins',
-                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
-                                        ),
-                                      ),
-                                      Text(":"),
-                                      SizedBox(width: width / 68.3),
-                                      KText(
-                                        text: userData['Name'],
-                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(height: height / 32.55),
-                                  // Continue displaying other user details in a similar manner
-                                  // ...
-
-                                  SizedBox(height: height / 32.55),
-                                  InkWell(
-                                    onTap: () {
-                                      // Your logic goes here
-                                      Navigator.pop(context);
-                                    },
-                                    child: Container(
-                                      height: height / 16.275,
-                                      width: 200,
-                                      decoration: BoxDecoration(
-                                        color: Colors.green,
-                                        borderRadius: BorderRadius.circular(8),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black26,
-                                            offset: Offset(1, 2),
-                                            blurRadius: 3,
-                                          ),
-                                        ],
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: width / 227.66),
-                                        child: Center(
-                                          child: KText(
-                                            text: "Close",
-                                            style: SafeGoogleFont(
-                                              'Poppins',
-                                              fontSize: width / 105.375,
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: height / 32.55),
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
 
 
 
@@ -4419,7 +4223,1111 @@ class _Faculty_TabState extends State<Faculty_Tab> {
       );
   }
 
+  viewPopup(String userUpdateDocumentID) async {
+    Size size = MediaQuery.of(context).size;
+    double height = size.height;
+    double width = size.width;
 
+    DocumentSnapshot<Map<String, dynamic>> userSnapshot =
+    await FirebaseFirestore.instance.collection("Faculty").doc(userUpdateDocumentID).get();
+
+    Map<String, dynamic>? userData = userSnapshot.data();
+
+    return showDialog(
+      context: context,
+      builder: (ctx) {
+        if (userData == null) {
+          // Handle the case where user data is not found
+          return AlertDialog(
+            // Your error handling UI or message can go here
+            // ...
+          );
+        }
+
+        return AlertDialog(
+          backgroundColor: Colors.transparent,
+          content: Container(
+            width: size.width * 0.5,
+            margin: EdgeInsets.symmetric(horizontal: width / 68.3, vertical: height / 32.55),
+            decoration: BoxDecoration(
+              color: Constants().primaryAppColor,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  offset: Offset(1, 2),
+                  blurRadius: 3,
+                ),
+              ],
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: size.height * 0.1,
+                  width: double.infinity,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width / 68.3, vertical: height / 81.375),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Faculty details",
+                          style: SafeGoogleFont(
+                            'Nunito',
+                            fontSize: 22,
+                            fontWeight: FontWeight.w700,
+
+                            color:  Colors.white,
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            height: height / 16.275,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  offset: Offset(1, 2),
+                                  blurRadius: 3,
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: width / 227.66),
+                              child: Center(
+                                child: KText(
+                                  text: "CLOSE",
+                                  style: SafeGoogleFont(
+                                    'Nunito',
+                                    fontSize: 20 ,
+                                    fontWeight: FontWeight.w700,
+                                    color: const Color(0xff030229),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        bottomRight: Radius.circular(10),
+                        bottomLeft: Radius.circular(10),
+                      ),
+                    ),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  width: 200,
+                                  height: 200,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    image: DecorationImage(
+                                      filterQuality: FilterQuality.high,
+
+                                      image: NetworkImage(userData['UserImg']),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: width / 136.6, vertical: height / 65.1),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(height: height / 32.55),
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: size.width * 0.15,
+                                          child: KText(
+                                            text: "Prefix",
+                                            style: SafeGoogleFont('Poppins',
+                                                fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                          ),
+                                        ),
+                                        Text(":"),
+                                        SizedBox(width: width / 68.3),
+                                        KText(
+                                          text: userData['prefix'],
+                                          style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(height: height / 32.55),
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: size.width * 0.15,
+                                          child: KText(
+                                            text: "Fisrt Name",
+                                            style: SafeGoogleFont('Poppins',
+                                                fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                          ),
+                                        ),
+                                        Text(":"),
+                                        SizedBox(width: width / 68.3),
+                                        KText(
+                                          text: userData['Name'],
+                                          style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(height: height / 32.55),
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: size.width * 0.15,
+                                          child: KText(
+                                            text: "Middle Name",
+                                            style: SafeGoogleFont('Poppins',
+                                                fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                          ),
+                                        ),
+                                        Text(":"),
+                                        SizedBox(width: width / 68.3),
+                                        KText(
+                                          text: userData['middleName'],
+                                          style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(height: height / 32.55),
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: size.width * 0.15,
+                                          child: KText(
+                                            text: "Last Name",
+                                            style: SafeGoogleFont('Poppins',
+                                                fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                          ),
+                                        ),
+                                        Text(":"),
+                                        SizedBox(width: width / 68.3),
+                                        KText(
+                                          text: userData['lastName'],
+                                          style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(height: height / 32.55),
+
+
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: size.width * 0.15,
+                                          child: KText(
+                                            text: "DOB",
+                                            style: SafeGoogleFont('Poppins',
+                                                fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                          ),
+                                        ),
+                                        Text(":"),
+                                        SizedBox(width: width / 68.3),
+                                        KText(
+                                          text: userData['dob'],
+                                          style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(height: height / 32.55),
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: size.width * 0.15,
+                                          child: KText(
+                                            text: "Gender",
+                                            style: SafeGoogleFont('Poppins',
+                                                fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                          ),
+                                        ),
+                                        Text(":"),
+                                        SizedBox(width: width / 68.3),
+                                        KText(
+                                          text: userData['Gender'],
+                                          style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(height: height / 32.55),
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: size.width * 0.15,
+                                          child: KText(
+                                            text: "Aadhaar No",
+                                            style: SafeGoogleFont('Poppins',
+                                                fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                          ),
+                                        ),
+                                        Text(":"),
+                                        SizedBox(width: width / 68.3),
+                                        KText(
+                                          text: userData['aadhaarNo'],
+                                          style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(height: height / 32.55),
+
+
+
+
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(width: width / 307.2),
+                              KText(
+                                text: 'Contact Details',
+                                style: SafeGoogleFont(
+                                  'Nunito',
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  color: const Color(0xff000000),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SizedBox(
+                              width: 650,
+                              child: Divider(),
+                            ),
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: width / 136.6, bottom: height / 85.1,right: width / 136.6),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  SizedBox(height: height / 82.55),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Phone Number",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['Phone'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Alternate Mobile Number",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['mobileNo'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Email ID",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['email'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Address",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['Address'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "State",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['state'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "City",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['city'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Pin Code",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['pinCode'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+
+                                  SizedBox(height: height / 32.55),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Country",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['country'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                       /*   Row(
+                            children: [
+                              SizedBox(width: width / 307.2),
+                              KText(
+                                text: 'User Details',
+                                style: SafeGoogleFont(
+                                  'Nunito',
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  color: const Color(0xff000000),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SizedBox(
+                              width: 650,
+                              child: Divider(),
+                            ),
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: width / 136.6, bottom: height / 85.1,right: width / 136.6),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  SizedBox(height: height / 82.55),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Year Passed",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['yearofpassed'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Department",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['subjectStream'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Class",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['class'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Roll No",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['rollNo'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "House",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['house'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Your Last Visit",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['lastvisit'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Status Message",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['statusmessage'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+
+                                  SizedBox(height: height / 32.55),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Shift",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['shift'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Register Number",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['clregno'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Thesis/Dissertation Topic",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['thesistopic'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Competitive Exam Passed",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['exampassed'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Current Academic Status",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['currentstatus'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Other Degree Earned",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['other Degree'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+
+
+
+                                ],
+                              ),
+                            ),
+                          ),*/
+
+                          Row(
+                            children: [
+                              SizedBox(width: width / 307.2),
+                              KText(
+                                text: 'User Qualifications',
+                                style: SafeGoogleFont(
+                                  'Nunito',
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  color: const Color(0xff000000),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SizedBox(
+                              width: 650,
+                              child: Divider(),
+                            ),
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: width / 136.6, bottom: height / 85.1,right: width / 136.6),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  SizedBox(height: height / 82.55),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Educational Qualification",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['educationquvalification'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Additional Qualification",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['additionalquvalification'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+                                ],
+                              ),
+                            ),
+                          ),
+
+/*
+                          Row(
+                            children: [
+                              SizedBox(width: width / 307.2),
+                              KText(
+                                text: 'Professional Details',
+                                style: SafeGoogleFont(
+                                  'Nunito',
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  color: const Color(0xff000000),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SizedBox(
+                              width: 650,
+                              child: Divider(),
+                            ),
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: width / 136.6, bottom: height / 85.1,right: width / 136.6),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  SizedBox(height: height / 82.55),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Are You Working",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['Occupation'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Designation",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['designation'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Company/Concern's Name",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['company_concern'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+
+
+
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Type",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['placetype'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Career Information",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['Name'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+
+
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Package at the time of placement",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['package'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+                                ],
+                              ),
+                            ),
+                          ),*/
+
+
+                          Row(
+                            children: [
+                              SizedBox(width: width / 307.2),
+                              KText(
+                                text: 'Marital Information',
+                                style: SafeGoogleFont(
+                                  'Nunito',
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  color: const Color(0xff000000),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SizedBox(
+                              width: 650,
+                              child: Divider(),
+                            ),
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: width / 136.6, bottom: height / 85.1,right: width / 136.6),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  SizedBox(height: height / 82.55),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Are You Married",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['maritalStatus'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Spouse Name",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['spouseName'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Anniversary Date",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['anniversaryDate'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.15,
+                                        child: KText(
+                                          text: "Children count",
+                                          style: SafeGoogleFont('Poppins',
+                                              fontWeight: FontWeight.w600, fontSize: width / 95.375),
+                                        ),
+                                      ),
+                                      Text(":"),
+                                      SizedBox(width: width / 68.3),
+                                      KText(
+                                        text: userData['childreancount'],
+                                        style: SafeGoogleFont('Poppins', fontSize: width / 105.571),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: height / 32.55),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
 
 
