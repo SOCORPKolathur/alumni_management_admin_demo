@@ -23,14 +23,34 @@ class UsersManagement extends StatefulWidget {
 class _UsersManagementState extends State<UsersManagement> {
 
   bool dashboard = false;
-  bool userManagement = false;
-  bool reports = false;
+  bool alumnitracking = false;
   bool users = false;
+  bool faculty = false;
   bool gallery = false;
+
+  bool acidemicyear = false;
+  bool department = false;
+  bool classes = false;
+  bool houses = false;
+  bool userManagement = false;
+  bool loginreports = false;
+
+  bool messages = false;
+
+
+  bool  email= false;
+  bool  sms= false;
+  bool  notifications= false;
+  bool  blogs= false;
+  bool  audiopodcast= false;
+
   bool  events= false;
-  bool  news= false;
-  bool  message= false;
-  bool  setting= false;
+  bool  collageact= false;
+  bool  jobads= false;
+  bool  jobpost= false;
+  bool  socialmedia= false;
+
+
 
   String Uservalue="Select";
   String Userdocid="";
@@ -99,16 +119,16 @@ class _UsersManagementState extends State<UsersManagement> {
             PermissionLis.add("dashboard");
           });
         }
-        if(document.docs[j]['permission'][i]=="userManagement"){
+        if(document.docs[j]['permission'][i]=="user management"){
           setState(() {
             userManagement=true;
-            PermissionLis.add("userManagement");
+            PermissionLis.add("user management");
           });
         }
-        if(document.docs[j]['permission'][i]=="reports"){
+        if(document.docs[j]['permission'][i]=="Alumni Tracking"){
           setState(() {
-            reports=true;
-            PermissionLis.add("reports");
+            alumnitracking=true;
+            PermissionLis.add("Alumni Tracking");
           });
         }
         if(document.docs[j]['permission'][i]=="users"){
@@ -129,24 +149,107 @@ class _UsersManagementState extends State<UsersManagement> {
             PermissionLis.add("events");
           });
         }
-        if(document.docs[j]['permission'][i]=="news"){
+        if(document.docs[j]['permission'][i]=="Faculty"){
           setState(() {
-            news=true;
-            PermissionLis.add("news");
+            faculty=true;
+            PermissionLis.add("Faculty");
           });
         }
-        if(document.docs[j]['permission'][i]=="message"){
+        if(document.docs[j]['permission'][i]=="messages"){
           setState(() {
-            message=true;
-            PermissionLis.add("message");
+            messages=true;
+            PermissionLis.add("messages");
           });
         }
-        if(document.docs[j]['permission'][i]=="setting"){
+        if(document.docs[j]['permission'][i]=="academic year"){
           setState(() {
-            setting=true;
-            PermissionLis.add("setting");
+            acidemicyear=true;
+            PermissionLis.add("academic year");
           });
         }
+        if(document.docs[j]['permission'][i]=="department"){
+          setState(() {
+            department=true;
+            PermissionLis.add("department");
+          });
+        }
+        if(document.docs[j]['permission'][i]=="Classes"){
+          setState(() {
+            classes=true;
+            PermissionLis.add("Classes");
+          });
+        }
+        if(document.docs[j]['permission'][i]=="Houses"){
+          setState(() {
+            houses=true;
+            PermissionLis.add("Houses");
+          });
+        }
+        if(document.docs[j]['permission'][i]=="login reports"){
+          setState(() {
+            loginreports=true;
+            PermissionLis.add("login reports");
+          });
+        }
+        if(document.docs[j]['permission'][i]=="email"){
+          setState(() {
+            email=true;
+            PermissionLis.add("email");
+          });
+        }
+
+        if(document.docs[j]['permission'][i]=="SMS"){
+          setState(() {
+            sms=true;
+            PermissionLis.add("SMS");
+          });
+        }
+
+        if(document.docs[j]['permission'][i]=="notifications"){
+          setState(() {
+            notifications=true;
+            PermissionLis.add("notifications");
+          });
+        }
+
+
+        if(document.docs[j]['permission'][i]=="blogs"){
+          setState(() {
+            blogs=true;
+            PermissionLis.add("blogs");
+          });
+        }
+        if(document.docs[j]['permission'][i]=="audio podcasts"){
+          setState(() {
+            audiopodcast=true;
+            PermissionLis.add("audio podcasts");
+          });
+        }
+        if(document.docs[j]['permission'][i]=="collage activities"){
+          setState(() {
+            collageact=true;
+            PermissionLis.add("collage activities");
+          });
+        }
+        if(document.docs[j]['permission'][i]=="job advertisement"){
+          setState(() {
+            jobads=true;
+            PermissionLis.add("job advertisement");
+          });
+        }
+        if(document.docs[j]['permission'][i]=="job posts"){
+          setState(() {
+            jobpost=true;
+            PermissionLis.add("job posts");
+          });
+        }
+        if(document.docs[j]['permission'][i]=="social media"){
+          setState(() {
+            socialmedia=true;
+            PermissionLis.add("social media");
+          });
+        }
+
       }
     }
     print("End of the fuinctionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
@@ -177,7 +280,7 @@ class _UsersManagementState extends State<UsersManagement> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       KText(
-                        text:"User Managements",
+                        text:"User Management",
                       style:  SafeGoogleFont (
                           'Poppins',
                         fontSize: width / 82.538,
@@ -283,19 +386,8 @@ class _UsersManagementState extends State<UsersManagement> {
                       SizedBox(width:width/51.2),
                       InkWell(
                         onTap: (){
-                          if(dashboard == true|| userManagement == true|| reports == true||
-                           users == true||
-                           gallery == true||
-                            events== true||
-                            news==true||
-                            message== true||
-                            setting== true){
                             updatefunction();
                             successpopuop("Permission Add Successfully....");
-                          }
-                          else{
-                            errorPopup("Please Filled Minimum one CheckBox");
-                          }
                         },
                         child: Container(
                             width: width/10.5076,
@@ -359,51 +451,54 @@ class _UsersManagementState extends State<UsersManagement> {
                               child: Row(
                                 children: [
                                   Checkbox(
-                                      value: userManagement,
+                                      value: alumnitracking,
                                       onChanged: (val) {
                                         setState(() {
-                                          userManagement =
-                                          !userManagement;
-                                          if (userManagement == true) {
-                                            PermissionLis.add("userManagement");
+                                          alumnitracking =
+                                          !alumnitracking;
+                                          if (alumnitracking == true) {
+                                            PermissionLis.add("Alumni Tracking");
                                           }
                                           else{
-                                            PermissionLis.remove("userManagement");
+                                            PermissionLis.remove("Alumni Tracking");
                                           }
                                         });
                                       }),
                                   SizedBox(width: width/273.2,),
-                                  KText( text:"User Management",style:SafeGoogleFont (
+                                  KText( text:"Alumni Tracking",style:SafeGoogleFont (
                                     'Poppins',
                                   )),
                                 ],
                               ),
                             ),
-                            SizedBox(
-                              width: width/6.83,
-                              child: Row(
-                                children: [
-                                  Checkbox(
-                                      value: reports,
-                                      onChanged: (val) {
-                                        setState(() {
-                                          reports =
-                                          !reports;
-                                        });
-                                        if (reports == true) {
-                                          PermissionLis.add("reports");
-                                        }
-                                        else{
-                                          PermissionLis.remove("reports");
-                                        }
-                                      }),
-                                  SizedBox(width: width/273.2,),
-                                  KText( text:"Reports",style:SafeGoogleFont (
-                                    'Poppins',
-                                  )),
-                                ],
+
+                          ],
+                        ),
+                        SizedBox(height: height/36.95,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            KText(
+                              text:"Database",
+                              style:  SafeGoogleFont (
+                                'Poppins',
+                                fontSize: width / 82.538,
+                                fontWeight: FontWeight.w600,
+                                height: 1.6*ffem/fem,
+
                               ),
                             ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                              width: 600,
+                              child: Divider()),
+                        ),
+                        SizedBox(height: height/156.95,),
+                        Row(
+                          children: [
                             SizedBox(
                               width: width/6.83,
                               child: Row(
@@ -421,7 +516,6 @@ class _UsersManagementState extends State<UsersManagement> {
                                         else{
                                           PermissionLis.remove("users");
                                         }
-
                                       }),
                                   SizedBox(width: width/273.2,),
                                   KText( text:"Users",style:SafeGoogleFont (
@@ -435,10 +529,37 @@ class _UsersManagementState extends State<UsersManagement> {
                               child: Row(
                                 children: [
                                   Checkbox(
+                                      value: faculty,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          faculty =
+                                          !faculty;
+                                        });
+                                        if (faculty == true) {
+                                          PermissionLis.add("Faculty");
+                                        }
+                                        else{
+                                          PermissionLis.remove("Faculty");
+                                        }
+                                      }),
+                                  SizedBox(width: width/273.2,),
+                                  KText( text:"Faculty",style:SafeGoogleFont (
+                                    'Poppins',
+                                  )),
+                                ],
+                              ),
+                            ),
+
+                            SizedBox(
+                              width: width/6.83,
+                              child: Row(
+                                children: [
+                                  Checkbox(
                                       value: gallery,
                                       onChanged: (val) {
                                         setState(() {
-                                          gallery = !gallery;
+                                          gallery =
+                                          !gallery;
                                         });
                                         if (gallery == true) {
                                           PermissionLis.add("gallery");
@@ -454,10 +575,420 @@ class _UsersManagementState extends State<UsersManagement> {
                                 ],
                               ),
                             ),
+
                           ],
                         ),
                         SizedBox(height: height/36.95,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            KText(
+                              text:"Masters",
+                              style:  SafeGoogleFont (
+                                'Poppins',
+                                fontSize: width / 82.538,
+                                fontWeight: FontWeight.w600,
+                                height: 1.6*ffem/fem,
 
+                              ),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                              width: 600,
+                              child: Divider()),
+                        ),
+                        SizedBox(height: height/156.95,),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: width/6.83,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                      value: acidemicyear,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          acidemicyear =
+                                          !acidemicyear;
+                                        });
+                                        if (acidemicyear == true) {
+                                          PermissionLis.add("academic year");
+                                        }
+                                        else{
+                                          PermissionLis.remove("academic year");
+                                        }
+                                      }),
+                                  SizedBox(width: width/273.2,),
+                                  KText( text:"Academic year",style:SafeGoogleFont (
+                                    'Poppins',
+                                  )),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: width/6.83,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                      value: department,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          department =
+                                          !department;
+                                        });
+                                        if (department == true) {
+                                          PermissionLis.add("department");
+                                        }
+                                        else{
+                                          PermissionLis.remove("department");
+                                        }
+                                      }),
+                                  SizedBox(width: width/273.2,),
+                                  KText( text:"Department",style:SafeGoogleFont (
+                                    'Poppins',
+                                  )),
+                                ],
+                              ),
+                            ),
+
+                            SizedBox(
+                              width: width/6.83,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                      value: classes,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          classes =
+                                          !classes;
+                                        });
+                                        if (classes == true) {
+                                          PermissionLis.add("Classes");
+                                        }
+                                        else{
+                                          PermissionLis.remove("Classes");
+                                        }
+                                      }),
+                                  SizedBox(width: width/273.2,),
+                                  KText( text:"Classes",style:SafeGoogleFont (
+                                    'Poppins',
+                                  )),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: width/6.83,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                      value: houses,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          houses =
+                                          !houses;
+                                        });
+                                        if (houses == true) {
+                                          PermissionLis.add("Houses");
+                                        }
+                                        else{
+                                          PermissionLis.remove("Houses");
+                                        }
+                                      }),
+                                  SizedBox(width: width/273.2,),
+                                  KText( text:"Houses",style:SafeGoogleFont (
+                                    'Poppins',
+                                  )),
+                                ],
+                              ),
+                            ),
+
+                          ],
+                        ),
+                        SizedBox(height: height/36.95,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            KText(
+                              text:"Security",
+                              style:  SafeGoogleFont (
+                                'Poppins',
+                                fontSize: width / 82.538,
+                                fontWeight: FontWeight.w600,
+                                height: 1.6*ffem/fem,
+
+                              ),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                              width: 600,
+                              child: Divider()),
+                        ),
+                        SizedBox(height: height/156.95,),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: width/6.83,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                      value: userManagement,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          userManagement =
+                                          !userManagement;
+                                        });
+                                        if (userManagement == true) {
+                                          PermissionLis.add("user management");
+                                        }
+                                        else{
+                                          PermissionLis.remove("user management");
+                                        }
+                                      }),
+                                  SizedBox(width: width/273.2,),
+                                  KText( text:"User Management",style:SafeGoogleFont (
+                                    'Poppins',
+                                  )),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: width/6.83,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                      value: loginreports,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          loginreports =
+                                          !loginreports;
+                                        });
+                                        if (loginreports == true) {
+                                          PermissionLis.add("login reports");
+                                        }
+                                        else{
+                                          PermissionLis.remove("login reports");
+                                        }
+                                      }),
+                                  SizedBox(width: width/273.2,),
+                                  KText( text:"Login Reports",style:SafeGoogleFont (
+                                    'Poppins',
+                                  )),
+                                ],
+                              ),
+                            ),
+
+
+
+                          ],
+                        ),
+                        SizedBox(height: height/36.95,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            KText(
+                              text:"Communication",
+                              style:  SafeGoogleFont (
+                                'Poppins',
+                                fontSize: width / 82.538,
+                                fontWeight: FontWeight.w600,
+                                height: 1.6*ffem/fem,
+
+                              ),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                              width: 600,
+                              child: Divider()),
+                        ),
+                        SizedBox(height: height/156.95,),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: width/6.83,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                      value: messages,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          messages =
+                                          !messages;
+                                        });
+                                        if (messages == true) {
+                                          PermissionLis.add("messages");
+                                        }
+                                        else{
+                                          PermissionLis.remove("messages");
+                                        }
+                                      }),
+                                  SizedBox(width: width/273.2,),
+                                  KText( text:"Messages",style:SafeGoogleFont (
+                                    'Poppins',
+                                  )),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: width/6.83,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                      value: sms,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          sms =
+                                          !sms;
+                                        });
+                                        if (sms == true) {
+                                          PermissionLis.add("SMS");
+                                        }
+                                        else{
+                                          PermissionLis.remove("SMS");
+                                        }
+                                      }),
+                                  SizedBox(width: width/273.2,),
+                                  KText( text:"SMS",style:SafeGoogleFont (
+                                    'Poppins',
+                                  )),
+                                ],
+                              ),
+                            ),
+
+                            SizedBox(
+                              width: width/6.83,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                      value: email,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          email =
+                                          !email;
+                                        });
+                                        if (email == true) {
+                                          PermissionLis.add("email");
+                                        }
+                                        else{
+                                          PermissionLis.remove("email");
+                                        }
+                                      }),
+                                  SizedBox(width: width/273.2,),
+                                  KText( text:"Email",style:SafeGoogleFont (
+                                    'Poppins',
+                                  )),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: width/6.83,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                      value: notifications,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          notifications =
+                                          !notifications;
+                                        });
+                                        if (notifications == true) {
+                                          PermissionLis.add("notifications");
+                                        }
+                                        else{
+                                          PermissionLis.remove("notifications");
+                                        }
+                                      }),
+                                  SizedBox(width: width/273.2,),
+                                  KText( text:"Notifications",style:SafeGoogleFont (
+                                    'Poppins',
+                                  )),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: width/6.83,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                      value: blogs,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          blogs =
+                                          !blogs;
+                                        });
+                                        if (blogs == true) {
+                                          PermissionLis.add("blogs");
+                                        }
+                                        else{
+                                          PermissionLis.remove("blogs");
+                                        }
+                                      }),
+                                  SizedBox(width: width/273.2,),
+                                  KText( text:"Blogs",style:SafeGoogleFont (
+                                    'Poppins',
+                                  )),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: width/6.83,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                      value: audiopodcast,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          audiopodcast =
+                                          !audiopodcast;
+                                        });
+                                        if (audiopodcast == true) {
+                                          PermissionLis.add("audio podcasts");
+                                        }
+                                        else{
+                                          PermissionLis.remove("audio podcasts");
+                                        }
+                                      }),
+                                  SizedBox(width: width/273.2,),
+                                  KText( text:"Audio Podcasts",style:SafeGoogleFont (
+                                    'Poppins',
+                                  )),
+                                ],
+                              ),
+                            ),
+
+                          ],
+                        ),
+                        SizedBox(height: height/36.95,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            KText(
+                              text:"Engagement",
+                              style:  SafeGoogleFont (
+                                'Poppins',
+                                fontSize: width / 82.538,
+                                fontWeight: FontWeight.w600,
+                                height: 1.6*ffem/fem,
+
+                              ),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                              width: 600,
+                              child: Divider()),
+                        ),
+                        SizedBox(height: height/156.95,),
                         Row(
                           children: [
                             SizedBox(
@@ -490,21 +1021,21 @@ class _UsersManagementState extends State<UsersManagement> {
                               child: Row(
                                 children: [
                                   Checkbox(
-                                      value: news,
+                                      value: collageact,
                                       onChanged: (val) {
                                         setState(() {
-                                          news =
-                                          !news;
+                                          collageact =
+                                          !collageact;
                                         });
-                                        if (news == true) {
-                                          PermissionLis.add("news");
+                                        if (collageact == true) {
+                                          PermissionLis.add("collage activities");
                                         }
                                         else{
-                                          PermissionLis.remove("news");
+                                          PermissionLis.remove("collage activities");
                                         }
                                       }),
                                   SizedBox(width: width/273.2,),
-                                  KText( text:"News",style:SafeGoogleFont (
+                                  KText( text:"Collage Activities",style:SafeGoogleFont (
                                     'Poppins',
                                   )),
                                 ],
@@ -516,21 +1047,71 @@ class _UsersManagementState extends State<UsersManagement> {
                               child: Row(
                                 children: [
                                   Checkbox(
-                                      value: setting,
+                                      value: jobads,
                                       onChanged: (val) {
                                         setState(() {
-                                          setting =
-                                          !setting;
+                                          jobads =
+                                          !jobads;
                                         });
-                                        if (setting == true) {
-                                          PermissionLis.add("setting");
+                                        if (jobads == true) {
+                                          PermissionLis.add("job advertisement");
                                         }
                                         else{
-                                          PermissionLis.remove("setting");
+                                          PermissionLis.remove("job advertisement");
                                         }
                                       }),
                                   SizedBox(width: width/273.2,),
-                                  KText( text:"Setting",style:SafeGoogleFont (
+                                  KText( text:"Job Advertisement",style:SafeGoogleFont (
+                                    'Poppins',
+                                  )),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: width/6.83,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                      value: jobpost,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          jobpost =
+                                          !jobpost;
+                                        });
+                                        if (jobpost == true) {
+                                          PermissionLis.add("job posts");
+                                        }
+                                        else{
+                                          PermissionLis.remove("job posts");
+                                        }
+                                      }),
+                                  SizedBox(width: width/273.2,),
+                                  KText( text:"Job Posts",style:SafeGoogleFont (
+                                    'Poppins',
+                                  )),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: width/6.83,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                      value: socialmedia,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          socialmedia =
+                                          !socialmedia;
+                                        });
+                                        if (socialmedia == true) {
+                                          PermissionLis.add("social media");
+                                        }
+                                        else{
+                                          PermissionLis.remove("social media");
+                                        }
+                                      }),
+                                  SizedBox(width: width/273.2,),
+                                  KText( text:"Social Media",style:SafeGoogleFont (
                                     'Poppins',
                                   )),
                                 ],
@@ -1021,13 +1602,34 @@ class _UsersManagementState extends State<UsersManagement> {
       PermissionLis.clear();
        dashboard = false;
        userManagement = false;
-       reports = false;
+       dashboard = false;
+       alumnitracking = false;
        users = false;
+       faculty = false;
        gallery = false;
+
+       acidemicyear = false;
+       department = false;
+       classes = false;
+       houses = false;
+       userManagement = false;
+       loginreports = false;
+
+       messages = false;
+
+
+        email= false;
+        sms= false;
+        notifications= false;
+        blogs= false;
+        audiopodcast= false;
+
         events= false;
-        news= false;
-        message= false;
-        setting= false;
+        collageact= false;
+        jobads= false;
+        jobpost= false;
+        socialmedia= false;
+
     });
     var document = await FirebaseFirestore.instance.collection("AdminUser").where("username",isEqualTo:value).get();
     for(int j=0;j<document.docs.length;j++){
@@ -1036,62 +1638,153 @@ class _UsersManagementState extends State<UsersManagement> {
       });
       print(Userdocid);
       print(PermissionLis);
-      for(int i=0;i<document.docs[j]['permission'].length;i++){
-        if(document.docs[j]['permission'][i]=="dashboard"){
-          setState(() {
-            dashboard=true;
-            PermissionLis.add("dashboard");
-          });
-        }
-        if(document.docs[j]['permission'][i]=="userManagement"){
-          setState(() {
-            userManagement=true;
-            PermissionLis.add("userManagement");
-          });
-        }
-        if(document.docs[j]['permission'][i]=="reports"){
-          setState(() {
-            reports=true;
-            PermissionLis.add("reports");
-          });
-        }
-        if(document.docs[j]['permission'][i]=="users"){
-          setState(() {
-            users=true;
-            PermissionLis.add("users");
-          });
-        }
-        if(document.docs[j]['permission'][i]=="gallery"){
-          setState(() {
-            gallery=true;
-            PermissionLis.add("gallery");
-          });
-        }
-        if(document.docs[j]['permission'][i]=="events"){
-          setState(() {
-            events=true;
-            PermissionLis.add("events");
-          });
-        }
-        if(document.docs[j]['permission'][i]=="news"){
-          setState(() {
-            news=true;
-            PermissionLis.add("news");
-          });
-        }
-        if(document.docs[j]['permission'][i]=="message"){
-          setState(() {
-            message=true;
-            PermissionLis.add("message");
-          });
-        }
-        if(document.docs[j]['permission'][i]=="setting"){
-          setState(() {
-            setting=true;
-            PermissionLis.add("setting");
-          });
+
+      for(int j=0;j<document.docs.length;j++){
+        setState(() {
+          Uservalue=document.docs[j]['username'];
+          Userdocid=document.docs[j].id;
+        });
+        for(int i=0;i<document.docs[j]['permission'].length;i++){
+          if(document.docs[j]['permission'][i]=="dashboard"){
+            setState(() {
+              dashboard=true;
+              PermissionLis.add("dashboard");
+            });
+          }
+          if(document.docs[j]['permission'][i]=="user management"){
+            setState(() {
+              userManagement=true;
+              PermissionLis.add("user management");
+            });
+          }
+          if(document.docs[j]['permission'][i]=="Alumni Tracking"){
+            setState(() {
+              alumnitracking=true;
+              PermissionLis.add("Alumni Tracking");
+            });
+          }
+          if(document.docs[j]['permission'][i]=="users"){
+            setState(() {
+              users=true;
+              PermissionLis.add("users");
+            });
+          }
+          if(document.docs[j]['permission'][i]=="gallery"){
+            setState(() {
+              gallery=true;
+              PermissionLis.add("gallery");
+            });
+          }
+          if(document.docs[j]['permission'][i]=="events"){
+            setState(() {
+              events=true;
+              PermissionLis.add("events");
+            });
+          }
+          if(document.docs[j]['permission'][i]=="Faculty"){
+            setState(() {
+              faculty=true;
+              PermissionLis.add("Faculty");
+            });
+          }
+          if(document.docs[j]['permission'][i]=="messages"){
+            setState(() {
+              messages=true;
+              PermissionLis.add("messages");
+            });
+          }
+          if(document.docs[j]['permission'][i]=="academic year"){
+            setState(() {
+              acidemicyear=true;
+              PermissionLis.add("academic year");
+            });
+          }
+          if(document.docs[j]['permission'][i]=="department"){
+            setState(() {
+              department=true;
+              PermissionLis.add("department");
+            });
+          }
+          if(document.docs[j]['permission'][i]=="Classes"){
+            setState(() {
+              classes=true;
+              PermissionLis.add("Classes");
+            });
+          }
+          if(document.docs[j]['permission'][i]=="Houses"){
+            setState(() {
+              houses=true;
+              PermissionLis.add("Houses");
+            });
+          }
+          if(document.docs[j]['permission'][i]=="login reports"){
+            setState(() {
+              loginreports=true;
+              PermissionLis.add("login reports");
+            });
+          }
+          if(document.docs[j]['permission'][i]=="email"){
+            setState(() {
+              email=true;
+              PermissionLis.add("email");
+            });
+          }
+
+          if(document.docs[j]['permission'][i]=="SMS"){
+            setState(() {
+              sms=true;
+              PermissionLis.add("SMS");
+            });
+          }
+
+          if(document.docs[j]['permission'][i]=="notifications"){
+            setState(() {
+              notifications=true;
+              PermissionLis.add("notifications");
+            });
+          }
+
+
+          if(document.docs[j]['permission'][i]=="blogs"){
+            setState(() {
+              blogs=true;
+              PermissionLis.add("blogs");
+            });
+          }
+          if(document.docs[j]['permission'][i]=="audio podcasts"){
+            setState(() {
+              audiopodcast=true;
+              PermissionLis.add("audio podcasts");
+            });
+          }
+          if(document.docs[j]['permission'][i]=="collage activities"){
+            setState(() {
+              collageact=true;
+              PermissionLis.add("collage activities");
+            });
+          }
+          if(document.docs[j]['permission'][i]=="job advertisement"){
+            setState(() {
+              jobads=true;
+              PermissionLis.add("job advertisement");
+            });
+          }
+          if(document.docs[j]['permission'][i]=="job posts"){
+            setState(() {
+              jobpost=true;
+              PermissionLis.add("job posts");
+            });
+          }
+          if(document.docs[j]['permission'][i]=="social media"){
+            setState(() {
+              socialmedia=true;
+              PermissionLis.add("social media");
+            });
+          }
+
         }
       }
+
     }
   }
 
