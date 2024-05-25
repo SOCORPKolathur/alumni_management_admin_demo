@@ -386,6 +386,7 @@ class _DashBoardState extends State<DashBoard> {
                                           margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 4*fem),
                                           child: KText(
                                             text:
+
                                             'Dashboard',
                                             style:
                                             SafeGoogleFont (

@@ -10,6 +10,7 @@ import 'package:alumni_management_admin/common_widgets/developer_card_widget.dar
 import 'package:alumni_management_admin/utils.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' as cf;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
@@ -19,12 +20,13 @@ import 'package:flutter_holo_date_picker/i18n/date_picker_i18n.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pdf/pdf.dart';
 import 'package:intl/intl.dart';
+import 'package:randomstring_dart/randomstring_dart.dart';
 
 import '../JOb_Posts_Crud/JobPost_Crud.dart';
 
 class Job_Posts extends StatefulWidget {
   int pageval;
-   Job_Posts(this.pageval);
+  Job_Posts(this.pageval);
 
   @override
   State<Job_Posts> createState() => _Job_PostsState();
@@ -41,20 +43,21 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
   TextEditingController quvalificationController = TextEditingController();
   TextEditingController positionsController = TextEditingController();
   TextEditingController noOfOpeningController = TextEditingController();
+  TextEditingController companyController = TextEditingController();
+  TextEditingController expController = TextEditingController();
 
-
-
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   DateTime? dateRangeStart;
   DateTime? dateRangeEnd;
-  List<String> mydate=[];
+  List<String> mydate = [];
   bool isFiltered = false;
   TextEditingController Date1Controller = TextEditingController();
   TextEditingController Date2Controller = TextEditingController();
-  bool filtervalue=true;
-  bool addPhoto=false;
-  bool SliderImg=false;
-  String addphotoDocummentValue='';
+  bool filtervalue = true;
+  bool addPhoto = false;
+  bool SliderImg = false;
+  String addphotoDocummentValue = '';
   String filterChageValue = "timestamp";
   File? profileImage;
   var uploadedImage;
@@ -131,6 +134,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    getdocid();
     setDateTime();
     doclength();
     exportdataListFromStream.clear();
@@ -143,10 +147,10 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
       }
     });
 
-
     setState(() {
-      selectTabIndex=widget.pageval;
-      tabController!.animateTo(widget.pageval,duration: Duration(milliseconds: 200));
+      selectTabIndex = widget.pageval;
+      tabController!
+          .animateTo(widget.pageval, duration: Duration(milliseconds: 200));
     });
     super.initState();
   }
@@ -161,21 +165,26 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
   int temp2 = 1;
   List list = new List<int>.generate(1000, (i) => i + 1);
   List list2 = new List<int>.generate(1000, (i) => i + 1);
-  List <cf.DocumentSnapshot>documentList = [];
-  int documentlength =0 ;
-  int documentlength2 =0 ;
+  List<cf.DocumentSnapshot> documentList = [];
+  int documentlength = 0;
+  int documentlength2 = 0;
 
   doclength() async {
-
-    final cf.QuerySnapshot result = await cf.FirebaseFirestore.instance.collection("JobPosts").where("verify",isEqualTo:true).get();
-    final List < cf.DocumentSnapshot > documents = result.docs;
-    final cf.QuerySnapshot result2 = await cf.FirebaseFirestore.instance.collection("JobPosts").where("verify",isEqualTo:false).get();
-    final List < cf.DocumentSnapshot > documents2 = result2.docs;
+    final cf.QuerySnapshot result = await cf.FirebaseFirestore.instance
+        .collection("JobPosts")
+        .where("verify", isEqualTo: true)
+        .get();
+    final List<cf.DocumentSnapshot> documents = result.docs;
+    final cf.QuerySnapshot result2 = await cf.FirebaseFirestore.instance
+        .collection("JobPosts")
+        .where("verify", isEqualTo: false)
+        .get();
+    final List<cf.DocumentSnapshot> documents2 = result2.docs;
     setState(() {
       documentlength = documents.length;
       documentlength2 = documents2.length;
-      pagecount= ((documentlength~/10) +1);
-      pagecount2= ((documentlength2~/10) +1);
+      pagecount = ((documentlength ~/ 10) + 1);
+      pagecount2 = ((documentlength2 ~/ 10) + 1);
     });
     print(documents.length);
     print(documents2.length);
@@ -185,10 +194,10 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
     print(documentlength2);
     print(temp);
     print(temp2);
-    print("Document Total Length+++++++++++++++++++++++++++++++++++++++++++++++++");
+    print(
+        "Document Total Length+++++++++++++++++++++++++++++++++++++++++++++++++");
   }
-  
-  
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -240,7 +249,6 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                     titleController.text = "";
                                     uploadedImage = null;
                                     profileImage = null;
-
                                   });
                                 } else {
                                   setState(() {
@@ -351,16 +359,16 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                   child: InkWell(
                                     key: filterDataKey,
                                     onTap: () async {
-                                      if(dateRangeStart!=null){
+                                      if (dateRangeStart != null) {
                                         setState(() {
-                                          dateRangeStart=null;
-                                          dateRangeEnd=null;
+                                          dateRangeStart = null;
+                                          dateRangeEnd = null;
                                           mydate.clear();
-
                                         });
+                                      } else {
+                                        filterDataMenuItem(
+                                            context, filterDataKey, size);
                                       }
-                                      else{filterDataMenuItem(context, filterDataKey, size);}
-
                                     },
                                     child: Container(
                                       height: height / 16.275,
@@ -383,7 +391,9 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                             const Icon(Icons.filter_list_alt,
                                                 color: Colors.white),
                                             KText(
-                                              text: dateRangeStart==null?" Filter by Date":"Clear Date",
+                                              text: dateRangeStart == null
+                                                  ? " Filter by Date"
+                                                  : "Clear Date",
                                               style: SafeGoogleFont(
                                                 'Nunito',
                                                 fontSize: width / 120.571,
@@ -408,7 +418,6 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                       width: width / 1.26,
                       height: height / 1.23166,
                       decoration: BoxDecoration(
-
                         color: Colors.white,
                         boxShadow: [
                           const BoxShadow(
@@ -494,7 +503,8 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               3),
-                                                      color: const Color(0xffDDDEEE),
+                                                      color: const Color(
+                                                          0xffDDDEEE),
                                                       elevation: 5,
                                                       child: SizedBox(
                                                         height: height / 16.02,
@@ -522,7 +532,10 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                   105.571,
                                                             ),
                                                             validator: (value) {
-                                                              if (value == null || value.isEmpty) {
+                                                              if (value ==
+                                                                      null ||
+                                                                  value
+                                                                      .isEmpty) {
                                                                 return 'Position is required';
                                                               }
                                                               return null;
@@ -532,7 +545,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                 positionsController,
                                                             decoration:
                                                                 InputDecoration(
-                                                                  isDense: true,
+                                                              isDense: true,
                                                               border:
                                                                   InputBorder
                                                                       .none,
@@ -542,7 +555,6 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                 fontSize:
                                                                     width /
                                                                         105.571,
-
                                                               ),
                                                             ),
                                                           ),
@@ -576,8 +588,8 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(3),
-                                                        color:
-                                                            const Color(0xffDDDEEE),
+                                                        color: const Color(
+                                                            0xffDDDEEE),
                                                         elevation: 5,
                                                         child: SizedBox(
                                                           height:
@@ -607,12 +619,12 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                                     width /
                                                                         105.571,
                                                               ),
-                                                                  maxLines: 1,
+                                                              maxLines: 1,
                                                               controller:
                                                                   quvalificationController,
                                                               decoration:
                                                                   InputDecoration(
-                                                                    isDense: true,
+                                                                isDense: true,
                                                                 border:
                                                                     InputBorder
                                                                         .none,
@@ -636,8 +648,8 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                             SizedBox(height: height / 65.1),
                                             Row(
                                               mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 /*  Column(
                                                 crossAxisAlignment:
@@ -766,7 +778,8 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               3),
-                                                      color: const Color(0xffDDDEEE),
+                                                      color: const Color(
+                                                          0xffDDDEEE),
                                                       elevation: 5,
                                                       child: SizedBox(
                                                         height: height / 16.02,
@@ -798,7 +811,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                             maxLines: 1,
                                                             decoration:
                                                                 InputDecoration(
-                                                                  isDense: true,
+                                                              isDense: true,
                                                               border:
                                                                   InputBorder
                                                                       .none,
@@ -821,68 +834,71 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                       left: width / 54.64),
                                                   child: Column(
                                                     crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
                                                       KText(
                                                         text: "No of Openings*",
                                                         style: SafeGoogleFont(
                                                           'Nunito',
                                                           fontSize:
-                                                          width / 105.571,
+                                                              width / 105.571,
                                                           fontWeight:
-                                                          FontWeight.bold,
+                                                              FontWeight.bold,
                                                         ),
                                                       ),
                                                       SizedBox(
                                                           height:
-                                                          height / 108.5),
+                                                              height / 108.5),
                                                       Material(
                                                         borderRadius:
-                                                        BorderRadius
-                                                            .circular(3),
-                                                        color:
-                                                        const Color(0xffDDDEEE),
+                                                            BorderRadius
+                                                                .circular(3),
+                                                        color: const Color(
+                                                            0xffDDDEEE),
                                                         elevation: 5,
                                                         child: SizedBox(
                                                           height:
-                                                          height / 16.02,
+                                                              height / 16.02,
                                                           width:
-                                                          size.width * 0.17,
+                                                              size.width * 0.17,
                                                           child: Padding(
                                                             padding: EdgeInsets
                                                                 .symmetric(
-                                                                vertical:
-                                                                height /
-                                                                    81.375,
-                                                                horizontal:
-                                                                width /
-                                                                    170.75),
+                                                                    vertical:
+                                                                        height /
+                                                                            81.375,
+                                                                    horizontal:
+                                                                        width /
+                                                                            170.75),
                                                             child:
-                                                            TextFormField(
+                                                                TextFormField(
                                                               inputFormatters: [
-                                                                FilteringTextInputFormatter.allow(RegExp(r"[0-9]")),
+                                                                FilteringTextInputFormatter
+                                                                    .allow(RegExp(
+                                                                        r"[0-9]")),
                                                               ],
                                                               style:
-                                                              SafeGoogleFont(
+                                                                  SafeGoogleFont(
                                                                 'Nunito',
                                                                 fontSize:
-                                                                width /
-                                                                    105.571,
+                                                                    width /
+                                                                        105.571,
                                                               ),
                                                               minLines: 1,
-                                                              controller: noOfOpeningController,
+                                                              controller:
+                                                                  noOfOpeningController,
                                                               decoration:
-                                                              InputDecoration(
+                                                                  InputDecoration(
                                                                 border:
-                                                                InputBorder
-                                                                    .none,
+                                                                    InputBorder
+                                                                        .none,
                                                                 hintStyle:
-                                                                SafeGoogleFont(
+                                                                    SafeGoogleFont(
                                                                   'Nunito',
                                                                   fontSize:
-                                                                  width /
-                                                                      105.571,
+                                                                      width /
+                                                                          105.571,
                                                                 ),
                                                               ),
                                                             ),
@@ -894,12 +910,10 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                 ),
                                               ],
                                             ),
-
                                             SizedBox(height: height / 65.1),
                                             Row(
                                               mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .start,
+                                                  MainAxisAlignment.start,
                                               children: [
                                                 /*  Column(
                                                 crossAxisAlignment:
@@ -1010,83 +1024,101 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
 
                                                 Column(
                                                   crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                                      CrossAxisAlignment.start,
                                                   children: [
                                                     KText(
                                                       text: "Last Date ",
                                                       style: SafeGoogleFont(
                                                         'Nunito',
                                                         fontSize:
-                                                        width / 105.571,
+                                                            width / 105.571,
                                                         fontWeight:
-                                                        FontWeight.bold,
+                                                            FontWeight.bold,
                                                       ),
                                                     ),
                                                     SizedBox(
                                                         height: height / 108.5),
                                                     Material(
                                                       borderRadius:
-                                                      BorderRadius.circular(
-                                                          3),
-                                                      color: const Color(0xffDDDEEE),
+                                                          BorderRadius.circular(
+                                                              3),
+                                                      color: const Color(
+                                                          0xffDDDEEE),
                                                       elevation: 5,
                                                       child: SizedBox(
                                                         height: height / 16.02,
                                                         width:
-                                                        size.width * 0.17,
+                                                            size.width * 0.17,
                                                         child: Padding(
                                                           padding: EdgeInsets
                                                               .symmetric(
-                                                              vertical:
-                                                              height /
-                                                                  81.375,
-                                                              horizontal:
-                                                              width /
-                                                                  170.75),
+                                                                  vertical:
+                                                                      height /
+                                                                          81.375,
+                                                                  horizontal:
+                                                                      width /
+                                                                          170.75),
                                                           child: TextFormField(
                                                             inputFormatters: [
                                                               FilteringTextInputFormatter
                                                                   .allow(RegExp(
-                                                                  "[a-zA-Z ]")),
+                                                                      "[a-zA-Z ]")),
                                                             ],
                                                             readOnly: true,
-
                                                             onTap: () async {
-                                                              DateTime? pickedDate = await DatePicker.showSimpleDatePicker(context,
-                                                                initialDate: DateTime.now(),
-                                                                firstDate: DateTime.now(),
-                                                                lastDate: DateTime(2060),
-                                                                dateFormat: "dd-MM-yyyy",
-                                                                locale: DateTimePickerLocale.en_us,
+                                                              DateTime?
+                                                                  pickedDate =
+                                                                  await DatePicker
+                                                                      .showSimpleDatePicker(
+                                                                context,
+                                                                initialDate:
+                                                                    DateTime
+                                                                        .now(),
+                                                                firstDate:
+                                                                    DateTime
+                                                                        .now(),
+                                                                lastDate:
+                                                                    DateTime(
+                                                                        2060),
+                                                                dateFormat:
+                                                                    "dd-MM-yyyy",
+                                                                locale:
+                                                                    DateTimePickerLocale
+                                                                        .en_us,
                                                                 looping: true,
                                                               );
-                                                              if (pickedDate != null) {
+                                                              if (pickedDate !=
+                                                                  null) {
                                                                 setState(() {
-                                                                  lastDateController.text = formatter.format(pickedDate);
+                                                                  lastDateController
+                                                                          .text =
+                                                                      formatter
+                                                                          .format(
+                                                                              pickedDate);
                                                                 });
                                                               }
                                                             },
                                                             style:
-                                                            SafeGoogleFont(
+                                                                SafeGoogleFont(
                                                               'Nunito',
                                                               fontSize: width /
                                                                   105.571,
                                                             ),
                                                             controller:
-                                                            lastDateController,
+                                                                lastDateController,
                                                             maxLines: 1,
                                                             decoration:
-                                                            InputDecoration(
+                                                                InputDecoration(
                                                               isDense: true,
                                                               border:
-                                                              InputBorder
-                                                                  .none,
+                                                                  InputBorder
+                                                                      .none,
                                                               hintStyle:
-                                                              SafeGoogleFont(
+                                                                  SafeGoogleFont(
                                                                 'Nunito',
                                                                 fontSize:
-                                                                width /
-                                                                    105.571,
+                                                                    width /
+                                                                        105.571,
                                                               ),
                                                             ),
                                                           ),
@@ -1095,10 +1127,274 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                     )
                                                   ],
                                                 ),
-
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: width / 54.64),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      KText(
+                                                        text: "Company*",
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          fontSize:
+                                                              width / 105.571,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                          height:
+                                                              height / 108.5),
+                                                      Material(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(3),
+                                                        color: const Color(
+                                                            0xffDDDEEE),
+                                                        elevation: 5,
+                                                        child: SizedBox(
+                                                          height:
+                                                              height / 16.02,
+                                                          width:
+                                                              size.width * 0.17,
+                                                          child: Padding(
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    vertical:
+                                                                        height /
+                                                                            81.375,
+                                                                    horizontal:
+                                                                        width /
+                                                                            170.75),
+                                                            child:
+                                                                TextFormField(
+                                                              inputFormatters: [
+                                                                FilteringTextInputFormatter
+                                                                    .allow(RegExp(
+                                                                        "[a-zA-Z ]")),
+                                                              ],
+                                                              style:
+                                                                  SafeGoogleFont(
+                                                                'Nunito',
+                                                                fontSize:
+                                                                    width /
+                                                                        105.571,
+                                                              ),
+                                                              controller:
+                                                                  companyController,
+                                                              maxLines: 1,
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                isDense: true,
+                                                                border:
+                                                                    InputBorder
+                                                                        .none,
+                                                                hintStyle:
+                                                                    SafeGoogleFont(
+                                                                  'Nunito',
+                                                                  fontSize:
+                                                                      width /
+                                                                          105.571,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
                                               ],
                                             ),
+                                            SizedBox(height: height / 65.1),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                /*  Column(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                children: [
+                                                  KText(
+                                                    text: "Date *",
+                                                    style: SafeGoogleFont(
+                                                      'Nunito',
+                                                      fontSize: width / 105.571,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: height / 108.5),
+                                                  Material(
+                                                    borderRadius: BorderRadius.circular(3),
+                                                    color: Color(0xffDDDEEE),
+                                                    elevation: 5,
+                                                    child: SizedBox(
+                                                      height: height / 16.02,
+                                                      width: width / 9.106,
+                                                      child: Padding(
+                                                        padding: EdgeInsets.symmetric(
+                                                            vertical: height / 81.375,
+                                                            horizontal: width / 170.75),
+                                                        child: TextFormField(
+                                                          style: SafeGoogleFont(
+                                                            'Nunito',
+                                                            fontSize: width / 105.571,
+                                                          ),
+                                                          readOnly: true,
+                                                          decoration: InputDecoration(
+                                                              border: InputBorder.none),
+                                                          controller: dateController,
+                                                          onTap: () async {
+                                                            DateTime? pickedDate =
+                                                            await showDatePicker(
+                                                                context: context,
+                                                                initialDate:
+                                                                DateTime.now(),
+                                                                firstDate:
+                                                                DateTime(1900),
+                                                                lastDate:
+                                                                DateTime(3000));
+                                                            if (pickedDate != null) {
+                                                              setState(() {
+                                                                dateController.text =
+                                                                    formatter.format(
+                                                                        pickedDate);
+                                                              });
+                                                            }
+                                                          },
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                              SizedBox(width: width / 68.3),
+                                              Column(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                children: [
+                                                  KText(
+                                                    text: "Time *",
+                                                    style: SafeGoogleFont(
+                                                      'Nunito',
+                                                      fontSize: width / 105.571,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: height / 108.5),
+                                                  Material(
+                                                    borderRadius: BorderRadius.circular(3),
+                                                    color: Color(0xffDDDEEE),
+                                                    elevation: 5,
+                                                    child: SizedBox(
+                                                      height: height / 16.02,
+                                                      width: width / 9.106,
+                                                      child: Padding(
+                                                        padding: EdgeInsets.symmetric(
+                                                            vertical: height / 81.375,
+                                                            horizontal: width / 170.75),
+                                                        child: TextFormField(
+                                                          readOnly: true,
+                                                          onTap: () {
+                                                            _selectTime(context);
+                                                          },
+                                                          controller: timeController,
+                                                          decoration: InputDecoration(
+                                                            border: InputBorder.none,
+                                                            hintStyle: SafeGoogleFont(
+                                                              'Nunito',
+                                                              fontSize: width / 105.571,
+                                                            ),
+                                                          ),
+                                                          style: SafeGoogleFont(
+                                                            'Nunito',
+                                                            fontSize: width / 105.571,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                              SizedBox(width: width / 68.3),*/
 
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    KText(
+                                                      text:
+                                                          "Minimun Experience *",
+                                                      style: SafeGoogleFont(
+                                                        'Nunito',
+                                                        fontSize:
+                                                            width / 105.571,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                        height: height / 108.5),
+                                                    Material(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              3),
+                                                      color: const Color(
+                                                          0xffDDDEEE),
+                                                      elevation: 5,
+                                                      child: SizedBox(
+                                                        height: height / 16.02,
+                                                        width:
+                                                            size.width * 0.17,
+                                                        child: Padding(
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                                  vertical:
+                                                                      height /
+                                                                          81.375,
+                                                                  horizontal:
+                                                                      width /
+                                                                          170.75),
+                                                          child: TextFormField(
+                                                            inputFormatters: [
+                                                              FilteringTextInputFormatter
+                                                                  .allow(RegExp(
+                                                                      "[0-9 ]")),
+                                                            ],
+                                                            style:
+                                                                SafeGoogleFont(
+                                                              'Nunito',
+                                                              fontSize: width /
+                                                                  105.571,
+                                                            ),
+                                                            minLines: 1,
+                                                            controller:
+                                                                expController,
+                                                            decoration:
+                                                                InputDecoration(
+                                                              isDense: true,
+                                                              border:
+                                                                  InputBorder
+                                                                      .none,
+                                                              hintStyle:
+                                                                  SafeGoogleFont(
+                                                                'Nunito',
+                                                                fontSize:
+                                                                    width /
+                                                                        105.571,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                             SizedBox(height: height / 65.1),
                                             Row(
                                               children: [
@@ -1122,7 +1418,8 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               3),
-                                                      color: const Color(0xffDDDEEE),
+                                                      color: const Color(
+                                                          0xffDDDEEE),
                                                       elevation: 5,
                                                       child: SizedBox(
                                                         height: height / 10.850,
@@ -1200,7 +1497,8 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               3),
-                                                      color: const Color(0xffDDDEEE),
+                                                      color: const Color(
+                                                          0xffDDDEEE),
                                                       elevation: 5,
                                                       child: SizedBox(
                                                         height: height / 6.510,
@@ -1298,76 +1596,91 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                             onTap: () async {
                                               if (dateController.text != "" &&
                                                   timeController.text != "" &&
-
                                                   titleController.text != "" &&
-                                                  locationController.text != "" &&
-                                                  descriptionController.text != "" &&
-                                                  quvalificationController.text != "" &&
-                                                  noOfOpeningController.text != "" &&
-                                                  positionsController.text != ""
-
-
-
-
-
-
-
-
-
-
-
-                                              ) { // Check if Positions is not empty
+                                                  locationController.text !=
+                                                      "" &&
+                                                  descriptionController.text !=
+                                                      "" &&
+                                                  quvalificationController
+                                                          .text !=
+                                                      "" &&
+                                                  noOfOpeningController.text !=
+                                                      "" &&
+                                                  positionsController.text !=
+                                                      "") {
+                                                // Check if Positions is not empty
 
                                                 Response response = await JobPostFireCrud.addEvent(
-                                                  title: titleController.text,
-                                                  time: DateFormat('hh:mm a').format(DateTime.now()),
-                                                  location: locationController.text,
-                                                  image: profileImage,
-                                                  description: descriptionController.text,
-                                                  date: formatter.format(DateTime.now()),
-                                                  positions: positionsController.text,
-                                                  openings: noOfOpeningController.text,
-                                                  quvalification: quvalificationController.text,
-                                                  verify: true,
-                                                  userName: "Admin",
-                                                  UserOccupation: "Admin",
-                                                  Batch: "Admin",
-                                                    LastDate:lastDateController.text
-                                                );
+                                                    title: titleController.text,
+                                                    time: DateFormat('hh:mm a')
+                                                        .format(DateTime.now()),
+                                                    location:
+                                                        locationController.text,
+                                                    image: profileImage,
+                                                    description:
+                                                        descriptionController
+                                                            .text,
+                                                    date: formatter
+                                                        .format(DateTime.now()),
+                                                    positions:
+                                                        positionsController
+                                                            .text,
+                                                    openings:
+                                                        noOfOpeningController
+                                                            .text,
+                                                    quvalification:
+                                                        quvalificationController
+                                                            .text,
+                                                    verify: true,
+                                                    userName: "Admin",
+                                                    UserOccupation: "Admin",
+                                                    Batch: "Admin",
+                                                    LastDate: lastDateController
+                                                        .text);
+                                                _submitData1();
 
                                                 if (response.code == 200) {
                                                   CoolAlert.show(
                                                     context: context,
                                                     type: CoolAlertType.success,
-                                                    text: "Post created successfully!",
+                                                    text:
+                                                        "Post created successfully!",
                                                     width: size.width * 0.4,
-                                                    backgroundColor: Constants().primaryAppColor.withOpacity(0.8),
+                                                    backgroundColor: Constants()
+                                                        .primaryAppColor
+                                                        .withOpacity(0.8),
                                                   );
 
                                                   setState(() {
-                                                    locationController.text = "";
-                                                    descriptionController.text = "";
-                                                    quvalificationController.text = "";
-                                                    positionsController.text = "";
+                                                    locationController.text =
+                                                        "";
+                                                    descriptionController.text =
+                                                        "";
+                                                    quvalificationController
+                                                        .text = "";
+                                                    positionsController.text =
+                                                        "";
                                                     titleController.text = "";
                                                     uploadedImage = null;
                                                     profileImage = null;
                                                     currentTab = 'View';
                                                   });
                                                   doclength();
-                                                }
-                                                else {
+                                                } else {
                                                   CoolAlert.show(
                                                     context: context,
                                                     type: CoolAlertType.error,
-                                                    text: "Failed to Create Post!",
+                                                    text:
+                                                        "Failed to Create Post!",
                                                     width: size.width * 0.4,
-                                                    backgroundColor: Constants().primaryAppColor.withOpacity(0.8),
+                                                    backgroundColor: Constants()
+                                                        .primaryAppColor
+                                                        .withOpacity(0.8),
                                                   );
                                                 }
-                                              }
-                                              else {
-                                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                              } else {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(snackBar);
                                               }
                                             },
                                             child: Container(
@@ -1375,7 +1688,8 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                               width: width / 12.8,
                                               decoration: BoxDecoration(
                                                 color: const Color(0xffD60A0B),
-                                                borderRadius: BorderRadius.circular(4),
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
                                               ),
                                               child: Center(
                                                 child: KText(
@@ -1384,7 +1698,8 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                     'Nunito',
                                                     fontSize: width / 96,
                                                     fontWeight: FontWeight.w600,
-                                                    color: const Color(0xffFFFFFF),
+                                                    color:
+                                                        const Color(0xffFFFFFF),
                                                   ),
                                                 ),
                                               ),
@@ -1393,7 +1708,6 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                           SizedBox(
                                             width: width / 76.8,
                                           ),
-
 
                                           ///Reset Button
                                           GestureDetector(
@@ -1413,7 +1727,8 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                 height: height / 18.475,
                                                 width: width / 12.8,
                                                 decoration: BoxDecoration(
-                                                  color: const Color(0xff00A0E3),
+                                                  color:
+                                                      const Color(0xff00A0E3),
                                                   borderRadius:
                                                       BorderRadius.circular(4),
                                                 ),
@@ -1425,7 +1740,8 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                       fontSize: width / 96,
                                                       fontWeight:
                                                           FontWeight.w600,
-                                                      color: const Color(0xffFFFFFF),
+                                                      color: const Color(
+                                                          0xffFFFFFF),
                                                     ),
                                                   ),
                                                 )),
@@ -1465,7 +1781,8 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                       fontSize: width / 96,
                                                       fontWeight:
                                                           FontWeight.w600,
-                                                      color: const Color(0xffFFFFFF),
+                                                      color: const Color(
+                                                          0xffFFFFFF),
                                                     ),
                                                   ),
                                                 )),
@@ -1482,1718 +1799,1538 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                       ),
                     )
                   : currentTab.toUpperCase() == "VIEW"
-                      ? SizedBox(height: height / 1.0166, width: width / 1.21964,
-                child: SingleChildScrollView(
-                  physics: const NeverScrollableScrollPhysics(),
-                child: StreamBuilder<List<JobPostModel>>(
-                      stream: JobPostFireCrud.fetchJobPost(filterValue: filterChageValue,filter: filtervalue),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData == null) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        }
-                        if (!snapshot.hasData) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        }
-                        List<JobPostModel> jobPost = snapshot.data!;
-                        exportdataListFromStream = jobPost;
-                        List<JobPostModel> verifyed = [];
-                        List<JobPostModel> Notverifyed = [];
+                      ? SizedBox(
+                          height: height / 1.0166,
+                          width: width / 1.21964,
+                          child: SingleChildScrollView(
+                            physics: const NeverScrollableScrollPhysics(),
+                            child: StreamBuilder<List<JobPostModel>>(
+                                stream: JobPostFireCrud.fetchJobPost(
+                                    filterValue: filterChageValue,
+                                    filter: filtervalue),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData == null) {
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                  if (!snapshot.hasData) {
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                  List<JobPostModel> jobPost = snapshot.data!;
+                                  exportdataListFromStream = jobPost;
+                                  List<JobPostModel> verifyed = [];
+                                  List<JobPostModel> Notverifyed = [];
 
-                        snapshot.data!.forEach((element) {
-                          if (element.verify == true) {
-                            verifyed.add(element);
-                          } else {
-                            Notverifyed.add(element);
-                          }
-                        });
+                                  snapshot.data!.forEach((element) {
+                                    if (element.verify == true) {
+                                      verifyed.add(element);
+                                    } else {
+                                      Notverifyed.add(element);
+                                    }
+                                  });
 
-                        return Column(
-                          children: [
-                            TabBar(
-                              controller: tabController,
-                              labelColor: Colors.black,
-                              dividerColor: Colors.transparent,
-                              isScrollable: false,
-                              indicatorSize:
-                              TabBarIndicatorSize.label,
-                              indicatorColor:
-                              Constants().primaryAppColor,
-                              physics:
-                              const BouncingScrollPhysics(),
-                              indicatorPadding:
-                              const EdgeInsets.symmetric(
-                                  horizontal: 0, vertical: 0),
-                              labelPadding:
-                              const EdgeInsets.all(0),
-                              splashBorderRadius:
-                              BorderRadius.zero,
-                              splashFactory:
-                              NoSplash.splashFactory,
-                              labelStyle: GoogleFonts.nunito(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w800,
-                              ),
-                              unselectedLabelStyle:
-                              GoogleFonts.nunito(
-                                  color: const Color(
-                                      0xff4E4B66)),
-                              onTap: (index) {
-                                setState(() {
-                                  selectTabIndex = index;
-                                });
-                              },
-                              tabs: [
-                                Tab(
-                                  child: KText(
-                                      text: "Verified",
-                                      style: GoogleFonts.nunito(
-                                          fontWeight:
-                                          FontWeight.w600)),
-                                ),
-                                Tab(
-                                  child: KText(
-                                      text: "Not Verified",
-                                      style: GoogleFonts.nunito(
-                                          fontWeight:
-                                          FontWeight.w600)),
-                                ),
-                              ],
-                            ),
-                            Container(
-                                color: Colors.white,
-                                width: width / 1.2418,
-                                // width: width/1.3009,
-                                height: height / 13.4363,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      color: Colors.white,
-                                      width: width / 19.2,
-                                      height: height / 14.78,
-                                      alignment: Alignment.center,
-                                      child: Center(
-                                        child: Row(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .center,
-                                          children: [
-                                            KText(
-                                              text: "SL.No",
-                                              style:
-                                              SafeGoogleFont(
-                                                'Nunito',
-                                                color: const Color(
-                                                    0xff030229),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                              const EdgeInsets
-                                                  .only(
-                                                  left: 8),
-                                              child: InkWell(
-                                                onTap: () {
-                                                },
-                                                child: Transform
-                                                    .rotate(
-                                                  angle
-                                                      : 0,
-                                                  child: Opacity(
-                                                    // arrowdown2TvZ (8:2307)
-                                                    opacity: 0.7,
-                                                    child:
-                                                    Container(
-                                                      width: width /
-                                                          153.6,
-                                                      height:
-                                                      height /
-                                                          73.9,
-                                                      child: Image
-                                                          .asset(
-                                                        'assets/images/arrow-down-2.png',
-                                                        width: width /
-                                                            153.6,
-                                                        height:
-                                                        height /
-                                                            73.9,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                  return Column(
+                                    children: [
+                                      TabBar(
+                                        controller: tabController,
+                                        labelColor: Colors.black,
+                                        dividerColor: Colors.transparent,
+                                        isScrollable: false,
+                                        indicatorSize:
+                                            TabBarIndicatorSize.label,
+                                        indicatorColor:
+                                            Constants().primaryAppColor,
+                                        physics: const BouncingScrollPhysics(),
+                                        indicatorPadding:
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 0, vertical: 0),
+                                        labelPadding: const EdgeInsets.all(0),
+                                        splashBorderRadius: BorderRadius.zero,
+                                        splashFactory: NoSplash.splashFactory,
+                                        labelStyle: GoogleFonts.nunito(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w800,
                                         ),
-                                      ),
-                                    ),
-                                    Container(
-                                      color: Colors.white,
-                                      width: width / 9.38857,
-                                      height: height / 14.78,
-                                      alignment: Alignment.center,
-                                      child: Center(
-                                        child: Row(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .center,
-                                          children: [
-                                            KText(
-                                              text: "Post Name",
-                                              style:
-                                              SafeGoogleFont(
-                                                'Nunito',
-                                                color: const Color(
-                                                    0xff030229),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                              const EdgeInsets
-                                                  .only(
-                                                  left: 8),
-                                              child: InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    filtervalue = !filtervalue;
-                                                    filterChageValue="title";
-                                                  });
-                                                },
-                                                child: Transform
-                                                    .rotate(
-                                                  angle:filterChageValue=="title"&&
-                                                  filtervalue
-                                                      ? 200
-                                                      : 0,
-                                                  child: Opacity(
-                                                    // arrowdown2TvZ (8:2307)
-                                                    opacity: 0.7,
-                                                    child:
-                                                    Container(
-                                                      width: width /
-                                                          153.6,
-                                                      height:
-                                                      height /
-                                                          73.9,
-                                                      child: Image
-                                                          .asset(
-                                                        'assets/images/arrow-down-2.png',
-                                                        width: width /
-                                                            153.6,
-                                                        height:
-                                                        height /
-                                                            73.9,
-                                                          color:filterChageValue=="title"&&filtervalue==true?Colors.green:
-                                                          Colors.transparent
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      color: Colors.white,
-                                      width: width / 7.38857,
-                                      height: height / 14.78,
-                                      alignment: Alignment.center,
-                                      child: Center(
-                                        child: Row(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .center,
-                                          children: [
-                                            KText(
-                                              text: "Title",
-                                              style:
-                                              SafeGoogleFont(
-                                                'Nunito',
-                                                color: const Color(
-                                                    0xff030229),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                              const EdgeInsets
-                                                  .only(
-                                                  left: 8),
-                                              child: InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    filtervalue = !filtervalue;
-                                                    filterChageValue="title";
-                                                  });
-                                                },
-                                                child: Transform
-                                                    .rotate(
-                                                  angle:filterChageValue=="title"&&
-                                                  filtervalue
-                                                      ? 200
-                                                      : 0,
-                                                  child: Opacity(
-                                                    // arrowdown2TvZ (8:2307)
-                                                    opacity: 0.7,
-                                                    child:
-                                                    Container(
-                                                      width: width /
-                                                          153.6,
-                                                      height:
-                                                      height /
-                                                          73.9,
-                                                      child: Image
-                                                          .asset(
-                                                        'assets/images/arrow-down-2.png',
-                                                        width: width /
-                                                            153.6,
-                                                        height:
-                                                        height /
-                                                            73.9,
-                                                          color:filterChageValue=="title"&&filtervalue==true?Colors.green:
-                                                          Colors.transparent
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      color: Colors.white,
-                                      width: width / 4.38857,
-                                      height: height / 14.78,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .start,
-                                        children: [
-                                          KText(
-                                            text: "Description",
-                                            style: SafeGoogleFont(
-                                              'Nunito',
-                                              color: const Color(
-                                                  0xff030229),
-                                            ),
+                                        unselectedLabelStyle:
+                                            GoogleFonts.nunito(
+                                                color: const Color(0xff4E4B66)),
+                                        onTap: (index) {
+                                          setState(() {
+                                            selectTabIndex = index;
+                                          });
+                                        },
+                                        tabs: [
+                                          Tab(
+                                            child: KText(
+                                                text: "Verified",
+                                                style: GoogleFonts.nunito(
+                                                    fontWeight:
+                                                        FontWeight.w600)),
                                           ),
-                                          Padding(
-                                            padding:
-                                            const EdgeInsets
-                                                .only(
-                                                left: 8),
-                                            child: InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  filtervalue =
-                                                  !filtervalue;
-                                                  filterChageValue="subtitle";
-                                                });
-                                              },
-                                              child: Transform
-                                                  .rotate(
-
-                                                angle: filterChageValue=="subtitle"&&filtervalue
-                                                    ? 200
-                                                    : 0,
-                                                child: Opacity(
-                                                  // arrowdown2TvZ (8:2307)
-                                                  opacity: 0.7,
-                                                  child:
-                                                  Container(
-                                                    width: width /
-                                                        153.6,
-                                                    height:
-                                                    height /
-                                                        73.9,
-                                                    child: Image
-                                                        .asset(
-                                                      'assets/images/arrow-down-2.png',
-                                                      width: width /
-                                                          153.6,
-                                                      height:
-                                                      height /
-                                                          73.9,
-                                                        color:filterChageValue=="subtitle"&&filtervalue==true?Colors.green:
-                                                        Colors.transparent
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
+                                          Tab(
+                                            child: KText(
+                                                text: "Not Verified",
+                                                style: GoogleFonts.nunito(
+                                                    fontWeight:
+                                                        FontWeight.w600)),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                    Container(
-                                      color: Colors.white,
-                                      width: width / 9.6,
-                                      height: height / 14.78,
-                                      alignment: Alignment.center,
-                                      child: Center(
-                                        child: Row(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .center,
-                                          children: [
-                                            KText(
-                                              text: "Created On",
-                                              style:
-                                              SafeGoogleFont(
-                                                'Nunito',
-                                                color: const Color(
-                                                    0xff030229),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                              const EdgeInsets
-                                                  .only(
-                                                  left: 8),
-                                              child: InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    filtervalue =
-                                                    !filtervalue;
-                                                    filterChageValue="date";
-                                                  });
-                                                },
-                                                child: Transform
-                                                    .rotate(
-                                                  angle:filterChageValue=="date"&&
-                                                  filtervalue
-                                                      ? 200
-                                                      : 0,
-                                                  child: Opacity(
-                                                    // arrowdown2TvZ (8:2307)
-                                                    opacity: 0.7,
-                                                    child:
-                                                    Container(
-                                                      width: width /
-                                                          153.6,
-                                                      height:
-                                                      height /
-                                                          73.9,
-                                                      child: Image
-                                                          .asset(
-                                                        'assets/images/arrow-down-2.png',
-                                                        width: width /
-                                                            153.6,
-                                                        height:
-                                                        height /
-                                                            73.9,
-                                                          color:filterChageValue=="date"&&filtervalue==true?Colors.green:
-                                                          Colors.transparent
+                                      Container(
+                                          color: Colors.white,
+                                          width: width / 1.2418,
+                                          // width: width/1.3009,
+                                          height: height / 13.4363,
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                color: Colors.white,
+                                                width: width / 19.2,
+                                                height: height / 14.78,
+                                                alignment: Alignment.center,
+                                                child: Center(
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      KText(
+                                                        text: "SL.No",
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          color: const Color(
+                                                              0xff030229),
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      color: Colors.white,
-                                      width: width / 16.0,
-                                      height: height / 14.78,
-                                      alignment: Alignment.center,
-                                      child: Center(
-                                        child: Row(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .center,
-                                          children: [
-                                            KText(
-                                              text: "Last Date",
-                                              style:
-                                              SafeGoogleFont(
-                                                'Nunito',
-                                                color: const Color(
-                                                    0xff030229),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                              const EdgeInsets
-                                                  .only(
-                                                  left: 8),
-                                              child: InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    filtervalue =
-                                                    !filtervalue;
-                                                    filterChageValue="LastDate";
-                                                  });
-                                                },
-                                                child: Transform
-                                                    .rotate(
-                                                  angle:filterChageValue=="LastDate"&&
-                                                  filtervalue
-                                                      ? 200
-                                                      : 0,
-                                                  child: Opacity(
-                                                    // arrowdown2TvZ (8:2307)
-                                                    opacity: 0.7,
-                                                    child:
-                                                    Container(
-                                                      width: width /
-                                                          153.6,
-                                                      height:
-                                                      height /
-                                                          73.9,
-                                                      child: Image
-                                                          .asset(
-                                                        'assets/images/arrow-down-2.png',
-                                                        width: width /
-                                                            153.6,
-                                                        height:
-                                                        height /
-                                                            73.9,
-                                                          color:filterChageValue=="uploadTime"&&filtervalue==true?Colors.green:
-                                                          Colors.transparent
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      color: Colors.white,
-                                      width: width / 17.6,
-                                      height: height / 14.78,
-                                      alignment: Alignment.center,
-                                      child: Center(
-                                        child: Row(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .center,
-                                          children: [
-                                            KText(
-                                              text: "Status",
-                                              style:
-                                              SafeGoogleFont(
-                                                'Nunito',
-                                                color: const Color(
-                                                    0xff030229),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                              const EdgeInsets
-                                                  .only(
-                                                  left: 8),
-                                              child: InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    filtervalue = !filtervalue;
-                                                    filterChageValue="verify";
-                                                  });
-                                                },
-                                                child: Transform
-                                                    .rotate(
-                                                  angle:filterChageValue=="verify"&&
-                                                  filtervalue
-                                                      ? 200
-                                                      : 0,
-                                                  child: Opacity(
-                                                    // arrowdown2TvZ (8:2307)
-                                                    opacity: 0.7,
-                                                    child:
-                                                    Container(
-                                                      width: width /
-                                                          153.6,
-                                                      height:
-                                                      height /
-                                                          73.9,
-                                                      child: Image
-                                                          .asset(
-                                                        'assets/images/arrow-down-2.png',
-                                                        width: width /
-                                                            153.6,
-                                                        height:
-                                                        height /
-                                                            73.9,
-                                                          color:filterChageValue=="verify"&&filtervalue==true?Colors.green:
-                                                              Colors.transparent
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      color: Colors.white,
-                                      width: width / 16.36,
-                                      height: height / 14.78,
-                                      child: Center(
-                                        child: Row(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .center,
-                                          children: [
-                                            KText(
-                                              text: "Actions",
-                                              style:
-                                              SafeGoogleFont(
-                                                'Nunito',
-                                                color: const Color(
-                                                    0xff030229),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                              const EdgeInsets
-                                                  .only(
-                                                  left: 8),
-                                              child: InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    filtervalue =
-                                                    !filtervalue;
-                                                  });
-                                                },
-                                                child: Transform
-                                                    .rotate(
-                                                  angle:
-                                                  filtervalue
-                                                      ? 200
-                                                      : 0,
-                                                  child: Opacity(
-                                                    // arrowdown2TvZ (8:2307)
-                                                    opacity: 0.7,
-                                                    child:
-                                                    Container(
-                                                      width: width /
-                                                          153.6,
-                                                      height:
-                                                      height /
-                                                          73.9,
-
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )),
-
-                            SizedBox(
-                              height: height / 1.102,
-                              child: TabBarView(
-                                controller: tabController,
-                                physics: const ScrollPhysics(),
-                                children: [
-
-                                  SizedBox(
-                                      height: height / 1.14363,
-                                      width: width / 1.2288,
-                                      child: SingleChildScrollView(
-                                        physics: const NeverScrollableScrollPhysics(),
-                                        child: Column(
-                                          children: [
-
-                                            SizedBox(
-                                              height:height/1.38,
-                                              child: ListView.builder(
-                                                shrinkWrap: true,
-                                                physics: const NeverScrollableScrollPhysics(),
-                                                itemCount: pagecount == temp ? verifyed.length.remainder(10) == 0 ? 10 : verifyed.length.remainder(10) : 10,
-                                                itemBuilder: (ctx, i) {
-
-                                                  var verifyedData=verifyed[(temp*10)-10+i];
-                                                  List<GlobalKey<State<StatefulWidget>>>popMenuKeys = List.generate(
-                                                    verifyed.length, (index) => GlobalKey(),
-                                                  );
-
-                                                  if(mydate.isNotEmpty){
-                                                    if(mydate.contains(verifyedData.date)){
-                                                      return
-                                                        SizedBox(
-                                                          width:
-                                                          width / 1.2288,
-                                                          height: height /
-                                                              13.4363,
-                                                          child: Padding(
-                                                            padding: EdgeInsets
-                                                                .only(
-                                                                left: width /
-                                                                    170.75),
-                                                            child: Row(
-                                                              children: [
-                                                                SizedBox(
-                                                                  width:
-                                                                  width /
-                                                                      19.2,
-                                                                  height:
-                                                                  height /
-                                                                      14.78,
-                                                                  child:
-                                                                  Padding(
-                                                                    padding: const EdgeInsets
-                                                                        .only(
-                                                                        left:
-                                                                        8),
-                                                                    child:
-                                                                    KText(
-                                                                      text:
-                                                                      "${ temp * i+ 2}",
-                                                                      style:
-                                                                      SafeGoogleFont(
-                                                                        'Nunito',
-                                                                        color:
-                                                                        const Color(0xff030229),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(left: 8),
+                                                        child: InkWell(
+                                                          onTap: () {},
+                                                          child:
+                                                              Transform.rotate(
+                                                            angle: 0,
+                                                            child: Opacity(
+                                                              // arrowdown2TvZ (8:2307)
+                                                              opacity: 0.7,
+                                                              child: Container(
+                                                                width: width /
+                                                                    153.6,
+                                                                height: height /
+                                                                    73.9,
+                                                                child:
+                                                                    Image.asset(
+                                                                  'assets/images/arrow-down-2.png',
                                                                   width: width /
-                                                                      9.38857,
+                                                                      153.6,
                                                                   height:
-                                                                  height /
-                                                                      14.78,
-                                                                  child:
-                                                                  Padding(
-                                                                    padding: const EdgeInsets
-                                                                        .only(
-                                                                        left:
-                                                                        8),
-                                                                    child:
-                                                                    KText(
-                                                                      text:verifyedData.positions
-                                                                          .toString(),
-                                                                      style:
-                                                                      SafeGoogleFont(
-                                                                        'Nunito',
-                                                                        color:
-                                                                        const Color(0xff030229),
-                                                                      ),
-                                                                    ),
-                                                                  ),
+                                                                      height /
+                                                                          73.9,
                                                                 ),
-                                                                SizedBox(
-                                                                  width: width /
-                                                                      7.38857,
-                                                                  height:
-                                                                  height /
-                                                                      14.78,
-                                                                  child:
-                                                                  Padding(
-                                                                    padding: const EdgeInsets
-                                                                        .only(
-                                                                        left:
-                                                                        8),
-                                                                    child:
-                                                                    KText(
-                                                                      text:verifyedData
-                                                                          .title
-                                                                          .toString(),
-                                                                      style:
-                                                                      SafeGoogleFont(
-                                                                        'Nunito',
-                                                                        color:
-                                                                        const Color(0xff030229),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  width: width /
-                                                                      4.38857,
-                                                                  height:
-                                                                  height /
-                                                                      14.78,
-                                                                  child:
-                                                                  Padding(
-                                                                    padding: const EdgeInsets
-                                                                        .only(
-                                                                        left:
-                                                                        8),
-                                                                    child:
-                                                                    KText(
-                                                                      text: verifyedData
-                                                                          .description
-                                                                          .toString(),
-                                                                      style:
-                                                                      SafeGoogleFont(
-                                                                        'Nunito',
-                                                                        color:
-                                                                        const Color(0xff030229),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  width:
-                                                                  width /
-                                                                      9.6,
-                                                                  height:
-                                                                  height /
-                                                                      14.78,
-                                                                  child:
-                                                                  Padding(
-                                                                    padding: const EdgeInsets
-                                                                        .only(
-                                                                        left:
-                                                                        8),
-                                                                    child:
-                                                                    KText(
-                                                                      text: verifyedData
-                                                                          .date
-                                                                          .toString(),
-                                                                      style:
-                                                                      SafeGoogleFont(
-                                                                        'Nunito',
-                                                                        color:
-                                                                        const Color(0xff030229),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  width:
-                                                                  width /
-                                                                      16.0,
-                                                                  height:
-                                                                  height /
-                                                                      14.78,
-                                                                  child:
-                                                                  Padding(
-                                                                    padding: const EdgeInsets
-                                                                        .only(
-                                                                        left:
-                                                                        8),
-                                                                    child:
-                                                                    KText(
-                                                                      text: verifyedData
-                                                                          .LastDate
-                                                                          .toString(),
-                                                                      style:
-                                                                      SafeGoogleFont(
-                                                                        'Nunito',
-                                                                        color:
-                                                                        const Color(0xff030229),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                    width: width /
-                                                                        17.6,
-                                                                    height: height /
-                                                                        14.78,
-                                                                    child: verifyedData.verify ==
-                                                                        true
-                                                                        ? const Icon(
-                                                                      Icons.verified,
-                                                                      color: Colors.green,
-                                                                    )
-                                                                        : const Icon(
-                                                                      Icons.verified_outlined,
-                                                                    )),
-                                                                GestureDetector(
-                                                                  onTap: () {
-                                                                    Popupmenu(
-                                                                        context,
-                                                                        verifyedData,
-                                                                        popMenuKeys[
-                                                                        i],
-                                                                        size);
-                                                                  },
-                                                                  child: SizedBox(
-                                                                      key: popMenuKeys[
-                                                                      i],
-                                                                      width: width /
-                                                                          18.36,
-                                                                      height: height /
-                                                                          14.78,
-                                                                      child: const Icon(
-                                                                          Icons.more_horiz)),
-                                                                ),
-                                                              ],
+                                                              ),
                                                             ),
-                                                          ));
-                                                    }
-                                                  }
-                                                  else if(mydate.isEmpty){
-                                                    return  ((temp*10)-10+i >= documentlength)? const SizedBox():
-                                                    SizedBox(
-                                                        width:
-                                                        width / 1.2288,
-                                                        height: height /
-                                                            13.4363,
-                                                        child: Padding(
-                                                          padding: EdgeInsets
-                                                              .only(
-                                                              left: width /
-                                                                  170.75),
-                                                          child: Row(
-                                                            children: [
-                                                              SizedBox(
-                                                                width:
-                                                                width /
-                                                                    19.2,
-                                                                height:
-                                                                height /
-                                                                    14.78,
-                                                                child:
-                                                                Padding(
-                                                                  padding: const EdgeInsets
-                                                                      .only(
-                                                                      left:
-                                                                      8),
-                                                                  child:
-                                                                  KText(
-                                                                    text:
-                                                                    "${ temp * i+ 2}",
-                                                                    style:
-                                                                    SafeGoogleFont(
-                                                                      'Nunito',
-                                                                      color:
-                                                                      const Color(0xff030229),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                width: width /
-                                                                    9.38857,
-                                                                height:
-                                                                height /
-                                                                    14.78,
-                                                                child:
-                                                                Padding(
-                                                                  padding: const EdgeInsets
-                                                                      .only(
-                                                                      left:
-                                                                      8),
-                                                                  child:
-                                                                  KText(
-                                                                    text:verifyedData.positions
-                                                                        .toString(),
-                                                                    style:
-                                                                    SafeGoogleFont(
-                                                                      'Nunito',
-                                                                      color:
-                                                                      const Color(0xff030229),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                width: width /
-                                                                    7.38857,
-                                                                height:
-                                                                height /
-                                                                    14.78,
-                                                                child:
-                                                                Padding(
-                                                                  padding: const EdgeInsets
-                                                                      .only(
-                                                                      left:
-                                                                      8),
-                                                                  child:
-                                                                  KText(
-                                                                    text:verifyedData
-                                                                        .title
-                                                                        .toString(),
-                                                                    style:
-                                                                    SafeGoogleFont(
-                                                                      'Nunito',
-                                                                      color:
-                                                                      const Color(0xff030229),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                width: width /
-                                                                    4.38857,
-                                                                height:
-                                                                height /
-                                                                    14.78,
-                                                                child:
-                                                                Padding(
-                                                                  padding: const EdgeInsets
-                                                                      .only(
-                                                                      left:
-                                                                      8),
-                                                                  child:
-                                                                  KText(
-                                                                    text: verifyedData
-                                                                        .description
-                                                                        .toString(),
-                                                                    style:
-                                                                    SafeGoogleFont(
-                                                                      'Nunito',
-                                                                      color:
-                                                                      const Color(0xff030229),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                width:
-                                                                width /
-                                                                    9.6,
-                                                                height:
-                                                                height /
-                                                                    14.78,
-                                                                child:
-                                                                Padding(
-                                                                  padding: const EdgeInsets
-                                                                      .only(
-                                                                      left:
-                                                                      8),
-                                                                  child:
-                                                                  KText(
-                                                                    text: verifyedData
-                                                                        .date
-                                                                        .toString(),
-                                                                    style:
-                                                                    SafeGoogleFont(
-                                                                      'Nunito',
-                                                                      color:
-                                                                      const Color(0xff030229),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                width:
-                                                                width /
-                                                                    16.0,
-                                                                height:
-                                                                height /
-                                                                    14.78,
-                                                                child:
-                                                                Padding(
-                                                                  padding: const EdgeInsets
-                                                                      .only(
-                                                                      left:
-                                                                      8),
-                                                                  child:
-                                                                  KText(
-                                                                    text: verifyedData
-                                                                        .LastDate
-                                                                        .toString(),
-                                                                    style:
-                                                                    SafeGoogleFont(
-                                                                      'Nunito',
-                                                                      color:
-                                                                      const Color(0xff030229),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                  width: width /
-                                                                      17.6,
-                                                                  height: height /
-                                                                      14.78,
-                                                                  child: verifyedData.verify ==
-                                                                      true
-                                                                      ? const Icon(
-                                                                    Icons.verified,
-                                                                    color: Colors.green,
-                                                                  )
-                                                                      : const Icon(
-                                                                    Icons.verified_outlined,
-                                                                  )),
-                                                              GestureDetector(
-                                                                onTap: () {
-                                                                  Popupmenu(
-                                                                      context,
-                                                                      verifyedData,
-                                                                      popMenuKeys[
-                                                                      i],
-                                                                      size);
-                                                                },
-                                                                child: SizedBox(
-                                                                    key: popMenuKeys[
-                                                                    i],
-                                                                    width: width /
-                                                                        18.36,
-                                                                    height: height /
-                                                                        14.78,
-                                                                    child: const Icon(
-                                                                        Icons.more_horiz)),
-                                                              ),
-                                                            ],
                                                           ),
-                                                        ));
-                                                  }
-                                                  return const SizedBox();
-                                                },
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width:width/1.2418,
-                                              child: Stack(
-                                                alignment: Alignment.centerRight,
-                                                children: [
-                                                  SizedBox(
-                                                    width: double.infinity,
-                                                    height:height/13.02,
-                                                    child: ListView.builder(
-                                                        shrinkWrap: true,
-                                                        scrollDirection: Axis.horizontal,
-                                                        itemCount: pagecount,
-                                                        itemBuilder: (context,index){
-                                                          return InkWell(
-                                                            onTap: (){
-                                                              setState(() {
-                                                                temp=list[index];
-                                                              });
-                                                              print(temp);
-                                                            },
-                                                            child: Container(
-                                                                height:30,width:30,
-                                                                margin: const EdgeInsets.only(left:8,right:8,top:10,bottom:10),
-                                                                decoration: BoxDecoration(
-                                                                    borderRadius: BorderRadius.circular(100),
-                                                                    color:temp.toString() == list[index].toString() ?  Constants().primaryAppColor : Colors.transparent
-                                                                ),
-                                                                child: Center(
-                                                                  child: Text(list[index].toString(),style: SafeGoogleFont(
-                                                                      'Nunito',
-                                                                      fontWeight: FontWeight.w700,
-                                                                      color: temp.toString() == list[index].toString() ?  Colors.white : Colors.black
-
-                                                                  ),),
-                                                                )
-                                                            ),
-                                                          );
-
-                                                        }),
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
-                                                  temp > 1 ?
-                                                  Padding(
-                                                    padding: const EdgeInsets.only(right: 150.0),
-                                                    child:
-                                                    InkWell(
-                                                      onTap:(){
-                                                        setState(() {
-                                                          temp= temp-1;
-                                                        });
-                                                      },
-                                                      child: Container(
-                                                          height:height/16.275,
-                                                          width:width/11.3833,
-                                                          decoration:BoxDecoration(
-                                                              color:Constants().primaryAppColor,
-                                                              borderRadius: BorderRadius.circular(80)
+                                                ),
+                                              ),
+                                              Container(
+                                                color: Colors.white,
+                                                width: width / 9.38857,
+                                                height: height / 14.78,
+                                                alignment: Alignment.center,
+                                                child: Center(
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      KText(
+                                                        text: "Post Name",
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          color: const Color(
+                                                              0xff030229),
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(left: 8),
+                                                        child: InkWell(
+                                                          onTap: () {
+                                                            setState(() {
+                                                              filtervalue =
+                                                                  !filtervalue;
+                                                              filterChageValue =
+                                                                  "title";
+                                                            });
+                                                          },
+                                                          child:
+                                                              Transform.rotate(
+                                                            angle: filterChageValue ==
+                                                                        "title" &&
+                                                                    filtervalue
+                                                                ? 200
+                                                                : 0,
+                                                            child: Opacity(
+                                                              // arrowdown2TvZ (8:2307)
+                                                              opacity: 0.7,
+                                                              child: Container(
+                                                                width: width /
+                                                                    153.6,
+                                                                height: height /
+                                                                    73.9,
+                                                                child: Image.asset(
+                                                                    'assets/images/arrow-down-2.png',
+                                                                    width: width /
+                                                                        153.6,
+                                                                    height:
+                                                                        height /
+                                                                            73.9,
+                                                                    color: filterChageValue ==
+                                                                                "title" &&
+                                                                            filtervalue ==
+                                                                                true
+                                                                        ? Colors
+                                                                            .green
+                                                                        : Colors
+                                                                            .transparent),
+                                                              ),
+                                                            ),
                                                           ),
-                                                          child: Center(
-                                                            child: Text("Previous Page",style: SafeGoogleFont(
-                                                              'Nunito',
-                                                              fontWeight: FontWeight.w700,
-                                                              color: Colors.white,
-                                                            ),),
-                                                          )),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                color: Colors.white,
+                                                width: width / 7.38857,
+                                                height: height / 14.78,
+                                                alignment: Alignment.center,
+                                                child: Center(
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      KText(
+                                                        text: "Title",
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          color: const Color(
+                                                              0xff030229),
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(left: 8),
+                                                        child: InkWell(
+                                                          onTap: () {
+                                                            setState(() {
+                                                              filtervalue =
+                                                                  !filtervalue;
+                                                              filterChageValue =
+                                                                  "title";
+                                                            });
+                                                          },
+                                                          child:
+                                                              Transform.rotate(
+                                                            angle: filterChageValue ==
+                                                                        "title" &&
+                                                                    filtervalue
+                                                                ? 200
+                                                                : 0,
+                                                            child: Opacity(
+                                                              // arrowdown2TvZ (8:2307)
+                                                              opacity: 0.7,
+                                                              child: Container(
+                                                                width: width /
+                                                                    153.6,
+                                                                height: height /
+                                                                    73.9,
+                                                                child: Image.asset(
+                                                                    'assets/images/arrow-down-2.png',
+                                                                    width: width /
+                                                                        153.6,
+                                                                    height:
+                                                                        height /
+                                                                            73.9,
+                                                                    color: filterChageValue ==
+                                                                                "title" &&
+                                                                            filtervalue ==
+                                                                                true
+                                                                        ? Colors
+                                                                            .green
+                                                                        : Colors
+                                                                            .transparent),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                color: Colors.white,
+                                                width: width / 4.38857,
+                                                height: height / 14.78,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    KText(
+                                                      text: "Description",
+                                                      style: SafeGoogleFont(
+                                                        'Nunito',
+                                                        color: const Color(
+                                                            0xff030229),
+                                                      ),
                                                     ),
-                                                  )  : Container(),
-                                                  Container(
-                                                    child: temp < pagecount ?
                                                     Padding(
-                                                      padding: const EdgeInsets.only(right: 20.0),
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 8),
                                                       child: InkWell(
-                                                        onTap:(){
+                                                        onTap: () {
                                                           setState(() {
-                                                            temp= temp+1;
+                                                            filtervalue =
+                                                                !filtervalue;
+                                                            filterChageValue =
+                                                                "subtitle";
                                                           });
                                                         },
-                                                        child:
-                                                        Container(
-                                                            height:height/16.275,
-                                                            width:width/11.3833,
-                                                            decoration:BoxDecoration(
-                                                                color:Constants().primaryAppColor,
-                                                                borderRadius: BorderRadius.circular(80)
+                                                        child: Transform.rotate(
+                                                          angle: filterChageValue ==
+                                                                      "subtitle" &&
+                                                                  filtervalue
+                                                              ? 200
+                                                              : 0,
+                                                          child: Opacity(
+                                                            // arrowdown2TvZ (8:2307)
+                                                            opacity: 0.7,
+                                                            child: Container(
+                                                              width:
+                                                                  width / 153.6,
+                                                              height:
+                                                                  height / 73.9,
+                                                              child: Image.asset(
+                                                                  'assets/images/arrow-down-2.png',
+                                                                  width: width /
+                                                                      153.6,
+                                                                  height:
+                                                                      height /
+                                                                          73.9,
+                                                                  color: filterChageValue ==
+                                                                              "subtitle" &&
+                                                                          filtervalue ==
+                                                                              true
+                                                                      ? Colors
+                                                                          .green
+                                                                      : Colors
+                                                                          .transparent),
                                                             ),
-                                                            child: Center(
-                                                              child: Text("Next Page",style: SafeGoogleFont(
-                                                                'Nunito',
-                                                                fontWeight: FontWeight.w700,
-                                                                color: Colors.white,
-                                                              ),),
-                                                            )),
+                                                          ),
+                                                        ),
                                                       ),
-                                                    )  : Container(),
-                                                  )
-                                                ],
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
+                                              Container(
+                                                color: Colors.white,
+                                                width: width / 9.6,
+                                                height: height / 14.78,
+                                                alignment: Alignment.center,
+                                                child: Center(
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      KText(
+                                                        text: "Created On",
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          color: const Color(
+                                                              0xff030229),
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(left: 8),
+                                                        child: InkWell(
+                                                          onTap: () {
+                                                            setState(() {
+                                                              filtervalue =
+                                                                  !filtervalue;
+                                                              filterChageValue =
+                                                                  "date";
+                                                            });
+                                                          },
+                                                          child:
+                                                              Transform.rotate(
+                                                            angle: filterChageValue ==
+                                                                        "date" &&
+                                                                    filtervalue
+                                                                ? 200
+                                                                : 0,
+                                                            child: Opacity(
+                                                              // arrowdown2TvZ (8:2307)
+                                                              opacity: 0.7,
+                                                              child: Container(
+                                                                width: width /
+                                                                    153.6,
+                                                                height: height /
+                                                                    73.9,
+                                                                child: Image.asset(
+                                                                    'assets/images/arrow-down-2.png',
+                                                                    width: width /
+                                                                        153.6,
+                                                                    height:
+                                                                        height /
+                                                                            73.9,
+                                                                    color: filterChageValue ==
+                                                                                "date" &&
+                                                                            filtervalue ==
+                                                                                true
+                                                                        ? Colors
+                                                                            .green
+                                                                        : Colors
+                                                                            .transparent),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                color: Colors.white,
+                                                width: width / 16.0,
+                                                height: height / 14.78,
+                                                alignment: Alignment.center,
+                                                child: Center(
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      KText(
+                                                        text: "Last Date",
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          color: const Color(
+                                                              0xff030229),
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(left: 8),
+                                                        child: InkWell(
+                                                          onTap: () {
+                                                            setState(() {
+                                                              filtervalue =
+                                                                  !filtervalue;
+                                                              filterChageValue =
+                                                                  "LastDate";
+                                                            });
+                                                          },
+                                                          child:
+                                                              Transform.rotate(
+                                                            angle: filterChageValue ==
+                                                                        "LastDate" &&
+                                                                    filtervalue
+                                                                ? 200
+                                                                : 0,
+                                                            child: Opacity(
+                                                              // arrowdown2TvZ (8:2307)
+                                                              opacity: 0.7,
+                                                              child: Container(
+                                                                width: width /
+                                                                    153.6,
+                                                                height: height /
+                                                                    73.9,
+                                                                child: Image.asset(
+                                                                    'assets/images/arrow-down-2.png',
+                                                                    width: width /
+                                                                        153.6,
+                                                                    height:
+                                                                        height /
+                                                                            73.9,
+                                                                    color: filterChageValue ==
+                                                                                "uploadTime" &&
+                                                                            filtervalue ==
+                                                                                true
+                                                                        ? Colors
+                                                                            .green
+                                                                        : Colors
+                                                                            .transparent),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                color: Colors.white,
+                                                width: width / 17.6,
+                                                height: height / 14.78,
+                                                alignment: Alignment.center,
+                                                child: Center(
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      KText(
+                                                        text: "Status",
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          color: const Color(
+                                                              0xff030229),
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(left: 8),
+                                                        child: InkWell(
+                                                          onTap: () {
+                                                            setState(() {
+                                                              filtervalue =
+                                                                  !filtervalue;
+                                                              filterChageValue =
+                                                                  "verify";
+                                                            });
+                                                          },
+                                                          child:
+                                                              Transform.rotate(
+                                                            angle: filterChageValue ==
+                                                                        "verify" &&
+                                                                    filtervalue
+                                                                ? 200
+                                                                : 0,
+                                                            child: Opacity(
+                                                              // arrowdown2TvZ (8:2307)
+                                                              opacity: 0.7,
+                                                              child: Container(
+                                                                width: width /
+                                                                    153.6,
+                                                                height: height /
+                                                                    73.9,
+                                                                child: Image.asset(
+                                                                    'assets/images/arrow-down-2.png',
+                                                                    width: width /
+                                                                        153.6,
+                                                                    height:
+                                                                        height /
+                                                                            73.9,
+                                                                    color: filterChageValue ==
+                                                                                "verify" &&
+                                                                            filtervalue ==
+                                                                                true
+                                                                        ? Colors
+                                                                            .green
+                                                                        : Colors
+                                                                            .transparent),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                color: Colors.white,
+                                                width: width / 16.36,
+                                                height: height / 14.78,
+                                                child: Center(
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      KText(
+                                                        text: "Actions",
+                                                        style: SafeGoogleFont(
+                                                          'Nunito',
+                                                          color: const Color(
+                                                              0xff030229),
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(left: 8),
+                                                        child: InkWell(
+                                                          onTap: () {
+                                                            setState(() {
+                                                              filtervalue =
+                                                                  !filtervalue;
+                                                            });
+                                                          },
+                                                          child:
+                                                              Transform.rotate(
+                                                            angle: filtervalue
+                                                                ? 200
+                                                                : 0,
+                                                            child: Opacity(
+                                                              // arrowdown2TvZ (8:2307)
+                                                              opacity: 0.7,
+                                                              child: Container(
+                                                                width: width /
+                                                                    153.6,
+                                                                height: height /
+                                                                    73.9,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          )),
+                                      SizedBox(
+                                        height: height / 1.102,
+                                        child: TabBarView(
+                                          controller: tabController,
+                                          physics: const ScrollPhysics(),
+                                          children: [
+                                            SizedBox(
+                                                height: height / 1.14363,
+                                                width: width / 1.2288,
+                                                child: SingleChildScrollView(
+                                                  physics:
+                                                      const NeverScrollableScrollPhysics(),
+                                                  child: Column(
+                                                    children: [
+                                                      SizedBox(
+                                                        height: height / 1.38,
+                                                        child: ListView.builder(
+                                                          shrinkWrap: true,
+                                                          physics:
+                                                              const NeverScrollableScrollPhysics(),
+                                                          itemCount: pagecount ==
+                                                                  temp
+                                                              ? verifyed.length
+                                                                          .remainder(
+                                                                              10) ==
+                                                                      0
+                                                                  ? 10
+                                                                  : verifyed
+                                                                      .length
+                                                                      .remainder(
+                                                                          10)
+                                                              : 10,
+                                                          itemBuilder:
+                                                              (ctx, i) {
+                                                            var verifyedData =
+                                                                verifyed[(temp *
+                                                                        10) -
+                                                                    10 +
+                                                                    i];
+                                                            List<
+                                                                    GlobalKey<
+                                                                        State<
+                                                                            StatefulWidget>>>
+                                                                popMenuKeys =
+                                                                List.generate(
+                                                              verifyed.length,
+                                                              (index) =>
+                                                                  GlobalKey(),
+                                                            );
+
+                                                            if (mydate
+                                                                .isNotEmpty) {
+                                                              if (mydate.contains(
+                                                                  verifyedData
+                                                                      .date)) {
+                                                                return SizedBox(
+                                                                    width: width /
+                                                                        1.2288,
+                                                                    height: height /
+                                                                        13.4363,
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: EdgeInsets.only(
+                                                                          left: width /
+                                                                              170.75),
+                                                                      child:
+                                                                          Row(
+                                                                        children: [
+                                                                          SizedBox(
+                                                                            width:
+                                                                                width / 19.2,
+                                                                            height:
+                                                                                height / 14.78,
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: const EdgeInsets.only(left: 8),
+                                                                              child: KText(
+                                                                                text: "${temp * i + 2}",
+                                                                                style: SafeGoogleFont(
+                                                                                  'Nunito',
+                                                                                  color: const Color(0xff030229),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            width:
+                                                                                width / 9.38857,
+                                                                            height:
+                                                                                height / 14.78,
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: const EdgeInsets.only(left: 8),
+                                                                              child: KText(
+                                                                                text: verifyedData.positions.toString(),
+                                                                                style: SafeGoogleFont(
+                                                                                  'Nunito',
+                                                                                  color: const Color(0xff030229),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            width:
+                                                                                width / 7.38857,
+                                                                            height:
+                                                                                height / 14.78,
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: const EdgeInsets.only(left: 8),
+                                                                              child: KText(
+                                                                                text: verifyedData.title.toString(),
+                                                                                style: SafeGoogleFont(
+                                                                                  'Nunito',
+                                                                                  color: const Color(0xff030229),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            width:
+                                                                                width / 4.38857,
+                                                                            height:
+                                                                                height / 14.78,
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: const EdgeInsets.only(left: 8),
+                                                                              child: KText(
+                                                                                text: verifyedData.description.toString(),
+                                                                                style: SafeGoogleFont(
+                                                                                  'Nunito',
+                                                                                  color: const Color(0xff030229),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            width:
+                                                                                width / 9.6,
+                                                                            height:
+                                                                                height / 14.78,
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: const EdgeInsets.only(left: 8),
+                                                                              child: KText(
+                                                                                text: verifyedData.date.toString(),
+                                                                                style: SafeGoogleFont(
+                                                                                  'Nunito',
+                                                                                  color: const Color(0xff030229),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            width:
+                                                                                width / 16.0,
+                                                                            height:
+                                                                                height / 14.78,
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: const EdgeInsets.only(left: 8),
+                                                                              child: KText(
+                                                                                text: verifyedData.LastDate.toString(),
+                                                                                style: SafeGoogleFont(
+                                                                                  'Nunito',
+                                                                                  color: const Color(0xff030229),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                              width: width / 17.6,
+                                                                              height: height / 14.78,
+                                                                              child: verifyedData.verify == true
+                                                                                  ? const Icon(
+                                                                                      Icons.verified,
+                                                                                      color: Colors.green,
+                                                                                    )
+                                                                                  : const Icon(
+                                                                                      Icons.verified_outlined,
+                                                                                    )),
+                                                                          GestureDetector(
+                                                                            onTap:
+                                                                                () {
+                                                                              Popupmenu(context, verifyedData, popMenuKeys[i], size);
+                                                                            },
+                                                                            child: SizedBox(
+                                                                                key: popMenuKeys[i],
+                                                                                width: width / 18.36,
+                                                                                height: height / 14.78,
+                                                                                child: const Icon(Icons.more_horiz)),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ));
+                                                              }
+                                                            } else if (mydate
+                                                                .isEmpty) {
+                                                              return ((temp * 10) -
+                                                                          10 +
+                                                                          i >=
+                                                                      documentlength)
+                                                                  ? const SizedBox()
+                                                                  : SizedBox(
+                                                                      width: width /
+                                                                          1.2288,
+                                                                      height: height /
+                                                                          13.4363,
+                                                                      child:
+                                                                          Padding(
+                                                                        padding:
+                                                                            EdgeInsets.only(left: width / 170.75),
+                                                                        child:
+                                                                            Row(
+                                                                          children: [
+                                                                            SizedBox(
+                                                                              width: width / 19.2,
+                                                                              height: height / 14.78,
+                                                                              child: Padding(
+                                                                                padding: const EdgeInsets.only(left: 8),
+                                                                                child: KText(
+                                                                                  text: "${temp * i + 2}",
+                                                                                  style: SafeGoogleFont(
+                                                                                    'Nunito',
+                                                                                    color: const Color(0xff030229),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                            SizedBox(
+                                                                              width: width / 9.38857,
+                                                                              height: height / 14.78,
+                                                                              child: Padding(
+                                                                                padding: const EdgeInsets.only(left: 8),
+                                                                                child: KText(
+                                                                                  text: verifyedData.positions.toString(),
+                                                                                  style: SafeGoogleFont(
+                                                                                    'Nunito',
+                                                                                    color: const Color(0xff030229),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                            SizedBox(
+                                                                              width: width / 7.38857,
+                                                                              height: height / 14.78,
+                                                                              child: Padding(
+                                                                                padding: const EdgeInsets.only(left: 8),
+                                                                                child: KText(
+                                                                                  text: verifyedData.title.toString(),
+                                                                                  style: SafeGoogleFont(
+                                                                                    'Nunito',
+                                                                                    color: const Color(0xff030229),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                            SizedBox(
+                                                                              width: width / 4.38857,
+                                                                              height: height / 14.78,
+                                                                              child: Padding(
+                                                                                padding: const EdgeInsets.only(left: 8),
+                                                                                child: KText(
+                                                                                  text: verifyedData.description.toString(),
+                                                                                  style: SafeGoogleFont(
+                                                                                    'Nunito',
+                                                                                    color: const Color(0xff030229),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                            SizedBox(
+                                                                              width: width / 9.6,
+                                                                              height: height / 14.78,
+                                                                              child: Padding(
+                                                                                padding: const EdgeInsets.only(left: 8),
+                                                                                child: KText(
+                                                                                  text: verifyedData.date.toString(),
+                                                                                  style: SafeGoogleFont(
+                                                                                    'Nunito',
+                                                                                    color: const Color(0xff030229),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                            SizedBox(
+                                                                              width: width / 16.0,
+                                                                              height: height / 14.78,
+                                                                              child: Padding(
+                                                                                padding: const EdgeInsets.only(left: 8),
+                                                                                child: KText(
+                                                                                  text: verifyedData.LastDate.toString(),
+                                                                                  style: SafeGoogleFont(
+                                                                                    'Nunito',
+                                                                                    color: const Color(0xff030229),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                            SizedBox(
+                                                                                width: width / 17.6,
+                                                                                height: height / 14.78,
+                                                                                child: verifyedData.verify == true
+                                                                                    ? const Icon(
+                                                                                        Icons.verified,
+                                                                                        color: Colors.green,
+                                                                                      )
+                                                                                    : const Icon(
+                                                                                        Icons.verified_outlined,
+                                                                                      )),
+                                                                            GestureDetector(
+                                                                              onTap: () {
+                                                                                Popupmenu(context, verifyedData, popMenuKeys[i], size);
+                                                                              },
+                                                                              child: SizedBox(key: popMenuKeys[i], width: width / 18.36, height: height / 14.78, child: const Icon(Icons.more_horiz)),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ));
+                                                            }
+                                                            return const SizedBox();
+                                                          },
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: width / 1.2418,
+                                                        child: Stack(
+                                                          alignment: Alignment
+                                                              .centerRight,
+                                                          children: [
+                                                            SizedBox(
+                                                              width: double
+                                                                  .infinity,
+                                                              height: height /
+                                                                  13.02,
+                                                              child: ListView
+                                                                  .builder(
+                                                                      shrinkWrap:
+                                                                          true,
+                                                                      scrollDirection:
+                                                                          Axis
+                                                                              .horizontal,
+                                                                      itemCount:
+                                                                          pagecount,
+                                                                      itemBuilder:
+                                                                          (context,
+                                                                              index) {
+                                                                        return InkWell(
+                                                                          onTap:
+                                                                              () {
+                                                                            setState(() {
+                                                                              temp = list[index];
+                                                                            });
+                                                                            print(temp);
+                                                                          },
+                                                                          child: Container(
+                                                                              height: 30,
+                                                                              width: 30,
+                                                                              margin: const EdgeInsets.only(left: 8, right: 8, top: 10, bottom: 10),
+                                                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: temp.toString() == list[index].toString() ? Constants().primaryAppColor : Colors.transparent),
+                                                                              child: Center(
+                                                                                child: Text(
+                                                                                  list[index].toString(),
+                                                                                  style: SafeGoogleFont('Nunito', fontWeight: FontWeight.w700, color: temp.toString() == list[index].toString() ? Colors.white : Colors.black),
+                                                                                ),
+                                                                              )),
+                                                                        );
+                                                                      }),
+                                                            ),
+                                                            temp > 1
+                                                                ? Padding(
+                                                                    padding: const EdgeInsets
+                                                                        .only(
+                                                                        right:
+                                                                            150.0),
+                                                                    child:
+                                                                        InkWell(
+                                                                      onTap:
+                                                                          () {
+                                                                        setState(
+                                                                            () {
+                                                                          temp =
+                                                                              temp - 1;
+                                                                        });
+                                                                      },
+                                                                      child: Container(
+                                                                          height: height / 16.275,
+                                                                          width: width / 11.3833,
+                                                                          decoration: BoxDecoration(color: Constants().primaryAppColor, borderRadius: BorderRadius.circular(80)),
+                                                                          child: Center(
+                                                                            child:
+                                                                                Text(
+                                                                              "Previous Page",
+                                                                              style: SafeGoogleFont(
+                                                                                'Nunito',
+                                                                                fontWeight: FontWeight.w700,
+                                                                                color: Colors.white,
+                                                                              ),
+                                                                            ),
+                                                                          )),
+                                                                    ),
+                                                                  )
+                                                                : Container(),
+                                                            Container(
+                                                              child: temp <
+                                                                      pagecount
+                                                                  ? Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .only(
+                                                                          right:
+                                                                              20.0),
+                                                                      child:
+                                                                          InkWell(
+                                                                        onTap:
+                                                                            () {
+                                                                          setState(
+                                                                              () {
+                                                                            temp =
+                                                                                temp + 1;
+                                                                          });
+                                                                        },
+                                                                        child: Container(
+                                                                            height: height / 16.275,
+                                                                            width: width / 11.3833,
+                                                                            decoration: BoxDecoration(color: Constants().primaryAppColor, borderRadius: BorderRadius.circular(80)),
+                                                                            child: Center(
+                                                                              child: Text(
+                                                                                "Next Page",
+                                                                                style: SafeGoogleFont(
+                                                                                  'Nunito',
+                                                                                  fontWeight: FontWeight.w700,
+                                                                                  color: Colors.white,
+                                                                                ),
+                                                                              ),
+                                                                            )),
+                                                                      ),
+                                                                    )
+                                                                  : Container(),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )),
+                                            SizedBox(
+                                                height: height / 1.34363,
+                                                width: width / 1.2288,
+                                                child: Column(
+                                                  children: [
+                                                    SizedBox(
+                                                      height: height / 1.7131,
+                                                      child: ListView.builder(
+                                                        shrinkWrap: true,
+                                                        physics:
+                                                            const ScrollPhysics(),
+                                                        itemCount:
+                                                            Notverifyed.length,
+                                                        itemBuilder: (ctx, i) {
+                                                          var NotverifyedData =
+                                                              Notverifyed[
+                                                                  (temp2 * 10) -
+                                                                      10 +
+                                                                      i];
+                                                          List<
+                                                                  GlobalKey<
+                                                                      State<
+                                                                          StatefulWidget>>>
+                                                              popMenuKeys =
+                                                              List.generate(
+                                                            Notverifyed.length,
+                                                            (index) =>
+                                                                GlobalKey(),
+                                                          );
+                                                          if (mydate
+                                                              .isNotEmpty) {
+                                                            if (mydate.contains(
+                                                                NotverifyedData
+                                                                    .date)) {
+                                                              return ((temp2 *
+                                                                              10) -
+                                                                          10 +
+                                                                          i >=
+                                                                      documentlength2)
+                                                                  ? const SizedBox()
+                                                                  : SizedBox(
+                                                                      width: width /
+                                                                          1.2288,
+                                                                      height: height /
+                                                                          13.4363,
+                                                                      child:
+                                                                          Row(
+                                                                        children: [
+                                                                          SizedBox(
+                                                                            width:
+                                                                                width / 19.2,
+                                                                            height:
+                                                                                height / 14.78,
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: const EdgeInsets.only(left: 8),
+                                                                              child: KText(
+                                                                                text: "${i + 1}",
+                                                                                style: SafeGoogleFont(
+                                                                                  'Nunito',
+                                                                                  color: const Color(0xff030229),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            width:
+                                                                                width / 9.38857,
+                                                                            height:
+                                                                                height / 14.78,
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: const EdgeInsets.only(left: 8),
+                                                                              child: KText(
+                                                                                text: NotverifyedData.positions.toString(),
+                                                                                style: SafeGoogleFont(
+                                                                                  'Nunito',
+                                                                                  color: const Color(0xff030229),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            width:
+                                                                                width / 7.38857,
+                                                                            height:
+                                                                                height / 14.78,
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: const EdgeInsets.only(left: 8),
+                                                                              child: KText(
+                                                                                text: NotverifyedData.title.toString(),
+                                                                                style: SafeGoogleFont(
+                                                                                  'Nunito',
+                                                                                  color: const Color(0xff030229),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            width:
+                                                                                width / 4.38857,
+                                                                            height:
+                                                                                height / 14.78,
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: const EdgeInsets.only(left: 8),
+                                                                              child: KText(
+                                                                                text: NotverifyedData.description.toString(),
+                                                                                style: SafeGoogleFont(
+                                                                                  'Nunito',
+                                                                                  color: const Color(0xff030229),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            width:
+                                                                                width / 9.6,
+                                                                            height:
+                                                                                height / 14.78,
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: const EdgeInsets.only(left: 8),
+                                                                              child: KText(
+                                                                                text: NotverifyedData.date.toString(),
+                                                                                style: SafeGoogleFont(
+                                                                                  'Nunito',
+                                                                                  color: const Color(0xff030229),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            width:
+                                                                                width / 16.0,
+                                                                            height:
+                                                                                height / 14.78,
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: const EdgeInsets.only(left: 8),
+                                                                              child: KText(
+                                                                                text: NotverifyedData.LastDate.toString(),
+                                                                                style: SafeGoogleFont(
+                                                                                  'Nunito',
+                                                                                  color: const Color(0xff030229),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                              width: width / 17.6,
+                                                                              height: height / 14.78,
+                                                                              child: NotverifyedData.verify == true
+                                                                                  ? const Icon(
+                                                                                      Icons.verified,
+                                                                                      color: Colors.green,
+                                                                                    )
+                                                                                  : const Icon(
+                                                                                      Icons.verified_outlined,
+                                                                                    )),
+                                                                          GestureDetector(
+                                                                            onTap:
+                                                                                () {
+                                                                              Popupmenu(context, NotverifyedData, popMenuKeys[i], size);
+                                                                            },
+                                                                            child: SizedBox(
+                                                                                key: popMenuKeys[i],
+                                                                                width: width / 18.36,
+                                                                                height: height / 14.78,
+                                                                                child: const Icon(Icons.more_horiz)),
+                                                                          ),
+                                                                        ],
+                                                                      ));
+                                                            }
+                                                          } else if (mydate
+                                                              .isEmpty) {
+                                                            return ((temp2 *
+                                                                            10) -
+                                                                        10 +
+                                                                        i >=
+                                                                    documentlength2)
+                                                                ? const SizedBox()
+                                                                : SizedBox(
+                                                                    width: width /
+                                                                        1.2288,
+                                                                    height: height /
+                                                                        13.4363,
+                                                                    child: Row(
+                                                                      children: [
+                                                                        SizedBox(
+                                                                          width:
+                                                                              width / 19.2,
+                                                                          height:
+                                                                              height / 14.78,
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.only(left: 8),
+                                                                            child:
+                                                                                KText(
+                                                                              text: "${i + 1}",
+                                                                              style: SafeGoogleFont(
+                                                                                'Nunito',
+                                                                                color: const Color(0xff030229),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        SizedBox(
+                                                                          width:
+                                                                              width / 9.38857,
+                                                                          height:
+                                                                              height / 14.78,
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.only(left: 8),
+                                                                            child:
+                                                                                KText(
+                                                                              text: NotverifyedData.positions.toString(),
+                                                                              style: SafeGoogleFont(
+                                                                                'Nunito',
+                                                                                color: const Color(0xff030229),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        SizedBox(
+                                                                          width:
+                                                                              width / 7.38857,
+                                                                          height:
+                                                                              height / 14.78,
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.only(left: 8),
+                                                                            child:
+                                                                                KText(
+                                                                              text: NotverifyedData.title.toString(),
+                                                                              style: SafeGoogleFont(
+                                                                                'Nunito',
+                                                                                color: const Color(0xff030229),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        SizedBox(
+                                                                          width:
+                                                                              width / 4.38857,
+                                                                          height:
+                                                                              height / 14.78,
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.only(left: 8),
+                                                                            child:
+                                                                                KText(
+                                                                              text: NotverifyedData.description.toString(),
+                                                                              style: SafeGoogleFont(
+                                                                                'Nunito',
+                                                                                color: const Color(0xff030229),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        SizedBox(
+                                                                          width:
+                                                                              width / 9.6,
+                                                                          height:
+                                                                              height / 14.78,
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.only(left: 8),
+                                                                            child:
+                                                                                KText(
+                                                                              text: NotverifyedData.date.toString(),
+                                                                              style: SafeGoogleFont(
+                                                                                'Nunito',
+                                                                                color: const Color(0xff030229),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        SizedBox(
+                                                                          width:
+                                                                              width / 16.0,
+                                                                          height:
+                                                                              height / 14.78,
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.only(left: 8),
+                                                                            child:
+                                                                                KText(
+                                                                              text: NotverifyedData.LastDate.toString(),
+                                                                              style: SafeGoogleFont(
+                                                                                'Nunito',
+                                                                                color: const Color(0xff030229),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        SizedBox(
+                                                                            width: width /
+                                                                                17.6,
+                                                                            height:
+                                                                                height / 14.78,
+                                                                            child: NotverifyedData.verify == true
+                                                                                ? const Icon(
+                                                                                    Icons.verified,
+                                                                                    color: Colors.green,
+                                                                                  )
+                                                                                : const Icon(
+                                                                                    Icons.verified_outlined,
+                                                                                  )),
+                                                                        GestureDetector(
+                                                                          onTap:
+                                                                              () {
+                                                                            Popupmenu(
+                                                                                context,
+                                                                                NotverifyedData,
+                                                                                popMenuKeys[i],
+                                                                                size);
+                                                                          },
+                                                                          child: SizedBox(
+                                                                              key: popMenuKeys[i],
+                                                                              width: width / 18.36,
+                                                                              height: height / 14.78,
+                                                                              child: const Icon(Icons.more_horiz)),
+                                                                        ),
+                                                                      ],
+                                                                    ));
+                                                          }
+                                                          return const SizedBox();
+                                                        },
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: width / 1.2418,
+                                                      child: Stack(
+                                                        alignment: Alignment
+                                                            .centerRight,
+                                                        children: [
+                                                          SizedBox(
+                                                            width:
+                                                                double.infinity,
+                                                            height:
+                                                                height / 13.02,
+                                                            child: ListView
+                                                                .builder(
+                                                                    shrinkWrap:
+                                                                        true,
+                                                                    scrollDirection:
+                                                                        Axis
+                                                                            .horizontal,
+                                                                    itemCount:
+                                                                        pagecount2,
+                                                                    itemBuilder:
+                                                                        (context,
+                                                                            index) {
+                                                                      return InkWell(
+                                                                        onTap:
+                                                                            () {
+                                                                          setState(
+                                                                              () {
+                                                                            temp2 =
+                                                                                list2[index];
+                                                                          });
+                                                                          print(
+                                                                              temp2);
+                                                                        },
+                                                                        child: Container(
+                                                                            height: 30,
+                                                                            width: 30,
+                                                                            margin: const EdgeInsets.only(left: 8, right: 8, top: 10, bottom: 10),
+                                                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: temp2.toString() == list2[index].toString() ? Constants().primaryAppColor : Colors.transparent),
+                                                                            child: Center(
+                                                                              child: Text(
+                                                                                list2[index].toString(),
+                                                                                style: SafeGoogleFont('Nunito', fontWeight: FontWeight.w700, color: temp2.toString() == list2[index].toString() ? Colors.white : Colors.black),
+                                                                              ),
+                                                                            )),
+                                                                      );
+                                                                    }),
+                                                          ),
+                                                          temp2 > 1
+                                                              ? Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .only(
+                                                                          right:
+                                                                              150.0),
+                                                                  child:
+                                                                      InkWell(
+                                                                    onTap: () {
+                                                                      setState(
+                                                                          () {
+                                                                        temp2 =
+                                                                            temp2 -
+                                                                                1;
+                                                                      });
+                                                                    },
+                                                                    child: Container(
+                                                                        height: height / 16.275,
+                                                                        width: width / 11.3833,
+                                                                        decoration: BoxDecoration(color: Constants().primaryAppColor, borderRadius: BorderRadius.circular(80)),
+                                                                        child: Center(
+                                                                          child:
+                                                                              Text(
+                                                                            "Previous Page",
+                                                                            style:
+                                                                                SafeGoogleFont(
+                                                                              'Nunito',
+                                                                              fontWeight: FontWeight.w700,
+                                                                              color: Colors.white,
+                                                                            ),
+                                                                          ),
+                                                                        )),
+                                                                  ),
+                                                                )
+                                                              : Container(),
+                                                          Container(
+                                                            child: temp2 <
+                                                                    pagecount2
+                                                                ? Padding(
+                                                                    padding: const EdgeInsets
+                                                                        .only(
+                                                                        right:
+                                                                            20.0),
+                                                                    child:
+                                                                        InkWell(
+                                                                      onTap:
+                                                                          () {
+                                                                        setState(
+                                                                            () {
+                                                                          temp2 =
+                                                                              temp2 + 1;
+                                                                        });
+                                                                      },
+                                                                      child: Container(
+                                                                          height: height / 16.275,
+                                                                          width: width / 11.3833,
+                                                                          decoration: BoxDecoration(color: Constants().primaryAppColor, borderRadius: BorderRadius.circular(80)),
+                                                                          child: Center(
+                                                                            child:
+                                                                                Text(
+                                                                              "Next Page",
+                                                                              style: SafeGoogleFont(
+                                                                                'Nunito',
+                                                                                fontWeight: FontWeight.w700,
+                                                                                color: Colors.white,
+                                                                              ),
+                                                                            ),
+                                                                          )),
+                                                                    ),
+                                                                  )
+                                                                : Container(),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )),
                                           ],
                                         ),
-                                      )),
-
-                                  SizedBox(
-                                      height: height / 1.34363,
-                                      width: width / 1.2288,
-                                      child: Column(
-                                        children: [
-                                          SizedBox(
-                                            height:height/1.7131,
-                                            child: ListView.builder(
-                                              shrinkWrap: true,
-                                              physics:
-                                              const ScrollPhysics(),
-                                              itemCount: Notverifyed.length,
-                                              itemBuilder: (ctx, i) {
-
-                                                var NotverifyedData=Notverifyed[(temp2*10)-10+i];
-                                                List<GlobalKey<State<StatefulWidget>>>
-                                                popMenuKeys =
-                                                List.generate(Notverifyed.length, (index) => GlobalKey(),
-                                                );
-                                                if(mydate.isNotEmpty){
-                                                  if(mydate.contains(NotverifyedData.date)){
-                                                    return
-                                                      ((temp2*10)-10+i >= documentlength2)? const SizedBox():
-                                                      SizedBox(
-                                                        width:
-                                                        width / 1.2288,
-                                                        height: height /
-                                                            13.4363,
-                                                        child: Row(
-                                                          children: [
-                                                            SizedBox(
-                                                              width: width /
-                                                                  19.2,
-                                                              height:
-                                                              height /
-                                                                  14.78,
-                                                              child:
-                                                              Padding(
-                                                                padding: const EdgeInsets
-                                                                    .only(
-                                                                    left:
-                                                                    8),
-                                                                child:
-                                                                KText(
-                                                                  text:
-                                                                  "${i + 1}",
-                                                                  style:
-                                                                  SafeGoogleFont(
-                                                                    'Nunito',
-                                                                    color: const Color(
-                                                                        0xff030229),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              width: width /
-                                                                  9.38857,
-                                                              height:
-                                                              height /
-                                                                  14.78,
-                                                              child:
-                                                              Padding(
-                                                                padding: const EdgeInsets
-                                                                    .only(
-                                                                    left:
-                                                                    8),
-                                                                child:
-                                                                KText(
-                                                                  text: NotverifyedData
-                                                                      .positions
-                                                                      .toString(),
-                                                                  style:
-                                                                  SafeGoogleFont(
-                                                                    'Nunito',
-                                                                    color: const Color(
-                                                                        0xff030229),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              width: width /
-                                                                  7.38857,
-                                                              height:
-                                                              height /
-                                                                  14.78,
-                                                              child:
-                                                              Padding(
-                                                                padding: const EdgeInsets
-                                                                    .only(
-                                                                    left:
-                                                                    8),
-                                                                child:
-                                                                KText(
-                                                                  text: NotverifyedData
-                                                                      .title
-                                                                      .toString(),
-                                                                  style:
-                                                                  SafeGoogleFont(
-                                                                    'Nunito',
-                                                                    color: const Color(
-                                                                        0xff030229),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              width: width /
-                                                                  4.38857,
-                                                              height:
-                                                              height /
-                                                                  14.78,
-                                                              child:
-                                                              Padding(
-                                                                padding: const EdgeInsets
-                                                                    .only(
-                                                                    left:
-                                                                    8),
-                                                                child:
-                                                                KText(
-                                                                  text: NotverifyedData
-                                                                      .description
-                                                                      .toString(),
-                                                                  style:
-                                                                  SafeGoogleFont(
-                                                                    'Nunito',
-                                                                    color: const Color(
-                                                                        0xff030229),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              width: width /
-                                                                  9.6,
-                                                              height:
-                                                              height /
-                                                                  14.78,
-                                                              child:
-                                                              Padding(
-                                                                padding: const EdgeInsets
-                                                                    .only(
-                                                                    left:
-                                                                    8),
-                                                                child:
-                                                                KText(
-                                                                  text: NotverifyedData
-                                                                      .date
-                                                                      .toString(),
-                                                                  style:
-                                                                  SafeGoogleFont(
-                                                                    'Nunito',
-                                                                    color: const Color(
-                                                                        0xff030229),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              width: width /
-                                                                  16.0,
-                                                              height:
-                                                              height /
-                                                                  14.78,
-                                                              child:
-                                                              Padding(
-                                                                padding: const EdgeInsets
-                                                                    .only(
-                                                                    left:
-                                                                    8),
-                                                                child:
-                                                                KText(
-                                                                  text: NotverifyedData
-                                                                      .LastDate
-                                                                      .toString(),
-                                                                  style:
-                                                                  SafeGoogleFont(
-                                                                    'Nunito',
-                                                                    color: const Color(
-                                                                        0xff030229),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                                width:
-                                                                width /
-                                                                    17.6,
-                                                                height:
-                                                                height /
-                                                                    14.78,
-                                                                child: NotverifyedData.verify ==
-                                                                    true
-                                                                    ? const Icon(
-                                                                  Icons.verified,
-                                                                  color:
-                                                                  Colors.green,
-                                                                )
-                                                                    : const Icon(
-                                                                  Icons.verified_outlined,
-                                                                )),
-                                                            GestureDetector(
-                                                              onTap: () {
-                                                                Popupmenu(
-                                                                    context,
-                                                                    NotverifyedData,
-                                                                    popMenuKeys[
-                                                                    i],
-                                                                    size);
-                                                              },
-                                                              child: SizedBox(
-                                                                  key: popMenuKeys[
-                                                                  i],
-                                                                  width: width /
-                                                                      18.36,
-                                                                  height: height /
-                                                                      14.78,
-                                                                  child: const Icon(
-                                                                      Icons
-                                                                          .more_horiz)),
-                                                            ),
-                                                          ],
-                                                        ));
-                                                  }
-                                                }
-                                                else if(mydate.isEmpty){
-                                                  return
-                                                    ((temp2*10)-10+i >= documentlength2)? const SizedBox():
-                                                    SizedBox(
-                                                        width:
-                                                        width / 1.2288,
-                                                        height: height /
-                                                            13.4363,
-                                                        child: Row(
-                                                          children: [
-                                                            SizedBox(
-                                                              width: width /
-                                                                  19.2,
-                                                              height:
-                                                              height /
-                                                                  14.78,
-                                                              child:
-                                                              Padding(
-                                                                padding: const EdgeInsets
-                                                                    .only(
-                                                                    left:
-                                                                    8),
-                                                                child:
-                                                                KText(
-                                                                  text:
-                                                                  "${i + 1}",
-                                                                  style:
-                                                                  SafeGoogleFont(
-                                                                    'Nunito',
-                                                                    color: const Color(
-                                                                        0xff030229),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              width: width /
-                                                                  9.38857,
-                                                              height:
-                                                              height /
-                                                                  14.78,
-                                                              child:
-                                                              Padding(
-                                                                padding: const EdgeInsets
-                                                                    .only(
-                                                                    left:
-                                                                    8),
-                                                                child:
-                                                                KText(
-                                                                  text: NotverifyedData
-                                                                      .positions
-                                                                      .toString(),
-                                                                  style:
-                                                                  SafeGoogleFont(
-                                                                    'Nunito',
-                                                                    color: const Color(
-                                                                        0xff030229),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              width: width /
-                                                                  7.38857,
-                                                              height:
-                                                              height /
-                                                                  14.78,
-                                                              child:
-                                                              Padding(
-                                                                padding: const EdgeInsets
-                                                                    .only(
-                                                                    left:
-                                                                    8),
-                                                                child:
-                                                                KText(
-                                                                  text: NotverifyedData
-                                                                      .title
-                                                                      .toString(),
-                                                                  style:
-                                                                  SafeGoogleFont(
-                                                                    'Nunito',
-                                                                    color: const Color(
-                                                                        0xff030229),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              width: width /
-                                                                  4.38857,
-                                                              height:
-                                                              height /
-                                                                  14.78,
-                                                              child:
-                                                              Padding(
-                                                                padding: const EdgeInsets
-                                                                    .only(
-                                                                    left:
-                                                                    8),
-                                                                child:
-                                                                KText(
-                                                                  text: NotverifyedData
-                                                                      .description
-                                                                      .toString(),
-                                                                  style:
-                                                                  SafeGoogleFont(
-                                                                    'Nunito',
-                                                                    color: const Color(
-                                                                        0xff030229),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              width: width /
-                                                                  9.6,
-                                                              height:
-                                                              height /
-                                                                  14.78,
-                                                              child:
-                                                              Padding(
-                                                                padding: const EdgeInsets
-                                                                    .only(
-                                                                    left:
-                                                                    8),
-                                                                child:
-                                                                KText(
-                                                                  text: NotverifyedData
-                                                                      .date
-                                                                      .toString(),
-                                                                  style:
-                                                                  SafeGoogleFont(
-                                                                    'Nunito',
-                                                                    color: const Color(
-                                                                        0xff030229),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              width: width /
-                                                                  16.0,
-                                                              height:
-                                                              height /
-                                                                  14.78,
-                                                              child:
-                                                              Padding(
-                                                                padding: const EdgeInsets
-                                                                    .only(
-                                                                    left:
-                                                                    8),
-                                                                child:
-                                                                KText(
-                                                                  text: NotverifyedData
-                                                                      .LastDate
-                                                                      .toString(),
-                                                                  style:
-                                                                  SafeGoogleFont(
-                                                                    'Nunito',
-                                                                    color: const Color(
-                                                                        0xff030229),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                                width:
-                                                                width /
-                                                                    17.6,
-                                                                height:
-                                                                height /
-                                                                    14.78,
-                                                                child: NotverifyedData.verify ==
-                                                                    true
-                                                                    ? const Icon(
-                                                                  Icons.verified,
-                                                                  color:
-                                                                  Colors.green,
-                                                                )
-                                                                    : const Icon(
-                                                                  Icons.verified_outlined,
-                                                                )),
-                                                            GestureDetector(
-                                                              onTap: () {
-                                                                Popupmenu(
-                                                                    context,
-                                                                    NotverifyedData,
-                                                                    popMenuKeys[
-                                                                    i],
-                                                                    size);
-                                                              },
-                                                              child: SizedBox(
-                                                                  key: popMenuKeys[
-                                                                  i],
-                                                                  width: width /
-                                                                      18.36,
-                                                                  height: height /
-                                                                      14.78,
-                                                                  child: const Icon(
-                                                                      Icons
-                                                                          .more_horiz)),
-                                                            ),
-                                                          ],
-                                                        ));
-                                                }
-                                                return const SizedBox();
-                                              },
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width:width/1.2418,
-
-                                            child: Stack(
-                                              alignment: Alignment.centerRight,
-                                              children: [
-                                                SizedBox(
-                                                  width: double.infinity,
-                                                  height:height/13.02,
-                                                  child: ListView.builder(
-                                                      shrinkWrap: true,
-                                                      scrollDirection: Axis.horizontal,
-                                                      itemCount: pagecount2,
-                                                      itemBuilder: (context,index){
-                                                        return InkWell(
-                                                          onTap: (){
-                                                            setState(() {
-                                                              temp2=list2[index];
-                                                            });
-                                                            print(temp2);
-                                                          },
-                                                          child: Container(
-                                                              height:30,width:30,
-                                                              margin: const EdgeInsets.only(left:8,right:8,top:10,bottom:10),
-                                                              decoration: BoxDecoration(
-                                                                  borderRadius: BorderRadius.circular(100),
-                                                                  color:temp2.toString() == list2[index].toString() ?  Constants().primaryAppColor : Colors.transparent
-                                                              ),
-                                                              child: Center(
-                                                                child: Text(list2[index].toString(),style: SafeGoogleFont(
-                                                                    'Nunito',
-                                                                    fontWeight: FontWeight.w700,
-                                                                    color: temp2.toString() == list2[index].toString() ?  Colors.white : Colors.black
-
-                                                                ),),
-                                                              )
-                                                          ),
-                                                        );
-
-                                                      }),
-                                                ),
-                                                temp2 > 1 ?
-                                                Padding(
-                                                  padding: const EdgeInsets.only(right: 150.0),
-                                                  child:
-                                                  InkWell(
-                                                    onTap:(){
-                                                      setState(() {
-                                                        temp2= temp2-1;
-                                                      });
-                                                    },
-                                                    child: Container(
-                                                        height:height/16.275,
-                                                        width:width/11.3833,
-                                                        decoration:BoxDecoration(
-                                                            color:Constants().primaryAppColor,
-                                                            borderRadius: BorderRadius.circular(80)
-                                                        ),
-                                                        child: Center(
-                                                          child: Text("Previous Page",style: SafeGoogleFont(
-                                                            'Nunito',
-                                                            fontWeight: FontWeight.w700,
-                                                            color: Colors.white,
-                                                          ),),
-                                                        )),
-                                                  ),
-                                                )  : Container(),
-                                                Container(
-                                                  child: temp2 < pagecount2 ?
-                                                  Padding(
-                                                    padding: const EdgeInsets.only(right: 20.0),
-                                                    child: InkWell(
-                                                      onTap:(){
-                                                        setState(() {
-                                                          temp2= temp2+1;
-                                                        });
-                                                      },
-                                                      child:
-                                                      Container(
-                                                          height:height/16.275,
-                                                          width:width/11.3833,
-                                                          decoration:BoxDecoration(
-                                                              color:Constants().primaryAppColor,
-                                                              borderRadius: BorderRadius.circular(80)
-                                                          ),
-                                                          child: Center(
-                                                            child: Text("Next Page",style: SafeGoogleFont(
-                                                              'Nunito',
-                                                              fontWeight: FontWeight.w700,
-                                                              color: Colors.white,
-                                                            ),),
-                                                          )),
-                                                    ),
-                                                  )  : Container(),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      )),
-
-                                ],
-                              ),
-                            ),
-
-                          ],
-                        );
-                      }),
-                ),
-              )
+                                      ),
+                                    ],
+                                  );
+                                }),
+                          ),
+                        )
                       : Container(),
-
-
               SizedBox(height: height / 65.1),
               const DeveloperCardWidget(),
               SizedBox(height: height / 65.1),
@@ -3298,8 +3435,6 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                       ),
                     ),
                     child: SingleChildScrollView(
-
-
                       child: Column(
                         children: [
                           Container(
@@ -3997,8 +4132,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                       positionsController,
                                                   decoration: InputDecoration(
                                                     isDense: true,
-                                                       border: InputBorder.none,
-
+                                                    border: InputBorder.none,
                                                     hintStyle: SafeGoogleFont(
                                                       'Nunito',
                                                       fontSize: width / 105.571,
@@ -4041,14 +4175,17 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                           width / 170.75),
                                                   child: TextFormField(
                                                     inputFormatters: [
-                                                      FilteringTextInputFormatter.allow(RegExp("[a-zA-Z ]")),
+                                                      FilteringTextInputFormatter
+                                                          .allow(RegExp(
+                                                              "[a-zA-Z ]")),
                                                     ],
                                                     style: SafeGoogleFont(
                                                       'Nunito',
                                                       fontSize: width / 105.571,
                                                     ),
                                                     minLines: 1,
-                                                    controller: quvalificationController,
+                                                    controller:
+                                                        quvalificationController,
                                                     decoration: InputDecoration(
                                                       isDense: true,
                                                       border: InputBorder.none,
@@ -4070,11 +4207,11 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                   SizedBox(height: height / 65.1),
                                   Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Column(
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: [
                                           KText(
                                             text: "Location",
@@ -4087,7 +4224,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                           SizedBox(height: height / 108.5),
                                           Material(
                                             borderRadius:
-                                            BorderRadius.circular(3),
+                                                BorderRadius.circular(3),
                                             color: const Color(0xffDDDEEE),
                                             elevation: 5,
                                             child: SizedBox(
@@ -4101,7 +4238,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                   inputFormatters: [
                                                     FilteringTextInputFormatter
                                                         .allow(RegExp(
-                                                        "[a-zA-Z ]")),
+                                                            "[a-zA-Z ]")),
                                                   ],
                                                   style: SafeGoogleFont(
                                                     'Nunito',
@@ -4109,11 +4246,10 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                   ),
                                                   minLines: 1,
                                                   controller:
-                                                  locationController,
+                                                      locationController,
                                                   decoration: InputDecoration(
                                                     isDense: true,
                                                     border: InputBorder.none,
-
                                                     hintStyle: SafeGoogleFont(
                                                       'Nunito',
                                                       fontSize: width / 105.571,
@@ -4130,7 +4266,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                             left: width / 54.64),
                                         child: Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             KText(
                                               text: "No of openings *",
@@ -4143,7 +4279,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                             SizedBox(height: height / 108.5),
                                             Material(
                                               borderRadius:
-                                              BorderRadius.circular(3),
+                                                  BorderRadius.circular(3),
                                               color: const Color(0xffDDDEEE),
                                               elevation: 5,
                                               child: SizedBox(
@@ -4153,12 +4289,12 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                   padding: EdgeInsets.symmetric(
                                                       vertical: height / 81.375,
                                                       horizontal:
-                                                      width / 170.75),
+                                                          width / 170.75),
                                                   child: TextFormField(
                                                     inputFormatters: [
                                                       FilteringTextInputFormatter
-                                                          .allow(RegExp(
-                                                          "[0-9 ]")),
+                                                          .allow(
+                                                              RegExp("[0-9 ]")),
                                                     ],
                                                     style: SafeGoogleFont(
                                                       'Nunito',
@@ -4166,14 +4302,14 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                                     ),
                                                     minLines: 1,
                                                     controller:
-                                                    noOfOpeningController,
+                                                        noOfOpeningController,
                                                     decoration: InputDecoration(
                                                       isDense: true,
                                                       border: InputBorder.none,
                                                       hintStyle: SafeGoogleFont(
                                                         'Nunito',
                                                         fontSize:
-                                                        width / 105.571,
+                                                            width / 105.571,
                                                       ),
                                                     ),
                                                   ),
@@ -4286,7 +4422,6 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                         ],
                                       ),
                                       SizedBox(width: width / 68.3),*/
-
                                     ],
                                   ),
                                   SizedBox(height: height / 65.1),
@@ -4450,36 +4585,37 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                         timeController.text != "") {
                                       Response response =
                                           await JobPostFireCrud.updateRecord(
-                                              JobPostModel(
-                                                verify: jobPost.verify,
-                                                id: jobPost.id,
-                                                title: titleController.text,
-                                                imgUrl: jobPost.imgUrl,
-                                                timestamp: jobPost.timestamp,
-                                                views: jobPost.views,
-                                                time: timeController.text,
-                                                location:
-                                                    locationController.text,
-                                                description:
-                                                    descriptionController.text,
-                                                date: dateController.text,
-                                                registeredUsers:
-                                                    jobPost.registeredUsers,
-                                                openings: int.parse(noOfOpeningController.text.toString()==""?"1":noOfOpeningController.text.toString()),
-                                                userName: 'Admin',
-                                                Batch: 'Admin',
-                                                UserOccupation: 'Admin',
-                                                quvalification: quvalificationController.text,
-
-                                                positions: positionsController.text,
-                                              ),
-                                              profileImage,
-                                              jobPost.imgUrl ?? "",
-
-
-
-
-                                          );
+                                        JobPostModel(
+                                          verify: jobPost.verify,
+                                          id: jobPost.id,
+                                          title: titleController.text,
+                                          imgUrl: jobPost.imgUrl,
+                                          timestamp: jobPost.timestamp,
+                                          views: jobPost.views,
+                                          time: timeController.text,
+                                          location: locationController.text,
+                                          description:
+                                              descriptionController.text,
+                                          date: dateController.text,
+                                          registeredUsers:
+                                              jobPost.registeredUsers,
+                                          openings: int.parse(
+                                              noOfOpeningController.text
+                                                          .toString() ==
+                                                      ""
+                                                  ? "1"
+                                                  : noOfOpeningController.text
+                                                      .toString()),
+                                          userName: 'Admin',
+                                          Batch: 'Admin',
+                                          UserOccupation: 'Admin',
+                                          quvalification:
+                                              quvalificationController.text,
+                                          positions: positionsController.text,
+                                        ),
+                                        profileImage,
+                                        jobPost.imgUrl ?? "",
+                                      );
                                       if (response.code == 200) {
                                         CoolAlert.show(
                                             context: context,
@@ -4618,7 +4754,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
       rows.add(row);
     }
     String csv = const ListToCsvConverter().convert(rows);
-    saveCsvToFile(csv);
+    // saveCsvToFile(csv);
   }
 
   convertToPdf(List<JobPostModel> jobPost) async {
@@ -4646,26 +4782,26 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
     print(row);
     print("dynamic list++++++++++++++++++++++++++++++++++++++++++++++++++++++");
     String pdf = const ListToCsvConverter().convert(rows);
-    savePdfToFile(pdf);
+    // savePdfToFile(pdf);
   }
 
-  void saveCsvToFile(csvString) async {
-    final blob = Blob([Uint8List.fromList(csvString.codeUnits)]);
-    final url = Url.createObjectUrlFromBlob(blob);
-    final anchor = AnchorElement(href: url)
-      ..setAttribute("download", "JobPost.csv")
-      ..click();
-    Url.revokeObjectUrl(url);
-  }
-
-  void savePdfToFile(data) async {
-    final blob = Blob([data], 'application/pdf');
-    final url = Url.createObjectUrlFromBlob(blob);
-    final anchor = AnchorElement(href: url)
-      ..setAttribute("download", "jobPost.pdf")
-      ..click();
-    Url.revokeObjectUrl(url);
-  }
+  // void saveCsvToFile(csvString) async {
+  //   final blob = Blob([Uint8List.fromList(csvString.codeUnits)]);
+  //   final url = Url.createObjectUrlFromBlob(blob);
+  //   final anchor = AnchorElement(href: url)
+  //     ..setAttribute("download", "JobPost.csv")
+  //     ..click();
+  //   Url.revokeObjectUrl(url);
+  // }
+  //
+  // void savePdfToFile(data) async {
+  //   final blob = Blob([data], 'application/pdf');
+  //   final url = Url.createObjectUrlFromBlob(blob);
+  //   final anchor = AnchorElement(href: url)
+  //     ..setAttribute("download", "jobPost.pdf")
+  //     ..click();
+  //   Url.revokeObjectUrl(url);
+  // }
 
   copyToClipBoard(List<JobPostModel> jobPost) async {
     List<List<dynamic>> rows = [];
@@ -4737,7 +4873,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                       children: [
                         Padding(
                           padding:
-                          EdgeInsets.symmetric(horizontal: width / 68.3),
+                              EdgeInsets.symmetric(horizontal: width / 68.3),
                           child: KText(
                             text: "Filter",
                             style: SafeGoogleFont(
@@ -4794,7 +4930,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                 ),
                                 child: TextField(
                                   readOnly: true,
-                                  controller:Date1Controller,
+                                  controller: Date1Controller,
                                   decoration: InputDecoration(
                                     hintStyle: SafeGoogleFont('Nunito',
                                         color: const Color(0xff00A99D)),
@@ -4809,7 +4945,9 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                     if (pickedDate != null) {
                                       setState(() {
                                         dateRangeStart = pickedDate;
-                                        Date1Controller.text=DateFormat('d/M/yyyy').format(pickedDate);
+                                        Date1Controller.text =
+                                            DateFormat('d/M/yyyy')
+                                                .format(pickedDate);
                                       });
                                     }
                                   },
@@ -4847,35 +4985,43 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                 ),
                                 child: TextField(
                                     readOnly: true,
-                                    controller:Date2Controller,
+                                    controller: Date2Controller,
                                     decoration: InputDecoration(
                                       hintStyle: SafeGoogleFont('Nunito',
                                           color: const Color(0xff00A99D)),
-
                                       border: InputBorder.none,
                                     ),
                                     onTap: () async {
                                       DateTime? pickedDate =
-                                      await showDatePicker(
-                                          context: context,
-                                          initialDate: DateTime.now(),
-                                          firstDate: DateTime(2000),
-                                          lastDate: DateTime(3000));
+                                          await showDatePicker(
+                                              context: context,
+                                              initialDate: DateTime.now(),
+                                              firstDate: DateTime(2000),
+                                              lastDate: DateTime(3000));
                                       if (pickedDate != null) {
                                         setState(() {
-                                          Date2Controller.text=DateFormat('d/M/yyyy').format(pickedDate);
+                                          Date2Controller.text =
+                                              DateFormat('d/M/yyyy')
+                                                  .format(pickedDate);
                                           dateRangeEnd = pickedDate;
                                         });
-                                        DateTime startDate = DateTime.utc(dateRangeStart!.year, dateRangeStart!.month, dateRangeStart!.day);
-                                        DateTime endDate = DateTime.utc(dateRangeEnd!.year, dateRangeEnd!.month, dateRangeEnd!.day);
+                                        DateTime startDate = DateTime.utc(
+                                            dateRangeStart!.year,
+                                            dateRangeStart!.month,
+                                            dateRangeStart!.day);
+                                        DateTime endDate = DateTime.utc(
+                                            dateRangeEnd!.year,
+                                            dateRangeEnd!.month,
+                                            dateRangeEnd!.day);
                                         print(startDate);
                                         print(endDate);
                                         print("+++++++=================");
                                         getDaysInBetween() {
-                                          final int difference = endDate.difference(startDate).inDays;
+                                          final int difference = endDate
+                                              .difference(startDate)
+                                              .inDays;
                                           return difference + 1;
                                         }
-
 
                                         final items = List<DateTime>.generate(
                                             getDaysInBetween(), (i) {
@@ -4888,11 +5034,13 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                                         print(items.length);
                                         for (int i = 0; i < items.length; i++) {
                                           setState(() {
-                                            mydate.add(formatter.format(items[i])
+                                            mydate.add(formatter
+                                                .format(items[i])
                                                 .toString());
                                           });
                                           print(mydate);
-                                          print("+++++++++++++000000000+++++++++++");
+                                          print(
+                                              "+++++++++++++000000000+++++++++++");
                                         }
                                       }
                                     }),
@@ -4904,7 +5052,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                             children: [
                               InkWell(
                                 onTap: () {
-                                  setState((){
+                                  setState(() {
                                     Date1Controller.clear();
                                     Date2Controller.clear();
                                   });
@@ -4942,7 +5090,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
                               SizedBox(width: width / 273.2),
                               InkWell(
                                 onTap: () {
-                                  setState((){
+                                  setState(() {
                                     Date1Controller.clear();
                                     Date2Controller.clear();
                                   });
@@ -5028,7 +5176,7 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
 
   TimeOfDay _selectedTime = TimeOfDay.now();
 
- /* Future<void> _selectTime(BuildContext context) async {
+  /* Future<void> _selectTime(BuildContext context) async {
     TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: _selectedTime,
@@ -5348,4 +5496,81 @@ class _Job_PostsState extends State<Job_Posts> with TickerProviderStateMixin {
           .toList(),
     );
   }
+
+  _submitData1() {
+    // String idGenerator() {
+    //   final now = DateTime.now();
+    //   return now.microsecondsSinceEpoch.toString();
+    // }
+
+    final rs = RandomString();
+    String documentid = rs.getRandomString();
+    FirebaseFirestore.instance.collection("JobPosts").doc(documentid).set({
+      "Batch": "Admin",
+      "views": [],
+      "verify": [],
+      "userName": "",
+      "uploadTime": timeController.text,
+      "title": titleController.text,
+      "timestamp": Timestamp.now().microsecondsSinceEpoch,
+      "subtitle": "",
+      "registeredUsers": "",
+      "quvalification": quvalificationController.text,
+      "positions": positionsController.text,
+      "openings": noOfOpeningController.text,
+      "location": locationController.text,
+      "img": "",
+      "id": "",
+      "date": dateController.text,
+      "UserOccupation": "Admin",
+      "LastDate": lastDateController.text,
+      "Batch": "Admin",
+    });
+
+    FirebaseFirestore.instance.collection('Post').doc(documentid).set({
+      'jposttitle': titleController.text,
+      'jpostdate': dateController.text,
+      'jpostlocation': locationController.text,
+      'jpostdescription': descriptionController.text,
+      "jpostimageurl": "",
+      "jposttime": timeController.text,
+      "jpostposition": positionsController.text,
+      "jpostopening": noOfOpeningController.text,
+      "jpostqualification": quvalificationController.text,
+      "jpostlastdate": lastDateController.text,
+      'timestamp': Timestamp.now().microsecondsSinceEpoch,
+      "types": "jobpost",
+      "register": [],
+      "likes": [],
+      "views": [],
+      "name": name,
+      "userimage": image,
+      "exp": expController.text,
+      "company": companyController.text,
+    });
+  }
+
+  String name = "";
+  String image = "";
+  getdocid() async {
+    var doc =
+        await FirebaseFirestore.instance.collection("AlumniDetails").get();
+    for (int i = 0; i < doc.docs.length; i++) {
+      if (doc.docs[i]["name"] != "") {
+        print(doc.docs[i]["logo"]);
+        setState(() {
+          name = doc.docs[i]["name"];
+          image = doc.docs[i]["logo"];
+        });
+      }
+    }
+    print(image);
+  }
+  //  generateDocument() {
+  //   CollectionReference collection = _firestore.collection('your_collection_name');
+  //   DocumentReference docRef = collection.doc();
+  //   String docId = docRef.id;
+  //   // Use the generated document ID as needed
+  //   print('Generated Firestore Document ID: $docId');
+  // }
 }
